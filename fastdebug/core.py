@@ -4,9 +4,9 @@
 __all__ = ['defaults', 'dbcolors', 'colorize', 'strip_ansi', 'alignright', 'printsrc', 'dbprint']
 
 # %% ../00_core.ipynb 4
-defaults = type('defaults', (object,), {'eg': None, # examples
-                                        'src': None, # official src
-                                        'margin': 157 # align to the right by 157
+defaults = type('defaults', (object,), {'margin': 157 # align to the right by 157
+                                        # 'eg': None, # examples
+                                        # 'src': None, # official src
                                        }) 
 
 # %% ../00_core.ipynb 10
