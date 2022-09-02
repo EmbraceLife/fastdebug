@@ -11,17 +11,20 @@ defaults = type('defaults', (object,), {'margin': 157, # align to the right by 1
                                         # 'src': None, # official src
                                        }) 
 
-# %% ../00_core.ipynb 8
+# %% ../00_core.ipynb 19
 from pprint import pprint
 
 # %% ../00_core.ipynb 30
+import inspect
+
+# %% ../00_core.ipynb 45
 class dbcolors:
     g = '\033[92m' #GREEN
     y = '\033[93m' #YELLOW
     r = '\033[91m' #RED
     reset = '\033[0m' #RESET COLOR
 
-# %% ../00_core.ipynb 31
+# %% ../00_core.ipynb 46
 def colorize(cmt, color:str=None):
     if color == "g":
         return dbcolors.g + cmt + dbcolors.reset
@@ -32,14 +35,14 @@ def colorize(cmt, color:str=None):
     else: 
         return cmt
 
-# %% ../00_core.ipynb 35
+# %% ../00_core.ipynb 50
 import re
 
-# %% ../00_core.ipynb 36
+# %% ../00_core.ipynb 51
 def strip_ansi(source):
     return re.sub(r'\033\[(\d|;)+?m', '', source)
 
-# %% ../00_core.ipynb 37
+# %% ../00_core.ipynb 52
 def alignright(blocks):
     lst = blocks.split('\n')
     maxlen = max(map(lambda l : len(strip_ansi(l)) , lst ))
@@ -47,10 +50,10 @@ def alignright(blocks):
     for l in lst:
         print(' '*indent + format(l))
 
-# %% ../00_core.ipynb 41
+# %% ../00_core.ipynb 56
 import inspect
 
-# %% ../00_core.ipynb 49
+# %% ../00_core.ipynb 64
 def printsrc(src, srclines, cmt, expand:int=2):
 
     # convert the source code of the function into a list of strings splitted by '\n'
@@ -83,12 +86,13 @@ def printsrc(src, srclines, cmt, expand:int=2):
             print('{:<157}'.format(l)) # print out the rest of source code to the most left
     
 
-# %% ../00_core.ipynb 64
+# %% ../00_core.ipynb 81
 def dbprint(src, # the src func name, e.g., foo
             srclines:str, # the srclines under investigation
             cmt:str, # comment
             *codes, # a list of dbcodes
-            expand:int=2 # span 2 lines of srcode up and down from the srcline investigated
+            expand:int=2, # span 2 lines of srcode up and down from the srcline investigated
+            env = globals() # outer env
            ):  # a number of stuff needed to run the code, e.g. var1 = var1, func1 = func1
     "Insert dbcodes under srclines under investigation, and create a new dbsrc function to replace the official one"
     
@@ -151,7 +155,9 @@ def dbprint(src, # the src func name, e.g., foo
     #     print(l)
     
     # exec the dbsrc to replace the official source code
-    exec(dbsrc) # created new foo and saved inside locals()
+    # exec(dbsrc) # created new foo and saved inside locals()
+    # exec(dbsrc, globals().update(locals())) # make sure b can access lst from above
+    exec(dbsrc, globals().update(env)) # make sure b can access lst from above
     
     # check to see whether the new srcode is created
     # print(locals())
@@ -162,7 +168,7 @@ def dbprint(src, # the src func name, e.g., foo
     return locals()[defaults.orisrc.__name__]
     
 
-# %% ../00_core.ipynb 67
+# %% ../00_core.ipynb 84
 def dbprintinsert(*codes, **env): 
     for c in codes:
     # print(f"{c} => {c} : {eval(c, globals().update(env))}") 
@@ -170,7 +176,7 @@ def dbprintinsert(*codes, **env):
         print('{:>157}'.format(output))   
         
 
-# %% ../00_core.ipynb 122
+# %% ../00_core.ipynb 139
 def printrunsrclines(func, example):
     srclines = inspect.getsource(func).split('\n')
     dbsrc = ""
@@ -196,7 +202,7 @@ def printrunsrclines(func, example):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
 
-# %% ../00_core.ipynb 133
+# %% ../00_core.ipynb 150
 def printrunsrclines(func, example):
     srclines = inspect.getsource(func).split('\n')
     dbsrc = ""
