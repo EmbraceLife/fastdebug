@@ -124,7 +124,7 @@ def printsrc(src, # name of src code such as foo, or delegates
             printsrclinewithidx(idx, l)
 
 
-# %% ../00_core.ipynb 117
+# %% ../00_core.ipynb 119
 def dbprint(src, # the src func name, e.g., foo
             dbcode, # the srclines under investigation, can be either string or int
             cmt:str, # comment
@@ -170,13 +170,8 @@ def dbprint(src, # the src func name, e.g., foo
             dbcodes = "dbprintinsert("
             count = 1
             for c in codes:
-                if count == len(codes) and "env=" in c:
-                    dbcodes = dbcodes + c + ")"
-                # elif count == len(codes) and "=" not in c:
-                #     dbcodes = dbcodes + '"' + c + '"' + ")"
-                # elif count != len(codes) and "=" in c:
-                #     dbcodes = dbcodes + c + ","
-                # elif count != len(codes) and "=" not in c:
+                if count == len(codes):
+                    dbcodes = dbcodes + '"' + c + '"' + "," + "env=g" + ")"
                 else:
                     dbcodes = dbcodes + '"' + c + '"' + ","
                 count = count + 1
@@ -210,12 +205,11 @@ def dbprint(src, # the src func name, e.g., foo
     env.update(locals())
     
     return locals()[defaults.orisrc.__name__]
-    
 
-# %% ../00_core.ipynb 132
+# %% ../00_core.ipynb 135
 import ast
 
-# %% ../00_core.ipynb 133
+# %% ../00_core.ipynb 136
 def dbprintinsert(*codes, env={}): 
 
         
@@ -346,7 +340,7 @@ def dbprintinsert(*codes, env={}):
         # the benefit of using global().update(env) is 
         # to ensure we don't need to include the same env fo
 
-# %% ../00_core.ipynb 187
+# %% ../00_core.ipynb 190
 def printrunsrclines(func, example):
     srclines = inspect.getsource(func).split('\n')
     dbsrc = ""
@@ -372,7 +366,7 @@ def printrunsrclines(func, example):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
 
-# %% ../00_core.ipynb 201
+# %% ../00_core.ipynb 204
 def printrunsrclines(src, example, env):
     srclst = inspect.getsource(src).split('\n')
     dbsrc = ""
@@ -443,7 +437,7 @@ def printrunsrclines(src, example, env):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
 
-# %% ../00_core.ipynb 208
+# %% ../00_core.ipynb 212
 class Fastdb():
     
     def __init__(self, 
@@ -486,8 +480,8 @@ class Fastdb():
                 dbcodes = "dbprintinsert("
                 count = 1
                 for c in codes:
-                    if count == len(codes) and "env=" in c:
-                        dbcodes = dbcodes + c + ")"
+                    if count == len(codes):
+                        dbcodes = dbcodes + '"' + c + '"' + "," + "env=g" + ")"
                     else:
                         dbcodes = dbcodes + '"' + c + '"' + ","
                     count = count + 1
