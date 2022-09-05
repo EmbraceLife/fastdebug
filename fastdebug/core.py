@@ -378,7 +378,7 @@ def dbprintinsert(*codes, env={}):
         # the benefit of using global().update(env) is 
         # to ensure we don't need to include the same env fo
 
-# %% ../00_core.ipynb 200
+# %% ../00_core.ipynb 202
 def printrunsrclines(func, example):
     srclines = inspect.getsource(func).split('\n')
     dbsrc = ""
@@ -404,7 +404,7 @@ def printrunsrclines(func, example):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
 
-# %% ../00_core.ipynb 214
+# %% ../00_core.ipynb 216
 def printrunsrclines(src, example, env):
     srclst = inspect.getsource(src).split('\n')
     dbsrc = ""
@@ -475,7 +475,7 @@ def printrunsrclines(src, example, env):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
 
-# %% ../00_core.ipynb 235
+# %% ../00_core.ipynb 238
 class Fastdb():
     
     def __init__(self, 
@@ -536,162 +536,7 @@ class Fastdb():
 
                     dbsrc = dbsrc + " "*numindent + "g = locals()" + '\n'
                     dbsrc = dbsrc + " "*numindent + dbcodes + '\n'
-
-                else:
-                    dbsrc = dbsrc + l + '\n'                
-
-            elif bool(l.strip()) and idx + 1 == len(lst):
-                dbsrc = dbsrc + l
-
-            elif bool(l.strip()): # make sure pure indentation + \n is ignored
-                dbsrc = dbsrc + l + '\n'
-                
-        if showdbsrc: # added to debug
-            for l in dbsrc.split('\n'):
-                print(l)
-                
-        exec(dbsrc, globals().update(self.outenv)) # make sure b can access lst from above
-
-        self.outenv.update(locals())
-
-        return locals()[self.orisrc.__name__]
-    
-    
-    def print(self, 
-                maxlines:int=33, # maximum num of lines per page
-                part:int=0): # if the src is more than 33 lines, then divide the src by 33 into a few parts
-        totallen = 157
-        lenidx = 5
-        lspace = 10
-        lstsrc = inspect.getsource(self.orisrc).split('\n')
-        numparts = len(lstsrc) // 33 + 1 if len(lstsrc) % 33 != 0 else len(lstsrc) // 33
-        # cmts = {5:"this is me", 111:"this is me", 14:"this is you this is you this is you this is you this is you this is you this is you this is you "}
-        cmts = self.cmts
-        if part == 0: 
-            for idx, l in zip(range(len(lstsrc)), lstsrc):
-                lenl = len(l)
-                
-                if not bool(l.strip()):
-                    print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
-                    
-                elif lenl + lspace >= 100:
-                    if bool(cmts):
-                        cmtidx = [cmt[0] for cmt in list(cmts.items())]
-                        if idx in cmtidx:
-                            print(l + " # " + cmts[idx] + " "*(totallen-lenl-lenidx-len(cmts[idx])-3) + "(" + str(idx) + ")")
-                        else:
-                            print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
-                    else: 
-                        print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
-                        
-                else:
-
-
-                    if bool(cmts):
-                        cmtidx = [cmt[0] for cmt in list(cmts.items())]
-                        if idx in cmtidx:
-                            print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + cmts[idx]))
-                        else:
-                            print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                                                      
-
-                    else:
-                        print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                 
-        
-        for p in range(numparts):
-            for idx, l in zip(range(len(lstsrc)), lstsrc):
-
-                if (maxlines*p <= idx < maxlines*(p+1) and p+1 == part):
-                    lenl = len(l)
-                    if not bool(l.strip()):
-                        print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
-                    elif lenl + lspace >= 100:
-                        if bool(cmts):
-                            cmtidx = [cmt[0] for cmt in list(cmts.items())]
-                            if idx in cmtidx:
-                                print(l + " # " + cmts[idx] + " "*(totallen-lenl-lenidx-len(cmts[idx])-3) + "(" + str(idx) + ")")
-                            else:
-                                print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
-                        else: 
-                            print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
-
-
-                    else:
-
-                        if bool(cmts):
-                            cmtidx = [cmt[0] for cmt in list(cmts.items())]
-                            if idx in cmtidx:
-                                print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + cmts[idx]))
-                            else:
-                                print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                                                          
-                            
-                        else:
-                            print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                      
-
-                if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
-                    print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
-                    return
-
-# %% ../00_core.ipynb 237
-class Fastdb():
-    
-    def __init__(self, 
-                 src, # name of src code
-                 env): # env = g, as g = globals()
-        self.orisrc = src
-        self.margin = 157
-        self.outenv = env
-        self.cmts = {}
-        
-    def dbprint(self, 
-                # src, # the src func name, e.g., foo
-                dbcode, # the srclines under investigation, can be either string or int
-                cmt:str, # comment
-                *codes, # a list of dbcodes
-                expand:int=2, # span 2 lines of srcode up and down from the srcline investigated
-                showdbsrc=False): # display dbsrc or not
-        "Insert dbcodes under srclines under investigation, and create a new dbsrc function to replace the official one"
-
-        src = self.orisrc
-        if type(dbcode) == int: self.cmts.update({dbcode: cmt})
-
-        printsrc(src, dbcode, cmt, expand)
-
-        dbsrc = ""
-        indent = 4
-        onedbprint = False
-
-        lst = inspect.getsource(src).split('\n')
-        if not bool(lst[-1]): lst = lst[:-1]
-        
-        newlst = []
-        for i in codes: # no matter whether there is "" or "  " in the front or in the middle of codes
-            if bool(i.strip()): newlst.append(i)
-        codes = newlst
-
-        srclines = ""
-        if type(dbcode) == int:
-            srclines = lst[dbcode]
-        else:
-            srclines = dbcode
-
-        for idx, l in zip(range(len(lst)), lst):
-
-            if bool(l.strip()) and l.strip() in srclines and idx == dbcode: 
-
-                if len(codes) > 0: # if the new codes is not empty
-                    numindent = len(l) - len(l.strip())
-                    dbcodes = "dbprintinsert("
-                    count = 1
-                    for c in codes:
-                        if count == len(codes):
-                            dbcodes = dbcodes + '"' + c + '"' + "," + "env=g" + ")"
-                        else:
-                            dbcodes = dbcodes + '"' + c + '"' + ","
-                        count = count + 1
-
-                    dbsrc = dbsrc + " "*numindent + "g = locals()" + '\n'
-                    dbsrc = dbsrc + " "*numindent + dbcodes + '\n'
-
+                    dbsrc = dbsrc + l + '\n'     
                 else:
                     dbsrc = dbsrc + l + '\n'                
 

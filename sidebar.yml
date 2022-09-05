@@ -4,13 +4,5 @@ website:
       - index.ipynb
       - 00_core.ipynb
       - FixSigMeta.ipynb
+      - utils.html
       - utils.ipynb
-      - section: examples
-        contents:
-          - examples/Fastdb.ipynb
-          - examples/dbprint.ipynb
-          - examples/printsrc.ipynb
-          - examples/printsrcrun.ipynb
-      - section: history
-        contents:
-          - history/FooGetSigInit.ipynb
