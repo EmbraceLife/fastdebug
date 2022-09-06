@@ -3,14 +3,14 @@
 # %% auto 0
 __all__ = ['whatinside', 'whichversion', 'tstenv']
 
-# %% ../utils.ipynb 2
+# %% ../utils.ipynb 3
 # from inspect import getmembers, isfunction, isclass, isbuiltin, getsource
 import os.path, pkgutil
 from pprint import pprint
 import inspect
 
 
-# %% ../utils.ipynb 3
+# %% ../utils.ipynb 4
 def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
                dun:bool=False, # print all items in __all__
                func:bool=False, # print all user defined functions
@@ -45,11 +45,11 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
         print(f'The library has {len(modules)} modules')
         pprint(modules)
 
-# %% ../utils.ipynb 8
+# %% ../utils.ipynb 9
 from importlib.metadata import version, metadata, distribution
 from platform import python_version 
 
-# %% ../utils.ipynb 9
+# %% ../utils.ipynb 10
 def whichversion(libname:str, # library name not string
                 req:bool=False, # print lib requirements 
                 file:bool=False): # print all lib files
@@ -70,7 +70,7 @@ def whichversion(libname:str, # library name not string
         pprint(distribution(libname).files)
     
 
-# %% ../utils.ipynb 15
+# %% ../utils.ipynb 16
 def tstenv(outenv=globals()):
     print(f'out global env has {len(outenv.keys())} vars')
     print(f'inner global env has {len(globals().keys())} vars')
