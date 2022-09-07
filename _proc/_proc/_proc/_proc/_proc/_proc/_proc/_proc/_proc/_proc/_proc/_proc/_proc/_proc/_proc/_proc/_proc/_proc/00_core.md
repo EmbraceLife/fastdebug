@@ -82,9 +82,7 @@ from fastdebug.utils import *
 "whichversion" in globals()
 ```
 
-<!-- #region toc-hr-collapsed=true -->
 ## Execute strings
-<!-- #endregion -->
 
 ```python
 eval?
@@ -948,9 +946,9 @@ printsrc(foo, 3, "this is comment")
 
 more [complex example](./examples/printsrc.ipynb) on printsrc
 
-<!-- #region toc-hr-collapsed=true -->
+
 ## dbprint on expression
-<!-- #endregion -->
+
 
 ### basic version
 
@@ -1850,9 +1848,8 @@ inspect.signature(Foo)
 ```
 <!-- #endregion -->
 
-<!-- #region toc-hr-collapsed=true -->
 ## dbprintinsert
-<!-- #endregion -->
+
 
 ### Run and display the inserted dbcodes 
 for each srcline under investigation, used inside dbprint
@@ -2095,11 +2092,10 @@ ls = ls[:-1]
 ls
 ```
 
-<!-- #region toc-hr-collapsed=true -->
 ## printrunsrclines() 
 
 It can print out only srclines which actually ran
-<!-- #endregion -->
+
 
 ### Examples
 
@@ -2629,9 +2625,7 @@ printrunsrclines(delegates, '', env=g) # make sure to use \\n not \n
 
 ```
 
-<!-- #region tags=[] -->
 ## Make fastdebug a class
-<!-- #endregion -->
 
 ```python
 
@@ -3921,7 +3915,7 @@ class Fastdb():
 ### using @patch to enable docs for instance methods like `dbprint` and `print`
 
 ```python
-#| export
+#| exports
 class Fastdb():
     "Create a Fastdebug class which has two functionalities: dbprint and print."
     def __init__(self, 
@@ -3934,7 +3928,7 @@ class Fastdb():
 ```
 
 ```python
-#| export        
+#| exports        
 @patch
 def dbprint(self:Fastdb, 
             dbcode:int, # a srcline under investigation, can be either string or int
@@ -4012,7 +4006,7 @@ def dbprint(self:Fastdb,
 ```
 
 ```python
-#| export
+#| exports
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page

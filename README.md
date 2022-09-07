@@ -128,16 +128,16 @@ whatinside??
     File:      ~/Documents/fastdebug/fastdebug/utils.py
     Type:      function
 
-However, `pdbpp` which is super nice version of `ipdb` but we can’t use
-it in jupyter notebook, even when we could use it, the outputs from
-running `pdb` commands are not good for documenting, meaning they
-usually are not readable when you look back.
+Though `pdbpp` is super nice version of `ipdb` but we can’t use it in
+jupyter notebook, even if we could use it, the outputs from running
+`pdb` commands are not good for documenting, meaning they usually are
+not easy to read when you look back.
 
-Meanwhile, I have always wanted to explore the wonderful fastai
-libraries (I am starting with fastcore). Now, with the amazing nbdev,
-writing your own library becomes super easy. So, Here I am, just
-finished the second version of this library to help me explore and dig
-the source code of fastai libraries.
+I have always wanted to explore the wonderful fastai libraries (I am
+starting with fastcore). Now, with the amazing nbdev, writing your own
+library becomes super easy. So, Here I am, just finished the second
+version of this library to help me explore and dig the source code of
+fastai libraries.
 
 ## How to use `fastdebug`?
 
@@ -187,11 +187,11 @@ fdb.print()
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
         dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9)       
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10)      
-        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # what can getmembers and isfunction give me?
+        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # can we print the list 'funcs' above nicely?
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
-        pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+        pkgpath = os.path.dirname(mo.__file__)================================================(14) # what does os.path.dirname do?
         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (15)
         if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(16)      
         if func: =============================================================================(17)      
@@ -207,7 +207,7 @@ fdb.print()
             print(f'The callables are: ')=====================================================(27)      
             pprint([i[0] for i in callables])=================================================(28)      
         if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30)      
+            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # what does pkgutil.iter_modules do?
             print(f'The library has {len(modules)} modules')==================================(31)      
             pprint(modules)===================================================================(32)      
                                                                                                                                                             (33)
@@ -262,7 +262,7 @@ whatinside(fm)
     Optionally, only return members that satisfy a given predicate.
 
 
-    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('_funcs_kwargs', <function _funcs_kwargs at 0x108004c10>), ('_mk_param', <function _mk_param at 0x108004940>), ('_rm_self', <function _rm_self at 0x108004310>), ('all_equal', <function all_equal at 0x107fcb8b0>), ('anno_dict', <function anno_dict at 0x1080048b0>), ('any_is_instance', <function any_is_instance at 0x107fcba60>), ('array_equal', <function array_equal at 0x107fcbb80>), ('contextmanager', <function contextmanager at 0x105278c10>), ('copy', <function copy at 0x105526790>), ('delegates', <function delegates at 0x108004af0>), ('df_equal', <function df_equal at 0x107fcbc10>), ('empty2none', <function empty2none at 0x108004550>), ('equals', <function equals at 0x107fcbca0>), ('funcs_kwargs', <function funcs_kwargs at 0x108004ca0>), ('in_colab', <function in_colab at 0x107fcbe50>), ('in_ipython', <function in_ipython at 0x107fcbdc0>), ('in_jupyter', <function in_jupyter at 0x107fcbee0>), ('in_notebook', <function in_notebook at 0x107fcbf70>), ('ipython_shell', <function ipython_shell at 0x107fcbd30>), ('is_close', <function is_close at 0x107ffeee0>), ('is_coll', <function is_coll at 0x107fcb820>), ('is_iter', <function is_iter at 0x107fcb790>), ('isinstance_str', <function isinstance_str at 0x107fcbaf0>), ('method', <function method at 0x108004b80>), ('nequals', <function nequals at 0x107ffeca0>), ('noop', <function noop at 0x107fcb940>), ('noops', <function noops at 0x107fcb9d0>), ('remove_prefix', <function remove_prefix at 0x107fda040>), ('remove_suffix', <function remove_suffix at 0x107fda0d0>), ('test', <function test at 0x107ffec10>), ('test_close', <function test_close at 0x107ffef70>), ('test_eq', <function test_eq at 0x107ffed30>), ('test_eq_type', <function test_eq_type at 0x107ffedc0>), ('test_fail', <function test_fail at 0x107ffe670>), ('test_fig_exists', <function test_fig_exists at 0x108004280>), ('test_is', <function test_is at 0x108004040>), ('test_ne', <function test_ne at 0x107ffee50>), ('test_shuffled', <function test_shuffled at 0x1080040d0>), ('test_sig', <function test_sig at 0x107ffea60>), ('test_stdout', <function test_stdout at 0x108004160>), ('test_warns', <function test_warns at 0x1080041f0>), ('use_kwargs', <function use_kwargs at 0x108004a60>), ('use_kwargs_dict', <function use_kwargs_dict at 0x1080049d0>)]
+    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('_funcs_kwargs', <function _funcs_kwargs at 0x10878ee50>), ('_mk_param', <function _mk_param at 0x10878eb80>), ('_rm_self', <function _rm_self at 0x10878e550>), ('all_equal', <function all_equal at 0x10875c040>), ('anno_dict', <function anno_dict at 0x10878eaf0>), ('any_is_instance', <function any_is_instance at 0x10875c1f0>), ('array_equal', <function array_equal at 0x10875c310>), ('contextmanager', <function contextmanager at 0x105608c10>), ('copy', <function copy at 0x105886790>), ('delegates', <function delegates at 0x10878ed30>), ('df_equal', <function df_equal at 0x10875c3a0>), ('empty2none', <function empty2none at 0x10878e790>), ('equals', <function equals at 0x10875c430>), ('funcs_kwargs', <function funcs_kwargs at 0x10878eee0>), ('in_colab', <function in_colab at 0x10875c5e0>), ('in_ipython', <function in_ipython at 0x10875c550>), ('in_jupyter', <function in_jupyter at 0x10875c670>), ('in_notebook', <function in_notebook at 0x10875c700>), ('ipython_shell', <function ipython_shell at 0x10875c4c0>), ('is_close', <function is_close at 0x10878e160>), ('is_coll', <function is_coll at 0x10872ff70>), ('is_iter', <function is_iter at 0x10872fee0>), ('isinstance_str', <function isinstance_str at 0x10875c280>), ('method', <function method at 0x10878edc0>), ('nequals', <function nequals at 0x108787ee0>), ('noop', <function noop at 0x10875c0d0>), ('noops', <function noops at 0x10875c160>), ('remove_prefix', <function remove_prefix at 0x10875c790>), ('remove_suffix', <function remove_suffix at 0x10875c820>), ('test', <function test at 0x108787e50>), ('test_close', <function test_close at 0x10878e1f0>), ('test_eq', <function test_eq at 0x108787f70>), ('test_eq_type', <function test_eq_type at 0x10878e040>), ('test_fail', <function test_fail at 0x108787ca0>), ('test_fig_exists', <function test_fig_exists at 0x10878e4c0>), ('test_is', <function test_is at 0x10878e280>), ('test_ne', <function test_ne at 0x10878e0d0>), ('test_shuffled', <function test_shuffled at 0x10878e310>), ('test_sig', <function test_sig at 0x108787940>), ('test_stdout', <function test_stdout at 0x10878e3a0>), ('test_warns', <function test_warns at 0x10878e430>), ('use_kwargs', <function use_kwargs at 0x10878eca0>), ('use_kwargs_dict', <function use_kwargs_dict at 0x10878ec10>)]
     fastcore.meta has: 
     13 items in its __all__, and 
     43 user defined functions, 
@@ -288,7 +288,7 @@ fdb.print(maxlines=15, part=1)
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
         dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9)       
         funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # what can getmembers and isfunction give me?
-        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # can we print the list 'funcs' above nicely?
+        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
         pkgpath = os.path.dirname(mo.__file__)================================================(14)      
@@ -320,49 +320,49 @@ fdb.print(maxlines=15, part=1)
         print(f)                                                                              
                                                                                                                                       Running your code block => 
     The code block printout => : 
-    ('_funcs_kwargs', <function _funcs_kwargs at 0x108004c10>)
-    ('_mk_param', <function _mk_param at 0x108004940>)
-    ('_rm_self', <function _rm_self at 0x108004310>)
-    ('all_equal', <function all_equal at 0x107fcb8b0>)
-    ('anno_dict', <function anno_dict at 0x1080048b0>)
-    ('any_is_instance', <function any_is_instance at 0x107fcba60>)
-    ('array_equal', <function array_equal at 0x107fcbb80>)
-    ('contextmanager', <function contextmanager at 0x105278c10>)
-    ('copy', <function copy at 0x105526790>)
-    ('delegates', <function delegates at 0x108004af0>)
-    ('df_equal', <function df_equal at 0x107fcbc10>)
-    ('empty2none', <function empty2none at 0x108004550>)
-    ('equals', <function equals at 0x107fcbca0>)
-    ('funcs_kwargs', <function funcs_kwargs at 0x108004ca0>)
-    ('in_colab', <function in_colab at 0x107fcbe50>)
-    ('in_ipython', <function in_ipython at 0x107fcbdc0>)
-    ('in_jupyter', <function in_jupyter at 0x107fcbee0>)
-    ('in_notebook', <function in_notebook at 0x107fcbf70>)
-    ('ipython_shell', <function ipython_shell at 0x107fcbd30>)
-    ('is_close', <function is_close at 0x107ffeee0>)
-    ('is_coll', <function is_coll at 0x107fcb820>)
-    ('is_iter', <function is_iter at 0x107fcb790>)
-    ('isinstance_str', <function isinstance_str at 0x107fcbaf0>)
-    ('method', <function method at 0x108004b80>)
-    ('nequals', <function nequals at 0x107ffeca0>)
-    ('noop', <function noop at 0x107fcb940>)
-    ('noops', <function noops at 0x107fcb9d0>)
-    ('remove_prefix', <function remove_prefix at 0x107fda040>)
-    ('remove_suffix', <function remove_suffix at 0x107fda0d0>)
-    ('test', <function test at 0x107ffec10>)
-    ('test_close', <function test_close at 0x107ffef70>)
-    ('test_eq', <function test_eq at 0x107ffed30>)
-    ('test_eq_type', <function test_eq_type at 0x107ffedc0>)
-    ('test_fail', <function test_fail at 0x107ffe670>)
-    ('test_fig_exists', <function test_fig_exists at 0x108004280>)
-    ('test_is', <function test_is at 0x108004040>)
-    ('test_ne', <function test_ne at 0x107ffee50>)
-    ('test_shuffled', <function test_shuffled at 0x1080040d0>)
-    ('test_sig', <function test_sig at 0x107ffea60>)
-    ('test_stdout', <function test_stdout at 0x108004160>)
-    ('test_warns', <function test_warns at 0x1080041f0>)
-    ('use_kwargs', <function use_kwargs at 0x108004a60>)
-    ('use_kwargs_dict', <function use_kwargs_dict at 0x1080049d0>)
+    ('_funcs_kwargs', <function _funcs_kwargs at 0x10878ee50>)
+    ('_mk_param', <function _mk_param at 0x10878eb80>)
+    ('_rm_self', <function _rm_self at 0x10878e550>)
+    ('all_equal', <function all_equal at 0x10875c040>)
+    ('anno_dict', <function anno_dict at 0x10878eaf0>)
+    ('any_is_instance', <function any_is_instance at 0x10875c1f0>)
+    ('array_equal', <function array_equal at 0x10875c310>)
+    ('contextmanager', <function contextmanager at 0x105608c10>)
+    ('copy', <function copy at 0x105886790>)
+    ('delegates', <function delegates at 0x10878ed30>)
+    ('df_equal', <function df_equal at 0x10875c3a0>)
+    ('empty2none', <function empty2none at 0x10878e790>)
+    ('equals', <function equals at 0x10875c430>)
+    ('funcs_kwargs', <function funcs_kwargs at 0x10878eee0>)
+    ('in_colab', <function in_colab at 0x10875c5e0>)
+    ('in_ipython', <function in_ipython at 0x10875c550>)
+    ('in_jupyter', <function in_jupyter at 0x10875c670>)
+    ('in_notebook', <function in_notebook at 0x10875c700>)
+    ('ipython_shell', <function ipython_shell at 0x10875c4c0>)
+    ('is_close', <function is_close at 0x10878e160>)
+    ('is_coll', <function is_coll at 0x10872ff70>)
+    ('is_iter', <function is_iter at 0x10872fee0>)
+    ('isinstance_str', <function isinstance_str at 0x10875c280>)
+    ('method', <function method at 0x10878edc0>)
+    ('nequals', <function nequals at 0x108787ee0>)
+    ('noop', <function noop at 0x10875c0d0>)
+    ('noops', <function noops at 0x10875c160>)
+    ('remove_prefix', <function remove_prefix at 0x10875c790>)
+    ('remove_suffix', <function remove_suffix at 0x10875c820>)
+    ('test', <function test at 0x108787e50>)
+    ('test_close', <function test_close at 0x10878e1f0>)
+    ('test_eq', <function test_eq at 0x108787f70>)
+    ('test_eq_type', <function test_eq_type at 0x10878e040>)
+    ('test_fail', <function test_fail at 0x108787ca0>)
+    ('test_fig_exists', <function test_fig_exists at 0x10878e4c0>)
+    ('test_is', <function test_is at 0x10878e280>)
+    ('test_ne', <function test_ne at 0x10878e0d0>)
+    ('test_shuffled', <function test_shuffled at 0x10878e310>)
+    ('test_sig', <function test_sig at 0x108787940>)
+    ('test_stdout', <function test_stdout at 0x10878e3a0>)
+    ('test_warns', <function test_warns at 0x10878e430>)
+    ('use_kwargs', <function use_kwargs at 0x10878eca0>)
+    ('use_kwargs_dict', <function use_kwargs_dict at 0x10878ec10>)
     fastcore.meta has: 
     13 items in its __all__, and 
     43 user defined functions, 
@@ -544,17 +544,8 @@ Fastdb??
 ```
 
     Init signature: Fastdb(src, env)
-    Source:        
-    class Fastdb():
-        "Create a Fastdebug class which has two functionalities: dbprint and print."
-        def __init__(self, 
-                     src, # name of src code you are exploring
-                     env): # env variables needed for exploring the source code, e.g., g = globals()
-            self.orisrc = src
-            self.margin = 157
-            self.outenv = env
-            self.cmts = {}
-    File:           ~/Documents/fastdebug/fastdebug/core.py
+    Docstring:      Create a Fastdebug class which has two functionalities: dbprint and print.
+    File:           ~/Documents/fastdebug/fastdebug/utils.py
     Type:           type
     Subclasses:     
 
@@ -659,6 +650,7 @@ Fastdb.print??
         part: int = 0,
     )
     Source:   
+    @patch
     def print(self:Fastdb, 
                 maxlines:int=33, # maximum num of lines per page
                 part:int=0): # if the src is more than 33 lines, then divide the src by 33 into a few parts
