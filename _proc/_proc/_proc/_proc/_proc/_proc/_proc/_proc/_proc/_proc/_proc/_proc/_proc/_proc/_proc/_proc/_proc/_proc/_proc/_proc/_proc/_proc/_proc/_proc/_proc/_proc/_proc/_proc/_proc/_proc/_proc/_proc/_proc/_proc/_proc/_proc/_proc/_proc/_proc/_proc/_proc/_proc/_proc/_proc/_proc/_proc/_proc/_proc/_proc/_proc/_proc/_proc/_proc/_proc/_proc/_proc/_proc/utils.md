@@ -41,7 +41,7 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
                lib:bool=False, # print all the modules of the library it belongs to
                cal:bool=False # print all callables
              ): 
-    'Check what inside a module: __all__, functions, classes, builtins, and callables'
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'
     dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0
     funcs = inspect.getmembers(mo, inspect.isfunction)
     classes = inspect.getmembers(mo, inspect.isclass)

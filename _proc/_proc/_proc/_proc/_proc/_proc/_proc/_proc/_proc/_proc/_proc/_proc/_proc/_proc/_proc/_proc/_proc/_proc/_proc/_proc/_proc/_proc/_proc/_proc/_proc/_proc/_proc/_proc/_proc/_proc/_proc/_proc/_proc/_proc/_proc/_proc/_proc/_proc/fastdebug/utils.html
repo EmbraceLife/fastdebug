@@ -116,9 +116,6 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
         <li class="sidebar-item">
-  utils.html
-  </li>
-        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="/utils.html" class="sidebar-item-text sidebar-link">Utils</a>
   </div>
@@ -164,7 +161,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="utils.ipynb-4" class="level1">
 <h1>%% ../utils.ipynb 4</h1>
-<p>def whatinside(mo, # module, e.g., <code>import fastcore.all as fa</code>, use <code>fa</code> here dun:bool=False, # print all items in <strong>all</strong> func:bool=False, # print all user defined functions clas:bool=False, # print all class objects bltin:bool=False, # print all builtin funcs or methods lib:bool=False, # print all the modules of the library it belongs to cal:bool=False # print all callables ): ‘Check what inside a module: <strong>all</strong>, functions, classes, builtins, and callables’ dun_all = len(mo.__all__) if hasattr(mo, “<strong>all</strong>”) else 0 funcs = inspect.getmembers(mo, inspect.isfunction) classes = inspect.getmembers(mo, inspect.isclass) builtins = inspect.getmembers(mo, inspect.isbuiltin) callables = inspect.getmembers(mo, callable) pkgpath = os.path.dirname(mo.__file__) print(f”{mo.__name__} has: items in its <strong>all</strong>, and user defined functions, classes or class objects, builtin funcs and methods, and callables.“)<br />
+<p>def whatinside(mo, # module, e.g., <code>import fastcore.all as fa</code>, use <code>fa</code> here dun:bool=False, # print all items in <strong>all</strong> func:bool=False, # print all user defined functions clas:bool=False, # print all class objects bltin:bool=False, # print all builtin funcs or methods lib:bool=False, # print all the modules of the library it belongs to cal:bool=False # print all callables ): ‘Check what inside a module: <code>__all__</code>, functions, classes, builtins, and callables’ dun_all = len(mo.__all__) if hasattr(mo, “<strong>all</strong>”) else 0 funcs = inspect.getmembers(mo, inspect.isfunction) classes = inspect.getmembers(mo, inspect.isclass) builtins = inspect.getmembers(mo, inspect.isbuiltin) callables = inspect.getmembers(mo, callable) pkgpath = os.path.dirname(mo.__file__) print(f”{mo.__name__} has: items in its <strong>all</strong>, and user defined functions, classes or class objects, builtin funcs and methods, and callables.“)<br />
 if hasattr(mo,”<strong>all</strong>”) and dun: pprint(mo.__all__) if func: print(f’The user defined functions are:‘) pprint([i[0] for i in funcs]) if clas: print(f’The class objects are:’) pprint([i[0] for i in classes]) if bltin: print(f’The builtin functions or methods are:‘) pprint([i[0] for i in builtins]) if cal: print(f’The callables are:’) pprint([i[0] for i in callables]) if lib: modules = [name for <em>, name, </em> in pkgutil.iter_modules([pkgpath])] print(f’The library has {len(modules)} modules’) pprint(modules)</p>
 </section>
 <section id="utils.ipynb-9" class="level1">
@@ -188,7 +185,7 @@ if file:
 <h1>%% ../utils.ipynb 16</h1>
 <p>def tstenv(outenv=globals()): print(f’out global env has {len(outenv.keys())} vars’) print(f’inner global env has {len(globals().keys())} vars’) print(f’inner local env has {len(globals().keys())} vars’) lstout = list(outenv.keys()) lstin = list(globals().keys()) print(lstout[:10]) print(lstin[:10]) print(f”out env[‘<strong>name</strong>’]: {outenv[‘<strong>name</strong>’]}“) print(f”inner env[‘<strong>name</strong>’]: {globals()[‘<strong>name</strong>’]}“)</p>
 <div id="quarto-navigation-envelope" class="hidden">
-<p><span class="hidden" data-render-id="quarto-int-sidebar-title">../fastdebug</span> <span class="hidden" data-render-id="quarto-int-navbar-title">fastdebug</span> <span class="hidden" data-render-id="quarto-int-sidebar:/index.html">fastdebug</span> <span class="hidden" data-render-id="quarto-int-sidebar:/core.html">core</span> <span class="hidden" data-render-id="quarto-int-sidebar:/FixSigMeta.html">FixSigMeta</span> <span class="hidden" data-render-id="quarto-int-sidebar:undefined">utils.html</span> <span class="hidden" data-render-id="quarto-int-sidebar:/utils.html">Utils</span></p>
+<p><span class="hidden" data-render-id="quarto-int-sidebar-title">../fastdebug</span> <span class="hidden" data-render-id="quarto-int-navbar-title">fastdebug</span> <span class="hidden" data-render-id="quarto-int-sidebar:/index.html">fastdebug</span> <span class="hidden" data-render-id="quarto-int-sidebar:/core.html">core</span> <span class="hidden" data-render-id="quarto-int-sidebar:/FixSigMeta.html">FixSigMeta</span> <span class="hidden" data-render-id="quarto-int-sidebar:/utils.html">Utils</span></p>
 </div>
 <div id="quarto-meta-markdown" class="hidden">
 <p><span class="hidden" data-render-id="quarto-twittercardtitle"></span> <span class="hidden" data-render-id="quarto-ogcardtitle"></span> <span class="hidden" data-render-id="quarto-metasitename">../fastdebug</span></p>

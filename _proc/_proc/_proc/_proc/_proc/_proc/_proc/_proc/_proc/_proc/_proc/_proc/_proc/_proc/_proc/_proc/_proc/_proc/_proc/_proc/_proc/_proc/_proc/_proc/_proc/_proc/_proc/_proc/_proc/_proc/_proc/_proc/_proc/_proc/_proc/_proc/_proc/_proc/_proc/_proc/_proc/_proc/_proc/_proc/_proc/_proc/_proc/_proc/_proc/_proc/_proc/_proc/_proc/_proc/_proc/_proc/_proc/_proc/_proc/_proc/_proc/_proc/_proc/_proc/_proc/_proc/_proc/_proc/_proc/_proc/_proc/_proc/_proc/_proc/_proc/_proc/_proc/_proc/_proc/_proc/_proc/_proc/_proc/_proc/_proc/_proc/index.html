@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.1.189" />
 
-<meta name="description" content="a little tool to help me explore the source code of fastai libraries">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+<meta name="description" content="a little tool to help me explore the source code of fastai libraries" />
 
 <title>fastdebug</title>
 <style>
@@ -86,23 +88,7 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<!-- htmldependencies:E3FAD763 -->
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -124,33 +110,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="fastdebug">
-<meta property="og:description" content="a little tool to help me explore the source code of fastai libraries">
-<meta property="og:site-name" content="fastdebug">
-<meta name="twitter:title" content="fastdebug">
-<meta name="twitter:description" content="a little tool to help me explore the source code of fastai libraries">
-<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="nav-sidebar floating nav-fixed">
+<body>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="/index.html">
     <span class="navbar-title">fastdebug</span>
     </a>
   </div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+  aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"
+  onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/EmbraceLife/fastdebug"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/EmbraceLife/fastdebug"><i 
+  class="bi bi-github" 
+  role="img" 
+>
 </i> 
  </a>
   </li>  
@@ -159,10 +144,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <nav class="quarto-secondary-nav" 
+        data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" 
+        aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+        onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"
+  >
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">fastdebug</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+      <h1 class="quarto-secondary-nav-title"></h1>
+      <button type="button" 
+        class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
     </div>
@@ -176,22 +166,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">fastdebug</a>
+  <a href="/index.html" class="sidebar-item-text sidebar-link active">fastdebug</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./core.html" class="sidebar-item-text sidebar-link">core</a>
+  <a href="/core.html" class="sidebar-item-text sidebar-link">core</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./FixSigMeta.html" class="sidebar-item-text sidebar-link">FixSigMeta</a>
+  <a href="/FixSigMeta.html" class="sidebar-item-text sidebar-link">FixSigMeta</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./utils.html" class="sidebar-item-text sidebar-link">Utils</a>
+  <a href="/utils.html" class="sidebar-item-text sidebar-link">Utils</a>
   </div>
 </li>
     </ul>
@@ -199,25 +189,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#references-i-use-when-i-explore" id="toc-references-i-use-when-i-explore" class="nav-link active" data-scroll-target="#references-i-use-when-i-explore">References I use when I explore</a>
-  <ul>
-  <li><a href="#fastai-style" id="toc-fastai-style" class="nav-link" data-scroll-target="#fastai-style">fastai style</a></li>
-  </ul></li>
-  <li><a href="#install" id="toc-install" class="nav-link" data-scroll-target="#install">Install</a></li>
-  <li><a href="#how-to-use" id="toc-how-to-use" class="nav-link" data-scroll-target="#how-to-use">How to use</a></li>
-  </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+        <div id="quarto-toc-target"></div>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">fastdebug</h1>
+<h1 class="title">fastdebug</h1>
 </div>
 
 <div>
@@ -235,36 +214,728 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   
 
 </header>
-
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#references-i-use-when-i-explore" id="toc-references-i-use-when-i-explore">References I use when I explore</a>
+  <ul>
+  <li><a href="#fastai-style" id="toc-fastai-style">fastai style</a></li>
+  </ul></li>
+  <li><a href="#what-is-fastdebug-library-for" id="toc-what-is-fastdebug-library-for">What is <code>fastdebug</code> library for?</a></li>
+  <li><a href="#how-to-use-fastdebug" id="toc-how-to-use-fastdebug">How to use <code>fastdebug</code>?</a>
+  <ul>
+  <li><a href="#step-1-display-the-source-code-with-idx" id="toc-step-1-display-the-source-code-with-idx">Step 1: display the source code with idx</a></li>
+  <li><a href="#step-2-starting-explore-comment-and-write-evaluations-on-a-srcline" id="toc-step-2-starting-explore-comment-and-write-evaluations-on-a-srcline">Step 2: starting explore, comment and write evaluations on a srcline</a></li>
+  </ul></li>
+  <li><a href="#key-functionalities" id="toc-key-functionalities">Key functionalities</a></li>
+  <li><a href="#install" id="toc-install">Install</a></li>
+  <li><a href="#how-to-use" id="toc-how-to-use">How to use</a></li>
+  </ul>
+</nav>
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
 <section id="references-i-use-when-i-explore" class="level2">
-<h2 class="anchored" data-anchor-id="references-i-use-when-i-explore">References I use when I explore</h2>
+<h2>References I use when I explore</h2>
 <section id="fastai-style" class="level3">
-<h3 class="anchored" data-anchor-id="fastai-style">fastai style</h3>
+<h3>fastai style</h3>
 <p>What is the fastai coding <a href="https://docs.fast.ai/dev/style.html#style-guide">style</a></p>
 <p>How to do <a href="https://docs.fast.ai/dev/abbr.html">abbreviation</a> the fastai way</p>
 <p>A great example of how fastai libraries can make life more <a href="https://www.fast.ai/2019/08/06/delegation/">comfortable</a></p>
 </section>
 </section>
+<section id="what-is-fastdebug-library-for" class="level2">
+<h2>What is <code>fastdebug</code> library for?</h2>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastcore.meta <span class="im">as</span> fm</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>whatinside(fm, dun<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>fastcore.meta has: 
+13 items in its __all__, and 
+43 user defined functions, 
+19 classes or class objects, 
+2 builtin funcs and methods, and
+74 callables.
+
+[&#39;test_sig&#39;,
+ &#39;FixSigMeta&#39;,
+ &#39;PrePostInitMeta&#39;,
+ &#39;AutoInit&#39;,
+ &#39;NewChkMeta&#39;,
+ &#39;BypassNewMeta&#39;,
+ &#39;empty2none&#39;,
+ &#39;anno_dict&#39;,
+ &#39;use_kwargs_dict&#39;,
+ &#39;use_kwargs&#39;,
+ &#39;delegates&#39;,
+ &#39;method&#39;,
+ &#39;funcs_kwargs&#39;]</code></pre>
+</div>
+</div>
+<p>As this is the first time you see <code>whainside</code>, you probably will run <code>whatinside?</code> to know how to use it.</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>whatinside?</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">Signature:</span>
+whatinside<span class="ansi-blue-fg">(</span>
+    mo<span class="ansi-blue-fg">,</span>
+    dun<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    func<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    clas<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    bltin<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    lib<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    cal<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Docstring:</span> Check what inside a module: `__all__`, functions, classes, builtins, and callables
+<span class="ansi-red-fg">File:</span>      ~/Documents/fastdebug/fastdebug/utils.py
+<span class="ansi-red-fg">Type:</span>      function
+</pre>
+</div>
+</div>
+</div>
+<p>But if you want to make sense of how its source code works, then simply run <code>whatinside??</code> to read the source may not be sufficient for beginners like me to grasp what exactly is going on inside the source code. I need something more like <code>pdb</code> to help me dig deeper.</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>whatinside??</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">Signature:</span>
+whatinside<span class="ansi-blue-fg">(</span>
+    mo<span class="ansi-blue-fg">,</span>
+    dun<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    func<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    clas<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    bltin<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    lib<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    cal<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Source:</span>   
+<span class="ansi-green-fg">def</span> whatinside<span class="ansi-blue-fg">(</span>mo<span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># module, e.g., `import fastcore.all as fa`, use `fa` here</span>
+               dun<span class="ansi-blue-fg">:</span>bool<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># print all items in __all__</span>
+               func<span class="ansi-blue-fg">:</span>bool<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># print all user defined functions</span>
+               clas<span class="ansi-blue-fg">:</span>bool<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># print all class objects</span>
+               bltin<span class="ansi-blue-fg">:</span>bool<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># print all builtin funcs or methods</span>
+               lib<span class="ansi-blue-fg">:</span>bool<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># print all the modules of the library it belongs to</span>
+               cal<span class="ansi-blue-fg">:</span>bool<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span> <span class="ansi-red-fg"># print all callables</span>
+             <span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> 
+    <span class="ansi-blue-fg">'Check what inside a module: `__all__`, functions, classes, builtins, and callables'</span>
+    dun_all <span class="ansi-blue-fg">=</span> len<span class="ansi-blue-fg">(</span>mo<span class="ansi-blue-fg">.</span>__all__<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">if</span> hasattr<span class="ansi-blue-fg">(</span>mo<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">"__all__"</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">else</span> <span class="ansi-cyan-fg">0</span>
+    funcs <span class="ansi-blue-fg">=</span> inspect<span class="ansi-blue-fg">.</span>getmembers<span class="ansi-blue-fg">(</span>mo<span class="ansi-blue-fg">,</span> inspect<span class="ansi-blue-fg">.</span>isfunction<span class="ansi-blue-fg">)</span>
+    classes <span class="ansi-blue-fg">=</span> inspect<span class="ansi-blue-fg">.</span>getmembers<span class="ansi-blue-fg">(</span>mo<span class="ansi-blue-fg">,</span> inspect<span class="ansi-blue-fg">.</span>isclass<span class="ansi-blue-fg">)</span>
+    builtins <span class="ansi-blue-fg">=</span> inspect<span class="ansi-blue-fg">.</span>getmembers<span class="ansi-blue-fg">(</span>mo<span class="ansi-blue-fg">,</span> inspect<span class="ansi-blue-fg">.</span>isbuiltin<span class="ansi-blue-fg">)</span>
+    callables <span class="ansi-blue-fg">=</span> inspect<span class="ansi-blue-fg">.</span>getmembers<span class="ansi-blue-fg">(</span>mo<span class="ansi-blue-fg">,</span> callable<span class="ansi-blue-fg">)</span>
+    pkgpath <span class="ansi-blue-fg">=</span> os<span class="ansi-blue-fg">.</span>path<span class="ansi-blue-fg">.</span>dirname<span class="ansi-blue-fg">(</span>mo<span class="ansi-blue-fg">.</span>__file__<span class="ansi-blue-fg">)</span>
+    print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n"</span><span class="ansi-blue-fg">)</span>  
+    <span class="ansi-green-fg">if</span> hasattr<span class="ansi-blue-fg">(</span>mo<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">"__all__"</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">and</span> dun<span class="ansi-blue-fg">:</span> pprint<span class="ansi-blue-fg">(</span>mo<span class="ansi-blue-fg">.</span>__all__<span class="ansi-blue-fg">)</span>
+    <span class="ansi-green-fg">if</span> func<span class="ansi-blue-fg">:</span> 
+        print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">f'The user defined functions are:'</span><span class="ansi-blue-fg">)</span>
+        pprint<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>i<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> funcs<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+    <span class="ansi-green-fg">if</span> clas<span class="ansi-blue-fg">:</span> 
+        print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">f'The class objects are:'</span><span class="ansi-blue-fg">)</span>
+        pprint<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>i<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> classes<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+    <span class="ansi-green-fg">if</span> bltin<span class="ansi-blue-fg">:</span> 
+        print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">f'The builtin functions or methods are:'</span><span class="ansi-blue-fg">)</span>
+        pprint<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>i<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> builtins<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+    <span class="ansi-green-fg">if</span> cal<span class="ansi-blue-fg">:</span> 
+        print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">f'The callables are: '</span><span class="ansi-blue-fg">)</span>
+        pprint<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>i<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> callables<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+    <span class="ansi-green-fg">if</span> lib<span class="ansi-blue-fg">:</span> 
+        modules <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>name <span class="ansi-green-fg">for</span> _<span class="ansi-blue-fg">,</span> name<span class="ansi-blue-fg">,</span> _ <span class="ansi-green-fg">in</span> pkgutil<span class="ansi-blue-fg">.</span>iter_modules<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>pkgpath<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span>
+        print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">f'The library has {len(modules)} modules'</span><span class="ansi-blue-fg">)</span>
+        pprint<span class="ansi-blue-fg">(</span>modules<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">File:</span>      ~/Documents/fastdebug/fastdebug/utils.py
+<span class="ansi-red-fg">Type:</span>      function
+</pre>
+</div>
+</div>
+</div>
+<p>However, <code>pdbpp</code> which is super nice version of <code>ipdb</code> but we can’t use it in jupyter notebook, even when we could use it, the outputs from running <code>pdb</code> commands are not good for documenting, meaning they usually are not readable when you look back.</p>
+<p>Meanwhile, I have always wanted to explore the wonderful fastai libraries (I am starting with fastcore). Now, with the amazing nbdev, writing your own library becomes super easy. So, Here I am, just finished the second version of this library to help me explore and dig the source code of fastai libraries.</p>
+</section>
+<section id="how-to-use-fastdebug" class="level2">
+<h2>How to use <code>fastdebug</code>?</h2>
+<p>In this section, I will show you how I would like to explore fastai libs with this tool. As a simple demo, I will explore my own <code>wahtinside</code> instead. From now on, I will assume I know nothing about this function.</p>
+<section id="step-1-display-the-source-code-with-idx" class="level3">
+<h3>Step 1: display the source code with idx</h3>
+<p>I would like to do is to read the source code, but I would like to have each line indiced so that I can specify exactly which line to dig into later.</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastdebug.utils <span class="im">as</span> fu</span></code></pre></div>
+</div>
+<p>We are exploring <a href="https://EmbraceLife.github.io/fastdebug/utils.html#whatinside"><code>whatinside</code></a>, so we need to have the env (see <code>g</code> below) where it is defined for <a href="https://EmbraceLife.github.io/fastdebug/core.html#fastdb"><code>Fastdb</code></a> to use.</p>
+<div class="cell">
+<div class="sourceCode" id="cb8"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> {}</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>g.update(fu.__dict__) </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(g)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>20</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(whatinside, g)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb11"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    &#39;Check what inside a module: `__all__`, functions, classes, builtins, and callables&#39;==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, &quot;__all__&quot;) else 0============================(9)       
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10)      
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+    print(f&quot;{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n&quot;)  (15)
+    if hasattr(mo, &quot;__all__&quot;) and dun: pprint(mo.__all__)=================================(16)      
+    if func: =============================================================================(17)      
+        print(f&#39;The user defined functions are:&#39;)=========================================(18)      
+        pprint([i[0] for i in funcs])=====================================================(19)      
+    if clas: =============================================================================(20)      
+        print(f&#39;The class objects are:&#39;)==================================================(21)      
+        pprint([i[0] for i in classes])===================================================(22)      
+    if bltin: ============================================================================(23)      
+        print(f&#39;The builtin functions or methods are:&#39;)===================================(24)      
+        pprint([i[0] for i in builtins])==================================================(25)      
+    if cal: ==============================================================================(26)      
+        print(f&#39;The callables are: &#39;)=====================================================(27)      
+        pprint([i[0] for i in callables])=================================================(28)      
+    if lib: ==============================================================================(29)      
+        modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30)      
+        print(f&#39;The library has {len(modules)} modules&#39;)==================================(31)      
+        pprint(modules)===================================================================(32)      
+                                                                                                                                                        (33)</code></pre>
+</div>
+</div>
+</section>
+<section id="step-2-starting-explore-comment-and-write-evaluations-on-a-srcline" class="level3">
+<h3>Step 2: starting explore, comment and write evaluations on a srcline</h3>
+<p>line 9 looks easy enough, but line 10 is unfamiliar to me, so I would like to explore and dig around it.</p>
+<p>Here are a list of things I want to ask about this line of code</p>
+<ol type="1">
+<li>what is <code>mo</code>? (easy)</li>
+<li>what does <code>inspect.isfunction</code> do?</li>
+<li>what does <code>inspect.getmembers</code> do?</li>
+<li>what does <code>funcs = inspect.getmembers(mo, inspect.isfunction)</code> give me?</li>
+</ol>
+<p>I want to find out about them without searching online, nor using running separate cells to be deleted later.</p>
+<div class="cell">
+<div class="sourceCode" id="cb13"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">10</span>, <span class="st">&quot;what can getmembers and isfunction give me?&quot;</span>, <span class="st">&quot;mo&quot;</span>, <span class="st">&quot;inspect.getdoc(inspect.isfunction)&quot;</span>, <span class="op">\</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;inspect.getdoc(inspect.getmembers)&quot;</span>, <span class="st">&quot;funcs = inspect.getmembers(mo, inspect.isfunction)&quot;</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>whatinside(fm)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    &#39;Check what inside a module: `__all__`, functions, classes, builtins, and callables&#39;                                                                (8)
+    dun_all = len(mo.__all__) if hasattr(mo, &quot;__all__&quot;) else 0                                                                                          (9)
+    funcs = inspect.getmembers(mo, inspect.isfunction)==================================================================================================(10)
+                                                                                                                  what can getmembers and isfunction give me?
+    classes = inspect.getmembers(mo, inspect.isclass)                                                                                                   (11)
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
+
+
+                                            mo =&gt; mo : &lt;module &#39;fastcore.meta&#39; from &#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore/meta.py&#39;&gt;
+
+
+inspect.getdoc(inspect.isfunction) =&gt; inspect.getdoc(inspect.isfunction) : Return true if the object is a user-defined function.
+
+Function objects provide these attributes:
+    __doc__         documentation string
+    __name__        name with which this function was defined
+    __code__        code object containing compiled function bytecode
+    __defaults__    tuple of any default values for arguments
+    __globals__     global namespace in which this function was defined
+    __annotations__ dict of parameter annotations
+    __kwdefaults__  dict of keyword only parameters with defaults
+
+
+inspect.getdoc(inspect.getmembers) =&gt; inspect.getdoc(inspect.getmembers) : Return all members of an object as (name, value) pairs sorted by name.
+Optionally, only return members that satisfy a given predicate.
+
+
+funcs = inspect.getmembers(mo, inspect.isfunction) =&gt; funcs: [(&#39;_funcs_kwargs&#39;, &lt;function _funcs_kwargs at 0x108004c10&gt;), (&#39;_mk_param&#39;, &lt;function _mk_param at 0x108004940&gt;), (&#39;_rm_self&#39;, &lt;function _rm_self at 0x108004310&gt;), (&#39;all_equal&#39;, &lt;function all_equal at 0x107fcb8b0&gt;), (&#39;anno_dict&#39;, &lt;function anno_dict at 0x1080048b0&gt;), (&#39;any_is_instance&#39;, &lt;function any_is_instance at 0x107fcba60&gt;), (&#39;array_equal&#39;, &lt;function array_equal at 0x107fcbb80&gt;), (&#39;contextmanager&#39;, &lt;function contextmanager at 0x105278c10&gt;), (&#39;copy&#39;, &lt;function copy at 0x105526790&gt;), (&#39;delegates&#39;, &lt;function delegates at 0x108004af0&gt;), (&#39;df_equal&#39;, &lt;function df_equal at 0x107fcbc10&gt;), (&#39;empty2none&#39;, &lt;function empty2none at 0x108004550&gt;), (&#39;equals&#39;, &lt;function equals at 0x107fcbca0&gt;), (&#39;funcs_kwargs&#39;, &lt;function funcs_kwargs at 0x108004ca0&gt;), (&#39;in_colab&#39;, &lt;function in_colab at 0x107fcbe50&gt;), (&#39;in_ipython&#39;, &lt;function in_ipython at 0x107fcbdc0&gt;), (&#39;in_jupyter&#39;, &lt;function in_jupyter at 0x107fcbee0&gt;), (&#39;in_notebook&#39;, &lt;function in_notebook at 0x107fcbf70&gt;), (&#39;ipython_shell&#39;, &lt;function ipython_shell at 0x107fcbd30&gt;), (&#39;is_close&#39;, &lt;function is_close at 0x107ffeee0&gt;), (&#39;is_coll&#39;, &lt;function is_coll at 0x107fcb820&gt;), (&#39;is_iter&#39;, &lt;function is_iter at 0x107fcb790&gt;), (&#39;isinstance_str&#39;, &lt;function isinstance_str at 0x107fcbaf0&gt;), (&#39;method&#39;, &lt;function method at 0x108004b80&gt;), (&#39;nequals&#39;, &lt;function nequals at 0x107ffeca0&gt;), (&#39;noop&#39;, &lt;function noop at 0x107fcb940&gt;), (&#39;noops&#39;, &lt;function noops at 0x107fcb9d0&gt;), (&#39;remove_prefix&#39;, &lt;function remove_prefix at 0x107fda040&gt;), (&#39;remove_suffix&#39;, &lt;function remove_suffix at 0x107fda0d0&gt;), (&#39;test&#39;, &lt;function test at 0x107ffec10&gt;), (&#39;test_close&#39;, &lt;function test_close at 0x107ffef70&gt;), (&#39;test_eq&#39;, &lt;function test_eq at 0x107ffed30&gt;), (&#39;test_eq_type&#39;, &lt;function test_eq_type at 0x107ffedc0&gt;), (&#39;test_fail&#39;, &lt;function test_fail at 0x107ffe670&gt;), (&#39;test_fig_exists&#39;, &lt;function test_fig_exists at 0x108004280&gt;), (&#39;test_is&#39;, &lt;function test_is at 0x108004040&gt;), (&#39;test_ne&#39;, &lt;function test_ne at 0x107ffee50&gt;), (&#39;test_shuffled&#39;, &lt;function test_shuffled at 0x1080040d0&gt;), (&#39;test_sig&#39;, &lt;function test_sig at 0x107ffea60&gt;), (&#39;test_stdout&#39;, &lt;function test_stdout at 0x108004160&gt;), (&#39;test_warns&#39;, &lt;function test_warns at 0x1080041f0&gt;), (&#39;use_kwargs&#39;, &lt;function use_kwargs at 0x108004a60&gt;), (&#39;use_kwargs_dict&#39;, &lt;function use_kwargs_dict at 0x1080049d0&gt;)]
+fastcore.meta has: 
+13 items in its __all__, and 
+43 user defined functions, 
+19 classes or class objects, 
+2 builtin funcs and methods, and
+74 callables.
+</code></pre>
+</div>
+</div>
+<p>If you want to zoom in the source code, you could cut the source into parts and exam each part individually.</p>
+<div class="cell">
+<div class="sourceCode" id="cb15"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">15</span>, part<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    &#39;Check what inside a module: `__all__`, functions, classes, builtins, and callables&#39;==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, &quot;__all__&quot;) else 0============================(9)       
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # what can getmembers and isfunction give me?
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # can we print the list &#39;funcs&#39; above nicely?
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+                                                                                                                                     part No.1 out of 2 parts</code></pre>
+</div>
+</div>
+<p>You may find the <code>funcs</code> difficult to read, if so you can write a block of codes to print out the <code>funcs</code> nicely.</p>
+<div class="cell">
+<div class="sourceCode" id="cb17"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">11</span>, <span class="st">&quot;can we print the list &#39;funcs&#39; above nicely?&quot;</span>, <span class="op">\</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;funcs = inspect.getmembers(mo, inspect.isfunction)</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="st">for f in funcs:</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="st">    print(f)&quot;</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>whatinside(fm)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">15</span>, part<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    dun_all = len(mo.__all__) if hasattr(mo, &quot;__all__&quot;) else 0                                                                                          (9)
+    funcs = inspect.getmembers(mo, inspect.isfunction)                                                                                                  (10)
+    classes = inspect.getmembers(mo, inspect.isclass)===================================================================================================(11)
+                                                                                                                  can we print the list &#39;funcs&#39; above nicely?
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
+    callables = inspect.getmembers(mo, callable)                                                                                                        (13)
+
+
+funcs = inspect.getmembers(mo, inspect.isfunction)
+for f in funcs:
+    print(f)                                                                              
+                                                                                                                                  Running your code block =&gt; 
+The code block printout =&gt; : 
+(&#39;_funcs_kwargs&#39;, &lt;function _funcs_kwargs at 0x108004c10&gt;)
+(&#39;_mk_param&#39;, &lt;function _mk_param at 0x108004940&gt;)
+(&#39;_rm_self&#39;, &lt;function _rm_self at 0x108004310&gt;)
+(&#39;all_equal&#39;, &lt;function all_equal at 0x107fcb8b0&gt;)
+(&#39;anno_dict&#39;, &lt;function anno_dict at 0x1080048b0&gt;)
+(&#39;any_is_instance&#39;, &lt;function any_is_instance at 0x107fcba60&gt;)
+(&#39;array_equal&#39;, &lt;function array_equal at 0x107fcbb80&gt;)
+(&#39;contextmanager&#39;, &lt;function contextmanager at 0x105278c10&gt;)
+(&#39;copy&#39;, &lt;function copy at 0x105526790&gt;)
+(&#39;delegates&#39;, &lt;function delegates at 0x108004af0&gt;)
+(&#39;df_equal&#39;, &lt;function df_equal at 0x107fcbc10&gt;)
+(&#39;empty2none&#39;, &lt;function empty2none at 0x108004550&gt;)
+(&#39;equals&#39;, &lt;function equals at 0x107fcbca0&gt;)
+(&#39;funcs_kwargs&#39;, &lt;function funcs_kwargs at 0x108004ca0&gt;)
+(&#39;in_colab&#39;, &lt;function in_colab at 0x107fcbe50&gt;)
+(&#39;in_ipython&#39;, &lt;function in_ipython at 0x107fcbdc0&gt;)
+(&#39;in_jupyter&#39;, &lt;function in_jupyter at 0x107fcbee0&gt;)
+(&#39;in_notebook&#39;, &lt;function in_notebook at 0x107fcbf70&gt;)
+(&#39;ipython_shell&#39;, &lt;function ipython_shell at 0x107fcbd30&gt;)
+(&#39;is_close&#39;, &lt;function is_close at 0x107ffeee0&gt;)
+(&#39;is_coll&#39;, &lt;function is_coll at 0x107fcb820&gt;)
+(&#39;is_iter&#39;, &lt;function is_iter at 0x107fcb790&gt;)
+(&#39;isinstance_str&#39;, &lt;function isinstance_str at 0x107fcbaf0&gt;)
+(&#39;method&#39;, &lt;function method at 0x108004b80&gt;)
+(&#39;nequals&#39;, &lt;function nequals at 0x107ffeca0&gt;)
+(&#39;noop&#39;, &lt;function noop at 0x107fcb940&gt;)
+(&#39;noops&#39;, &lt;function noops at 0x107fcb9d0&gt;)
+(&#39;remove_prefix&#39;, &lt;function remove_prefix at 0x107fda040&gt;)
+(&#39;remove_suffix&#39;, &lt;function remove_suffix at 0x107fda0d0&gt;)
+(&#39;test&#39;, &lt;function test at 0x107ffec10&gt;)
+(&#39;test_close&#39;, &lt;function test_close at 0x107ffef70&gt;)
+(&#39;test_eq&#39;, &lt;function test_eq at 0x107ffed30&gt;)
+(&#39;test_eq_type&#39;, &lt;function test_eq_type at 0x107ffedc0&gt;)
+(&#39;test_fail&#39;, &lt;function test_fail at 0x107ffe670&gt;)
+(&#39;test_fig_exists&#39;, &lt;function test_fig_exists at 0x108004280&gt;)
+(&#39;test_is&#39;, &lt;function test_is at 0x108004040&gt;)
+(&#39;test_ne&#39;, &lt;function test_ne at 0x107ffee50&gt;)
+(&#39;test_shuffled&#39;, &lt;function test_shuffled at 0x1080040d0&gt;)
+(&#39;test_sig&#39;, &lt;function test_sig at 0x107ffea60&gt;)
+(&#39;test_stdout&#39;, &lt;function test_stdout at 0x108004160&gt;)
+(&#39;test_warns&#39;, &lt;function test_warns at 0x1080041f0&gt;)
+(&#39;use_kwargs&#39;, &lt;function use_kwargs at 0x108004a60&gt;)
+(&#39;use_kwargs_dict&#39;, &lt;function use_kwargs_dict at 0x1080049d0&gt;)
+fastcore.meta has: 
+13 items in its __all__, and 
+43 user defined functions, 
+19 classes or class objects, 
+2 builtin funcs and methods, and
+74 callables.
+
+def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    &#39;Check what inside a module: `__all__`, functions, classes, builtins, and callables&#39;==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, &quot;__all__&quot;) else 0============================(9)       
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # what can getmembers and isfunction give me?
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # can we print the list &#39;funcs&#39; above nicely?
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+                                                                                                                                     part No.1 out of 2 parts</code></pre>
+</div>
+</div>
+<p>Keep reading, I want to see what exactly does line 14 do?</p>
+<div class="cell">
+<div class="sourceCode" id="cb19"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">14</span>, <span class="st">&quot;what does os.path.dirname do?&quot;</span>, <span class="st">&quot;mo.__file__&quot;</span>, <span class="st">&quot;inspect.getdoc(os.path.dirname)&quot;</span>, <span class="st">&quot;pkgpath = os.path.dirname(mo.__file__)&quot;</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>whatinside(fm)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">20</span>, part<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
+    callables = inspect.getmembers(mo, callable)                                                                                                        (13)
+    pkgpath = os.path.dirname(mo.__file__)==============================================================================================================(14)
+                                                                                                                                what does os.path.dirname do?
+    print(f&quot;{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n&quot;)  (15)
+    if hasattr(mo, &quot;__all__&quot;) and dun: pprint(mo.__all__)                                                                                               (16)
+
+
+                                                          mo.__file__ =&gt; mo.__file__ : /Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore/meta.py
+
+
+                                           inspect.getdoc(os.path.dirname) =&gt; inspect.getdoc(os.path.dirname) : Returns the directory component of a pathname
+
+
+                                            pkgpath = os.path.dirname(mo.__file__) =&gt; pkgpath: /Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore
+fastcore.meta has: 
+13 items in its __all__, and 
+43 user defined functions, 
+19 classes or class objects, 
+2 builtin funcs and methods, and
+74 callables.
+
+    if clas: =============================================================================(20)      
+        print(f&#39;The class objects are:&#39;)==================================================(21)      
+        pprint([i[0] for i in classes])===================================================(22)      
+    if bltin: ============================================================================(23)      
+        print(f&#39;The builtin functions or methods are:&#39;)===================================(24)      
+        pprint([i[0] for i in builtins])==================================================(25)      
+    if cal: ==============================================================================(26)      
+        print(f&#39;The callables are: &#39;)=====================================================(27)      
+        pprint([i[0] for i in callables])=================================================(28)      
+    if lib: ==============================================================================(29)      
+        modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30)      
+        print(f&#39;The library has {len(modules)} modules&#39;)==================================(31)      
+        pprint(modules)===================================================================(32)      
+                                                                                                                                                        (33)
+                                                                                                                                     part No.2 out of 2 parts</code></pre>
+</div>
+</div>
+<p>Finally, I want to dig into line 30 with a different example to trigger line 30.</p>
+<div class="cell">
+<div class="sourceCode" id="cb21"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">30</span>, <span class="st">&quot;what does pkgutil.iter_modules do?&quot;</span>, <span class="st">&quot;pkgpath&quot;</span>, <span class="st">&quot;inspect.getdoc(pkgutil.iter_modules)&quot;</span>, <span class="op">\</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;for a, b, c in pkgutil.iter_modules([pkgpath]):</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="st">    print(f&#39;</span><span class="sc">{a}</span><span class="st"> ; </span><span class="sc">{b}</span><span class="st">; </span><span class="sc">{c}</span><span class="st">&#39;)&quot;</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>whatinside(fm, lib<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">20</span>, part<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        pprint([i[0] for i in callables])                                                                                                               (28)
+    if lib:                                                                                                                                             (29)
+        modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]==============================================================================(30)
+                                                                                                                           what does pkgutil.iter_modules do?
+        print(f&#39;The library has {len(modules)} modules&#39;)                                                                                                (31)
+        pprint(modules)                                                                                                                                 (32)
+fastcore.meta has: 
+13 items in its __all__, and 
+43 user defined functions, 
+19 classes or class objects, 
+2 builtin funcs and methods, and
+74 callables.
+
+
+
+                                                                          pkgpath =&gt; pkgpath : /Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore
+
+
+inspect.getdoc(pkgutil.iter_modules) =&gt; inspect.getdoc(pkgutil.iter_modules) : Yields ModuleInfo for all submodules on path,
+or, if path is None, all top-level modules on sys.path.
+
+&#39;path&#39; should be either None or a list of paths to look for
+modules in.
+
+&#39;prefix&#39; is a string to output on the front of every module name
+on output.
+
+
+for a, b, c in pkgutil.iter_modules([pkgpath]):
+    print(f&#39;{a} ; {b}; {c}&#39;)                                                                                 
+                                                                                                                                  Running your code block =&gt; 
+The code block printout =&gt; : 
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; _modidx; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; _nbdev; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; all; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; basics; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; dispatch; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; docments; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; docscrape; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; foundation; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; imports; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; meta; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; nb_imports; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; net; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; parallel; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; script; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; shutil; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; style; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; test; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; transform; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; utils; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; xdg; False
+FileFinder(&#39;/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore&#39;) ; xtras; False
+The library has 21 modules
+[&#39;_modidx&#39;,
+ &#39;_nbdev&#39;,
+ &#39;all&#39;,
+ &#39;basics&#39;,
+ &#39;dispatch&#39;,
+ &#39;docments&#39;,
+ &#39;docscrape&#39;,
+ &#39;foundation&#39;,
+ &#39;imports&#39;,
+ &#39;meta&#39;,
+ &#39;nb_imports&#39;,
+ &#39;net&#39;,
+ &#39;parallel&#39;,
+ &#39;script&#39;,
+ &#39;shutil&#39;,
+ &#39;style&#39;,
+ &#39;test&#39;,
+ &#39;transform&#39;,
+ &#39;utils&#39;,
+ &#39;xdg&#39;,
+ &#39;xtras&#39;]
+    if clas: =============================================================================(20)      
+        print(f&#39;The class objects are:&#39;)==================================================(21)      
+        pprint([i[0] for i in classes])===================================================(22)      
+    if bltin: ============================================================================(23)      
+        print(f&#39;The builtin functions or methods are:&#39;)===================================(24)      
+        pprint([i[0] for i in builtins])==================================================(25)      
+    if cal: ==============================================================================(26)      
+        print(f&#39;The callables are: &#39;)=====================================================(27)      
+        pprint([i[0] for i in callables])=================================================(28)      
+    if lib: ==============================================================================(29)      
+        modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # what does pkgutil.iter_modules do?
+        print(f&#39;The library has {len(modules)} modules&#39;)==================================(31)      
+        pprint(modules)===================================================================(32)      
+                                                                                                                                                        (33)
+                                                                                                                                     part No.2 out of 2 parts</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="key-functionalities" class="level2">
+<h2>Key functionalities</h2>
+<div class="cell">
+<div class="sourceCode" id="cb23"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Fastdb??</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">Init signature:</span> Fastdb<span class="ansi-blue-fg">(</span>src<span class="ansi-blue-fg">,</span> env<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Source:</span>        
+<span class="ansi-green-fg">class</span> Fastdb<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+    <span class="ansi-blue-fg">"Create a Fastdebug class which has two functionalities: dbprint and print."</span>
+    <span class="ansi-green-fg">def</span> __init__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> 
+                 src<span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># name of src code you are exploring</span>
+                 env<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> <span class="ansi-red-fg"># env variables needed for exploring the source code, e.g., g = globals()</span>
+        self<span class="ansi-blue-fg">.</span>orisrc <span class="ansi-blue-fg">=</span> src
+        self<span class="ansi-blue-fg">.</span>margin <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">157</span>
+        self<span class="ansi-blue-fg">.</span>outenv <span class="ansi-blue-fg">=</span> env
+        self<span class="ansi-blue-fg">.</span>cmts <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">{</span><span class="ansi-blue-fg">}</span>
+<span class="ansi-red-fg">File:</span>           ~/Documents/fastdebug/fastdebug/core.py
+<span class="ansi-red-fg">Type:</span>           type
+<span class="ansi-red-fg">Subclasses:</span>     
+</pre>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb24"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Fastdb.dbprint??</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">Signature:</span>
+Fastdb<span class="ansi-blue-fg">.</span>dbprint<span class="ansi-blue-fg">(</span>
+    self<span class="ansi-blue-fg">:</span> fastdebug<span class="ansi-blue-fg">.</span>core<span class="ansi-blue-fg">.</span>Fastdb<span class="ansi-blue-fg">,</span>
+    dbcode<span class="ansi-blue-fg">:</span> int<span class="ansi-blue-fg">,</span>
+    cmt<span class="ansi-blue-fg">:</span> str<span class="ansi-blue-fg">,</span>
+    <span class="ansi-blue-fg">*</span>codes<span class="ansi-blue-fg">,</span>
+    expand<span class="ansi-blue-fg">:</span> int <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">,</span>
+    showdbsrc<span class="ansi-blue-fg">:</span> bool <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Source:</span>   
+<span class="ansi-blue-fg">@</span>patch
+<span class="ansi-green-fg">def</span> dbprint<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">:</span>Fastdb<span class="ansi-blue-fg">,</span> 
+            dbcode<span class="ansi-blue-fg">:</span>int<span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># a srcline under investigation, can be either string or int</span>
+            cmt<span class="ansi-blue-fg">:</span>str<span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># comment added to the srcline</span>
+            <span class="ansi-blue-fg">*</span>codes<span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># a list of expressions (str) you write to be evaluated above the srcline</span>
+            expand<span class="ansi-blue-fg">:</span>int<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># span 2 lines of srcode up and down from the srcline investigated</span>
+            showdbsrc<span class="ansi-blue-fg">:</span>bool<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> <span class="ansi-red-fg"># display dbsrc</span>
+    <span class="ansi-blue-fg">"Add comment and evaluate custom (single or multi lines) expressions to any srcline of the source code you are investigating"</span>
+    src <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>orisrc
+    <span class="ansi-green-fg">if</span> type<span class="ansi-blue-fg">(</span>dbcode<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">==</span> int<span class="ansi-blue-fg">:</span> self<span class="ansi-blue-fg">.</span>cmts<span class="ansi-blue-fg">.</span>update<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">{</span>dbcode<span class="ansi-blue-fg">:</span> cmt<span class="ansi-blue-fg">}</span><span class="ansi-blue-fg">)</span>
+    printsrc<span class="ansi-blue-fg">(</span>src<span class="ansi-blue-fg">,</span> dbcode<span class="ansi-blue-fg">,</span> cmt<span class="ansi-blue-fg">,</span> expand<span class="ansi-blue-fg">)</span>
+    dbsrc <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">""</span>
+    indent <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">4</span>
+    onedbprint <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">False</span>
+    lst <span class="ansi-blue-fg">=</span> inspect<span class="ansi-blue-fg">.</span>getsource<span class="ansi-blue-fg">(</span>src<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>split<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'\n'</span><span class="ansi-blue-fg">)</span>
+    <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> bool<span class="ansi-blue-fg">(</span>lst<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> lst <span class="ansi-blue-fg">=</span> lst<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span>
+    newlst <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">]</span>
+    <span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> codes<span class="ansi-blue-fg">:</span> <span class="ansi-red-fg"># no matter whether there is "" or "  " in the front or in the middle of codes</span>
+        <span class="ansi-green-fg">if</span> bool<span class="ansi-blue-fg">(</span>i<span class="ansi-blue-fg">.</span>strip<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> newlst<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>i<span class="ansi-blue-fg">)</span>
+    codes <span class="ansi-blue-fg">=</span> newlst
+    srclines <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">""</span>
+    <span class="ansi-green-fg">if</span> type<span class="ansi-blue-fg">(</span>dbcode<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">==</span> int<span class="ansi-blue-fg">:</span>
+        srclines <span class="ansi-blue-fg">=</span> lst<span class="ansi-blue-fg">[</span>dbcode<span class="ansi-blue-fg">]</span>
+    <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+        srclines <span class="ansi-blue-fg">=</span> dbcode
+    <span class="ansi-green-fg">for</span> idx<span class="ansi-blue-fg">,</span> l <span class="ansi-green-fg">in</span> zip<span class="ansi-blue-fg">(</span>range<span class="ansi-blue-fg">(</span>len<span class="ansi-blue-fg">(</span>lst<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> lst<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        <span class="ansi-green-fg">if</span> bool<span class="ansi-blue-fg">(</span>l<span class="ansi-blue-fg">.</span>strip<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">and</span> l<span class="ansi-blue-fg">.</span>strip<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">in</span> srclines <span class="ansi-green-fg">and</span> idx <span class="ansi-blue-fg">==</span> dbcode<span class="ansi-blue-fg">:</span> 
+            <span class="ansi-green-fg">if</span> len<span class="ansi-blue-fg">(</span>codes<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">&gt;</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span> <span class="ansi-red-fg"># if the new codes is not empty</span>
+                numindent <span class="ansi-blue-fg">=</span> len<span class="ansi-blue-fg">(</span>l<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">-</span> len<span class="ansi-blue-fg">(</span>l<span class="ansi-blue-fg">.</span>strip<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+                dbcodes <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">"dbprintinsert("</span>
+                count <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">1</span>
+                <span class="ansi-green-fg">for</span> c <span class="ansi-green-fg">in</span> codes<span class="ansi-blue-fg">:</span>
+                    <span class="ansi-green-fg">if</span> count <span class="ansi-blue-fg">==</span> len<span class="ansi-blue-fg">(</span>codes<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+                        dbcodes <span class="ansi-blue-fg">=</span> dbcodes <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">'"'</span> <span class="ansi-blue-fg">+</span> c <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">'"'</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">","</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"env=g"</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">")"</span>
+                    <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                        dbcodes <span class="ansi-blue-fg">=</span> dbcodes <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">'"'</span> <span class="ansi-blue-fg">+</span> c <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">'"'</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">","</span>
+                    count <span class="ansi-blue-fg">=</span> count <span class="ansi-blue-fg">+</span> <span class="ansi-cyan-fg">1</span>
+                dbsrc <span class="ansi-blue-fg">=</span> dbsrc <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span>numindent <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"g = locals()"</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">'\n'</span>
+                dbsrc <span class="ansi-blue-fg">=</span> dbsrc <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span>numindent <span class="ansi-blue-fg">+</span> dbcodes <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">'\n'</span>
+                dbsrc <span class="ansi-blue-fg">=</span> dbsrc <span class="ansi-blue-fg">+</span> l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">'\n'</span>     
+            <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                dbsrc <span class="ansi-blue-fg">=</span> dbsrc <span class="ansi-blue-fg">+</span> l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">'\n'</span>                
+        <span class="ansi-green-fg">elif</span> bool<span class="ansi-blue-fg">(</span>l<span class="ansi-blue-fg">.</span>strip<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">and</span> idx <span class="ansi-blue-fg">+</span> <span class="ansi-cyan-fg">1</span> <span class="ansi-blue-fg">==</span> len<span class="ansi-blue-fg">(</span>lst<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+            dbsrc <span class="ansi-blue-fg">=</span> dbsrc <span class="ansi-blue-fg">+</span> l
+        <span class="ansi-green-fg">elif</span> bool<span class="ansi-blue-fg">(</span>l<span class="ansi-blue-fg">.</span>strip<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> <span class="ansi-red-fg"># make sure pure indentation + \n is ignored</span>
+            dbsrc <span class="ansi-blue-fg">=</span> dbsrc <span class="ansi-blue-fg">+</span> l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">'\n'</span>
+    <span class="ansi-green-fg">if</span> showdbsrc<span class="ansi-blue-fg">:</span> <span class="ansi-red-fg"># added to debug</span>
+        totallen <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">157</span>
+        lenidx <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">5</span>
+        dblst <span class="ansi-blue-fg">=</span> dbsrc<span class="ansi-blue-fg">.</span>split<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'\n'</span><span class="ansi-blue-fg">)</span>
+        <span class="ansi-green-fg">for</span> idx<span class="ansi-blue-fg">,</span> l <span class="ansi-green-fg">in</span> zip<span class="ansi-blue-fg">(</span>range<span class="ansi-blue-fg">(</span>len<span class="ansi-blue-fg">(</span>dblst<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> dblst<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+            lenl <span class="ansi-blue-fg">=</span> len<span class="ansi-blue-fg">(</span>l<span class="ansi-blue-fg">)</span>
+            <span class="ansi-green-fg">if</span> <span class="ansi-blue-fg">"dbprintinsert"</span> <span class="ansi-green-fg">in</span> l<span class="ansi-blue-fg">:</span> 
+                print<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"="</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>totallen<span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lenidx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"(db)"</span><span class="ansi-blue-fg">)</span>
+            <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                print<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>totallen<span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lenidx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"("</span> <span class="ansi-blue-fg">+</span> str<span class="ansi-blue-fg">(</span>idx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">")"</span><span class="ansi-blue-fg">)</span>
+    exec<span class="ansi-blue-fg">(</span>dbsrc<span class="ansi-blue-fg">,</span> globals<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>update<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>outenv<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span> <span class="ansi-red-fg"># make sure b can access lst from above</span>
+    <span class="ansi-green-fg">return</span> locals<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">[</span>self<span class="ansi-blue-fg">.</span>orisrc<span class="ansi-blue-fg">.</span>__name__<span class="ansi-blue-fg">]</span>
+<span class="ansi-red-fg">File:</span>      ~/Documents/fastdebug/fastdebug/core.py
+<span class="ansi-red-fg">Type:</span>      function
+</pre>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb25"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Fastdb.<span class="bu">print</span>??</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">Signature:</span>
+Fastdb<span class="ansi-blue-fg">.</span>print<span class="ansi-blue-fg">(</span>
+    self<span class="ansi-blue-fg">:</span> fastdebug<span class="ansi-blue-fg">.</span>core<span class="ansi-blue-fg">.</span>Fastdb<span class="ansi-blue-fg">,</span>
+    maxlines<span class="ansi-blue-fg">:</span> int <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">33</span><span class="ansi-blue-fg">,</span>
+    part<span class="ansi-blue-fg">:</span> int <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Source:</span>   
+<span class="ansi-green-fg">def</span> print<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">:</span>Fastdb<span class="ansi-blue-fg">,</span> 
+            maxlines<span class="ansi-blue-fg">:</span>int<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">33</span><span class="ansi-blue-fg">,</span> <span class="ansi-red-fg"># maximum num of lines per page</span>
+            part<span class="ansi-blue-fg">:</span>int<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> <span class="ansi-red-fg"># if the src is more than 33 lines, then divide the src by 33 into a few parts</span>
+    <span class="ansi-blue-fg">"Print the source code in whole or parts with idx and comments you added with dbprint along the way."</span>
+    totallen <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">157</span>
+    lenidx <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">5</span>
+    lspace <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">10</span>
+    lstsrc <span class="ansi-blue-fg">=</span> inspect<span class="ansi-blue-fg">.</span>getsource<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>orisrc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>split<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'\n'</span><span class="ansi-blue-fg">)</span>
+    numparts <span class="ansi-blue-fg">=</span> len<span class="ansi-blue-fg">(</span>lstsrc<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">//</span> <span class="ansi-cyan-fg">33</span> <span class="ansi-blue-fg">+</span> <span class="ansi-cyan-fg">1</span> <span class="ansi-green-fg">if</span> len<span class="ansi-blue-fg">(</span>lstsrc<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">%</span> <span class="ansi-cyan-fg">33</span> <span class="ansi-blue-fg">!=</span> <span class="ansi-cyan-fg">0</span> <span class="ansi-green-fg">else</span> len<span class="ansi-blue-fg">(</span>lstsrc<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">//</span> <span class="ansi-cyan-fg">33</span>
+    cmts <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>cmts
+    <span class="ansi-green-fg">if</span> part <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span> 
+        <span class="ansi-green-fg">for</span> idx<span class="ansi-blue-fg">,</span> l <span class="ansi-green-fg">in</span> zip<span class="ansi-blue-fg">(</span>range<span class="ansi-blue-fg">(</span>len<span class="ansi-blue-fg">(</span>lstsrc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> lstsrc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+            lenl <span class="ansi-blue-fg">=</span> len<span class="ansi-blue-fg">(</span>l<span class="ansi-blue-fg">)</span>
+            <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> bool<span class="ansi-blue-fg">(</span>l<span class="ansi-blue-fg">.</span>strip<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+                print<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>totallen<span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lenidx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"("</span> <span class="ansi-blue-fg">+</span> str<span class="ansi-blue-fg">(</span>idx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">")"</span><span class="ansi-blue-fg">)</span>
+            <span class="ansi-green-fg">elif</span> lenl <span class="ansi-blue-fg">+</span> lspace <span class="ansi-blue-fg">&gt;=</span> <span class="ansi-cyan-fg">100</span><span class="ansi-blue-fg">:</span>
+                <span class="ansi-green-fg">if</span> bool<span class="ansi-blue-fg">(</span>cmts<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+                    cmtidx <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>cmt<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">for</span> cmt <span class="ansi-green-fg">in</span> list<span class="ansi-blue-fg">(</span>cmts<span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span>
+                    <span class="ansi-green-fg">if</span> idx <span class="ansi-green-fg">in</span> cmtidx<span class="ansi-blue-fg">:</span>
+                        print<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" # "</span> <span class="ansi-blue-fg">+</span> cmts<span class="ansi-blue-fg">[</span>idx<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>totallen<span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lenidx<span class="ansi-blue-fg">-</span>len<span class="ansi-blue-fg">(</span>cmts<span class="ansi-blue-fg">[</span>idx<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"("</span> <span class="ansi-blue-fg">+</span> str<span class="ansi-blue-fg">(</span>idx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">")"</span><span class="ansi-blue-fg">)</span>
+                    <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                        print<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>totallen<span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lenidx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"("</span> <span class="ansi-blue-fg">+</span> str<span class="ansi-blue-fg">(</span>idx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">")"</span><span class="ansi-blue-fg">)</span>
+                <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span> 
+                    print<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>totallen<span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lenidx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"("</span> <span class="ansi-blue-fg">+</span> str<span class="ansi-blue-fg">(</span>idx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">")"</span><span class="ansi-blue-fg">)</span>
+            <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                <span class="ansi-green-fg">if</span> bool<span class="ansi-blue-fg">(</span>cmts<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+                    cmtidx <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>cmt<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">for</span> cmt <span class="ansi-green-fg">in</span> list<span class="ansi-blue-fg">(</span>cmts<span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span>
+                    <span class="ansi-green-fg">if</span> idx <span class="ansi-green-fg">in</span> cmtidx<span class="ansi-blue-fg">:</span>
+                        print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'{:&lt;100}'</span><span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"="</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">100</span><span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lspace<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">f"({idx})"</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" # "</span> <span class="ansi-blue-fg">+</span> cmts<span class="ansi-blue-fg">[</span>idx<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+                    <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                        print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'{:&lt;100}'</span><span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"="</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">100</span><span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lspace<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">f"({idx})"</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>                                                      
+                <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                    print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'{:&lt;100}'</span><span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"="</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">100</span><span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lspace<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">f"({idx})"</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>                 
+    <span class="ansi-green-fg">for</span> p <span class="ansi-green-fg">in</span> range<span class="ansi-blue-fg">(</span>numparts<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        <span class="ansi-green-fg">for</span> idx<span class="ansi-blue-fg">,</span> l <span class="ansi-green-fg">in</span> zip<span class="ansi-blue-fg">(</span>range<span class="ansi-blue-fg">(</span>len<span class="ansi-blue-fg">(</span>lstsrc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> lstsrc<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+            <span class="ansi-green-fg">if</span> <span class="ansi-blue-fg">(</span>maxlines<span class="ansi-blue-fg">*</span>p <span class="ansi-blue-fg">&lt;=</span> idx <span class="ansi-blue-fg">&lt;</span> maxlines<span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>p<span class="ansi-blue-fg">+</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">and</span> p<span class="ansi-blue-fg">+</span><span class="ansi-cyan-fg">1</span> <span class="ansi-blue-fg">==</span> part<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+                lenl <span class="ansi-blue-fg">=</span> len<span class="ansi-blue-fg">(</span>l<span class="ansi-blue-fg">)</span>
+                <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> bool<span class="ansi-blue-fg">(</span>l<span class="ansi-blue-fg">.</span>strip<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+                    print<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>totallen<span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lenidx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"("</span> <span class="ansi-blue-fg">+</span> str<span class="ansi-blue-fg">(</span>idx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">")"</span><span class="ansi-blue-fg">)</span>
+                <span class="ansi-green-fg">elif</span> lenl <span class="ansi-blue-fg">+</span> lspace <span class="ansi-blue-fg">&gt;=</span> <span class="ansi-cyan-fg">100</span><span class="ansi-blue-fg">:</span>
+                    <span class="ansi-green-fg">if</span> bool<span class="ansi-blue-fg">(</span>cmts<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+                        cmtidx <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>cmt<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">for</span> cmt <span class="ansi-green-fg">in</span> list<span class="ansi-blue-fg">(</span>cmts<span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span>
+                        <span class="ansi-green-fg">if</span> idx <span class="ansi-green-fg">in</span> cmtidx<span class="ansi-blue-fg">:</span>
+                            print<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" # "</span> <span class="ansi-blue-fg">+</span> cmts<span class="ansi-blue-fg">[</span>idx<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>totallen<span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lenidx<span class="ansi-blue-fg">-</span>len<span class="ansi-blue-fg">(</span>cmts<span class="ansi-blue-fg">[</span>idx<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"("</span> <span class="ansi-blue-fg">+</span> str<span class="ansi-blue-fg">(</span>idx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">")"</span><span class="ansi-blue-fg">)</span>
+                        <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                            print<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>totallen<span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lenidx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"("</span> <span class="ansi-blue-fg">+</span> str<span class="ansi-blue-fg">(</span>idx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">")"</span><span class="ansi-blue-fg">)</span>
+                    <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span> 
+                        print<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" "</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>totallen<span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lenidx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"("</span> <span class="ansi-blue-fg">+</span> str<span class="ansi-blue-fg">(</span>idx<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">")"</span><span class="ansi-blue-fg">)</span>
+                <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                    <span class="ansi-green-fg">if</span> bool<span class="ansi-blue-fg">(</span>cmts<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+                        cmtidx <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>cmt<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">for</span> cmt <span class="ansi-green-fg">in</span> list<span class="ansi-blue-fg">(</span>cmts<span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span>
+                        <span class="ansi-green-fg">if</span> idx <span class="ansi-green-fg">in</span> cmtidx<span class="ansi-blue-fg">:</span>
+                            print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'{:&lt;100}'</span><span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"="</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">100</span><span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lspace<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">f"({idx})"</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">" # "</span> <span class="ansi-blue-fg">+</span> cmts<span class="ansi-blue-fg">[</span>idx<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+                        <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                            print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'{:&lt;100}'</span><span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"="</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">100</span><span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lspace<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">f"({idx})"</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>                                                          
+                    <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+                        print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'{:&lt;100}'</span><span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">(</span>l <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">"="</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">100</span><span class="ansi-blue-fg">-</span>lenl<span class="ansi-blue-fg">-</span>lspace<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">f"({idx})"</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>                      
+            <span class="ansi-green-fg">if</span> <span class="ansi-blue-fg">(</span>idx <span class="ansi-blue-fg">==</span> maxlines<span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>p<span class="ansi-blue-fg">+</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">or</span> idx <span class="ansi-blue-fg">==</span> len<span class="ansi-blue-fg">(</span>lstsrc<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">-</span> <span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">and</span> p<span class="ansi-blue-fg">+</span><span class="ansi-cyan-fg">1</span> <span class="ansi-blue-fg">==</span> part<span class="ansi-blue-fg">:</span>
+                print<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'{:&gt;157}'</span><span class="ansi-blue-fg">.</span>format<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">f"part No.{p+1} out of {numparts} parts"</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+                <span class="ansi-green-fg">return</span>
+<span class="ansi-red-fg">File:</span>      ~/Documents/fastdebug/fastdebug/core.py
+<span class="ansi-red-fg">Type:</span>      function
+</pre>
+</div>
+</div>
+</div>
+</section>
 <section id="install" class="level2">
-<h2 class="anchored" data-anchor-id="install">Install</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install fastdebug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h2>Install</h2>
+<div class="sourceCode" id="cb26"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install fastdebug</span></code></pre></div>
 </section>
 <section id="how-to-use" class="level2">
-<h2 class="anchored" data-anchor-id="how-to-use">How to use</h2>
+<h2>How to use</h2>
 <p>Fill me in please! Don’t forget code examples:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="op">+</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="op">+</span><span class="dv">1</span></span></code></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>2</code></pre>
 </div>
 </div>
-
-
+<div id="quarto-navigation-envelope" class="hidden">
+<p><span class="hidden" data-render-id="quarto-int-sidebar-title">fastdebug</span> <span class="hidden" data-render-id="quarto-int-navbar-title">fastdebug</span> <span class="hidden" data-render-id="quarto-int-next">core</span> <span class="hidden" data-render-id="quarto-int-sidebar:/index.html">fastdebug</span> <span class="hidden" data-render-id="quarto-int-sidebar:/core.html">core</span> <span class="hidden" data-render-id="quarto-int-sidebar:/FixSigMeta.html">FixSigMeta</span> <span class="hidden" data-render-id="quarto-int-sidebar:/utils.html">Utils</span></p>
+</div>
+<div id="quarto-meta-markdown" class="hidden">
+<p><span class="hidden" data-render-id="quarto-metatitle">fastdebug</span> <span class="hidden" data-render-id="quarto-twittercardtitle">fastdebug</span> <span class="hidden" data-render-id="quarto-ogcardtitle">fastdebug</span> <span class="hidden" data-render-id="quarto-metasitename">fastdebug</span> <span class="hidden" data-render-id="quarto-metadesc">a little tool to help me explore the source code of fastai libraries</span></p>
+</div>
 </section>
 
 </main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+<script id = "quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -364,6 +1035,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 </div> <!-- /content -->
 
+</body>
 
-
-</body></html>
+</html>

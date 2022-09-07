@@ -82,7 +82,9 @@ from fastdebug.utils import *
 "whichversion" in globals()
 ```
 
+<!-- #region toc-hr-collapsed=true -->
 ## Execute strings
+<!-- #endregion -->
 
 ```python
 eval?
@@ -391,6 +393,11 @@ tstenv()
 ## make a colorful string
 
 ```python
+#| export
+from fastcore.basics import *
+```
+
+```python
 #|export
 class dbcolors:
     g = '\033[92m' #GREEN
@@ -434,11 +441,21 @@ def strip_ansi(source):
 ```
 
 ```python
-#| export
+
 def alignright(blocks):
     lst = blocks.split('\n')
     maxlen = max(map(lambda l : len(strip_ansi(l)) , lst ))
     indent = defaults.margin - maxlen
+    for l in lst:
+        print(' '*indent + format(l))
+```
+
+```python
+#| export
+def alignright(blocks, margin:int=157):
+    lst = blocks.split('\n')
+    maxlen = max(map(lambda l : len(strip_ansi(l)) , lst ))
+    indent = margin - maxlen
     for l in lst:
         print(' '*indent + format(l))
 ```
@@ -577,11 +594,11 @@ def printsrcwithidx(src,
 ```
 
 ```python
-printsrcwithidx(foo)
+# printsrcwithidx(foo)
 ```
 
 ```python
-printsrcwithidx(pprint)
+# printsrcwithidx(pprint)
 ```
 
 ### no more update for printsrcwithidx, for the latest see Fastdb.print
@@ -931,9 +948,9 @@ printsrc(foo, 3, "this is comment")
 
 more [complex example](./examples/printsrc.ipynb) on printsrc
 
-
+<!-- #region toc-hr-collapsed=true -->
 ## dbprint on expression
-
+<!-- #endregion -->
 
 ### basic version
 
@@ -1833,8 +1850,9 @@ inspect.signature(Foo)
 ```
 <!-- #endregion -->
 
+<!-- #region toc-hr-collapsed=true -->
 ## dbprintinsert
-
+<!-- #endregion -->
 
 ### Run and display the inserted dbcodes 
 for each srcline under investigation, used inside dbprint
@@ -1866,11 +1884,11 @@ g = globals()
 ```
 
 ```python
-dbprint(foo, "b = a + 1", "comment", "a", "a + 1", env=g)
+# dbprint(foo, "b = a + 1", "comment", "a", "a + 1", env=g)
 ```
 
 ```python
-dbprint(foo, "b = a + 1", "comment", "a", "a + 1", env=g)
+# dbprint(foo, "b = a + 1", "comment", "a", "a + 1", env=g)
 ```
 
 ```python
@@ -1878,7 +1896,7 @@ foo(3) #
 ```
 
 ```python
-dbprint(foo, "c = a * b", "comment", "b", "b * a", expand=3)
+# dbprint(foo, "c = a * b", "comment", "b", "b * a", expand=3)
 ```
 
 ### use locals() inside the dbsrc code to avoid adding env individually
@@ -2038,33 +2056,33 @@ g = globals()
 ```
 
 ```python
-foo1 = dbprint(foo, "b = a + 1", "comment", "a", "a + 1")
-foo1(3)
+# foo1 = dbprint(foo, "b = a + 1", "comment", "a", "a + 1")
+# foo1(3)
 ```
 
 ```python
-foo1 = dbprint(foo, "b = a + 1", "comment", "a", "a + 1", "pprint(a)", "if a > 2:\\n    print('I am here')")
-foo1(3)
+# foo1 = dbprint(foo, "b = a + 1", "comment", "a", "a + 1", "pprint(a)", "if a > 2:\\n    print('I am here')")
+# foo1(3)
 ```
 
 ```python
-foo1 = dbprint(foo, "b = a + 1", "comment", "for i in range(3):\\n    print(f'I am {i}')")
-foo1(3)
+# foo1 = dbprint(foo, "b = a + 1", "comment", "for i in range(3):\\n    print(f'I am {i}')")
+# foo1(3)
 ```
 
 ```python
-foo1 = dbprint(foo, "b = a + 1", "comment", "for i in range(3): print(f'I am {i}')")
-foo1(3)
+# foo1 = dbprint(foo, "b = a + 1", "comment", "for i in range(3): print(f'I am {i}')")
+# foo1(3)
 ```
 
 ```python
-foo1 = dbprint(foo, "b = a + 1", "comment", "pprint(locals())")
-foo1(3)
+# foo1 = dbprint(foo, "b = a + 1", "comment", "pprint(locals())")
+# foo1(3)
 ```
 
 ```python
-foo1 = dbprint(foo, "b = a + 1", "comment", "pprint(locals(), width=157)") # width=157 can cause error
-foo1(3)
+# foo1 = dbprint(foo, "b = a + 1", "comment", "pprint(locals(), width=157)") # width=157 can cause error
+# foo1(3)
 ```
 
 ```python
@@ -2077,10 +2095,11 @@ ls = ls[:-1]
 ls
 ```
 
+<!-- #region toc-hr-collapsed=true -->
 ## printrunsrclines() 
 
 It can print out only srclines which actually ran
-
+<!-- #endregion -->
 
 ### Examples
 
@@ -2601,7 +2620,7 @@ printrunsrclines(delegates, '', env=g) # make sure to use \\n not \n
 ```
 
 ```python
-printsrcwithidx(delegates)
+# printsrcwithidx(delegates)
 ```
 
 ### more difficult examples to test printrunsrc()
@@ -2610,7 +2629,9 @@ printsrcwithidx(delegates)
 
 ```
 
+<!-- #region tags=[] -->
 ## Make fastdebug a class
+<!-- #endregion -->
 
 ```python
 
@@ -3730,9 +3751,9 @@ class Fastdb():
 ### not load the inner locals() to outenv can prevent mysterious printing of previous db messages
 
 ```python
-#| export
+
 class Fastdb():
-    
+    "Create a Fastdebug class which has two functionalities: dbprint and print."
     def __init__(self, 
                  src, # name of src code
                  env): # env = g, as g = globals()
@@ -3744,12 +3765,12 @@ class Fastdb():
         
     def dbprint(self, 
                 # src, # the src func name, e.g., foo
-                dbcode, # the srclines under investigation, can be either string or int
+                dbcode:int, # a srcline under investigation, can be either string or int
                 cmt:str, # comment
-                *codes, # a list of dbcodes
+                *codes, # a list of expressions (str) you write to be evaluated above the srcline
                 expand:int=2, # span 2 lines of srcode up and down from the srcline investigated
-                showdbsrc=False): # display dbsrc or not
-        "Insert dbcodes under srclines under investigation, and create a new dbsrc function to replace the official one"
+                showdbsrc:bool=False): # display dbsrc
+        "Add comment and evaluate custom (single or multi lines) expressions to any srcline of the source code you are investigating"
 
         src = self.orisrc
         if type(dbcode) == int: self.cmts.update({dbcode: cmt})
@@ -3823,6 +3844,8 @@ class Fastdb():
     def print(self, 
                 maxlines:int=33, # maximum num of lines per page
                 part:int=0): # if the src is more than 33 lines, then divide the src by 33 into a few parts
+        "Print the source code in whole or parts with idx and comments you added with dbprint along the way."
+        
         totallen = 157
         lenidx = 5
         lspace = 10
@@ -3895,20 +3918,188 @@ class Fastdb():
                     return
 ```
 
+### using @patch to enable docs for instance methods like `dbprint` and `print`
+
+```python
+#| export
+class Fastdb():
+    "Create a Fastdebug class which has two functionalities: dbprint and print."
+    def __init__(self, 
+                 src, # name of src code you are exploring
+                 env): # env variables needed for exploring the source code, e.g., g = globals()
+        self.orisrc = src
+        self.margin = 157
+        self.outenv = env
+        self.cmts = {}
+```
+
+```python
+#| export        
+@patch
+def dbprint(self:Fastdb, 
+            dbcode:int, # a srcline under investigation, can be either string or int
+            cmt:str, # comment added to the srcline
+            *codes, # a list of expressions (str) you write to be evaluated above the srcline
+            expand:int=2, # span 2 lines of srcode up and down from the srcline investigated
+            showdbsrc:bool=False): # display dbsrc
+    "Add comment and evaluate custom (single or multi lines) expressions to any srcline of the source code you are investigating"
+
+    src = self.orisrc
+    if type(dbcode) == int: self.cmts.update({dbcode: cmt})
+
+    printsrc(src, dbcode, cmt, expand)
+
+    dbsrc = ""
+    indent = 4
+    onedbprint = False
+
+    lst = inspect.getsource(src).split('\n')
+    if not bool(lst[-1]): lst = lst[:-1]
+
+    newlst = []
+    for i in codes: # no matter whether there is "" or "  " in the front or in the middle of codes
+        if bool(i.strip()): newlst.append(i)
+    codes = newlst
+
+    srclines = ""
+    if type(dbcode) == int:
+        srclines = lst[dbcode]
+    else:
+        srclines = dbcode
+
+    for idx, l in zip(range(len(lst)), lst):
+
+        if bool(l.strip()) and l.strip() in srclines and idx == dbcode: 
+
+            if len(codes) > 0: # if the new codes is not empty
+                numindent = len(l) - len(l.strip())
+                dbcodes = "dbprintinsert("
+                count = 1
+                for c in codes:
+                    if count == len(codes):
+                        dbcodes = dbcodes + '"' + c + '"' + "," + "env=g" + ")"
+                    else:
+                        dbcodes = dbcodes + '"' + c + '"' + ","
+                    count = count + 1
+
+                dbsrc = dbsrc + " "*numindent + "g = locals()" + '\n'
+                dbsrc = dbsrc + " "*numindent + dbcodes + '\n'
+                dbsrc = dbsrc + l + '\n'     
+            else:
+                dbsrc = dbsrc + l + '\n'                
+
+        elif bool(l.strip()) and idx + 1 == len(lst):
+            dbsrc = dbsrc + l
+
+        elif bool(l.strip()): # make sure pure indentation + \n is ignored
+            dbsrc = dbsrc + l + '\n'
+
+    if showdbsrc: # added to debug
+        totallen = 157
+        lenidx = 5
+        dblst = dbsrc.split('\n')
+        for idx, l in zip(range(len(dblst)), dblst):
+            lenl = len(l)
+            if "dbprintinsert" in l: 
+                print(l + "="*(totallen-lenl-lenidx) + "(db)")
+            else:
+                print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+
+    exec(dbsrc, globals().update(self.outenv)) # make sure b can access lst from above
+
+    return locals()[self.orisrc.__name__]
+
+```
+
+```python
+#| export
+@patch
+def print(self:Fastdb, 
+            maxlines:int=33, # maximum num of lines per page
+            part:int=0): # if the src is more than 33 lines, then divide the src by 33 into a few parts
+    "Print the source code in whole or parts with idx and comments you added with dbprint along the way."
+
+    totallen = 157
+    lenidx = 5
+    lspace = 10
+    lstsrc = inspect.getsource(self.orisrc).split('\n')
+    numparts = len(lstsrc) // 33 + 1 if len(lstsrc) % 33 != 0 else len(lstsrc) // 33
+    cmts = self.cmts
+    if part == 0: 
+        for idx, l in zip(range(len(lstsrc)), lstsrc):
+            lenl = len(l)
+
+            if not bool(l.strip()):
+                print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+
+            elif lenl + lspace >= 100:
+                if bool(cmts):
+                    cmtidx = [cmt[0] for cmt in list(cmts.items())]
+                    if idx in cmtidx:
+                        print(l + " # " + cmts[idx] + " "*(totallen-lenl-lenidx-len(cmts[idx])-3) + "(" + str(idx) + ")")
+                    else:
+                        print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+                else: 
+                    print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+
+            else:
+
+
+                if bool(cmts):
+                    cmtidx = [cmt[0] for cmt in list(cmts.items())]
+                    if idx in cmtidx:
+                        print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + cmts[idx]))
+                    else:
+                        print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                                                      
+
+                else:
+                    print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                 
+
+    for p in range(numparts):
+        for idx, l in zip(range(len(lstsrc)), lstsrc):
+
+            if (maxlines*p <= idx < maxlines*(p+1) and p+1 == part):
+                lenl = len(l)
+                if not bool(l.strip()):
+                    print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+                elif lenl + lspace >= 100:
+                    if bool(cmts):
+                        cmtidx = [cmt[0] for cmt in list(cmts.items())]
+                        if idx in cmtidx:
+                            print(l + " # " + cmts[idx] + " "*(totallen-lenl-lenidx-len(cmts[idx])-3) + "(" + str(idx) + ")")
+                        else:
+                            print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+                    else: 
+                        print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+
+
+                else:
+
+                    if bool(cmts):
+                        cmtidx = [cmt[0] for cmt in list(cmts.items())]
+                        if idx in cmtidx:
+                            print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + cmts[idx]))
+                        else:
+                            print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                                                          
+
+                    else:
+                        print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                      
+
+            if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
+                print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
+                return
+```
+
 ### use dbprint to override the original official code without changing its own pyfile
 
 <!-- #region -->
 see the example [here](./examples/dbprint.ipynb#make-inspect.signature-to-run-our-dbsrc-code)
 
 ```python
-sfc = dbprint(_signature_from_callable, "if isinstance(obj, type):", "this is comment", \
-              "locals()", "isinstance(obj, type)", "env=g", \
-              expand=1, env=g)
-
-# overriding the original official source with our dbsrc, even though rewriting _signature_from_callable inside inspect.py ######################
-inspect._signature_from_callable = _signature_from_callable
-inspect.signature(Foo) 
-
+dbsig = sig.dbprint(29, "why has to unwrap?", "hasattr(obj, '__signature__')")
+inspect._signature_from_callable = dbsig
+pprint(inspect.signature(Foo))
+sig.print(part=1)
 ```
 <!-- #endregion -->
 
