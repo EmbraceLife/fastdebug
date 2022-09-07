@@ -1,14 +1,37 @@
+---
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .md
+      format_name: markdown
+      format_version: '1.3'
+      jupytext_version: 1.14.0
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+# Utils
+
+> little functions to tell you the basics of a module
+
+```python
 #| default_exp utils
+```
 
+## whatinside a module of a library
 
+```python
 #| export
 # from inspect import getmembers, isfunction, isclass, isbuiltin, getsource
 import os.path, pkgutil
 from pprint import pprint
 import inspect
 
+```
 
-
+```python
 #| export
 def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
                dun:bool=False, # print all items in __all__
@@ -43,22 +66,29 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
         modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]
         print(f'The library has {len(modules)} modules')
         pprint(modules)
+```
 
-
+```python
 whatinside(inspect)
+```
 
-
+```python
 whatinside(inspect, func=True)
+```
 
-
+```python
 whatinside(inspect, clas=True)
+```
 
+## whichversion of a library
 
+```python
 #| export
 from importlib.metadata import version, metadata, distribution
 from platform import python_version 
+```
 
-
+```python
 #| export
 def whichversion(libname:str, # library name not string
                 req:bool=False, # print lib requirements 
@@ -79,26 +109,32 @@ def whichversion(libname:str, # library name not string
         print(f"\n{libname} has: ")
         pprint(distribution(libname).files)
     
+```
 
-
+```python
 whichversion("python")
+```
 
-
+```python
 whichversion("fastcore")
+```
 
-
+```python
 whichversion("fastai")
+```
 
-
+```python
 whichversion("jupyter")
+```
 
-
+```python
 try:
     whichversion("inspect")
 except: 
     print("inspect won't work here")
+```
 
-
+```python
 #| export
 def tstenv(outenv=globals()):
     print(f'out global env has {len(outenv.keys())} vars')
@@ -110,28 +146,41 @@ def tstenv(outenv=globals()):
     print(lstin[:10])
     print(f"out env['__name__']: {outenv['__name__']}")
     print(f"inner env['__name__']: {globals()['__name__']}")
+```
 
-
+```python
 tstenv()
+```
 
-
+```python
 len(globals().keys())
+```
 
+#|hide
+## Export
 
+```python
 #| hide
 from nbdev import nbdev_export
 nbdev_export()
+```
 
+#|hide
+## Send to Obsidian
 
+```python
 #| hide
-get_ipython().getoutput("jupytext --to md /Users/Natsume/Documents/fastdebug/utils.ipynb")
-get_ipython().getoutput("mv /Users/Natsume/Documents/fastdebug/utils.md \")
+!jupytext --to md /Users/Natsume/Documents/fastdebug/utils.ipynb
+!mv /Users/Natsume/Documents/fastdebug/utils.md \
 /Users/Natsume/Documents/divefastai/Debuggable/jupytext/
+```
 
-
+```python
 #| hide
-get_ipython().getoutput("jupyter nbconvert --config /Users/Natsume/Documents/mynbcfg.py --to markdown \")
+!jupyter nbconvert --config /Users/Natsume/Documents/mynbcfg.py --to markdown \
 --output-dir /Users/Natsume/Documents/divefastai/Debuggable/nbconvert
+```
 
+```python
 
-
+```

@@ -155,7 +155,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#core.ipynb-146" id="toc-core.ipynb-146" class="nav-link" data-scroll-target="#core.ipynb-146">%% ../00_core.ipynb 146</a></li>
   <li><a href="#core.ipynb-202" id="toc-core.ipynb-202" class="nav-link" data-scroll-target="#core.ipynb-202">%% ../00_core.ipynb 202</a></li>
   <li><a href="#core.ipynb-216" id="toc-core.ipynb-216" class="nav-link" data-scroll-target="#core.ipynb-216">%% ../00_core.ipynb 216</a></li>
-  <li><a href="#core.ipynb-240" id="toc-core.ipynb-240" class="nav-link" data-scroll-target="#core.ipynb-240">%% ../00_core.ipynb 240</a></li>
+  <li><a href="#core.ipynb-242" id="toc-core.ipynb-242" class="nav-link" data-scroll-target="#core.ipynb-242">%% ../00_core.ipynb 242</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -590,8 +590,8 @@ for idx, l in zip(range(len(srclst)), srclst):
     if idx in srcidx or "for" in l or "if" in l or "else" in l:
         print(l)</code></pre>
 </section>
-<section id="core.ipynb-240" class="level1">
-<h1>%% ../00_core.ipynb 240</h1>
+<section id="core.ipynb-242" class="level1">
+<h1>%% ../00_core.ipynb 242</h1>
 <p>class Fastdb():</p>
 <pre><code>def __init__(self, 
              src, # name of src code
@@ -674,7 +674,8 @@ def dbprint(self,
             
     exec(dbsrc, globals().update(self.outenv)) # make sure b can access lst from above
 
-    self.outenv.update(locals())
+    # self.outenv.update(locals())
+    # self.outenv.update({self.orisrc.__name__: locals()[self.orisrc.__name__]})
 
     return locals()[self.orisrc.__name__]
 

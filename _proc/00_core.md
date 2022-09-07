@@ -1,10 +1,33 @@
+---
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .md
+      format_name: markdown
+      format_version: '1.3'
+      jupytext_version: 1.14.0
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+# core
+
+> the core functionalities of fastdebug
+
+```python
 #| default_exp core
+```
 
-
+```python
 #| hide
 from nbdev.showdoc import *
+```
 
+## make life easier with defaults  
 
+```python
 #| exports
 defaults = type('defaults', (object,), {'margin': 157, # align to the right by 157
                                         'orisrc': None, # keep a copy of original official src code
@@ -13,56 +36,79 @@ defaults = type('defaults', (object,), {'margin': 157, # align to the right by 1
                                         # 'eg': None, # examples
                                         # 'src': None, # official src
                                        }) 
+```
 
+## globals() and locals()
 
+Interesting behavior of [locals()](https://stackoverflow.com/questions/7969949/whats-the-difference-between-globals-locals-and-vars)
+
+```python
 locals() == globals()
+```
 
-
+```python
 "functools" in locals()
+```
 
-
+```python
 "inspect" in locals()
+```
 
-
+```python
 "eval" in locals()
+```
 
-
+```python
 "defaults" in locals()
+```
 
-
+```python
 "whatinside" in locals()
+```
 
-
+```python
 "whichversion" in locals()
+```
 
-
+```python
 from fastdebug.utils import *
+```
 
-
+```python
 "whatinside" in locals()
+```
 
-
+```python
 "whichversion" in globals()
+```
 
+## Execute strings
 
-get_ipython().run_line_magic('pinfo',  'eval')
+```python
+eval?
+```
 
+```python
+exec?
+```
 
-get_ipython().run_line_magic('pinfo',  'exec')
-
-
+```python
 #| export
 from pprint import pprint
+```
 
+### new variable or updated variable by exec will only be accessible from locals()
 
+```python
 x = 1
 def test():
     a = "1+x"
     pprint(f'locals: {locals()}', width=157) # x is not in locals() but in globals()
     print(eval(a)) 
 test()
+```
 
-
+```python
 x = 1
 def test():
     a = "b = 1+x"
@@ -76,8 +122,9 @@ try:
 except NameError as e:
     print(e)
     
+```
 
-
+```python
 x = 1
 def test():
     a = "b = 1+x"
@@ -92,8 +139,9 @@ try:
     test()
 except KeyError as e:
     print("KeyError: 'b' does not exist")
+```
 
-
+```python
 x = 1
 def test():
     a = "b = 1+x"
@@ -109,8 +157,9 @@ try:
     test()
 except KeyError as e:
     print("KeyError: 'b' does not exist")
+```
 
-
+```python
 x = 1
 def test():
     a = "b = 1+x"
@@ -124,8 +173,9 @@ def test():
     pprint(locals())
 
 test()
+```
 
-
+```python
 x = 1
 def test():
     a = "b = 1+x"
@@ -139,8 +189,11 @@ def test():
     pprint(locals())
 
 test()
+```
 
+### eval can override its own globals() and locals()
 
+```python
 def test():
     a = 1
     b = "a+1"
@@ -149,12 +202,16 @@ def test():
     pprint(f'locals: {locals()}', width=157) 
 
 test()
+```
 
+### when exec update existing functions
 
+```python
 #| export
 import inspect
+```
 
-
+```python
 def foo(x, y): return x + y
 def test(func):
     a = 1
@@ -174,11 +231,15 @@ def test(func):
     print(foo(1,9))
 
 test(foo)    
+```
 
+### when the func to be udpated involve other libraries
 
+```python
 import functools
+```
 
-
+```python
 def foo(x, y): 
     print(inspect.signature(foo))
     return x + y
@@ -202,8 +263,11 @@ def test(func):
     print(foo(1,9))
 
 test(foo)    
+```
 
+### inside a function, exec() allow won't give you necessary env from function namespace
 
+```python
 def add(x, y): return 1
 
 def test(func):
@@ -224,8 +288,14 @@ try:
     test(add)
 except NameError as e:
     print(e)
+```
+
+### magic of `exec(b, globals().update(locals()))`
 
 
+What about `exec(b, globals().update(globals()))`
+
+```python
 def add(x, y): return 1
 
 def test(func):
@@ -247,8 +317,9 @@ try:
     test(add)
 except: 
     print("exec(b, globals().update(globals())) won't give us lst in the func namespace")
+```
 
-
+```python
 def add(x, y): return 1
 
 def test(func):
@@ -270,8 +341,11 @@ try:
     print(add1(5,6))
 except: 
     print("you can't bring add1 from a function namespace to the outside world")
+```
 
+### Bring variables from a func namespace to the sideout world
 
+```python
 def add(x, y): return 1
 
 def test(func):
@@ -294,28 +368,38 @@ test(add)
 pprint(add(5,6)) # the original add is override by the add from the function's locals()
 pprint(add1(5,6))
 print(lst)
+```
 
+### globals() in a cell vs globals() in a func
 
+```python
 from fastdebug.utils import tstenv
+```
 
-
+```python
 len(globals().keys())
+```
 
-
+```python
 globals()['__name__']
+```
 
-
+```python
 tstenv()
+```
 
+## make a colorful string
 
+```python
 #|export
 class dbcolors:
     g = '\033[92m' #GREEN
     y = '\033[93m' #YELLOW
     r = '\033[91m' #RED
     reset = '\033[0m' #RESET COLOR
+```
 
-
+```python
 #|export
 def colorize(cmt, color:str=None):
     if color == "g":
@@ -326,23 +410,30 @@ def colorize(cmt, color:str=None):
         return dbcolors.r + cmt + dbcolors.reset
     else: 
         return cmt
+```
 
-
+```python
 colorize("this is me", "r")
+```
 
-
+```python
 print(colorize("this is me", "r"))
+```
 
+## align text to the most right
 
+```python
 #| export
 import re
+```
 
-
+```python
 #| export
 def strip_ansi(source):
     return re.sub(r'\033\[(\d|;)+?m', '', source)
+```
 
-
+```python
 #| export
 def alignright(blocks):
     lst = blocks.split('\n')
@@ -350,14 +441,22 @@ def alignright(blocks):
     indent = defaults.margin - maxlen
     for l in lst:
         print(' '*indent + format(l))
+```
 
-
+```python
 alignright("this is me")
+```
+
+```python
+
+```
+
+## printsrcwithidx
 
 
+### print the entire source code with idx from 0
 
-
-
+```python
 
 def printsrcwithidx(src):
     totallen = 157
@@ -367,8 +466,11 @@ def printsrcwithidx(src):
         lenl = len(l)
 
         print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+```
 
+### print the whole src with idx or print them in parts
 
+```python
 
 def printsrcwithidx(src, 
                     maxlines:int=33, # maximum num of lines per page
@@ -393,8 +495,11 @@ def printsrcwithidx(src,
             if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
+```
 
+### use cmts from dbprint to print out src with comments
 
+```python
 #| export
 def printsrcwithidx(src, 
                     maxlines:int=33, # maximum num of lines per page
@@ -469,18 +574,32 @@ def printsrcwithidx(src,
             if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
+```
 
-
+```python
 printsrcwithidx(foo)
+```
 
-
+```python
 printsrcwithidx(pprint)
+```
+
+### no more update for printsrcwithidx, for the latest see Fastdb.print
 
 
+see a [complex example](./examples/dbprint.ipynb#test-printsrcwithidx) on printsrcwithidx
+
+
+## print out src code
+
+```python
 #| export
 import inspect
+```
 
+### basic version
 
+```python
 
 def printsrc(src, srclines, cmt):
 # print out the title
@@ -506,24 +625,31 @@ def printsrc(src, srclines, cmt):
 
         else: 
             print('{:<157}'.format(l)) # print out the rest of source code
+```
 
-
+```python
 def foo():     
     a = 1 + 1
     b = a + 1
     pass
+```
 
-
+```python
 printsrc(foo, "a = 1 + 1", "this is comment")
+```
 
-
+```python
 printsrc(foo, "    a = 1 + 1\n    b = a + 1", "this is comment")
+```
 
+### print src with specific number of lines
 
+```python
 len("    this is a code\nthis is another code".split('\n'))
 list(map(lambda x: bool(x.strip()), "    this is a code\n    this is another code\n   \n   ".split('\n'))).count(True)
+```
 
-
+```python
 
 def printsrc(src, srclines, cmt, expand:int=2):
 
@@ -556,8 +682,11 @@ def printsrc(src, srclines, cmt, expand:int=2):
         elif idx <= endidx + expand and idx > endidx:
             print('{:<157}'.format(l)) # print out the rest of source code to the most left
     
+```
 
+### make the naming more sensible
 
+```python
 
 def printsrc(src, dblines, cmt, expand:int=2):
 
@@ -588,8 +717,11 @@ def printsrc(src, dblines, cmt, expand:int=2):
         elif idx <= enddbidx + expand and idx > enddbidx:
             print('{:<157}'.format(l)) 
     
+```
 
+### Allow a dbline occur more than once
 
+```python
 
 def printsrc(src, dblines, cmt, expand:int=2):
 
@@ -626,16 +758,23 @@ def printsrc(src, dblines, cmt, expand:int=2):
                     print("\n")
                     print('{:=^157}'.format(f" The occurance {o} "))
                     print("\n")                
+```
+
+### adding idx to the selected srclines
 
 
+#### printsrclinewithidx
+
+```python
 #| export
 def printsrclinewithidx(idx, l, fill=" "):
     totallen = 157
     lenidx = 5
     lenl = len(l)
     print(l + fill*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+```
 
-
+```python
 
 def printsrc(src, # name of src code such as foo, or delegates
              dblines,
@@ -668,15 +807,20 @@ def printsrc(src, # name of src code such as foo, or delegates
                     print("\n")
                     print('{:=^157}'.format(f" The occurance {o} "))
                     print("\n")
+```
 
+### dblines can be string of code or idx number
 
+```python
 type(int("120"))
+```
 
-
+```python
 a = 120
 type(a) == int
+```
 
-
+```python
 
 def printsrc(src, # name of src code such as foo, or delegates
              dbcode, # string of codes or int of code idx number
@@ -715,8 +859,11 @@ def printsrc(src, # name of src code such as foo, or delegates
                     print("\n")
                     print('{:=^157}'.format(f" The occurance {o} "))
                     print("\n")
+```
 
+### avoid multi-occurrance of the same srcline
 
+```python
 #| export
 def printsrc(src, # name of src code such as foo, or delegates
              dbcode, # string of codes or int of code idx number
@@ -754,8 +901,9 @@ def printsrc(src, # name of src code such as foo, or delegates
         elif idx <= srcidx + expand and idx > srcidx:
             printsrclinewithidx(idx, l)
 
+```
 
-
+```python
 def foo(a):
     "this is docs"
     # this is a pure comment
@@ -767,17 +915,29 @@ def foo(a):
         b = a + 1
     "this is docs"
     return a
+```
 
-
+```python
 printsrc(foo, "else:", "this is comment", expand=4)
+```
 
-
+```python
 printsrc(foo, "return a", "this is comment", expand=10)
+```
 
-
+```python
 printsrc(foo, 3, "this is comment")
+```
+
+more [complex example](./examples/printsrc.ipynb) on printsrc
 
 
+## dbprint on expression
+
+
+### basic version
+
+```python
 
 def dbprint(src, # the src func name, e.g., foo
             srclines:str, # the srclines under investigation
@@ -794,32 +954,43 @@ def dbprint(src, # the src func name, e.g., foo
     # print(f"{c} => {c} : {eval(c, globals().update(env))}") 
         output = f"{c} => {c} : {eval(c, globals().update(env))}"
         print('{:>157}'.format(output))   
+```
 
-
+```python
 def foo():     
     a = 1 + 1
     b = a + 1
     pass
+```
 
-
+```python
 def foo(): 
     dbprint(foo, "    a = 1 + 1", "this is a test", "1+2", "str(1+2)")
     a = 1 + 1
     pass
+```
 
-
+```python
 foo()
+```
+
+```python
+
+```
+
+### insert dbcode and make a new dbfunc
 
 
+when bringing back splitted lines back, we need add '\n' back to them
 
-
-
+```python
 back = ""
 for l in inspect.getsource(foo).split('\n'):
     back = back + l
 pprint(back, width=157)
+```
 
-
+```python
 
 def dbprint(src, # the src func name, e.g., foo
             srclines:str, # the srclines under investigation
@@ -899,8 +1070,11 @@ def dbprint(src, # the src func name, e.g., foo
     
     return locals()[defaults.orisrc.__name__]
     
+```
 
+### Bring outside namespace variables into exec()
 
+```python
 
 def dbprint(src, # the src func name, e.g., foo
             srclines:str, # the srclines under investigation
@@ -983,8 +1157,11 @@ def dbprint(src, # the src func name, e.g., foo
     
     return locals()[defaults.orisrc.__name__]
     
+```
 
+### Bring what inside the func namespace variables to the outside world
 
+```python
 
 def dbprint(src, # the src func name, e.g., foo
             srclines:str, # the srclines under investigation
@@ -1060,8 +1237,14 @@ def dbprint(src, # the src func name, e.g., foo
     
     return locals()[defaults.orisrc.__name__]
     
+```
+
+see a [complex example](./examples/dbprint.ipynb) on dbprint
 
 
+### Adding g = locals() to dbprintinsert to avoid adding env individually
+
+```python
 
 def dbprint(src, # the src func name, e.g., foo
             srclines:str, # the srclines under investigation
@@ -1141,8 +1324,11 @@ def dbprint(src, # the src func name, e.g., foo
     
     return locals()[defaults.orisrc.__name__]
     
+```
 
+### enable srclines to be either string or int 
 
+```python
 
 def dbprint(src, # the src func name, e.g., foo
             dbcode, # the srclines under investigation, can be either string or int
@@ -1229,8 +1415,11 @@ def dbprint(src, # the src func name, e.g., foo
     
     return locals()[defaults.orisrc.__name__]
     
+```
 
+### enable = to be used as assignment in codes
 
+```python
 
 def dbprint(src, # the src func name, e.g., foo
             dbcode, # the srclines under investigation, can be either string or int
@@ -1318,8 +1507,11 @@ def dbprint(src, # the src func name, e.g., foo
     
     return locals()[defaults.orisrc.__name__]
     
+```
 
+### avoid adding "env=g" for dbprintinsert
 
+```python
 
 def dbprint(src, # the src func name, e.g., foo
             dbcode, # the srclines under investigation, can be either string or int
@@ -1401,8 +1593,11 @@ def dbprint(src, # the src func name, e.g., foo
     env.update(locals())
     
     return locals()[defaults.orisrc.__name__]
+```
 
+### collect cmt for later printsrcwithidx to print comments together
 
+```python
 
 def dbprint(src, # the src func name, e.g., foo
             dbcode, # the srclines under investigation, can be either string or int
@@ -1468,8 +1663,11 @@ def dbprint(src, # the src func name, e.g., foo
 
     return locals()[defaults.orisrc.__name__]
 
+```
 
+### make sure only one line with correct idx is debugged
 
+```python
 #| export
 def dbprint(src, # the src func name, e.g., foo
             dbcode, # the srclines under investigation, can be either string or int
@@ -1538,8 +1736,11 @@ def dbprint(src, # the src func name, e.g., foo
 
     return locals()[defaults.orisrc.__name__]
 
+```
 
+### avoid typing "" when there is no codes
 
+```python
 
 # def dbprint(src, # the src func name, e.g., foo
 #             dbcode, # the srclines under investigation, can be either string or int
@@ -1610,8 +1811,35 @@ def dbprint(src, # the src func name, e.g., foo
 
 #     return locals()[defaults.orisrc.__name__]
 
+```
+
+### no more update for dbprint, for the latest see Fastdb.dbprint
 
 
+### use dbprint to override the original official code without changing its own pyfile
+
+<!-- #region -->
+see the example [here](./examples/dbprint.ipynb#make-inspect.signature-to-run-our-dbsrc-code)
+
+```python
+sfc = dbprint(_signature_from_callable, "if isinstance(obj, type):", "this is comment", \
+              "locals()", "isinstance(obj, type)", "env=g", \
+              expand=1, env=g)
+
+# overriding the original official source with our dbsrc, even though rewriting _signature_from_callable inside inspect.py ######################
+inspect._signature_from_callable = _signature_from_callable
+inspect.signature(Foo) 
+
+```
+<!-- #endregion -->
+
+## dbprintinsert
+
+
+### Run and display the inserted dbcodes 
+for each srcline under investigation, used inside dbprint
+
+```python
 
 def dbprintinsert(*codes, **env): 
     for c in codes:
@@ -1619,33 +1847,43 @@ def dbprintinsert(*codes, **env):
         output = f"{c} => {c} : {eval(c, globals().update(env))}"
         print('{:>157}'.format(output))   
         
+```
 
-
+```python
 def foo(a):
     a = a*2
     b = a + 1
     c = a * b
     return c
+```
 
-
+```python
 bool("   ".strip())
+```
 
-
+```python
 g = globals()
+```
 
-
+```python
 dbprint(foo, "b = a + 1", "comment", "a", "a + 1", env=g)
+```
 
-
+```python
 dbprint(foo, "b = a + 1", "comment", "a", "a + 1", env=g)
+```
 
-
+```python
 foo(3) # 
+```
 
-
+```python
 dbprint(foo, "c = a * b", "comment", "b", "b * a", expand=3)
+```
 
+### use locals() inside the dbsrc code to avoid adding env individually
 
+```python
 
 def dbprintinsert(*codes, env={}): 
     for c in codes:
@@ -1653,12 +1891,16 @@ def dbprintinsert(*codes, env={}):
         output = f"{c} => {c} : {eval(c, globals().update(env))}"
         print('{:>157}'.format(output))   
         
+```
 
+### enable dbprintinsert to do exec on a block of code
 
+```python
 #| export
 import ast
+```
 
-
+```python
 #| export
 def dbprintinsert(*codes, env={}): 
 
@@ -1789,50 +2031,73 @@ def dbprintinsert(*codes, env={}):
             
         # the benefit of using global().update(env) is 
         # to ensure we don't need to include the same env fo
+```
 
-
+```python
 g = globals()
+```
 
-
+```python
 foo1 = dbprint(foo, "b = a + 1", "comment", "a", "a + 1")
 foo1(3)
+```
 
-
+```python
 foo1 = dbprint(foo, "b = a + 1", "comment", "a", "a + 1", "pprint(a)", "if a > 2:\\n    print('I am here')")
 foo1(3)
+```
 
-
+```python
 foo1 = dbprint(foo, "b = a + 1", "comment", "for i in range(3):\\n    print(f'I am {i}')")
 foo1(3)
+```
 
-
+```python
 foo1 = dbprint(foo, "b = a + 1", "comment", "for i in range(3): print(f'I am {i}')")
 foo1(3)
+```
 
-
+```python
 foo1 = dbprint(foo, "b = a + 1", "comment", "pprint(locals())")
 foo1(3)
+```
 
-
+```python
 foo1 = dbprint(foo, "b = a + 1", "comment", "pprint(locals(), width=157)") # width=157 can cause error
 foo1(3)
+```
 
-
+```python
 from fastcore.meta import delegates
+```
 
-
+```python
 ls = inspect.getsource(delegates).split('\n')
 ls = ls[:-1]
 ls
+```
+
+## printrunsrclines() 
+
+It can print out only srclines which actually ran
 
 
+### Examples
+
+
+#### simple example
+
+```python
 # def foo(a):
 #     if a > 1:
 #         a = 1 + 1
 #     else:
 #         b = a + 1
+```
 
+#### complex example
 
+```python
 def foo(a):
     "this is docs"
     # this is a pure comment
@@ -1845,11 +2110,15 @@ def foo(a):
     "this is docs"
     return a
         
+```
 
-
+```python
 foo(3)
+```
 
+### insert a line after each srcline to add idx
 
+```python
 srclines = inspect.getsource(foo).split('\n')
 dbsrc = ""
 
@@ -1857,15 +2126,23 @@ for idx, l in zip(range(len(srclines)), srclines):
     # if "if" in l or "else" in l or "for" in l:
         
     dbsrc = dbsrc + l + f"\n    srcidx.append({idx})\n" # add srcidx.append(idx) to each line
+```
 
-
+```python
 for l in dbsrc.split('\n'):
     print(l)
+```
+
+### add correct indentation to each inserted line
 
 
+#### count the indentation for each srcline
+
+```python
 len("    a = 1") - len("    a = 1".strip())
+```
 
-
+```python
 srclines = inspect.getsource(foo).split('\n')
 dbsrc = ""
 
@@ -1873,12 +2150,16 @@ for idx, l in zip(range(len(srclines)), srclines):
     numindent = len(l) - len(l.strip())
     addline = f"srcidx.append({idx})"
     dbsrc = dbsrc + l + "\n" + " "*numindent + addline + "\n"   # add srcidx.append(idx) to each line
+```
 
-
+```python
 for l in dbsrc.split('\n'):
     print(l)
+```
 
+### indentation special case: if, else, for, def
 
+```python
 srclines = inspect.getsource(foo).split('\n')
 dbsrc = ""
 indent = 4
@@ -1891,25 +2172,34 @@ for idx, l in zip(range(len(srclines)), srclines):
         numindent = numindent + indent
     
     dbsrc = dbsrc + l + "\n" + " "*numindent + addline + "\n"  # add srcidx.append(idx) to each line
+```
 
-
+```python
 for l in dbsrc.split('\n'):
     print(l)
+```
 
+### remove pure comments or docs from dbsrc
+Do not insert line for pure comment or pure "\n"
 
+```python
 from pprint import pprint
+```
 
-
+```python
 for l in srclines:
     pprint(l)
+```
 
-
+```python
 "# this is a comment".startswith("#")
+```
 
-
+```python
 "a = 1 # this is comment".startswith("#")
+```
 
-
+```python
 srclines = inspect.getsource(foo).split('\n')
 dbsrc = ""
 indent = 4
@@ -1923,12 +2213,14 @@ for idx, l in zip(range(len(srclines)), srclines):
     
     if bool(l): # ignore pure '\n'
         dbsrc = dbsrc + l + "\n" + " "*numindent + addline + "\n"  # add srcidx.append(idx) to each line
+```
 
-
+```python
 for l in dbsrc.split('\n'):
     print(l)
+```
 
-
+```python
 srclines = inspect.getsource(foo).split('\n')
 dbsrc = ""
 indent = 4
@@ -1942,39 +2234,54 @@ for idx, l in zip(range(len(srclines)), srclines):
     
     if bool(l) and not l.strip().startswith('#') and not (l.strip().startswith('"') and l.strip().endswith('"')): # ignore/remove pure quotations or docs
         dbsrc = dbsrc + l + "\n" + " "*numindent + addline + "\n"  # add srcidx.append(idx) to each line
+```
 
-
+```python
 for l in dbsrc.split('\n'): # now the dbsrc has no pure comment and pure docs
     print(l)
+```
 
+```python
+foo??
+```
 
-get_ipython().run_line_magic('pinfo2',  'foo')
-
-
+```python
 exec(dbsrc) # give life to dbsrc
+```
 
+```python
+foo??
+```
 
-get_ipython().run_line_magic('pinfo2',  'foo')
-
-
+```python
 srcidx = [] #used outside the srcode
+```
 
-
+```python
 foo(3) # run the example using dbsrc
 # foo(-1) # run the example using dbsrc
 srcidx # Now it should have all the idx whose srclines have run
+```
 
+### print out the srclines which get run
 
+```python
 for idx, l in zip(range(len(srclines)), srclines):
     if idx in srcidx:
         print(l)
+```
 
+### Make sure all if, else, for get printed
 
+```python
 for idx, l in zip(range(len(srclines)), srclines):
     if idx in srcidx or "for" in l or "if" in l or "else" in l:
         print(l)
+```
 
+### Put all together into the function printrunsrclines()
 
+```python
 def foo(a):
     "this is docs"
     # this is a pure comment
@@ -1987,8 +2294,9 @@ def foo(a):
     "this is docs"
     return a
         
+```
 
-
+```python
 def printrunsrclines(func):
     srclines = inspect.getsource(func).split('\n')
     dbsrc = ""
@@ -2018,11 +2326,15 @@ def printrunsrclines(func):
     for idx, l in zip(range(len(srclines)), srclines):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
+```
 
-
+```python
 printrunsrclines(foo)
+```
 
+#### no more renaming of foo
 
+```python
 def printrunsrclines(func):
     srclines = inspect.getsource(func).split('\n')
     dbsrc = ""
@@ -2046,8 +2358,9 @@ def printrunsrclines(func):
     for idx, l in zip(range(len(srclines)), srclines):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
+```
 
-
+```python
 def foo(a):
 
     if a > 1:
@@ -2056,14 +2369,19 @@ def foo(a):
     else:
         b = a + 1
     return a
+```
 
-
+```python
 printrunsrclines(foo)
+```
 
+```python
 
+```
 
+#### add example as a param into the function
 
-
+```python
 #| export
 def printrunsrclines(func, example):
     srclines = inspect.getsource(func).split('\n')
@@ -2089,14 +2407,19 @@ def printrunsrclines(func, example):
     for idx, l in zip(range(len(srclines)), srclines):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
+```
 
-
+```python
 printrunsrclines(foo, "foo(-1)")
+```
 
-
+```python
 printrunsrclines(foo, "foo(2)")
+```
 
+#### improve on search for `if`, else, for, def to avoid errors for more examples
 
+```python
 
 def printrunsrclines(func, example):
     srclines = inspect.getsource(func).split('\n')
@@ -2123,11 +2446,15 @@ def printrunsrclines(func, example):
     for idx, l in zip(range(len(srclines)), srclines):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
+```
 
-
+```python
 printrunsrclines(alignright, 'alignright("this is me")')
+```
 
+#### remove an empty line with indentation
 
+```python
 lst = """
 this is code\n\
      \n\
@@ -2136,8 +2463,9 @@ this is code
 print(lst)
 for l in lst:
     print(bool(l.strip()))
+```
 
-
+```python
 
 def printrunsrclines(func, example):
     srclines = inspect.getsource(func).split('\n')
@@ -2164,22 +2492,29 @@ def printrunsrclines(func, example):
     for idx, l in zip(range(len(srclines)), srclines):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
+```
 
-
+```python
 printrunsrclines(alignright, 'alignright("this is me")')
+```
 
-
+```python
 pprint(inspect.getsource(printsrc))
+```
 
-
+```python
 ", " in "    env, ".strip()
+```
 
+### make it work
 
+```python
 a=[]
 a.append([1,2])
 a
+```
 
-
+```python
 #| export
 def printrunsrclines(src, example, env):
     srclst = inspect.getsource(src).split('\n')
@@ -2250,24 +2585,34 @@ def printrunsrclines(src, example, env):
     for idx, l in zip(range(len(srclst)), srclst):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
+```
 
-
+```python
 from fastcore.meta import *
 from fastcore.imports import *
+```
 
-
+```python
 g = globals()
+```
 
-
+```python
 printrunsrclines(delegates, '', env=g) # make sure to use \\n not \n
+```
 
-
+```python
 printsrcwithidx(delegates)
+```
 
+### more difficult examples to test printrunsrc()
 
+```python
 
+```
 
+## Make fastdebug a class
 
+```python
 
 class Fastdb():
     
@@ -2361,8 +2706,9 @@ class Fastdb():
                 if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                     print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                     return
+```
 
-
+```python
 
 class Fastdb():
     
@@ -2456,8 +2802,11 @@ class Fastdb():
                 if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                     print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                     return
+```
 
+### improve on the line idx readability
 
+```python
 
 class Fastdb():
     
@@ -2562,8 +2911,11 @@ class Fastdb():
                 if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                     print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                     return
+```
 
+### collect cmt from dbprint and print
 
+```python
 
 class Fastdb():
     
@@ -2710,8 +3062,11 @@ class Fastdb():
                 if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                     print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                     return
+```
 
+### make sure only the line with correct idx is debugged
 
+```python
 
 class Fastdb():
     
@@ -2867,21 +3222,27 @@ class Fastdb():
                 if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                     print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                     return
+```
 
+### having "" or "   " inside codes without causing error
 
+```python
 bool(["   "][0].strip())
+```
 
-
+```python
 bool("   ".strip())
+```
 
-
+```python
 lst = ["...", "", "  ", ""]
 newlst = []
 for i in lst: 
     if bool(i.strip()): newlst.append(i)
 newlst        
+```
 
-
+```python
 
 class Fastdb():
     
@@ -3037,8 +3398,11 @@ class Fastdb():
                 if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                     print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                     return
+```
 
+### replace Fastdb.printsrcwithdix with Fastdb.print
 
+```python
 
 class Fastdb():
     
@@ -3194,8 +3558,11 @@ class Fastdb():
                 if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                     print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                     return
+```
 
+### add idx to dbsrc when showdbsrc=True
 
+```python
 
 class Fastdb():
     
@@ -3358,8 +3725,11 @@ class Fastdb():
                 if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                     print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                     return
+```
 
+### not load the inner locals() to outenv can prevent mysterious printing of previous db messages
 
+```python
 #| export
 class Fastdb():
     
@@ -3523,19 +3893,58 @@ class Fastdb():
                 if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                     print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                     return
+```
+
+### use dbprint to override the original official code without changing its own pyfile
+
+<!-- #region -->
+see the example [here](./examples/dbprint.ipynb#make-inspect.signature-to-run-our-dbsrc-code)
+
+```python
+sfc = dbprint(_signature_from_callable, "if isinstance(obj, type):", "this is comment", \
+              "locals()", "isinstance(obj, type)", "env=g", \
+              expand=1, env=g)
+
+# overriding the original official source with our dbsrc, even though rewriting _signature_from_callable inside inspect.py ######################
+inspect._signature_from_callable = _signature_from_callable
+inspect.signature(Foo) 
+
+```
+<!-- #endregion -->
+
+### use guide on Fastdb.dbprint
 
 
+1. don't use for the line start with `elif`, as putting `dbprintinsert` above `elif` without indentation will cause syntax error. I am not sure whether I need to fix it now.
+
+
+see example [here](./examples/Fastdb.ipynb)
+
+
+test it with example [here](./examples/print.ipynb)
+
+
+#|hide
+## Export
+
+```python
 #| hide
 from nbdev import nbdev_export
 nbdev_export()
+```
 
+#|hide
+## Send to Obsidian
 
+```python
 #| hide
-get_ipython().getoutput("jupytext --to md /Users/Natsume/Documents/fastdebug/00_core.ipynb")
-get_ipython().getoutput("mv /Users/Natsume/Documents/fastdebug/00_core.md \")
+!jupytext --to md /Users/Natsume/Documents/fastdebug/00_core.ipynb
+!mv /Users/Natsume/Documents/fastdebug/00_core.md \
 /Users/Natsume/Documents/divefastai/Debuggable/jupytext/
+```
 
-
+```python
 #| hide
-get_ipython().getoutput("jupyter nbconvert --config /Users/Natsume/Documents/mynbcfg.py --to markdown \")
+!jupyter nbconvert --config /Users/Natsume/Documents/mynbcfg.py --to markdown \
 --output-dir /Users/Natsume/Documents/divefastai/Debuggable/nbconvert
+```

@@ -475,7 +475,7 @@ def printrunsrclines(src, example, env):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
 
-# %% ../00_core.ipynb 240
+# %% ../00_core.ipynb 242
 class Fastdb():
     
     def __init__(self, 
@@ -559,7 +559,8 @@ class Fastdb():
                 
         exec(dbsrc, globals().update(self.outenv)) # make sure b can access lst from above
 
-        self.outenv.update(locals())
+        # self.outenv.update(locals())
+        # self.outenv.update({self.orisrc.__name__: locals()[self.orisrc.__name__]})
 
         return locals()[self.orisrc.__name__]
     
