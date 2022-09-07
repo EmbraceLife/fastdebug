@@ -180,6 +180,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
 </li>
         <li class="sidebar-item">
+  utils.html
+  </li>
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="/utils.html" class="sidebar-item-text sidebar-link">Utils</a>
   </div>
@@ -222,7 +225,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#fastai-style" id="toc-fastai-style">fastai style</a></li>
   </ul></li>
-  <li><a href="#what-is-fastdebug-library-for" id="toc-what-is-fastdebug-library-for">What is <code>fastdebug</code> library for?</a></li>
+  <li><a href="#what-is-the-motivation-behind-fastdebug-library" id="toc-what-is-the-motivation-behind-fastdebug-library">What is the motivation behind <code>fastdebug</code> library?</a></li>
   <li><a href="#how-to-use-fastdebug" id="toc-how-to-use-fastdebug">How to use <code>fastdebug</code>?</a>
   <ul>
   <li><a href="#step-1-display-the-source-code-with-idx" id="toc-step-1-display-the-source-code-with-idx">Step 1: display the source code with idx</a></li>
@@ -243,15 +246,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>A great example of how fastai libraries can make life more <a href="https://www.fast.ai/2019/08/06/delegation/">comfortable</a></p>
 </section>
 </section>
-<section id="what-is-fastdebug-library-for" class="level2">
-<h2>What is <code>fastdebug</code> library for?</h2>
-<div class="cell">
+<section id="what-is-the-motivation-behind-fastdebug-library" class="level2">
+<h2>What is the motivation behind <code>fastdebug</code> library?</h2>
+<p>Please let me show you with a simple example here.</p>
+<div class="cell" data-execution_count="1">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span></code></pre></div>
 </div>
-<div class="cell">
+<div class="cell" data-execution_count="2">
 <div class="sourceCode" id="cb2"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastcore.meta <span class="im">as</span> fm</span></code></pre></div>
 </div>
-<div class="cell">
+<div class="cell" data-execution_count="3">
 <div class="sourceCode" id="cb3"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>whatinside(fm, dun<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>fastcore.meta has: 
@@ -277,7 +281,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <p>As this is the first time you see <code>whainside</code>, you probably will run <code>whatinside?</code> to know how to use it.</p>
-<div class="cell">
+<div class="cell" data-execution_count="4">
 <div class="sourceCode" id="cb5"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>whatinside?</span></code></pre></div>
 <div class="cell-output cell-output-display">
 <div class="ansi-escaped-output">
@@ -299,7 +303,7 @@ whatinside<span class="ansi-blue-fg">(</span>
 </div>
 </div>
 <p>But if you want to make sense of how its source code works, then simply run <code>whatinside??</code> to read the source may not be sufficient for beginners like me to grasp what exactly is going on inside the source code. I need something more like <code>pdb</code> to help me dig deeper.</p>
-<div class="cell">
+<div class="cell" data-execution_count="5">
 <div class="sourceCode" id="cb6"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>whatinside??</span></code></pre></div>
 <div class="cell-output cell-output-display">
 <div class="ansi-escaped-output">
@@ -353,32 +357,39 @@ whatinside<span class="ansi-blue-fg">(</span>
 </div>
 </div>
 </div>
-<p>Though <code>pdbpp</code> is super nice version of <code>ipdb</code> but we can’t use it in jupyter notebook, even if we could use it, the outputs from running <code>pdb</code> commands are not good for documenting, meaning they usually are not easy to read when you look back.</p>
-<p>I have always wanted to explore the wonderful fastai libraries (I am starting with fastcore). Now, with the amazing nbdev, writing your own library becomes super easy. So, Here I am, just finished the second version of this library to help me explore and dig the source code of fastai libraries.</p>
+<p>I enjoyed <code>pdbpp</code> for exploring source code in terminal, which is super nice version of <code>ipdb</code>. However, we can’t use it in jupyter notebook, even if we could use it, the outputs from running <code>pdb</code> commands are not good for documenting, meaning they usually are not easy to read when you come back to it. Jupyterlab’s visual debugger is nice to have, but you can’t document debugging process, and evaluating expressions feel a little clunky to me.</p>
+<p>I have always wanted to explore the wonderful fastai libraries (I am starting with fastcore). I like to learn the fastai coding style, exploratory coding approach and of course all the knowledge Jeremy distilled in the fastai libraries. But every library looks massive to a novice like me. How can I explore the libraries efficiently and joyfully? I must use jupyterlab or jupyter notebook for exploratory coding, but I can’t use pdbpp in jupyter to help.</p>
+<p>So, I am thinking why not write a little debugging tool myself, and maybe I don’t even need fancy inspect.py and pdb.py for it. But I would not dare to try to write a library of my own without being enpowered by the amazing <a href="https://nbdev.fast.ai/">nbdev</a> and the wonderful team behind it. They make writing your own library unbelievably easy and joyful.</p>
+<p>So, Here I am, just finished the second version of this library, I want to see whether this tool is really useful explore and dig the source code of fastai libraries.</p>
 </section>
 <section id="how-to-use-fastdebug" class="level2">
 <h2>How to use <code>fastdebug</code>?</h2>
-<p>In this section, I will show you how I would like to explore fastai libs with this tool. As a simple demo, I will explore my own <code>wahtinside</code> instead. From now on, I will assume I know nothing about this function.</p>
+<p>In this section, I will show you how I would like to explore fastai libs with this tool. As a simple demo, I will explore my own <code>wahtinside</code> instead. From now on, I will pretend to know nothing about this function.</p>
+<p>If you prefers a more real world example, I have <a href="https://fastcore.fast.ai/meta.html#fixsigmeta"><code>fastcore.meta.FixSigMeta</code></a> <a href="./FixSigMeta.ipynb">ready</a> for you.</p>
+<p>If you find anything confusing or bug-like, please inform me at in this forum <a href="https://forums.fast.ai/t/hidden-docs-of-fastcore/98455">post</a>.</p>
 <section id="step-1-display-the-source-code-with-idx" class="level3">
 <h3>Step 1: display the source code with idx</h3>
 <p>I would like to do is to read the source code, but I would like to have each line indiced so that I can specify exactly which line to dig into later.</p>
-<div class="cell">
+<div class="cell" data-execution_count="6">
 <div class="sourceCode" id="cb7"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastdebug.utils <span class="im">as</span> fu</span></code></pre></div>
 </div>
 <p>We are exploring <a href="https://EmbraceLife.github.io/fastdebug/utils.html#whatinside"><code>whatinside</code></a>, so we need to have the env (see <code>g</code> below) where it is defined for <a href="https://EmbraceLife.github.io/fastdebug/core.html#fastdb"><code>Fastdb</code></a> to use.</p>
-<div class="cell">
+<div class="cell" data-execution_count="7">
 <div class="sourceCode" id="cb8"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> {}</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>g.update(fu.__dict__) </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(g)</span></code></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>20</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode" id="cb10"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(whatinside, g)</span></code></pre></div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode" id="cb10"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.core <span class="im">import</span> <span class="op">*</span></span></code></pre></div>
 </div>
-<div class="cell column-screen">
-<div class="sourceCode" id="cb11"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code></pre></div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode" id="cb11"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(whatinside, g)</span></code></pre></div>
+</div>
+<div class="cell column-screen" data-execution_count="10">
+<div class="sourceCode" id="cb12"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                dun:bool=False, # print all items in __all__===============================(1)       
@@ -390,11 +401,11 @@ whatinside<span class="ansi-blue-fg">(</span>
              ): ==========================================================================(7)       
     &#39;Check what inside a module: `__all__`, functions, classes, builtins, and callables&#39;==(8)       
     dun_all = len(mo.__all__) if hasattr(mo, &quot;__all__&quot;) else 0============================(9)       
-    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # what can getmembers and isfunction give me?
-    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # can we print the list &#39;funcs&#39; above nicely?
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10)      
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
     builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
     callables = inspect.getmembers(mo, callable)==========================================(13)      
-    pkgpath = os.path.dirname(mo.__file__)================================================(14) # what does os.path.dirname do?
+    pkgpath = os.path.dirname(mo.__file__)================================================(14)      
     print(f&quot;{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n&quot;)  (15)
     if hasattr(mo, &quot;__all__&quot;) and dun: pprint(mo.__all__)=================================(16)      
     if func: =============================================================================(17)      
@@ -410,7 +421,7 @@ whatinside<span class="ansi-blue-fg">(</span>
         print(f&#39;The callables are: &#39;)=====================================================(27)      
         pprint([i[0] for i in callables])=================================================(28)      
     if lib: ==============================================================================(29)      
-        modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # what does pkgutil.iter_modules do?
+        modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30)      
         print(f&#39;The library has {len(modules)} modules&#39;)==================================(31)      
         pprint(modules)===================================================================(32)      
                                                                                                                                                         (33)</code></pre>
@@ -428,11 +439,11 @@ whatinside<span class="ansi-blue-fg">(</span>
 <li>what does <code>funcs = inspect.getmembers(mo, inspect.isfunction)</code> give me?</li>
 </ol>
 <p>I want to find out about them without searching online, nor using running separate cells to be deleted later.</p>
-<div class="cell column-screen">
-<div class="sourceCode" id="cb13"><pre class="sourceCode python cell-code code-overflow-scroll"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">10</span>, <span class="st">&quot;what can getmembers and isfunction give me?&quot;</span>, <span class="st">&quot;mo&quot;</span>, <span class="st">&quot;inspect.getdoc(inspect.isfunction)&quot;</span>, <span class="op">\</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;inspect.getdoc(inspect.getmembers)&quot;</span>, <span class="st">&quot;funcs = inspect.getmembers(mo, inspect.isfunction)&quot;</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>whatinside(fm)</span></code></pre></div>
+<div class="cell column-screen" data-execution_count="11">
+<div class="sourceCode" id="cb14"><pre class="sourceCode python cell-code code-overflow-scroll"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">10</span>, <span class="st">&quot;what can getmembers and isfunction give me?&quot;</span>, <span class="st">&quot;mo&quot;</span>, <span class="st">&quot;inspect.getdoc(inspect.isfunction)&quot;</span>, <span class="op">\</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;inspect.getdoc(inspect.getmembers)&quot;</span>, <span class="st">&quot;funcs = inspect.getmembers(mo, inspect.isfunction)&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>whatinside(fm)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    &#39;Check what inside a module: `__all__`, functions, classes, builtins, and callables&#39;                                                                (8)
     dun_all = len(mo.__all__) if hasattr(mo, &quot;__all__&quot;) else 0                                                                                          (9)
@@ -461,7 +472,7 @@ inspect.getdoc(inspect.getmembers) =&gt; inspect.getdoc(inspect.getmembers) : Re
 Optionally, only return members that satisfy a given predicate.
 
 
-funcs = inspect.getmembers(mo, inspect.isfunction) =&gt; funcs: [(&#39;_funcs_kwargs&#39;, &lt;function _funcs_kwargs at 0x10878ee50&gt;), (&#39;_mk_param&#39;, &lt;function _mk_param at 0x10878eb80&gt;), (&#39;_rm_self&#39;, &lt;function _rm_self at 0x10878e550&gt;), (&#39;all_equal&#39;, &lt;function all_equal at 0x10875c040&gt;), (&#39;anno_dict&#39;, &lt;function anno_dict at 0x10878eaf0&gt;), (&#39;any_is_instance&#39;, &lt;function any_is_instance at 0x10875c1f0&gt;), (&#39;array_equal&#39;, &lt;function array_equal at 0x10875c310&gt;), (&#39;contextmanager&#39;, &lt;function contextmanager at 0x105608c10&gt;), (&#39;copy&#39;, &lt;function copy at 0x105886790&gt;), (&#39;delegates&#39;, &lt;function delegates at 0x10878ed30&gt;), (&#39;df_equal&#39;, &lt;function df_equal at 0x10875c3a0&gt;), (&#39;empty2none&#39;, &lt;function empty2none at 0x10878e790&gt;), (&#39;equals&#39;, &lt;function equals at 0x10875c430&gt;), (&#39;funcs_kwargs&#39;, &lt;function funcs_kwargs at 0x10878eee0&gt;), (&#39;in_colab&#39;, &lt;function in_colab at 0x10875c5e0&gt;), (&#39;in_ipython&#39;, &lt;function in_ipython at 0x10875c550&gt;), (&#39;in_jupyter&#39;, &lt;function in_jupyter at 0x10875c670&gt;), (&#39;in_notebook&#39;, &lt;function in_notebook at 0x10875c700&gt;), (&#39;ipython_shell&#39;, &lt;function ipython_shell at 0x10875c4c0&gt;), (&#39;is_close&#39;, &lt;function is_close at 0x10878e160&gt;), (&#39;is_coll&#39;, &lt;function is_coll at 0x10872ff70&gt;), (&#39;is_iter&#39;, &lt;function is_iter at 0x10872fee0&gt;), (&#39;isinstance_str&#39;, &lt;function isinstance_str at 0x10875c280&gt;), (&#39;method&#39;, &lt;function method at 0x10878edc0&gt;), (&#39;nequals&#39;, &lt;function nequals at 0x108787ee0&gt;), (&#39;noop&#39;, &lt;function noop at 0x10875c0d0&gt;), (&#39;noops&#39;, &lt;function noops at 0x10875c160&gt;), (&#39;remove_prefix&#39;, &lt;function remove_prefix at 0x10875c790&gt;), (&#39;remove_suffix&#39;, &lt;function remove_suffix at 0x10875c820&gt;), (&#39;test&#39;, &lt;function test at 0x108787e50&gt;), (&#39;test_close&#39;, &lt;function test_close at 0x10878e1f0&gt;), (&#39;test_eq&#39;, &lt;function test_eq at 0x108787f70&gt;), (&#39;test_eq_type&#39;, &lt;function test_eq_type at 0x10878e040&gt;), (&#39;test_fail&#39;, &lt;function test_fail at 0x108787ca0&gt;), (&#39;test_fig_exists&#39;, &lt;function test_fig_exists at 0x10878e4c0&gt;), (&#39;test_is&#39;, &lt;function test_is at 0x10878e280&gt;), (&#39;test_ne&#39;, &lt;function test_ne at 0x10878e0d0&gt;), (&#39;test_shuffled&#39;, &lt;function test_shuffled at 0x10878e310&gt;), (&#39;test_sig&#39;, &lt;function test_sig at 0x108787940&gt;), (&#39;test_stdout&#39;, &lt;function test_stdout at 0x10878e3a0&gt;), (&#39;test_warns&#39;, &lt;function test_warns at 0x10878e430&gt;), (&#39;use_kwargs&#39;, &lt;function use_kwargs at 0x10878eca0&gt;), (&#39;use_kwargs_dict&#39;, &lt;function use_kwargs_dict at 0x10878ec10&gt;)]
+funcs = inspect.getmembers(mo, inspect.isfunction) =&gt; funcs: [(&#39;_funcs_kwargs&#39;, &lt;function _funcs_kwargs at 0x1076bec10&gt;), (&#39;_mk_param&#39;, &lt;function _mk_param at 0x1076be940&gt;), (&#39;_rm_self&#39;, &lt;function _rm_self at 0x1076be310&gt;), (&#39;all_equal&#39;, &lt;function all_equal at 0x1076b6160&gt;), (&#39;anno_dict&#39;, &lt;function anno_dict at 0x1076be8b0&gt;), (&#39;any_is_instance&#39;, &lt;function any_is_instance at 0x1076b6310&gt;), (&#39;array_equal&#39;, &lt;function array_equal at 0x1076b6430&gt;), (&#39;contextmanager&#39;, &lt;function contextmanager at 0x104990c10&gt;), (&#39;copy&#39;, &lt;function copy at 0x104c16790&gt;), (&#39;delegates&#39;, &lt;function delegates at 0x1076beaf0&gt;), (&#39;df_equal&#39;, &lt;function df_equal at 0x1076b64c0&gt;), (&#39;empty2none&#39;, &lt;function empty2none at 0x1076be550&gt;), (&#39;equals&#39;, &lt;function equals at 0x1076b6550&gt;), (&#39;funcs_kwargs&#39;, &lt;function funcs_kwargs at 0x1076beca0&gt;), (&#39;in_colab&#39;, &lt;function in_colab at 0x1076b6700&gt;), (&#39;in_ipython&#39;, &lt;function in_ipython at 0x1076b6670&gt;), (&#39;in_jupyter&#39;, &lt;function in_jupyter at 0x1076b6790&gt;), (&#39;in_notebook&#39;, &lt;function in_notebook at 0x1076b6820&gt;), (&#39;ipython_shell&#39;, &lt;function ipython_shell at 0x1076b65e0&gt;), (&#39;is_close&#39;, &lt;function is_close at 0x1076b6ee0&gt;), (&#39;is_coll&#39;, &lt;function is_coll at 0x1076b60d0&gt;), (&#39;is_iter&#39;, &lt;function is_iter at 0x107660ca0&gt;), (&#39;isinstance_str&#39;, &lt;function isinstance_str at 0x1076b63a0&gt;), (&#39;method&#39;, &lt;function method at 0x1076beb80&gt;), (&#39;nequals&#39;, &lt;function nequals at 0x1076b6ca0&gt;), (&#39;noop&#39;, &lt;function noop at 0x1076b61f0&gt;), (&#39;noops&#39;, &lt;function noops at 0x1076b6280&gt;), (&#39;remove_prefix&#39;, &lt;function remove_prefix at 0x1076b68b0&gt;), (&#39;remove_suffix&#39;, &lt;function remove_suffix at 0x1076b6940&gt;), (&#39;test&#39;, &lt;function test at 0x1076b6c10&gt;), (&#39;test_close&#39;, &lt;function test_close at 0x1076b6f70&gt;), (&#39;test_eq&#39;, &lt;function test_eq at 0x1076b6d30&gt;), (&#39;test_eq_type&#39;, &lt;function test_eq_type at 0x1076b6dc0&gt;), (&#39;test_fail&#39;, &lt;function test_fail at 0x1076b6a60&gt;), (&#39;test_fig_exists&#39;, &lt;function test_fig_exists at 0x1076be280&gt;), (&#39;test_is&#39;, &lt;function test_is at 0x1076be040&gt;), (&#39;test_ne&#39;, &lt;function test_ne at 0x1076b6e50&gt;), (&#39;test_shuffled&#39;, &lt;function test_shuffled at 0x1076be0d0&gt;), (&#39;test_sig&#39;, &lt;function test_sig at 0x10766a820&gt;), (&#39;test_stdout&#39;, &lt;function test_stdout at 0x1076be160&gt;), (&#39;test_warns&#39;, &lt;function test_warns at 0x1076be1f0&gt;), (&#39;use_kwargs&#39;, &lt;function use_kwargs at 0x1076bea60&gt;), (&#39;use_kwargs_dict&#39;, &lt;function use_kwargs_dict at 0x1076be9d0&gt;)]
 fastcore.meta has: 
 13 items in its __all__, and 
 43 user defined functions, 
@@ -472,8 +483,8 @@ fastcore.meta has:
 </div>
 </div>
 <p>If you want to zoom in the source code, you could cut the source into parts and exam each part individually.</p>
-<div class="cell column-screen">
-<div class="sourceCode" id="cb15"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">15</span>, part<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
+<div class="cell column-screen" data-execution_count="12">
+<div class="sourceCode" id="cb16"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">15</span>, part<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                dun:bool=False, # print all items in __all__===============================(1)       
@@ -494,14 +505,14 @@ fastcore.meta has:
 </div>
 </div>
 <p>You may find the <code>funcs</code> difficult to read, if so you can write a block of codes to print out the <code>funcs</code> nicely.</p>
-<div class="cell column-screen">
-<div class="sourceCode" id="cb17"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">11</span>, <span class="st">&quot;can we print the list &#39;funcs&#39; above nicely?&quot;</span>, <span class="op">\</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;funcs = inspect.getmembers(mo, inspect.isfunction)</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="st">for f in funcs:</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="st">    print(f)&quot;</span>)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>whatinside(fm)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">15</span>, part<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
+<div class="cell column-screen" data-execution_count="13">
+<div class="sourceCode" id="cb18"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">11</span>, <span class="st">&quot;can we print the list &#39;funcs&#39; above nicely?&quot;</span>, <span class="op">\</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;funcs = inspect.getmembers(mo, inspect.isfunction)</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="st">for f in funcs:</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="st">    print(f)&quot;</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>whatinside(fm)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">15</span>, part<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    dun_all = len(mo.__all__) if hasattr(mo, &quot;__all__&quot;) else 0                                                                                          (9)
     funcs = inspect.getmembers(mo, inspect.isfunction)                                                                                                  (10)
@@ -516,49 +527,49 @@ for f in funcs:
     print(f)                                                                              
                                                                                                                                   Running your code block =&gt; 
 The code block printout =&gt; : 
-(&#39;_funcs_kwargs&#39;, &lt;function _funcs_kwargs at 0x10878ee50&gt;)
-(&#39;_mk_param&#39;, &lt;function _mk_param at 0x10878eb80&gt;)
-(&#39;_rm_self&#39;, &lt;function _rm_self at 0x10878e550&gt;)
-(&#39;all_equal&#39;, &lt;function all_equal at 0x10875c040&gt;)
-(&#39;anno_dict&#39;, &lt;function anno_dict at 0x10878eaf0&gt;)
-(&#39;any_is_instance&#39;, &lt;function any_is_instance at 0x10875c1f0&gt;)
-(&#39;array_equal&#39;, &lt;function array_equal at 0x10875c310&gt;)
-(&#39;contextmanager&#39;, &lt;function contextmanager at 0x105608c10&gt;)
-(&#39;copy&#39;, &lt;function copy at 0x105886790&gt;)
-(&#39;delegates&#39;, &lt;function delegates at 0x10878ed30&gt;)
-(&#39;df_equal&#39;, &lt;function df_equal at 0x10875c3a0&gt;)
-(&#39;empty2none&#39;, &lt;function empty2none at 0x10878e790&gt;)
-(&#39;equals&#39;, &lt;function equals at 0x10875c430&gt;)
-(&#39;funcs_kwargs&#39;, &lt;function funcs_kwargs at 0x10878eee0&gt;)
-(&#39;in_colab&#39;, &lt;function in_colab at 0x10875c5e0&gt;)
-(&#39;in_ipython&#39;, &lt;function in_ipython at 0x10875c550&gt;)
-(&#39;in_jupyter&#39;, &lt;function in_jupyter at 0x10875c670&gt;)
-(&#39;in_notebook&#39;, &lt;function in_notebook at 0x10875c700&gt;)
-(&#39;ipython_shell&#39;, &lt;function ipython_shell at 0x10875c4c0&gt;)
-(&#39;is_close&#39;, &lt;function is_close at 0x10878e160&gt;)
-(&#39;is_coll&#39;, &lt;function is_coll at 0x10872ff70&gt;)
-(&#39;is_iter&#39;, &lt;function is_iter at 0x10872fee0&gt;)
-(&#39;isinstance_str&#39;, &lt;function isinstance_str at 0x10875c280&gt;)
-(&#39;method&#39;, &lt;function method at 0x10878edc0&gt;)
-(&#39;nequals&#39;, &lt;function nequals at 0x108787ee0&gt;)
-(&#39;noop&#39;, &lt;function noop at 0x10875c0d0&gt;)
-(&#39;noops&#39;, &lt;function noops at 0x10875c160&gt;)
-(&#39;remove_prefix&#39;, &lt;function remove_prefix at 0x10875c790&gt;)
-(&#39;remove_suffix&#39;, &lt;function remove_suffix at 0x10875c820&gt;)
-(&#39;test&#39;, &lt;function test at 0x108787e50&gt;)
-(&#39;test_close&#39;, &lt;function test_close at 0x10878e1f0&gt;)
-(&#39;test_eq&#39;, &lt;function test_eq at 0x108787f70&gt;)
-(&#39;test_eq_type&#39;, &lt;function test_eq_type at 0x10878e040&gt;)
-(&#39;test_fail&#39;, &lt;function test_fail at 0x108787ca0&gt;)
-(&#39;test_fig_exists&#39;, &lt;function test_fig_exists at 0x10878e4c0&gt;)
-(&#39;test_is&#39;, &lt;function test_is at 0x10878e280&gt;)
-(&#39;test_ne&#39;, &lt;function test_ne at 0x10878e0d0&gt;)
-(&#39;test_shuffled&#39;, &lt;function test_shuffled at 0x10878e310&gt;)
-(&#39;test_sig&#39;, &lt;function test_sig at 0x108787940&gt;)
-(&#39;test_stdout&#39;, &lt;function test_stdout at 0x10878e3a0&gt;)
-(&#39;test_warns&#39;, &lt;function test_warns at 0x10878e430&gt;)
-(&#39;use_kwargs&#39;, &lt;function use_kwargs at 0x10878eca0&gt;)
-(&#39;use_kwargs_dict&#39;, &lt;function use_kwargs_dict at 0x10878ec10&gt;)
+(&#39;_funcs_kwargs&#39;, &lt;function _funcs_kwargs at 0x1076bec10&gt;)
+(&#39;_mk_param&#39;, &lt;function _mk_param at 0x1076be940&gt;)
+(&#39;_rm_self&#39;, &lt;function _rm_self at 0x1076be310&gt;)
+(&#39;all_equal&#39;, &lt;function all_equal at 0x1076b6160&gt;)
+(&#39;anno_dict&#39;, &lt;function anno_dict at 0x1076be8b0&gt;)
+(&#39;any_is_instance&#39;, &lt;function any_is_instance at 0x1076b6310&gt;)
+(&#39;array_equal&#39;, &lt;function array_equal at 0x1076b6430&gt;)
+(&#39;contextmanager&#39;, &lt;function contextmanager at 0x104990c10&gt;)
+(&#39;copy&#39;, &lt;function copy at 0x104c16790&gt;)
+(&#39;delegates&#39;, &lt;function delegates at 0x1076beaf0&gt;)
+(&#39;df_equal&#39;, &lt;function df_equal at 0x1076b64c0&gt;)
+(&#39;empty2none&#39;, &lt;function empty2none at 0x1076be550&gt;)
+(&#39;equals&#39;, &lt;function equals at 0x1076b6550&gt;)
+(&#39;funcs_kwargs&#39;, &lt;function funcs_kwargs at 0x1076beca0&gt;)
+(&#39;in_colab&#39;, &lt;function in_colab at 0x1076b6700&gt;)
+(&#39;in_ipython&#39;, &lt;function in_ipython at 0x1076b6670&gt;)
+(&#39;in_jupyter&#39;, &lt;function in_jupyter at 0x1076b6790&gt;)
+(&#39;in_notebook&#39;, &lt;function in_notebook at 0x1076b6820&gt;)
+(&#39;ipython_shell&#39;, &lt;function ipython_shell at 0x1076b65e0&gt;)
+(&#39;is_close&#39;, &lt;function is_close at 0x1076b6ee0&gt;)
+(&#39;is_coll&#39;, &lt;function is_coll at 0x1076b60d0&gt;)
+(&#39;is_iter&#39;, &lt;function is_iter at 0x107660ca0&gt;)
+(&#39;isinstance_str&#39;, &lt;function isinstance_str at 0x1076b63a0&gt;)
+(&#39;method&#39;, &lt;function method at 0x1076beb80&gt;)
+(&#39;nequals&#39;, &lt;function nequals at 0x1076b6ca0&gt;)
+(&#39;noop&#39;, &lt;function noop at 0x1076b61f0&gt;)
+(&#39;noops&#39;, &lt;function noops at 0x1076b6280&gt;)
+(&#39;remove_prefix&#39;, &lt;function remove_prefix at 0x1076b68b0&gt;)
+(&#39;remove_suffix&#39;, &lt;function remove_suffix at 0x1076b6940&gt;)
+(&#39;test&#39;, &lt;function test at 0x1076b6c10&gt;)
+(&#39;test_close&#39;, &lt;function test_close at 0x1076b6f70&gt;)
+(&#39;test_eq&#39;, &lt;function test_eq at 0x1076b6d30&gt;)
+(&#39;test_eq_type&#39;, &lt;function test_eq_type at 0x1076b6dc0&gt;)
+(&#39;test_fail&#39;, &lt;function test_fail at 0x1076b6a60&gt;)
+(&#39;test_fig_exists&#39;, &lt;function test_fig_exists at 0x1076be280&gt;)
+(&#39;test_is&#39;, &lt;function test_is at 0x1076be040&gt;)
+(&#39;test_ne&#39;, &lt;function test_ne at 0x1076b6e50&gt;)
+(&#39;test_shuffled&#39;, &lt;function test_shuffled at 0x1076be0d0&gt;)
+(&#39;test_sig&#39;, &lt;function test_sig at 0x10766a820&gt;)
+(&#39;test_stdout&#39;, &lt;function test_stdout at 0x1076be160&gt;)
+(&#39;test_warns&#39;, &lt;function test_warns at 0x1076be1f0&gt;)
+(&#39;use_kwargs&#39;, &lt;function use_kwargs at 0x1076bea60&gt;)
+(&#39;use_kwargs_dict&#39;, &lt;function use_kwargs_dict at 0x1076be9d0&gt;)
 fastcore.meta has: 
 13 items in its __all__, and 
 43 user defined functions, 
@@ -585,11 +596,11 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here===
 </div>
 </div>
 <p>Keep reading, I want to see what exactly does line 14 do?</p>
-<div class="cell column-screen">
-<div class="sourceCode" id="cb19"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">14</span>, <span class="st">&quot;what does os.path.dirname do?&quot;</span>, <span class="st">&quot;mo.__file__&quot;</span>, <span class="st">&quot;inspect.getdoc(os.path.dirname)&quot;</span>, <span class="st">&quot;pkgpath = os.path.dirname(mo.__file__)&quot;</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>whatinside(fm)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">20</span>, part<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="cell column-screen" data-execution_count="14">
+<div class="sourceCode" id="cb20"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">14</span>, <span class="st">&quot;what does os.path.dirname do?&quot;</span>, <span class="st">&quot;mo.__file__&quot;</span>, <span class="st">&quot;inspect.getdoc(os.path.dirname)&quot;</span>, <span class="st">&quot;pkgpath = os.path.dirname(mo.__file__)&quot;</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>whatinside(fm)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">20</span>, part<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
     callables = inspect.getmembers(mo, callable)                                                                                                        (13)
@@ -631,13 +642,13 @@ fastcore.meta has:
 </div>
 </div>
 <p>Finally, I want to dig into line 30 with a different example to trigger line 30.</p>
-<div class="cell column-screen">
-<div class="sourceCode" id="cb21"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">30</span>, <span class="st">&quot;what does pkgutil.iter_modules do?&quot;</span>, <span class="st">&quot;pkgpath&quot;</span>, <span class="st">&quot;inspect.getdoc(pkgutil.iter_modules)&quot;</span>, <span class="op">\</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;for a, b, c in pkgutil.iter_modules([pkgpath]):</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="st">    print(f&#39;</span><span class="sc">{a}</span><span class="st"> ; </span><span class="sc">{b}</span><span class="st">; </span><span class="sc">{c}</span><span class="st">&#39;)&quot;</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>whatinside(fm, lib<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">20</span>, part<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="cell column-screen" data-execution_count="15">
+<div class="sourceCode" id="cb22"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.dbprint(<span class="dv">30</span>, <span class="st">&quot;what does pkgutil.iter_modules do?&quot;</span>, <span class="st">&quot;pkgpath&quot;</span>, <span class="st">&quot;inspect.getdoc(pkgutil.iter_modules)&quot;</span>, <span class="op">\</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;for a, b, c in pkgutil.iter_modules([pkgpath]):</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="st">    print(f&#39;</span><span class="sc">{a}</span><span class="st"> ; </span><span class="sc">{b}</span><span class="st">; </span><span class="sc">{c}</span><span class="st">&#39;)&quot;</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>whatinside <span class="op">=</span> dbsrc</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>whatinside(fm, lib<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">20</span>, part<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        pprint([i[0] for i in callables])                                                                                                               (28)
     if lib:                                                                                                                                             (29)
@@ -735,9 +746,9 @@ The library has 21 modules
 </section>
 <section id="key-functionalities" class="level2">
 <h2>Key functionalities</h2>
-<div class="cell">
-<div class="sourceCode" id="cb23"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Fastdb??</span></code></pre></div>
-<div class="cell-output cell-output-display column-screen">
+<div class="cell" data-execution_count="16">
+<div class="sourceCode" id="cb24"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Fastdb??</span></code></pre></div>
+<div class="cell-output cell-output-display column-page">
 <div class="ansi-escaped-output">
 <pre><span class="ansi-red-fg">Init signature:</span> Fastdb<span class="ansi-blue-fg">(</span>src<span class="ansi-blue-fg">,</span> env<span class="ansi-blue-fg">)</span>
 <span class="ansi-red-fg">Docstring:</span>      Create a Fastdebug class which has two functionalities: dbprint and print.
@@ -748,9 +759,9 @@ The library has 21 modules
 </div>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode" id="cb24"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Fastdb.dbprint??</span></code></pre></div>
-<div class="cell-output cell-output-display column-screen">
+<div class="cell" data-execution_count="17">
+<div class="sourceCode" id="cb25"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Fastdb.dbprint??</span></code></pre></div>
+<div class="cell-output cell-output-display column-page">
 <div class="ansi-escaped-output">
 <pre><span class="ansi-red-fg">Signature:</span>
 Fastdb<span class="ansi-blue-fg">.</span>dbprint<span class="ansi-blue-fg">(</span>
@@ -826,9 +837,9 @@ Fastdb<span class="ansi-blue-fg">.</span>dbprint<span class="ansi-blue-fg">(</sp
 </div>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode" id="cb25"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Fastdb.<span class="bu">print</span>??</span></code></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell" data-execution_count="18">
+<div class="sourceCode" id="cb26"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Fastdb.<span class="bu">print</span>??</span></code></pre></div>
+<div class="cell-output cell-output-display column-page">
 <div class="ansi-escaped-output">
 <pre><span class="ansi-red-fg">Signature:</span>
 Fastdb<span class="ansi-blue-fg">.</span>print<span class="ansi-blue-fg">(</span>
@@ -907,19 +918,19 @@ Fastdb<span class="ansi-blue-fg">.</span>print<span class="ansi-blue-fg">(</span
 </section>
 <section id="install" class="level2">
 <h2>Install</h2>
-<div class="sourceCode" id="cb26"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install fastdebug</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install fastdebug</span></code></pre></div>
 </section>
 <section id="how-to-use" class="level2">
 <h2>How to use</h2>
 <p>Fill me in please! Don’t forget code examples:</p>
-<div class="cell">
-<div class="sourceCode" id="cb27"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="op">+</span><span class="dv">1</span></span></code></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell" data-execution_count="19">
+<div class="sourceCode" id="cb28"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="op">+</span><span class="dv">1</span></span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>2</code></pre>
 </div>
 </div>
 <div id="quarto-navigation-envelope" class="hidden">
-<p><span class="hidden" data-render-id="quarto-int-sidebar-title">fastdebug</span> <span class="hidden" data-render-id="quarto-int-navbar-title">fastdebug</span> <span class="hidden" data-render-id="quarto-int-next">core</span> <span class="hidden" data-render-id="quarto-int-sidebar:/index.html">fastdebug</span> <span class="hidden" data-render-id="quarto-int-sidebar:/core.html">core</span> <span class="hidden" data-render-id="quarto-int-sidebar:/FixSigMeta.html">FixSigMeta</span> <span class="hidden" data-render-id="quarto-int-sidebar:/utils.html">Utils</span></p>
+<p><span class="hidden" data-render-id="quarto-int-sidebar-title">fastdebug</span> <span class="hidden" data-render-id="quarto-int-navbar-title">fastdebug</span> <span class="hidden" data-render-id="quarto-int-next">core</span> <span class="hidden" data-render-id="quarto-int-sidebar:/index.html">fastdebug</span> <span class="hidden" data-render-id="quarto-int-sidebar:/core.html">core</span> <span class="hidden" data-render-id="quarto-int-sidebar:/FixSigMeta.html">FixSigMeta</span> <span class="hidden" data-render-id="quarto-int-sidebar:undefined">utils.html</span> <span class="hidden" data-render-id="quarto-int-sidebar:/utils.html">Utils</span></p>
 </div>
 <div id="quarto-meta-markdown" class="hidden">
 <p><span class="hidden" data-render-id="quarto-metatitle">fastdebug</span> <span class="hidden" data-render-id="quarto-twittercardtitle">fastdebug</span> <span class="hidden" data-render-id="quarto-ogcardtitle">fastdebug</span> <span class="hidden" data-render-id="quarto-metasitename">fastdebug</span> <span class="hidden" data-render-id="quarto-metadesc">a little tool to help me explore the source code of fastai libraries</span></p>
