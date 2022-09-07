@@ -4,7 +4,7 @@
 __all__ = ['defaults', 'dbcolors', 'colorize', 'strip_ansi', 'alignright', 'printsrcwithidx', 'printsrclinewithidx', 'printsrc',
            'dbprint', 'dbprintinsert', 'printrunsrclines', 'Fastdb']
 
-# %% ../00_core.ipynb 4
+# %% ../00_core.ipynb 5
 defaults = type('defaults', (object,), {'margin': 157, # align to the right by 157
                                         'orisrc': None, # keep a copy of original official src code
                                         'outenv': globals(), # outside global env
@@ -13,23 +13,23 @@ defaults = type('defaults', (object,), {'margin': 157, # align to the right by 1
                                         # 'src': None, # official src
                                        }) 
 
-# %% ../00_core.ipynb 19
+# %% ../00_core.ipynb 20
 from pprint import pprint
 
-# %% ../00_core.ipynb 30
+# %% ../00_core.ipynb 31
 import inspect
 
-# %% ../00_core.ipynb 49
+# %% ../00_core.ipynb 50
 from fastcore.basics import *
 
-# %% ../00_core.ipynb 50
+# %% ../00_core.ipynb 51
 class dbcolors:
     g = '\033[92m' #GREEN
     y = '\033[93m' #YELLOW
     r = '\033[91m' #RED
     reset = '\033[0m' #RESET COLOR
 
-# %% ../00_core.ipynb 51
+# %% ../00_core.ipynb 52
 def colorize(cmt, color:str=None):
     if color == "g":
         return dbcolors.g + cmt + dbcolors.reset
@@ -40,14 +40,14 @@ def colorize(cmt, color:str=None):
     else: 
         return cmt
 
-# %% ../00_core.ipynb 55
+# %% ../00_core.ipynb 56
 import re
 
-# %% ../00_core.ipynb 56
+# %% ../00_core.ipynb 57
 def strip_ansi(source):
     return re.sub(r'\033\[(\d|;)+?m', '', source)
 
-# %% ../00_core.ipynb 58
+# %% ../00_core.ipynb 59
 def alignright(blocks, margin:int=157):
     lst = blocks.split('\n')
     maxlen = max(map(lambda l : len(strip_ansi(l)) , lst ))
@@ -55,7 +55,7 @@ def alignright(blocks, margin:int=157):
     for l in lst:
         print(' '*indent + format(l))
 
-# %% ../00_core.ipynb 67
+# %% ../00_core.ipynb 68
 def printsrcwithidx(src, 
                     maxlines:int=33, # maximum num of lines per page
                     part:int=0): # if the src is more than 33 lines, then divide the src by 33 into a few parts
@@ -130,17 +130,17 @@ def printsrcwithidx(src,
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
 
-# %% ../00_core.ipynb 73
+# %% ../00_core.ipynb 74
 import inspect
 
-# %% ../00_core.ipynb 88
+# %% ../00_core.ipynb 89
 def printsrclinewithidx(idx, l, fill=" "):
     totallen = 157
     lenidx = 5
     lenl = len(l)
     print(l + fill*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
 
-# %% ../00_core.ipynb 95
+# %% ../00_core.ipynb 96
 def printsrc(src, # name of src code such as foo, or delegates
              dbcode, # string of codes or int of code idx number
              cmt,
@@ -178,7 +178,7 @@ def printsrc(src, # name of src code such as foo, or delegates
             printsrclinewithidx(idx, l)
 
 
-# %% ../00_core.ipynb 128
+# %% ../00_core.ipynb 129
 def dbprint(src, # the src func name, e.g., foo
             dbcode, # the srclines under investigation, can be either string or int
             cmt:str, # comment
@@ -247,10 +247,10 @@ def dbprint(src, # the src func name, e.g., foo
     return locals()[defaults.orisrc.__name__]
 
 
-# %% ../00_core.ipynb 147
+# %% ../00_core.ipynb 148
 import ast
 
-# %% ../00_core.ipynb 148
+# %% ../00_core.ipynb 149
 def dbprintinsert(*codes, env={}): 
 
         
@@ -381,7 +381,7 @@ def dbprintinsert(*codes, env={}):
         # the benefit of using global().update(env) is 
         # to ensure we don't need to include the same env fo
 
-# %% ../00_core.ipynb 204
+# %% ../00_core.ipynb 205
 def printrunsrclines(func, example):
     srclines = inspect.getsource(func).split('\n')
     dbsrc = ""
@@ -407,7 +407,7 @@ def printrunsrclines(func, example):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
 
-# %% ../00_core.ipynb 218
+# %% ../00_core.ipynb 219
 def printrunsrclines(src, example, env):
     srclst = inspect.getsource(src).split('\n')
     dbsrc = ""
@@ -478,7 +478,7 @@ def printrunsrclines(src, example, env):
         if idx in srcidx or "for" in l or "if" in l or "else" in l:
             print(l)
 
-# %% ../00_core.ipynb 246
+# %% ../00_core.ipynb 247
 class Fastdb():
     "Create a Fastdebug class which has two functionalities: dbprint and print."
     def __init__(self, 
@@ -489,7 +489,7 @@ class Fastdb():
         self.outenv = env
         self.cmts = {}
 
-# %% ../00_core.ipynb 247
+# %% ../00_core.ipynb 248
 @patch
 def dbprint(self:Fastdb, 
             dbcode:int, # a srcline under investigation, can be either string or int
@@ -565,7 +565,7 @@ def dbprint(self:Fastdb,
     return locals()[self.orisrc.__name__]
 
 
-# %% ../00_core.ipynb 248
+# %% ../00_core.ipynb 249
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
