@@ -19,17 +19,17 @@ from pprint import pprint
 # %% ../00_core.ipynb 31
 import inspect
 
-# %% ../00_core.ipynb 50
+# %% ../00_core.ipynb 51
 from fastcore.basics import *
 
-# %% ../00_core.ipynb 51
+# %% ../00_core.ipynb 52
 class dbcolors:
     g = '\033[92m' #GREEN
     y = '\033[93m' #YELLOW
     r = '\033[91m' #RED
     reset = '\033[0m' #RESET COLOR
 
-# %% ../00_core.ipynb 52
+# %% ../00_core.ipynb 53
 def colorize(cmt, color:str=None):
     if color == "g":
         return dbcolors.g + cmt + dbcolors.reset
@@ -40,14 +40,14 @@ def colorize(cmt, color:str=None):
     else: 
         return cmt
 
-# %% ../00_core.ipynb 56
+# %% ../00_core.ipynb 57
 import re
 
-# %% ../00_core.ipynb 57
+# %% ../00_core.ipynb 58
 def strip_ansi(source):
     return re.sub(r'\033\[(\d|;)+?m', '', source)
 
-# %% ../00_core.ipynb 59
+# %% ../00_core.ipynb 60
 def alignright(blocks, margin:int=157):
     lst = blocks.split('\n')
     maxlen = max(map(lambda l : len(strip_ansi(l)) , lst ))
@@ -55,22 +55,22 @@ def alignright(blocks, margin:int=157):
     for l in lst:
         print(' '*indent + format(l))
 
-# %% ../00_core.ipynb 74
+# %% ../00_core.ipynb 75
 import inspect
 
-# %% ../00_core.ipynb 89
+# %% ../00_core.ipynb 90
 def printsrclinewithidx(idx, l, fill=" "):
     totallen = 157
     lenidx = 5
     lenl = len(l)
     print(l + fill*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
 
-# %% ../00_core.ipynb 96
+# %% ../00_core.ipynb 97
 def printsrc(src, # name of src code such as foo, or delegates
              dbcode, # string of codes or int of code idx number
              cmt,
              expand:int=2): # expand the codes around the srcline under investigation
-    
+    "print the seleted srcline with comment, idx and specified num of expanding srclines"
     lstsrc = inspect.getsource(src).split('\n')
     
     dblines = ""
@@ -103,10 +103,10 @@ def printsrc(src, # name of src code such as foo, or delegates
             printsrclinewithidx(idx, l)
 
 
-# %% ../00_core.ipynb 148
+# %% ../00_core.ipynb 149
 import ast
 
-# %% ../00_core.ipynb 149
+# %% ../00_core.ipynb 150
 def dbprintinsert(*codes, env={}): 
 
         
@@ -237,7 +237,7 @@ def dbprintinsert(*codes, env={}):
         # the benefit of using global().update(env) is 
         # to ensure we don't need to include the same env fo
 
-# %% ../00_core.ipynb 247
+# %% ../00_core.ipynb 248
 class Fastdb():
     "Create a Fastdebug class which has two functionalities: dbprint and print."
     def __init__(self, 
@@ -248,10 +248,10 @@ class Fastdb():
         self.outenv = env
         self.cmts = {}
 
-# %% ../00_core.ipynb 252
+# %% ../00_core.ipynb 261
 @patch
 def dbprint(self:Fastdb, 
-            dbcode:int, # a srcline under investigation, can be either string or int
+            dbcode:int, # idx of a srcline under investigation, can only be int
             cmt:str, # comment added to the srcline
             *codes, # a list of expressions (str) you write to be evaluated above the srcline
             expand:int=2, # span 2 lines of srcode up and down from the srcline investigated
@@ -262,7 +262,8 @@ def dbprint(self:Fastdb,
     if type(dbcode) == int: self.cmts.update({dbcode: cmt})
 
     printsrc(src, dbcode, cmt, expand)
-
+    print('{:-<60}'.format(colorize("print selected srcline with expands above", color="y")))
+    
     dbsrc = ""
     indent = 4
     onedbprint = False
@@ -279,14 +280,18 @@ def dbprint(self:Fastdb,
     if type(dbcode) == int:
         srclines = lst[dbcode]
     else:
-        srclines = dbcode
+        colwarn = colorize("Warning!", color="r")
+        colmsg = colorize(" param decode has to be an int as idx.", color="y")
+        print(colwarn + colmsg)
+#         srclines = dbcode
+        return
 
     for idx, l in zip(range(len(lst)), lst):
 
-        if bool(l.strip()) and l.strip() in srclines and idx == dbcode: 
+        if bool(l.strip()) and l.strip() in srclines and idx == dbcode:
 
-            if len(codes) > 0: # if the new codes is not empty
-                numindent = len(l) - len(l.strip())
+            if len(codes) > 0: 
+                numindent = len(l) - len(l.lstrip()) # make sure indent not messed up by trailing spaces
                 dbcodes = "dbprintinsert("
                 count = 1
                 for c in codes:
@@ -309,6 +314,7 @@ def dbprint(self:Fastdb,
             dbsrc = dbsrc + l + '\n'
 
     if showdbsrc: # added to debug
+        print('{:-<60}'.format(colorize("showdbsrc=Start", color="y")))
         totallen = 157
         lenidx = 5
         dblst = dbsrc.split('\n')
@@ -319,23 +325,20 @@ def dbprint(self:Fastdb,
                 print(l + "="*(totallen-lenl-lenidx) + "(db)")
             else:
                 print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
-        
         print(f"before exec, locals(): {list(locals().keys())}")
-        print(f"Fastdb.dbprint has __code__?: {hasattr(Fastdb.dbprint, '__code__')}")
-        print(f"does Fastdb.dbprint has source available?: {not inspect.getsourcefile(Fastdb.dbprint) == '<string>'}")
-        print(f"outenv[self.orisrc.__qualname__.split('.')[0]].dbprint == Fastdb.dbprint: {self.outenv[self.orisrc.__qualname__.split('.')[0]].dbprint == Fastdb.dbprint}")
+        
     exec(dbsrc, globals().update(self.outenv)) # make sure b can access lst from above
+    
     if showdbsrc: 
         print(f"after exec, locals(): {list(locals().keys())}")
-        print(f"type(locals()[self.orisrc.__name__]): {type(locals()[self.orisrc.__name__])}")
-        print(f"Fastdb.dbprint has __code__?: {hasattr(Fastdb.dbprint, '__code__')}")
-        print(f"does Fastdb.dbprint has source available?: {not inspect.getsourcefile(Fastdb.dbprint) == '<string>'}")
-        print(f"outenv[self.orisrc.__qualname__.split('.')[0]].dbprint == Fastdb.dbprint: {self.outenv[self.orisrc.__qualname__.split('.')[0]].dbprint == Fastdb.dbprint}")
-
+        print(f'self.orisrc.__name__: {self.orisrc.__name__}')
+        print(f'locals()[self.orisrc.__name__]: {locals()[self.orisrc.__name__]}')
+        print('{:-<60}'.format(colorize("showdbsrc=End", color="y")))
+        
     return locals()[self.orisrc.__name__]
 
 
-# %% ../00_core.ipynb 253
+# %% ../00_core.ipynb 262
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
