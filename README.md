@@ -133,8 +133,8 @@ import fastdebug.utils as fu
 We are exploring
 [`whatinside`](https://EmbraceLife.github.io/fastdebug/utils.html#whatinside),
 so we need to have the env (see `g` below) where it is defined for
-[`Fastdb`](https://EmbraceLife.github.io/fastdebug/core.html#fastdb) to
-use.
+[`Fastdb`](https://EmbraceLife.github.io/fastdebug/core-copy1.html#fastdb)
+to use.
 
 ``` python
 g = {}
@@ -152,7 +152,8 @@ from fastdebug.core import *
 ```
 
 ``` python
-fdb = Fastdb(whatinside, g)
+# fdb = Fastdb(whatinside, g)
+fdb = Fastdb(whatinside)
 ```
 
 ``` python
@@ -210,6 +211,8 @@ fdb.print(maxlines=15, part=1)
                                                                                                                                              count num in __all__
         funcs = inspect.getmembers(mo, inspect.isfunction)                                                                                                  (10)
         classes = inspect.getmembers(mo, inspect.isclass)                                                                                                   (11)
+    print selected srcline with expands above----------
+    exec on dbsrc above--------------------------------
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -244,8 +247,7 @@ running separate cells to be deleted later.
 ``` python
 dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspect.isfunction)", \
             "inspect.getdoc(inspect.getmembers)", "funcs = inspect.getmembers(mo, inspect.isfunction)")
-whatinside = dbsrc
-whatinside(fm)
+fu.whatinside(fm)
 ```
 
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'                                                                (8)
@@ -254,6 +256,8 @@ whatinside(fm)
                                                                                                                                         get all funcs of a module
         classes = inspect.getmembers(mo, inspect.isclass)                                                                                                   (11)
         builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
+    print selected srcline with expands above----------
+    exec on dbsrc above--------------------------------
 
 
                                                 mo => mo : <module 'fastcore.meta' from '/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore/meta.py'>
@@ -275,7 +279,7 @@ whatinside(fm)
     Optionally, only return members that satisfy a given predicate.
 
 
-    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('_funcs_kwargs', <function _funcs_kwargs at 0x1063f01f0>), ('_mk_param', <function _mk_param at 0x1067ecee0>), ('_rm_self', <function _rm_self at 0x1067ec8b0>), ('all_equal', <function all_equal at 0x106307700>), ('anno_dict', <function anno_dict at 0x1067ece50>), ('any_is_instance', <function any_is_instance at 0x1063078b0>), ('array_equal', <function array_equal at 0x1063079d0>), ('contextmanager', <function contextmanager at 0x1031d4c10>), ('copy', <function copy at 0x103453790>), ('delegates', <function delegates at 0x1063f00d0>), ('df_equal', <function df_equal at 0x106307a60>), ('empty2none', <function empty2none at 0x1067ecaf0>), ('equals', <function equals at 0x106307af0>), ('funcs_kwargs', <function funcs_kwargs at 0x1063f0280>), ('in_colab', <function in_colab at 0x106307ca0>), ('in_ipython', <function in_ipython at 0x106307c10>), ('in_jupyter', <function in_jupyter at 0x106307d30>), ('in_notebook', <function in_notebook at 0x106307dc0>), ('ipython_shell', <function ipython_shell at 0x106307b80>), ('is_close', <function is_close at 0x1067ec4c0>), ('is_coll', <function is_coll at 0x106307670>), ('is_iter', <function is_iter at 0x1063075e0>), ('isinstance_str', <function isinstance_str at 0x106307940>), ('method', <function method at 0x1063f0160>), ('nequals', <function nequals at 0x1067ec280>), ('noop', <function noop at 0x106307790>), ('noops', <function noops at 0x106307820>), ('remove_prefix', <function remove_prefix at 0x106307e50>), ('remove_suffix', <function remove_suffix at 0x106307ee0>), ('test', <function test at 0x1067ec1f0>), ('test_close', <function test_close at 0x1067ec550>), ('test_eq', <function test_eq at 0x1067ec310>), ('test_eq_type', <function test_eq_type at 0x1067ec3a0>), ('test_fail', <function test_fail at 0x1067ec040>), ('test_fig_exists', <function test_fig_exists at 0x1067ec820>), ('test_is', <function test_is at 0x1067ec5e0>), ('test_ne', <function test_ne at 0x1067ec430>), ('test_shuffled', <function test_shuffled at 0x1067ec670>), ('test_sig', <function test_sig at 0x105eb8550>), ('test_stdout', <function test_stdout at 0x1067ec700>), ('test_warns', <function test_warns at 0x1067ec790>), ('use_kwargs', <function use_kwargs at 0x1063f0040>), ('use_kwargs_dict', <function use_kwargs_dict at 0x1067ecf70>)]
+    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('_funcs_kwargs', <function _funcs_kwargs at 0x107f3b940>), ('_mk_param', <function _mk_param at 0x107f3b670>), ('_rm_self', <function _rm_self at 0x107f3b040>), ('all_equal', <function all_equal at 0x107f32b80>), ('anno_dict', <function anno_dict at 0x107f3b5e0>), ('any_is_instance', <function any_is_instance at 0x107f38040>), ('array_equal', <function array_equal at 0x107f38160>), ('contextmanager', <function contextmanager at 0x1051e0c10>), ('copy', <function copy at 0x10547f790>), ('delegates', <function delegates at 0x107f3b820>), ('df_equal', <function df_equal at 0x107f381f0>), ('empty2none', <function empty2none at 0x107f3b280>), ('equals', <function equals at 0x107f38280>), ('funcs_kwargs', <function funcs_kwargs at 0x107f3b9d0>), ('in_colab', <function in_colab at 0x107f38430>), ('in_ipython', <function in_ipython at 0x107f383a0>), ('in_jupyter', <function in_jupyter at 0x107f384c0>), ('in_notebook', <function in_notebook at 0x107f38550>), ('ipython_shell', <function ipython_shell at 0x107f38310>), ('is_close', <function is_close at 0x107f38c10>), ('is_coll', <function is_coll at 0x107f32a60>), ('is_iter', <function is_iter at 0x107f32c10>), ('isinstance_str', <function isinstance_str at 0x107f380d0>), ('method', <function method at 0x107f3b8b0>), ('nequals', <function nequals at 0x107f389d0>), ('noop', <function noop at 0x107f32ee0>), ('noops', <function noops at 0x107f32f70>), ('remove_prefix', <function remove_prefix at 0x107f385e0>), ('remove_suffix', <function remove_suffix at 0x107f38670>), ('test', <function test at 0x107f38940>), ('test_close', <function test_close at 0x107f38ca0>), ('test_eq', <function test_eq at 0x107f38a60>), ('test_eq_type', <function test_eq_type at 0x107f38af0>), ('test_fail', <function test_fail at 0x107f38790>), ('test_fig_exists', <function test_fig_exists at 0x107f38f70>), ('test_is', <function test_is at 0x107f38d30>), ('test_ne', <function test_ne at 0x107f38b80>), ('test_shuffled', <function test_shuffled at 0x107f38dc0>), ('test_sig', <function test_sig at 0x107ee5940>), ('test_stdout', <function test_stdout at 0x107f38e50>), ('test_warns', <function test_warns at 0x107f38ee0>), ('use_kwargs', <function use_kwargs at 0x107f3b790>), ('use_kwargs_dict', <function use_kwargs_dict at 0x107f3b700>)]
     fastcore.meta has: 
     13 items in its __all__, and 
     43 user defined functions, 
@@ -290,7 +294,7 @@ discovered above for myself is the attributes of a function
 len(whatinside.__globals__)
 ```
 
-    176
+    44
 
 If you want to zoom in the source code, you could cut the source into
 parts and exam each part individually.
@@ -324,8 +328,7 @@ dbsrc = fdb.dbprint(11, "get all classes from the module", \
 "clas = inspect.getmembers(mo, inspect.isclass)\\n\
 for c in clas:\\n\
     print(c)")
-whatinside = dbsrc
-whatinside(fm)
+fu.whatinside(fm)
 fdb.print(maxlines=15, part=1)
 ```
 
@@ -335,6 +338,8 @@ fdb.print(maxlines=15, part=1)
                                                                                                                                   get all classes from the module
         builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
         callables = inspect.getmembers(mo, callable)                                                                                                        (13)
+    print selected srcline with expands above----------
+    exec on dbsrc above--------------------------------
 
 
     clas = inspect.getmembers(mo, inspect.isclass)
@@ -382,15 +387,14 @@ fdb.print(maxlines=15, part=1)
         classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
-        pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+        pkgpath = os.path.dirname(mo.__file__)================================================(14) # get the file path of the module
                                                                                                                                          part No.1 out of 2 parts
 
 Keep reading, I want to see what exactly does line 14 do?
 
 ``` python
 dbsrc = fdb.dbprint(14, "get the file path of the module", "mo.__file__", "inspect.getdoc(os.path.dirname)", "pkgpath = os.path.dirname(mo.__file__)")
-whatinside = dbsrc
-whatinside(fm)
+fu.whatinside(fm)
 fdb.print(maxlines=10, part=2)
 ```
 
@@ -400,6 +404,8 @@ fdb.print(maxlines=10, part=2)
                                                                                                                                   get the file path of the module
         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (15)
         if hasattr(mo, "__all__") and dun: pprint(mo.__all__)                                                                                               (16)
+    print selected srcline with expands above----------
+    exec on dbsrc above--------------------------------
 
 
                                                               mo.__file__ => mo.__file__ : /Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore/meta.py
@@ -445,7 +451,7 @@ fdb.print(maxlines=20, part=2)
             print(f'The callables are: ')=====================================================(27)      
             pprint([i[0] for i in callables])=================================================(28)      
         if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30)      
+            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # get names of all modules of a lib
             print(f'The library has {len(modules)} modules')==================================(31)      
             pprint(modules)===================================================================(32)      
                                                                                                                                                             (33)
@@ -455,8 +461,7 @@ fdb.print(maxlines=20, part=2)
 dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect.getdoc(pkgutil.iter_modules)", \
 "for a, b, c in pkgutil.iter_modules([pkgpath]):\\n\
     print(f'{a} ; {b}; {c}')")
-whatinside = dbsrc
-whatinside(fm, lib=True)
+fu.whatinside(fm, lib=True)
 fdb.print(maxlines=20, part=2)
 ```
 
@@ -466,6 +471,8 @@ fdb.print(maxlines=20, part=2)
                                                                                                                                 get names of all modules of a lib
             print(f'The library has {len(modules)} modules')                                                                                                (31)
             pprint(modules)                                                                                                                                 (32)
+    print selected srcline with expands above----------
+    exec on dbsrc above--------------------------------
     fastcore.meta has: 
     13 items in its __all__, and 
     43 user defined functions, 
@@ -600,31 +607,43 @@ To finish, I need to give
 its own untouched source code back
 
 ``` python
-whatinside = fdb.orisrc
+import inspect
 ```
+
+``` python
+whatinside is whatinside.__globals__['whatinside']
+```
+
+    False
+
+``` python
+fu.whatinside is whatinside.__globals__['whatinside']
+```
+
+    True
+
+``` python
+inspect.getsourcefile(whatinside)
+```
+
+    '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'
+
+``` python
+inspect.getsourcefile(fu.whatinside)
+```
+
+    '<string>'
+
+``` python
+inspect.getsourcefile(whatinside.__globals__['whatinside'])
+```
+
+    '<string>'
 
 To check, when run `whatinside??` we should see the actually source code
 whereas the db version of
 [`whatinside`](https://EmbraceLife.github.io/fastdebug/utils.html#whatinside)
 does not have.
-
-``` python
-whatinside??
-```
-
-## Key functionalities
-
-``` python
-Fastdb??
-```
-
-``` python
-Fastdb.dbprint??
-```
-
-``` python
-Fastdb.print??
-```
 
 ## Install
 

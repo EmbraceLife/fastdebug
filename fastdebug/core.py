@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['defaults', 'dbcolors', 'colorize', 'strip_ansi', 'alignright', 'printsrclinewithidx', 'printsrc', 'dbprintinsert',
-           'Fastdb']
+           'Fastdb', 'reliveonce']
 
 # %% ../00_core.ipynb 9
 defaults = type('defaults', (object,), {'margin': 157, # align to the right by 157
@@ -237,18 +237,18 @@ def dbprintinsert(*codes, env={}):
         # the benefit of using global().update(env) is 
         # to ensure we don't need to include the same env fo
 
-# %% ../00_core.ipynb 252
+# %% ../00_core.ipynb 254
 class Fastdb():
     "Create a Fastdebug class which has two functionalities: dbprint and print."
     def __init__(self, 
-                 src, # name of src code you are exploring
-                 env): # env variables needed for exploring the source code, e.g., g = globals()
+                 src): # name of src code you are exploring
+#                  env): # env variables needed for exploring the source code, e.g., g = globals()
         self.orisrc = src
         self.margin = 157
-        self.outenv = env
+        self.outenv = src.__globals__
         self.cmts = {}
 
-# %% ../00_core.ipynb 269
+# %% ../00_core.ipynb 273
 @patch
 def dbprint(self:Fastdb, 
             dbcode:int, # idx of a srcline under investigation, can only be int
@@ -286,7 +286,7 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
 
         if bool(l.strip()) and l.strip() in srclines and idx == dbcode:
 
-            if len(codes) > 0: 
+            if len(codes) > 0: # no codes, no dbprintinsert
                 numindent = len(l) - len(l.lstrip()) # make sure indent not messed up by trailing spaces
                 dbcodes = "dbprintinsert("
                 count = 1
@@ -305,9 +305,7 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
 
         elif bool(l.strip()) and idx + 1 == len(lst):
             dbsrc = dbsrc + l
-
-#         elif bool(l.strip()): # make sure pure indentation + \n is ignored
-        else:
+        else: # make sure this printout is identical to the printsrc output
             dbsrc = dbsrc + l + '\n'
 
     if showdbsrc: # added to debug
@@ -340,7 +338,10 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
             expr1 = "self.outenv[" + "'" + methodname + "']"
             print(f"inspect.getsourcefile({expr}) == '<string>': {True if inspect.getsourcefile(eval(expr)) == '<string>' else inspect.getsourcefile(eval(expr))}")
             print(f"self.outenv[{methodname}]: {eval(expr1)}")
-    exec(dbsrc, globals().update(self.outenv)) # make sure b can access lst from above
+            print(f"{self.orisrc} is {expr}: {self.orisrc is eval(expr)}")
+            
+            
+    exec(dbsrc, globals().update(self.outenv)) # when dbsrc is a method, it will update as part of a class
     print('{:-<60}'.format(colorize("exec on dbsrc above", color="y")))
     
     if showdbsrc: 
@@ -356,14 +357,18 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
     #         print(f"after exec, are {methodname} and {clsname} and {self.orisrc.__qualname__} in self.outenv(): {[i in self.outenv for i in [methodname, clsname, self.orisrc.__qualname__]]}")
             print(f"inspect.getsourcefile({expr}) == '<string>': {True if inspect.getsourcefile(eval(expr)) == '<string>' else inspect.getsourcefile(eval(expr))}")
             print(f"self.outenv[{methodname}]: {eval(expr1)}")
+            print(f"{self.orisrc} is {expr}: {self.orisrc is eval(expr)}")            
         print(f'self.orisrc.__name__: {self.orisrc.__name__}')
         print(f'locals()[self.orisrc.__name__]: {locals()[self.orisrc.__name__]}')
         print('{:-<60}'.format(colorize("showdbsrc=End", color="y")))
         
-    return locals()[self.orisrc.__name__]
+    self.outenv.update(locals())
+#     self.outenv[self.orisrc.__name__] = locals()[self.orisrc.__name__]
+#     return locals()[self.orisrc.__name__]
 
+        
 
-# %% ../00_core.ipynb 270
+# %% ../00_core.ipynb 274
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
@@ -439,3 +444,30 @@ def print(self:Fastdb,
             if (idx == maxlines*(p+1) or idx == len(lstsrc) - 1) and p+1 == part:
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
+
+# %% ../00_core.ipynb 276
+@patch
+def goback(self:Fastdb):
+    "Return src back to original state."
+    self.outenv[self.orisrc.__name__] = self.orisrc
+
+# %% ../00_core.ipynb 284
+def reliveonce(func, # the current func
+               oldfunc:str, # the old version of func in string
+               alive:bool=True, # True to bring old to live, False to return back to normal
+               db=False): # True, to print for debugging
+    "Replace current version of srcode with older version, and back to normal"
+    if alive:
+        safety = func
+        block = ast.parse(oldfunc, mode='exec')
+        exec(compile(block, '<string>', mode='exec'), globals().update(func.__globals__))
+        if db:
+            print(f"after exec: list(locals().keys()): {list(locals().keys())}")
+            print(f"before update: inspect.getsourcefile(func.__globals__[func.__name__]): {inspect.getsourcefile(func.__globals__[func.__name__])}")
+        
+        # update the old version of func from locals() into func.__globals__, so that outside this reliveonce function, the old func can be used
+        func.__globals__.update(locals())
+        if db:
+            print(f"after update: inspect.getsourcefile(func.__globals__[func.__name__]): {inspect.getsourcefile(func.__globals__[func.__name__])}")
+    else:
+        func.__globals__[func.__name__] = func.__globals__['safety']
