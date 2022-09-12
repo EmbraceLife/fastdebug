@@ -241,13 +241,14 @@ def dbprintinsert(*codes, env={}):
 class Fastdb():
     "Create a Fastdebug class which has two functionalities: dbprint and print."
     def __init__(self, 
-                 src): # name of src code you are exploring
-#                  env): # env variables needed for exploring the source code, e.g., g = globals()
+                 src, # name of src code you are exploring
+                 db=False): # db=True will run some debugging prints
         self.orisrc = src
         self.margin = 157
         self.outenv = src.__globals__
         self.cmts = {}
-        print(f"{self.orisrc} is {self.outenv[self.orisrc.__name__]}: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+        if db:
+            print(f"self.orisrc: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
 
 # %% ../00_core.ipynb 274
 @patch
@@ -325,23 +326,26 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
                 print(l + "-"*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
                 
         print(f"locals() keys: {list(locals().keys())}")
-        print(f"before update to exec, {self.orisrc.__name__} is self.outenv[{self.orisrc.__name__}]: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+        print(f"before update to exec, self.orisrc.__name__: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
 
         names = self.orisrc.__qualname__.split('.')        
         if len(names) == 2:
+            print('{:-<60}'.format(colorize("the src is a method of a class", color="y")))
             clsname = names[0]
             methodname = names[1]
-            print(f"before exec, is {methodname} in locals(): {methodname in locals()}")
-            print(f"before exec, is {clsname} in locals(): {clsname in locals()}")
-            print(f"before exec, is {self.orisrc.__qualname__} in locals(): {self.orisrc.__qualname__ in locals()}")
-            print(f"before exec, is {methodname} in self.outenv: {methodname in self.outenv}")
-            print(f"before exec, is {clsname} in self.outenv: {clsname in self.outenv}")
-            print(f"before exec, is {self.orisrc.__qualname__} in self.outenv: {self.orisrc.__qualname__ in self.outenv}")
+            print(f"before exec, is methodname: {methodname} in locals(): {methodname in locals()}")
+            print(f"before exec, is clsname: {clsname} in locals(): {clsname in locals()}")
+            print(f"before exec, is self.orisrc.__qualname__: {self.orisrc.__qualname__} in locals(): {self.orisrc.__qualname__ in locals()}")
+            print(f"before exec, is methodname: {methodname} in self.outenv: {methodname in self.outenv}")
+            print(f"before exec, is clsname: {clsname} in self.outenv: {clsname in self.outenv}")
+            print(f"before exec, is self.orisrc.__qualname__: {self.orisrc.__qualname__} in self.outenv: {self.orisrc.__qualname__ in self.outenv}")
             expr = "self.outenv[" + "'" + clsname + "']." + methodname
+            print(f"expr: {expr}")
             expr1 = "self.outenv[" + "'" + methodname + "']"
-            print(f"inspect.getsourcefile({expr}) == '<string>': {True if inspect.getsourcefile(eval(expr)) == '<string>' else inspect.getsourcefile(eval(expr))}")
-            print(f"self.outenv[{methodname}]: {eval(expr1)}")
-            print(f"{self.orisrc} is {expr}: {self.orisrc is eval(expr)}")
+            print(f"expr1: {expr1}")
+            print(f"inspect.getsourcefile('{expr}') == '<string>': {True if inspect.getsourcefile(eval(expr)) == '<string>' else inspect.getsourcefile(eval(expr))}")
+            print(f"self.outenv['{methodname}']: {eval(expr1)}")
+            print(f"self.orisrc.__name__: {self.orisrc.__name__} is {expr}: {self.orisrc is eval(expr)}")
             
             
     exec(dbsrc, globals().update(self.outenv)) # when dbsrc is a method, it will update as part of a class
@@ -351,35 +355,35 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
     if showdbsrc: 
         print(f"locals() keys: {list(locals().keys())}")
         if len(names) == 2:
-            print(f"after exec, is {methodname} in locals(): {methodname in locals()}")
-            print(f"after exec, is {clsname} in locals(): {clsname in locals()}")
-            print(f"after exec, is {self.orisrc.__qualname__} in locals(): {self.orisrc.__qualname__ in locals()}")
-            print(f"after exec, is {methodname} in self.outenv: {methodname in self.outenv}")
-            print(f"after exec, is {clsname} in self.outenv: {clsname in self.outenv}")
-            print(f"after exec, is {self.orisrc.__qualname__} in self.outenv: {self.orisrc.__qualname__ in self.outenv}")
-    #         print(f"after exec, are {methodname} and {clsname} and {self.orisrc.__qualname__} in locals(): {[i in list(locals().keys()) for i in [self.orisrc.__name__, clsname, self.orisrc.__qualname__]]}")
-    #         print(f"after exec, are {methodname} and {clsname} and {self.orisrc.__qualname__} in self.outenv(): {[i in self.outenv for i in [methodname, clsname, self.orisrc.__qualname__]]}")
+            print('{:-<60}'.format(colorize("the src is a method of a class", color="y")))            
+            print(f"after exec, is methodname: {methodname} in locals(): {methodname in locals()}")
+            print(f"after exec, is clsname: {clsname} in locals(): {clsname in locals()}")
+            print(f"after exec, is self.orisrc.__qualname__: {self.orisrc.__qualname__} in locals(): {self.orisrc.__qualname__ in locals()}")
+            print(f"after exec, is methodname: {methodname} in self.outenv: {methodname in self.outenv}")
+            print(f"after exec, is clsname: {clsname} in self.outenv: {clsname in self.outenv}")
+            print(f"after exec, is self.orisrc.__qualname__: {self.orisrc.__qualname__} in self.outenv: {self.orisrc.__qualname__ in self.outenv}")
             print(f"inspect.getsourcefile({expr}) == '<string>': {True if inspect.getsourcefile(eval(expr)) == '<string>' else inspect.getsourcefile(eval(expr))}")
-            print(f"self.outenv[{methodname}]: {eval(expr1)}")
-            print(f"{self.orisrc} is {expr}: {self.orisrc is eval(expr)}")            
+            print(f"self.outenv['{methodname}']: {eval(expr1)}")
+            print(f"self.orisrc.__name__: {self.orisrc.__name__} is {expr}: {self.orisrc is eval(expr)}")            
         print(f'self.orisrc.__name__: {self.orisrc.__name__}')
-        print(f'locals()[self.orisrc.__name__]: {locals()[self.orisrc.__name__]}')
-        print('{:-<60}'.format(colorize("showdbsrc=End", color="y")))
+        print(f"locals()['{self.orisrc.__name__}']: {locals()[self.orisrc.__name__]}")
+
     
     if showdbsrc:
         print(f"after exec and before self.outenv update, self.outenv['{self.orisrc.__name__}'] is locals()['{self.orisrc.__name__}']: {locals()[self.orisrc.__name__] is self.outenv[self.orisrc.__name__]}")
-        print(f"after exec and before self.outenv update, {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
-        print(f"after exec and before self.outenv update, {self.orisrc.__name__} is locals()['{self.orisrc.__name__}']: {self.orisrc is locals()[self.orisrc.__name__]}")
+        print(f"after exec and before self.outenv update, self.orisrc.__name__: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+        print(f"after exec and before self.outenv update, self.orisrc.__name__: {self.orisrc.__name__} is locals()['{self.orisrc.__name__}']: {self.orisrc is locals()[self.orisrc.__name__]}")
     # Important! update dbsrc to module.func, fu.whatinside, inspect._signature_from_callable
     self.outenv.update(locals()) 
 #     self.outenv[self.orisrc.__name__] = locals()[self.orisrc.__name__]
 #     return locals()[self.orisrc.__name__]
     if showdbsrc:
-        print(f"after update self.outenv, {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+        print(f"after update self.outenv, self.orisrc.__name__: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
         exec("import " + self.orisrc.__module__.split('.')[0])
-        print(f"after update self.outenv, {self.orisrc.__name__} is {self.orisrc.__module__}.{self.orisrc.__name__}: {self.orisrc is eval(self.orisrc.__module__ + '.' + self.orisrc.__name__, {}, locals())}")
+        print(f"after update self.outenv, self.orisrc.__name__: {self.orisrc.__name__} is {self.orisrc.__module__}.{self.orisrc.__name__}: {self.orisrc is eval(self.orisrc.__module__ + '.' + self.orisrc.__name__, {}, locals())}")
         print(f"after update self.outenv, self.outenv['{self.orisrc.__name__}'] is {self.orisrc.__module__}.{self.orisrc.__name__}: {self.outenv[self.orisrc.__name__] is eval(self.orisrc.__module__ + '.' + self.orisrc.__name__, {}, locals())}")        
-        print(f"Therefore, to use dbsrc we must use self.outenv['{self.orisrc.__name__}']")
+        print(f"Therefore, to use dbsrc we must use self.outenv['{self.orisrc.__name__}'], or {self.orisrc.__module__}.{self.orisrc.__name__}")
+        print('{:-<60}'.format(colorize("showdbsrc=End", color="y")))
 
         
 
@@ -466,7 +470,120 @@ def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../00_core.ipynb 285
+# %% ../00_core.ipynb 279
+@patch
+def explore(self:Fastdb, 
+            dbcode:int, # idx of a srcline under investigation, can only be int
+            cmt:str, # comment
+            showdbsrc:bool=False): # display dbsrc
+    "insert 'import ipdb; ipdb.set_trace()' above srcline of idx to create dbsrc, and exec on dbsrc"
+    src = self.orisrc
+
+    printsrc(src, dbcode, cmt)
+    print('{:-<60}'.format(colorize("print selected srcline with expands above", color="y")))
+    
+    dbsrc = ""
+    indent = 4
+
+    lst = inspect.getsource(src).split('\n')
+    if not bool(lst[-1]): lst = lst[:-1]
+
+    srclines = ""
+    if type(dbcode) == int:
+        srclines = lst[dbcode]
+    else:
+        raise TypeError("decode must be an integer.")
+
+    for idx, l in zip(range(len(lst)), lst):
+
+        if bool(l.strip()) and l.strip() in srclines and idx == dbcode:
+            numindent = len(l) - len(l.lstrip()) # make sure indent not messed up by trailing spaces
+            dbcodes = "import ipdb; ipdb.set_trace()"
+            dbsrc = dbsrc + " "*numindent + dbcodes + '\n'
+            dbsrc = dbsrc + l + '\n'     
+        elif bool(l.strip()) and idx + 1 == len(lst):
+            dbsrc = dbsrc + l
+        else: # make sure this printout is identical to the printsrc output
+            dbsrc = dbsrc + l + '\n'
+
+    if showdbsrc: # added to debug
+        print('{:-<60}'.format(colorize("print out dbsrc", color="y")))
+        totallen = 157
+        lenidx = 5
+        dblst = dbsrc.split('\n')
+        for idx, l in zip(range(len(dblst)), dblst):
+            lenl = len(l)
+#             if "dbprintinsert" in l: 
+            if l.strip().startswith("dbprintinsert"): 
+                print(l + "="*(totallen-lenl-lenidx) + "(db)")
+            elif not bool(l.strip()):
+                print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+            else:
+                print(l + "-"*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+        
+        names = self.orisrc.__qualname__.split('.')        
+        if len(names) == 2:
+            print('{:-<60}'.format(colorize("the src is a method of a class", color="y")))
+            clsname = names[0]
+            methodname = names[1]
+            print(f"before exec, is methodname: {methodname} in locals(): {methodname in locals()}")
+            print(f"before exec, is clsname: {clsname} in locals(): {clsname in locals()}")
+            print(f"before exec, is self.orisrc.__qualname__: {self.orisrc.__qualname__} in locals(): {self.orisrc.__qualname__ in locals()}")
+            print(f"before exec, is methodname: {methodname} in self.outenv: {methodname in self.outenv}")
+            print(f"before exec, is clsname: {clsname} in self.outenv: {clsname in self.outenv}")
+            print(f"before exec, is self.orisrc.__qualname__: {self.orisrc.__qualname__} in self.outenv: {self.orisrc.__qualname__ in self.outenv}")
+            expr = "self.outenv[" + "'" + clsname + "']." + methodname
+            print(f"expr: {expr}")
+            expr1 = "self.outenv[" + "'" + methodname + "']"
+            print(f"expr1: {expr1}")
+            print(f"inspect.getsourcefile('{expr}') == '<string>': {True if inspect.getsourcefile(eval(expr)) == '<string>' else inspect.getsourcefile(eval(expr))}")
+            print(f"self.outenv['{methodname}']: {eval(expr1)}")
+            print(f"self.orisrc.__name__: {self.orisrc.__name__} is {expr}: {self.orisrc is eval(expr)}")
+
+    file_name ='/tmp/' + self.orisrc.__name__ + '.py' # you can use any hash_function
+    with open(file_name, 'w') as f:
+        f.write(dbsrc)
+    code = compile(dbsrc, file_name, 'exec')
+    exec(code, globals().update(self.outenv)) # when dbsrc is a method, it will update as part of a class
+    print('{:-<60}'.format(colorize("exec on dbsrc above", color="y")))
+    
+    
+    if showdbsrc: 
+        print(f"locals() keys: {list(locals().keys())}")
+        if len(names) == 2:
+            print('{:-<60}'.format(colorize("the src is a method of a class", color="y")))            
+            print(f"after exec, is methodname: {methodname} in locals(): {methodname in locals()}")
+            print(f"after exec, is clsname: {clsname} in locals(): {clsname in locals()}")
+            print(f"after exec, is self.orisrc.__qualname__: {self.orisrc.__qualname__} in locals(): {self.orisrc.__qualname__ in locals()}")
+            print(f"after exec, is methodname: {methodname} in self.outenv: {methodname in self.outenv}")
+            print(f"after exec, is clsname: {clsname} in self.outenv: {clsname in self.outenv}")
+            print(f"after exec, is self.orisrc.__qualname__: {self.orisrc.__qualname__} in self.outenv: {self.orisrc.__qualname__ in self.outenv}")
+            print(f"inspect.getsourcefile({expr}) == '<string>': {True if inspect.getsourcefile(eval(expr)) == '<string>' else inspect.getsourcefile(eval(expr))}")
+            print(f"self.outenv['{methodname}']: {eval(expr1)}")
+            print(f"self.orisrc.__name__: {self.orisrc.__name__} is {expr}: {self.orisrc is eval(expr)}")            
+        print(f'self.orisrc.__name__: {self.orisrc.__name__}')
+        print(f"locals()['{self.orisrc.__name__}']: {locals()[self.orisrc.__name__]}")
+
+    
+    if showdbsrc:
+        print(f"after exec and before self.outenv update, self.outenv['{self.orisrc.__name__}'] is locals()['{self.orisrc.__name__}']: {locals()[self.orisrc.__name__] is self.outenv[self.orisrc.__name__]}")
+        print(f"after exec and before self.outenv update, self.orisrc.__name__: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+        print(f"after exec and before self.outenv update, self.orisrc.__name__: {self.orisrc.__name__} is locals()['{self.orisrc.__name__}']: {self.orisrc is locals()[self.orisrc.__name__]}")
+    # Important! update dbsrc to module.func, fu.whatinside, inspect._signature_from_callable
+    self.outenv.update(locals()) 
+#     self.outenv[self.orisrc.__name__] = locals()[self.orisrc.__name__]
+#     return locals()[self.orisrc.__name__]
+    if showdbsrc:
+        print(f"after update self.outenv, self.orisrc.__name__: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+        exec("import " + self.orisrc.__module__.split('.')[0])
+        print(f"after update self.outenv, self.orisrc.__name__: {self.orisrc.__name__} is {self.orisrc.__module__}.{self.orisrc.__name__}: {self.orisrc is eval(self.orisrc.__module__ + '.' + self.orisrc.__name__, {}, locals())}")
+        print(f"after update self.outenv, self.outenv['{self.orisrc.__name__}'] is {self.orisrc.__module__}.{self.orisrc.__name__}: {self.outenv[self.orisrc.__name__] is eval(self.orisrc.__module__ + '.' + self.orisrc.__name__, {}, locals())}")        
+        print(f"Therefore, to use dbsrc we must use self.outenv['{self.orisrc.__name__}'], or {self.orisrc.__module__}.{self.orisrc.__name__}")
+        print('{:-<60}'.format(colorize("showdbsrc=End", color="y")))
+
+        
+
+# %% ../00_core.ipynb 290
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal

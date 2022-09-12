@@ -31,7 +31,7 @@ A great example of how fastai libraries can make life more
 Please let me show you with a simple example here.
 
 ``` python
-import fastdebug
+# import fastdebug
 from fastdebug.utils import *
 import fastdebug.utils as fu
 from fastcore.test import *
@@ -75,12 +75,6 @@ fu.whatinside
 ```
 
     <function fastdebug.utils.whatinside(mo, dun: bool = False, func: bool = False, clas: bool = False, bltin: bool = False, lib: bool = False, cal: bool = False)>
-
-``` python
-fu.whatinside.__module__
-```
-
-    'fastdebug.utils'
 
 But if you want to make sense of how its source code works, then simply
 run `whatinside??` to read the source may not be sufficient for
@@ -126,21 +120,58 @@ for l in inspect.getsource(fu.whatinside).split('\n'):
             print(f'The library has {len(modules)} modules')
             pprint(modules)
 
-I enjoyed `pdbpp` for exploring source code in terminal, which is super
-nice version of `ipdb`. However, we can’t use it in jupyter notebook,
-even if we could use it, the outputs from running `pdb` commands are not
-good for documenting, meaning they usually are not easy to read when you
-come back to it. Jupyterlab’s visual debugger is nice to have, but you
-can’t document debugging process, and evaluating expressions feel a
-little clunky to me.
-
 I have always wanted to explore the wonderful fastai libraries (I am
 starting with fastcore). I like to learn the fastai coding style,
 exploratory coding approach and of course all the knowledge Jeremy
-distilled in the fastai libraries. But every library looks massive to a
-novice like me. How can I explore the libraries efficiently and
-joyfully? I must use jupyterlab or jupyter notebook for exploratory
-coding, but I can’t use pdbpp in jupyter to help.
+distilled in the fastai libraries. Even though every fastai function or
+class is quite short, but for a novice like me every library looks
+massive. To really make sense of what each line does is certainly a
+daunting task. So, is it possible to explore the libraries efficiently
+and joyfully? Any nice tools can help me explore and even document my
+learnings along the way?
+
+Below are the tools I have tried and their features I like
+
+pdbpp or pdb++ It’s a nicer version of pdb which have all the commands
+needed for explore the source code from pdb
+
+features I like:  
+\> sticky mode to display source code nicely during exploration
+
+> easy copy and paste of expressions for evaluation
+
+> autocompletion when writing expressions
+
+features I hope it to have:  
+\> to work with jupyter notebook (although it seems working with colab),
+not just in terminal
+
+> Easy ways to document findings during source code exploration (meaning
+> they usually are not easy to read even if they are still there when
+> you come back to it)
+
+ipdb or pdb in jupyter
+
+Features I like: \> They work with jupyter and we can add code
+expressions freely
+
+cons: \> 1. copy and paste is a pain, no autocompletion
+
+> 2.  display of source code is not as nice as pdbpp
+
+> 3.  can’t document exploration
+
+Jupyterlab’s visual debugger
+
+is a nice exploration tool to have and it is like pdbpp for jupyter, it
+has all the essential features ready to use.
+
+The problem is that it is clunky in write and run code expressions and I
+can’t document exploration.
+
+Another useful tool is `%debug` is a nice way to use pdb to debug on
+error (not for exploration and learning source code), which I should use
+more often.
 
 So, I am thinking why not write a little debugging tool myself, and
 maybe I don’t even need fancy inspect.py and pdb.py for it. But I would
@@ -152,6 +183,160 @@ joyful.
 So, Here I am, just finished the second version of this library, now I
 want to see whether this tool can help me make the process of exploring
 source code a joyful experience.
+
+## What’s the minimum I can do to improve `ipdb` for my own use?
+
+I will use `ipdb` as a pure exploration tool and I want to make it easy
+to use in the following ways:
+
+1.  I can easily print the source code so that I would know where to
+    insert breakpoints
+
+2.  once the breakpoints are determined, I want to automatically insert
+    `ipdb.set_trace()` to the srclines
+
+3.  then I can just run on example codes and ipdb window will
+    automatically open for me to explore from where the breakpoints at
+
+So, how can I explore the example below using the tool I described
+above?
+
+``` python
+whatinside(fu)
+```
+
+    fastdebug.utils has: 
+    3 items in its __all__, and 
+    8 user defined functions, 
+    0 classes or class objects, 
+    0 builtin funcs and methods, and
+    8 callables.
+
+``` python
+from fastdebug.core import *
+```
+
+``` python
+# fdb = Fastdb(whatinside)
+```
+
+``` python
+# fdb.print(20,1)
+```
+
+    def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+                   dun:bool=False, # print all items in __all__===============================(1)       
+                   func:bool=False, # print all user defined functions========================(2)       
+                   clas:bool=False, # print all class objects=================================(3)       
+                   bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+                   lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+                   cal:bool=False # print all callables=======================================(6)       
+                 ): ==========================================================================(7)       
+        'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9)       
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10)      
+        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
+        builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+        callables = inspect.getmembers(mo, callable)==========================================(13)      
+        pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+        print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (15)
+        if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(16)      
+        if func: =============================================================================(17)      
+            print(f'The user defined functions are:')=========================================(18)      
+            pprint([i[0] for i in funcs])=====================================================(19)      
+                                                                                                                                         part No.1 out of 2 parts
+
+``` python
+fu.whatinside?
+```
+
+``` python
+# fdb.explore(9, "try this line") # it will set a breakpoint at srcline 9
+fu.whatinside(fu) # it will open ipdb on srcline 9
+whatinside(fu)
+```
+
+                 ):                                                                                                                                         (7)
+        'Check what inside a module: `__all__`, functions, classes, builtins, and callables'                                                                (8)
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0==========================================================================================(9)
+                                                                                                                                                    try this line
+        funcs = inspect.getmembers(mo, inspect.isfunction)                                                                                                  (10)
+        classes = inspect.getmembers(mo, inspect.isclass)                                                                                                   (11)
+    print selected srcline with expands above----------
+    exec on dbsrc above--------------------------------
+    <function save_history at 0x105c20af0>
+    *** SyntaxError: EOF while scanning triple-quoted string literal
+    *** SyntaxError: invalid syntax
+    *** SyntaxError: unmatched ')'
+    *** SyntaxError: invalid syntax
+    *** SyntaxError: EOF while scanning triple-quoted string literal
+    *** IndentationError: expected an indented block
+    *** AttributeError: module 'pdb' has no attribute 'Color'
+    *** AttributeError: module 'pdb' has no attribute 'Color'
+    *** AttributeError: module 'pdb' has no attribute 'Color'
+    > <string>(11)whatinside()
+
+    ipdb> u
+    > /var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_98500/3846059219.py(2)<cell line: 2>()
+          1 fdb.explore(9, "try this line") # it will set a breakpoint at srcline 9
+    ----> 2 fu.whatinside(fu) # it will open ipdb on srcline 9
+          3 whatinside(fu)
+
+    ipdb> n
+    fastdebug.utils has: 
+    3 items in its __all__, and 
+    9 user defined functions, 
+    0 classes or class objects, 
+    0 builtin funcs and methods, and
+    9 callables.
+
+    --Return--
+    None
+    > /var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_98500/3846059219.py(2)<cell line: 2>()
+          1 fdb.explore(9, "try this line") # it will set a breakpoint at srcline 9
+    ----> 2 fu.whatinside(fu) # it will open ipdb on srcline 9
+          3 whatinside(fu)
+
+    ipdb> next
+        [... skipped 1 hidden frame]
+
+    > /Users/Natsume/mambaforge/lib/python3.9/site-packages/IPython/core/interactiveshell.py(3401)run_code()
+       3400                 # Reset our crash handler in place
+    -> 3401                 sys.excepthook = old_excepthook
+       3402         except SystemExit as e:
+
+    ipdb> n
+        [... skipped 1 hidden frame]
+
+    > /Users/Natsume/mambaforge/lib/python3.9/site-packages/IPython/core/interactiveshell.py(3422)run_code()
+       3421         else:
+    -> 3422             outflag = False
+       3423         return outflag
+
+    ipdb> next
+        [... skipped 1 hidden frame]
+
+    > /Users/Natsume/mambaforge/lib/python3.9/site-packages/IPython/core/interactiveshell.py(3423)run_code()
+       3422             outflag = False
+    -> 3423         return outflag
+       3424 
+
+    ipdb> r
+        [... skipped 1 hidden frame]
+
+    Internal StopIteration: False
+    > /Users/Natsume/mambaforge/lib/python3.9/site-packages/IPython/core/interactiveshell.py(3338)run_ast_nodes()
+       3337                     asy = compare(code)
+    -> 3338                 if await self.run_code(code, result, async_=asy):
+       3339                     return True
+
+    ipdb> c
+    fastdebug.utils has: 
+    3 items in its __all__, and 
+    9 user defined functions, 
+    0 classes or class objects, 
+    0 builtin funcs and methods, and
+    9 callables.
 
 ## How to use `fastdebug`?
 
@@ -190,11 +375,19 @@ test_eq(fu.whatinside is whatinside.__globals__['whatinside'], True)
 ```
 
 ``` python
-import fastdebug
-eval(whatinside.__module__ + "." + whatinside.__name__)
-```
+# import fastdebug
+# fastdebug
 
-    <function fastdebug.utils.whatinside(mo, dun: bool = False, func: bool = False, clas: bool = False, bltin: bool = False, lib: bool = False, cal: bool = False)>
+# exec("import " + whatinside.__module__.split('.')[0])
+
+# fastdebug
+
+# exec("import fastdebug")
+
+# fastdebug
+
+# eval(whatinside.__module__ + "." + whatinside.__name__)
+```
 
 ### Step 1: display the source code with idx
 
@@ -207,8 +400,6 @@ from fastdebug.core import *
 # fdb = Fastdb(whatinside) # g is refactored inside Fastdb
 fdb = Fastdb(fu.whatinside)
 ```
-
-    <function whatinside at 0x1055583a0> is <function whatinside at 0x1055583a0>: True
 
 ``` python
 fdb.print()
@@ -301,15 +492,19 @@ fdb.print(maxlines=15, part=1)
             print(f'The library has {len(modules)} modules')------------------------------------------------------------------------------------------------(31)
             pprint(modules)---------------------------------------------------------------------------------------------------------------------------------(32)
     locals() keys: ['self', 'dbcode', 'cmt', 'expand', 'showdbsrc', 'codes', 'src', 'dbsrc', 'indent', 'lst', 'newlst', 'srclines', 'idx', 'l', 'totallen', 'lenidx', 'dblst', 'lenl']
-    before update to exec, <function whatinside at 0x1055583a0> is self.outenv[whatinside]: True
+    before update to exec, self.orisrc.__name__: whatinside is self.outenv['whatinside']: True
     exec on dbsrc above--------------------------------
     locals() keys: ['self', 'dbcode', 'cmt', 'expand', 'showdbsrc', 'codes', 'src', 'dbsrc', 'indent', 'lst', 'newlst', 'srclines', 'idx', 'l', 'totallen', 'lenidx', 'dblst', 'lenl', 'names', 'whatinside']
-    after exec, <function whatinside at 0x1055583a0> is self.outenv['whatinside']: True
     self.orisrc.__name__: whatinside
-    locals()[self.orisrc.__name__]: <function whatinside at 0x1055cf3a0>
+    locals()['whatinside']: <function whatinside at 0x10785e8b0>
+    after exec and before self.outenv update, self.outenv['whatinside'] is locals()['whatinside']: False
+    after exec and before self.outenv update, self.orisrc.__name__: whatinside is self.outenv['whatinside']: True
+    after exec and before self.outenv update, self.orisrc.__name__: whatinside is locals()['whatinside']: False
+    after update self.outenv, self.orisrc.__name__: whatinside is self.outenv['whatinside']: False
+    after update self.outenv, self.orisrc.__name__: whatinside is fastdebug.utils.whatinside: False
+    after update self.outenv, self.outenv['whatinside'] is fastdebug.utils.whatinside: True
+    Therefore, to use dbsrc we must use self.outenv['whatinside'], or fastdebug.utils.whatinside
     showdbsrc=End--------------------------------------
-    before update self.outenv, <function whatinside at 0x1055583a0> is self.outenv['whatinside']: True
-    after update self.outenv, <function whatinside at 0x1055583a0> is self.outenv['whatinside']: False
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -376,7 +571,7 @@ fu.whatinside(fm)
     Optionally, only return members that satisfy a given predicate.
 
 
-    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('_funcs_kwargs', <function _funcs_kwargs at 0x105615940>), ('_mk_param', <function _mk_param at 0x105615670>), ('_rm_self', <function _rm_self at 0x1056151f0>), ('all_equal', <function all_equal at 0x10561cca0>), ('anno_dict', <function anno_dict at 0x1056155e0>), ('any_is_instance', <function any_is_instance at 0x10561ce50>), ('array_equal', <function array_equal at 0x10561cf70>), ('contextmanager', <function contextmanager at 0x1028b8c10>), ('copy', <function copy at 0x102b67790>), ('delegates', <function delegates at 0x105615820>), ('df_equal', <function df_equal at 0x105623040>), ('empty2none', <function empty2none at 0x105615280>), ('equals', <function equals at 0x1056230d0>), ('funcs_kwargs', <function funcs_kwargs at 0x1056159d0>), ('in_colab', <function in_colab at 0x105623280>), ('in_ipython', <function in_ipython at 0x1056231f0>), ('in_jupyter', <function in_jupyter at 0x105623310>), ('in_notebook', <function in_notebook at 0x1056233a0>), ('ipython_shell', <function ipython_shell at 0x105623160>), ('is_close', <function is_close at 0x105623820>), ('is_coll', <function is_coll at 0x10561cc10>), ('is_iter', <function is_iter at 0x102770160>), ('isinstance_str', <function isinstance_str at 0x10561cee0>), ('method', <function method at 0x1056158b0>), ('nequals', <function nequals at 0x1056235e0>), ('noop', <function noop at 0x10561cd30>), ('noops', <function noops at 0x10561cdc0>), ('remove_prefix', <function remove_prefix at 0x105623430>), ('remove_suffix', <function remove_suffix at 0x1056234c0>), ('test', <function test at 0x105623550>), ('test_close', <function test_close at 0x1056238b0>), ('test_eq', <function test_eq at 0x105623670>), ('test_eq_type', <function test_eq_type at 0x105623700>), ('test_fail', <function test_fail at 0x10561ca60>), ('test_fig_exists', <function test_fig_exists at 0x105623b80>), ('test_is', <function test_is at 0x105623940>), ('test_ne', <function test_ne at 0x105623790>), ('test_shuffled', <function test_shuffled at 0x1056239d0>), ('test_sig', <function test_sig at 0x1055cf430>), ('test_stdout', <function test_stdout at 0x105623a60>), ('test_warns', <function test_warns at 0x105623af0>), ('use_kwargs', <function use_kwargs at 0x105615790>), ('use_kwargs_dict', <function use_kwargs_dict at 0x105615700>)]
+    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('_funcs_kwargs', <function _funcs_kwargs at 0x1077f2ee0>), ('_mk_param', <function _mk_param at 0x1077f2c10>), ('_rm_self', <function _rm_self at 0x1077f2790>), ('all_equal', <function all_equal at 0x1077f00d0>), ('anno_dict', <function anno_dict at 0x1077f2b80>), ('any_is_instance', <function any_is_instance at 0x1077f0280>), ('array_equal', <function array_equal at 0x1077f03a0>), ('contextmanager', <function contextmanager at 0x104a9cc10>), ('copy', <function copy at 0x104d2b790>), ('delegates', <function delegates at 0x1077f2dc0>), ('df_equal', <function df_equal at 0x1077f0430>), ('empty2none', <function empty2none at 0x1077f2820>), ('equals', <function equals at 0x1077f04c0>), ('funcs_kwargs', <function funcs_kwargs at 0x1077f2f70>), ('in_colab', <function in_colab at 0x1077f0670>), ('in_ipython', <function in_ipython at 0x1077f05e0>), ('in_jupyter', <function in_jupyter at 0x1077f0700>), ('in_notebook', <function in_notebook at 0x1077f0790>), ('ipython_shell', <function ipython_shell at 0x1077f0550>), ('is_close', <function is_close at 0x1077f0c10>), ('is_coll', <function is_coll at 0x1077f0040>), ('is_iter', <function is_iter at 0x1077eef70>), ('isinstance_str', <function isinstance_str at 0x1077f0310>), ('method', <function method at 0x1077f2e50>), ('nequals', <function nequals at 0x1077f09d0>), ('noop', <function noop at 0x1077f0160>), ('noops', <function noops at 0x1077f01f0>), ('remove_prefix', <function remove_prefix at 0x1077f0820>), ('remove_suffix', <function remove_suffix at 0x1077f08b0>), ('test', <function test at 0x1077f0940>), ('test_close', <function test_close at 0x1077f0ca0>), ('test_eq', <function test_eq at 0x1077f0a60>), ('test_eq_type', <function test_eq_type at 0x1077f0af0>), ('test_fail', <function test_fail at 0x1077eedc0>), ('test_fig_exists', <function test_fig_exists at 0x1077f0f70>), ('test_is', <function test_is at 0x1077f0d30>), ('test_ne', <function test_ne at 0x1077f0b80>), ('test_shuffled', <function test_shuffled at 0x1077f0dc0>), ('test_sig', <function test_sig at 0x1077f23a0>), ('test_stdout', <function test_stdout at 0x1077f0e50>), ('test_warns', <function test_warns at 0x1077f0ee0>), ('use_kwargs', <function use_kwargs at 0x1077f2d30>), ('use_kwargs_dict', <function use_kwargs_dict at 0x1077f2ca0>)]
     fastcore.meta has: 
     13 items in its __all__, and 
     43 user defined functions, 
@@ -600,15 +795,19 @@ fdb.print(maxlines=20, part=2)
             print(f'The library has {len(modules)} modules')------------------------------------------------------------------------------------------------(33)
             pprint(modules)---------------------------------------------------------------------------------------------------------------------------------(34)
     locals() keys: ['self', 'dbcode', 'cmt', 'expand', 'showdbsrc', 'codes', 'src', 'dbsrc', 'indent', 'lst', 'newlst', 'i', 'srclines', 'idx', 'l', 'numindent', 'dbcodes', 'count', 'c', 'totallen', 'lenidx', 'dblst', 'lenl']
-    before update to exec, <function whatinside at 0x1055583a0> is self.outenv[whatinside]: False
+    before update to exec, self.orisrc.__name__: whatinside is self.outenv['whatinside']: False
     exec on dbsrc above--------------------------------
     locals() keys: ['self', 'dbcode', 'cmt', 'expand', 'showdbsrc', 'codes', 'src', 'dbsrc', 'indent', 'lst', 'newlst', 'i', 'srclines', 'idx', 'l', 'numindent', 'dbcodes', 'count', 'c', 'totallen', 'lenidx', 'dblst', 'lenl', 'names', 'whatinside']
-    after exec, <function whatinside at 0x1055583a0> is self.outenv['whatinside']: False
     self.orisrc.__name__: whatinside
-    locals()[self.orisrc.__name__]: <function whatinside at 0x105615a60>
+    locals()['whatinside']: <function whatinside at 0x1077beb80>
+    after exec and before self.outenv update, self.outenv['whatinside'] is locals()['whatinside']: False
+    after exec and before self.outenv update, self.orisrc.__name__: whatinside is self.outenv['whatinside']: False
+    after exec and before self.outenv update, self.orisrc.__name__: whatinside is locals()['whatinside']: False
+    after update self.outenv, self.orisrc.__name__: whatinside is self.outenv['whatinside']: False
+    after update self.outenv, self.orisrc.__name__: whatinside is fastdebug.utils.whatinside: False
+    after update self.outenv, self.outenv['whatinside'] is fastdebug.utils.whatinside: True
+    Therefore, to use dbsrc we must use self.outenv['whatinside'], or fastdebug.utils.whatinside
     showdbsrc=End--------------------------------------
-    before update self.outenv, <function whatinside at 0x1055583a0> is self.outenv['whatinside']: False
-    after update self.outenv, <function whatinside at 0x1055583a0> is self.outenv['whatinside']: False
     fastcore.meta has: 
     13 items in its __all__, and 
     43 user defined functions, 
@@ -765,6 +964,10 @@ test_eq(inspect.getsourcefile(fu.whatinside), '/Users/Natsume/Documents/fastdebu
 test_eq(fu.whatinside is whatinside.__globals__['whatinside'], True)
 test_eq(whatinside is whatinside.__globals__['whatinside'], True)
 test_eq(whatinside is fu.whatinside, True)
+```
+
+``` python
+test_eq(inspect.getsourcefile(whatinside), '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py')
 ```
 
 To check, when run `whatinside??` we should see the actually source code
