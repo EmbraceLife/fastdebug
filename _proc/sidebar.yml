@@ -3,6 +3,5 @@ website:
     contents:
       - index.ipynb
       - 00_core.ipynb
-      - FixSigMeta.ipynb
       - utils.html
       - utils.ipynb

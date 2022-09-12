@@ -253,7 +253,7 @@ class Fastdb():
 # %% ../00_core.ipynb 274
 @patch
 def dbprint(self:Fastdb, 
-            dbcode:int, # idx of a srcline under investigation, can only be int
+            idxsrc:int, # idx of a srcline under investigation, can only be int
             cmt:str, # comment added to the srcline
             *codes, # a list of expressions (str) you write to be evaluated above the srcline
             expand:int=2, # span 2 lines of srcode up and down from the srcline investigated
@@ -262,10 +262,11 @@ def dbprint(self:Fastdb,
 you are investigating. Run exec on the entire srcode with added expressions (dbsrc), so that dbsrc is callable."
 
     src = self.orisrc
-    if type(dbcode) == int: self.cmts.update({dbcode: cmt})
+    if type(idxsrc) == int: self.cmts.update({idxsrc: cmt})
 
-    printsrc(src, dbcode, cmt, expand)
-    print('{:-<60}'.format(colorize("print selected srcline with expands above", color="y")))
+    printsrc(src, idxsrc, cmt, expand)
+    if showdbsrc:
+        print('{:-<60}'.format(colorize("print selected srcline with expands above", color="y")))
     
     dbsrc = ""
     indent = 4
@@ -279,14 +280,14 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
     codes = newlst
 
     srclines = ""
-    if type(dbcode) == int:
-        srclines = lst[dbcode]
+    if type(idxsrc) == int:
+        srclines = lst[idxsrc]
     else:
         raise TypeError("decode must be an integer.")
 
     for idx, l in zip(range(len(lst)), lst):
 
-        if bool(l.strip()) and l.strip() in srclines and idx == dbcode:
+        if bool(l.strip()) and l.strip() in srclines and idx == idxsrc:
 
             if len(codes) > 0: # no codes, no dbprintinsert
                 numindent = len(l) - len(l.lstrip()) # make sure indent not messed up by trailing spaces
@@ -315,14 +316,20 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
         totallen = 157
         lenidx = 5
         dblst = dbsrc.split('\n')
+        idxsrcline = None
         for idx, l in zip(range(len(dblst)), dblst):
             lenl = len(l)
 #             if "dbprintinsert" in l: 
             if l.strip().startswith("dbprintinsert"): 
                 print(l + "="*(totallen-lenl-lenidx) + "(db)")
+                idxsrcline = idx            
             elif not bool(l.strip()):
+                if bool(idxsrcline) and idx > idxsrcline:
+                    idx = idx - 1                
                 print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
             else:
+                if bool(idxsrcline) and idx > idxsrcline:
+                    idx = idx - 1                
                 print(l + "-"*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
                 
         print(f"locals() keys: {list(locals().keys())}")
@@ -349,7 +356,8 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
             
             
     exec(dbsrc, globals().update(self.outenv)) # when dbsrc is a method, it will update as part of a class
-    print('{:-<60}'.format(colorize("exec on dbsrc above", color="y")))
+    if showdbsrc:
+        print('{:-<60}'.format(colorize("exec on dbsrc above", color="y")))
     
     
     if showdbsrc: 
@@ -470,17 +478,18 @@ def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../00_core.ipynb 279
+# %% ../00_core.ipynb 282
 @patch
 def explore(self:Fastdb, 
-            dbcode:int, # idx of a srcline under investigation, can only be int
-            cmt:str, # comment
+            idxsrc:int, # idxsrc can be an int or a list of int
+            cmt:str, # comment can be a string or a list of strings
             showdbsrc:bool=False): # display dbsrc
     "insert 'import ipdb; ipdb.set_trace()' above srcline of idx to create dbsrc, and exec on dbsrc"
     src = self.orisrc
 
-    printsrc(src, dbcode, cmt)
-    print('{:-<60}'.format(colorize("print selected srcline with expands above", color="y")))
+#     printsrc(src, idxsrc, cmt)
+    if showdbsrc:
+        print('{:-<60}'.format(colorize("print selected srcline with expands above", color="y")))
     
     dbsrc = ""
     indent = 4
@@ -488,19 +497,28 @@ def explore(self:Fastdb,
     lst = inspect.getsource(src).split('\n')
     if not bool(lst[-1]): lst = lst[:-1]
 
-    srclines = ""
-    if type(dbcode) == int:
-        srclines = lst[dbcode]
+    srclines = None
+    idxlst = None
+    if type(idxsrc) == int:
+        srclines = lst[idxsrc]
+    elif type(idxsrc) == list:
+        idxlst = idxsrc
     else:
-        raise TypeError("decode must be an integer.")
+        raise TypeError("decode must be an integer or a list.")
 
     for idx, l in zip(range(len(lst)), lst):
 
-        if bool(l.strip()) and l.strip() in srclines and idx == dbcode:
-            numindent = len(l) - len(l.lstrip()) # make sure indent not messed up by trailing spaces
+        if bool(l.strip()) and type(idxsrc) == int and idx == idxsrc:
+            numindent = len(l) - len(l.lstrip()) 
             dbcodes = "import ipdb; ipdb.set_trace()"
             dbsrc = dbsrc + " "*numindent + dbcodes + '\n'
             dbsrc = dbsrc + l + '\n'     
+        elif type(idxsrc) == list and idx in idxlst:
+            numindent = len(l) - len(l.lstrip()) 
+            dbcodes = "import ipdb; ipdb.set_trace()"
+            dbsrc = dbsrc + " "*numindent + dbcodes + '\n'
+            dbsrc = dbsrc + l + '\n'  
+            idxlst.remove(idx)
         elif bool(l.strip()) and idx + 1 == len(lst):
             dbsrc = dbsrc + l
         else: # make sure this printout is identical to the printsrc output
@@ -511,14 +529,22 @@ def explore(self:Fastdb,
         totallen = 157
         lenidx = 5
         dblst = dbsrc.split('\n')
+        idxsrcline = None
+        idxcount = 0
         for idx, l in zip(range(len(dblst)), dblst):
             lenl = len(l)
 #             if "dbprintinsert" in l: 
-            if l.strip().startswith("dbprintinsert"): 
+            if l.strip().startswith("import ipdb"): 
                 print(l + "="*(totallen-lenl-lenidx) + "(db)")
+                idxsrcline = idx
+                idxcount = idxcount + 1
             elif not bool(l.strip()):
+                if bool(idxsrcline) and idx > idxsrcline:
+                    idx = idx - idxcount
                 print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
             else:
+                if bool(idxsrcline) and idx > idxsrcline:
+                    idx = idx - idxcount
                 print(l + "-"*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
         
         names = self.orisrc.__qualname__.split('.')        
@@ -540,12 +566,13 @@ def explore(self:Fastdb,
             print(f"self.outenv['{methodname}']: {eval(expr1)}")
             print(f"self.orisrc.__name__: {self.orisrc.__name__} is {expr}: {self.orisrc is eval(expr)}")
 
-    file_name ='/tmp/' + self.orisrc.__name__ + '.py' # you can use any hash_function
+    file_name ='/tmp/' + self.orisrc.__name__ + '.py' # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
     with open(file_name, 'w') as f:
         f.write(dbsrc)
     code = compile(dbsrc, file_name, 'exec')
     exec(code, globals().update(self.outenv)) # when dbsrc is a method, it will update as part of a class
-    print('{:-<60}'.format(colorize("exec on dbsrc above", color="y")))
+    if showdbsrc:
+        print('{:-<60}'.format(colorize("exec on dbsrc above", color="y")))
     
     
     if showdbsrc: 
@@ -583,7 +610,7 @@ def explore(self:Fastdb,
 
         
 
-# %% ../00_core.ipynb 290
+# %% ../00_core.ipynb 293
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal
