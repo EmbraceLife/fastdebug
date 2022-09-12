@@ -260,7 +260,7 @@ def dbprint(self:Fastdb,
             showdbsrc:bool=False): # display dbsrc
     "Add comment and evaluate custom (single or multi lines) expressions to any srcline of the source code \
 you are investigating. Run exec on the entire srcode with added expressions (dbsrc), so that dbsrc is callable."
-
+    self.goback() # refresh 
     src = self.orisrc
     if type(idxsrc) == int: self.cmts.update({idxsrc: cmt})
 
@@ -333,8 +333,8 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
                 print(l + "-"*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
                 
         print(f"locals() keys: {list(locals().keys())}")
-        print(f"before update to exec, self.orisrc.__name__: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
-
+        print(f"before exec, self.orisrc.__name__: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+        print(f"before exec, self.orisrc.__name__: {self.orisrc.__name__} is : {self.orisrc}")
         names = self.orisrc.__qualname__.split('.')        
         if len(names) == 2:
             print('{:-<60}'.format(colorize("the src is a method of a class", color="y")))
@@ -478,13 +478,14 @@ def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../00_core.ipynb 282
+# %% ../00_core.ipynb 284
 @patch
 def explore(self:Fastdb, 
             idxsrc:int, # idxsrc can be an int or a list of int
             cmt:str, # comment can be a string or a list of strings
             showdbsrc:bool=False): # display dbsrc
     "insert 'import ipdb; ipdb.set_trace()' above srcline of idx to create dbsrc, and exec on dbsrc"
+    self.goback()
     src = self.orisrc
 
 #     printsrc(src, idxsrc, cmt)
@@ -547,6 +548,9 @@ def explore(self:Fastdb,
                     idx = idx - idxcount
                 print(l + "-"*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
         
+        print(f"locals() keys: {list(locals().keys())}")
+        print(f"before exec, self.orisrc.__name__: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+        print(f"before exec, self.orisrc.__name__: {self.orisrc.__name__} is : {self.orisrc}")
         names = self.orisrc.__qualname__.split('.')        
         if len(names) == 2:
             print('{:-<60}'.format(colorize("the src is a method of a class", color="y")))
@@ -610,7 +614,7 @@ def explore(self:Fastdb,
 
         
 
-# %% ../00_core.ipynb 293
+# %% ../00_core.ipynb 295
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal
