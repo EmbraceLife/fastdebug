@@ -247,8 +247,9 @@ class Fastdb():
         self.margin = 157
         self.outenv = src.__globals__
         self.cmts = {}
+        print(f"{self.orisrc} is {self.outenv[self.orisrc.__name__]}: {self.orisrc is self.outenv[self.orisrc.__name__]}")
 
-# %% ../00_core.ipynb 273
+# %% ../00_core.ipynb 274
 @patch
 def dbprint(self:Fastdb, 
             dbcode:int, # idx of a srcline under investigation, can only be int
@@ -324,7 +325,9 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
                 print(l + "-"*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
                 
         print(f"locals() keys: {list(locals().keys())}")
-        names = self.orisrc.__qualname__.split('.')
+        print(f"before update to exec, {self.orisrc.__name__} is self.outenv[{self.orisrc.__name__}]: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+
+        names = self.orisrc.__qualname__.split('.')        
         if len(names) == 2:
             clsname = names[0]
             methodname = names[1]
@@ -344,6 +347,7 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
     exec(dbsrc, globals().update(self.outenv)) # when dbsrc is a method, it will update as part of a class
     print('{:-<60}'.format(colorize("exec on dbsrc above", color="y")))
     
+    
     if showdbsrc: 
         print(f"locals() keys: {list(locals().keys())}")
         if len(names) == 2:
@@ -361,14 +365,25 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
         print(f'self.orisrc.__name__: {self.orisrc.__name__}')
         print(f'locals()[self.orisrc.__name__]: {locals()[self.orisrc.__name__]}')
         print('{:-<60}'.format(colorize("showdbsrc=End", color="y")))
-        
-    self.outenv.update(locals())
+    
+    if showdbsrc:
+        print(f"after exec and before self.outenv update, self.outenv['{self.orisrc.__name__}'] is locals()['{self.orisrc.__name__}']: {locals()[self.orisrc.__name__] is self.outenv[self.orisrc.__name__]}")
+        print(f"after exec and before self.outenv update, {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+        print(f"after exec and before self.outenv update, {self.orisrc.__name__} is locals()['{self.orisrc.__name__}']: {self.orisrc is locals()[self.orisrc.__name__]}")
+    # Important! update dbsrc to module.func, fu.whatinside, inspect._signature_from_callable
+    self.outenv.update(locals()) 
 #     self.outenv[self.orisrc.__name__] = locals()[self.orisrc.__name__]
 #     return locals()[self.orisrc.__name__]
+    if showdbsrc:
+        print(f"after update self.outenv, {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
+        exec("import " + self.orisrc.__module__.split('.')[0])
+        print(f"after update self.outenv, {self.orisrc.__name__} is {self.orisrc.__module__}.{self.orisrc.__name__}: {self.orisrc is eval(self.orisrc.__module__ + '.' + self.orisrc.__name__, {}, locals())}")
+        print(f"after update self.outenv, self.outenv['{self.orisrc.__name__}'] is {self.orisrc.__module__}.{self.orisrc.__name__}: {self.outenv[self.orisrc.__name__] is eval(self.orisrc.__module__ + '.' + self.orisrc.__name__, {}, locals())}")        
+        print(f"Therefore, to use dbsrc we must use self.outenv['{self.orisrc.__name__}']")
 
         
 
-# %% ../00_core.ipynb 274
+# %% ../00_core.ipynb 275
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
@@ -445,13 +460,13 @@ def print(self:Fastdb,
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
 
-# %% ../00_core.ipynb 276
+# %% ../00_core.ipynb 277
 @patch
 def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../00_core.ipynb 284
+# %% ../00_core.ipynb 285
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal
