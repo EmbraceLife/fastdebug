@@ -237,20 +237,22 @@ def dbprintinsert(*codes, env={}):
         # the benefit of using global().update(env) is 
         # to ensure we don't need to include the same env fo
 
-# %% ../00_core.ipynb 254
+# %% ../00_core.ipynb 256
 class Fastdb():
     "Create a Fastdebug class which has two functionalities: dbprint and print."
     def __init__(self, 
                  src, # name of src code you are exploring
                  db=False): # db=True will run some debugging prints
-        self.orisrc = src
+        self.orisrc = src # important: it is making a real copy
         self.margin = 157
         self.outenv = src.__globals__
         self.cmts = {}
+        self.eg = None # add example in string format
+        self.egEnv = None # add example env in dict
         if db:
             print(f"self.orisrc: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
 
-# %% ../00_core.ipynb 274
+# %% ../00_core.ipynb 284
 @patch
 def dbprint(self:Fastdb, 
             idxsrc:int, # idx of a srcline under investigation, can only be int
@@ -262,6 +264,8 @@ def dbprint(self:Fastdb,
 you are investigating. Run exec on the entire srcode with added expressions (dbsrc), so that dbsrc is callable."
     self.goback() # refresh 
     src = self.orisrc
+    self.idxsrc = idxsrc
+    
     if type(idxsrc) == int: self.cmts.update({idxsrc: cmt})
 
     printsrc(src, idxsrc, cmt, expand)
@@ -289,8 +293,8 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
 
         if bool(l.strip()) and l.strip() in srclines and idx == idxsrc:
 
-            if len(codes) > 0: # no codes, no dbprintinsert
-                numindent = len(l) - len(l.lstrip()) # make sure indent not messed up by trailing spaces
+            if len(codes) > 0: 
+                numindent = len(l) - len(l.lstrip()) 
                 dbcodes = "dbprintinsert("
                 count = 1
                 for c in codes:
@@ -300,8 +304,15 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
                         dbcodes = dbcodes + '"' + c + '"' + ","
                     count = count + 1
 
+                emptyline = "print()"
+                exploreStart = "print('{:=>157}'.format(colorize('Start of my srcline exploration:', color='r')))"
+                exploreEnd = "print('{:=>157}'.format(colorize('End of my srcline exploration:', color='r')))"
+                dbsrc = dbsrc + " "*numindent + emptyline + '\n'                   
+                dbsrc = dbsrc + " "*numindent + exploreStart + '\n'   
                 dbsrc = dbsrc + " "*numindent + "g = locals()" + '\n'
                 dbsrc = dbsrc + " "*numindent + dbcodes + '\n'
+                dbsrc = dbsrc + " "*numindent + exploreEnd + '\n'
+                dbsrc = dbsrc + " "*numindent + emptyline + '\n'                   
                 dbsrc = dbsrc + l + '\n'     
             else:
                 dbsrc = dbsrc + l + '\n'                
@@ -393,9 +404,40 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
         print(f"Therefore, to use dbsrc we must use self.outenv['{self.orisrc.__name__}'], or {self.orisrc.__module__}.{self.orisrc.__name__}")
         print('{:-<60}'.format(colorize("showdbsrc=End", color="y")))
 
-        
+# print out the srcode with comments using self.autoprint() and enable using whatinside without fu in front of it
+    if bool(self.eg):
+        self.egEnv[self.orisrc.__name__] = locals()[self.orisrc.__name__]        
+        exec(self.eg, {}, self.egEnv)
+        self.autoprint()
+    
 
-# %% ../00_core.ipynb 275
+# %% ../00_core.ipynb 285
+@patch
+def autoprint(self:Fastdb):
+    totalines = len(inspect.getsource(self.orisrc).split('\n'))
+    maxpcell = 33
+    idx = self.idxsrc
+    pt = idx // maxpcell
+    
+    print()
+    print('{:=<157}'.format(colorize("Review srcode with all comments added so far", color="y")))
+    if idx > maxpcell and idx % maxpcell != 0:
+        self.print(maxpcell, pt + 1)
+    elif idx % maxpcell == 0:
+        self.print(maxpcell, pt + 1)
+    else:
+        self.print(maxpcell, 1)
+    print()
+
+# %% ../00_core.ipynb 287
+@patch
+def takExample(self:Fastdb,
+               eg, 
+               **env):
+    self.eg = eg
+    self.egEnv = env
+
+# %% ../00_core.ipynb 289
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
@@ -472,13 +514,13 @@ def print(self:Fastdb,
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
 
-# %% ../00_core.ipynb 277
+# %% ../00_core.ipynb 292
 @patch
 def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../00_core.ipynb 284
+# %% ../00_core.ipynb 301
 @patch
 def explore(self:Fastdb, 
             idxsrc:int, # idxsrc can be an int or a list of int
@@ -611,10 +653,17 @@ def explore(self:Fastdb,
         print(f"after update self.outenv, self.outenv['{self.orisrc.__name__}'] is {self.orisrc.__module__}.{self.orisrc.__name__}: {self.outenv[self.orisrc.__name__] is eval(self.orisrc.__module__ + '.' + self.orisrc.__name__, {}, locals())}")        
         print(f"Therefore, to use dbsrc we must use self.outenv['{self.orisrc.__name__}'], or {self.orisrc.__module__}.{self.orisrc.__name__}")
         print('{:-<60}'.format(colorize("showdbsrc=End", color="y")))
+        
+#     self.orisrc = locals()[self.orisrc.__name__] # see whether whatinside in the outside updated too?
 
+# print out the srcode with comments using self.autoprint()
+    if bool(self.eg):
+        self.egEnv[self.orisrc.__name__] = locals()[self.orisrc.__name__]        
+        exec(self.eg, {}, self.egEnv)
+        self.autoprint()
         
 
-# %% ../00_core.ipynb 295
+# %% ../00_core.ipynb 311
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal
