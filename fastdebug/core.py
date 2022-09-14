@@ -244,6 +244,7 @@ class Fastdb():
                  src, # name of src code you are exploring
                  db=False): # db=True will run some debugging prints
         self.orisrc = src # important: it is making a real copy
+        self.idxsrc = None # the idx of srcline under investigation
         self.margin = 157
         self.outenv = src.__globals__
         self.cmts = {}
@@ -252,7 +253,7 @@ class Fastdb():
         if db:
             print(f"self.orisrc: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
 
-# %% ../00_core.ipynb 284
+# %% ../00_core.ipynb 287
 @patch
 def dbprint(self:Fastdb, 
             idxsrc:int, # idx of a srcline under investigation, can only be int
@@ -262,12 +263,17 @@ def dbprint(self:Fastdb,
             showdbsrc:bool=False): # display dbsrc
     "Add comment and evaluate custom (single or multi lines) expressions to any srcline of the source code \
 you are investigating. Run exec on the entire srcode with added expressions (dbsrc), so that dbsrc is callable."
-    self.goback() # refresh 
+#     self.goback() # refresh, but put it in the front will cause multiple reprints of dbcodes outputs
     src = self.orisrc
     self.idxsrc = idxsrc
     
     if type(idxsrc) == int: self.cmts.update({idxsrc: cmt})
 
+    print('{:=^157}'.format(f"     Investigating {colorize(self.orisrc.__name__, color='r')}     ")) 
+    print('{:=^157}'.format(f"     on line {colorize(str(self.idxsrc), color='r')}     "))
+    print('{:=^157}'.format(f"     with example {colorize(self.eg, color='r')}     ")) 
+    print()
+        
     printsrc(src, idxsrc, cmt, expand)
     if showdbsrc:
         print('{:-<60}'.format(colorize("print selected srcline with expands above", color="y")))
@@ -407,11 +413,13 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
 # print out the srcode with comments using self.autoprint() and enable using whatinside without fu in front of it
     if bool(self.eg):
         self.egEnv[self.orisrc.__name__] = locals()[self.orisrc.__name__]        
-        exec(self.eg, {}, self.egEnv)
+#         exec(self.eg, {}, self.egEnv)
+        exec("pprint(" + self.eg + ")", globals(), self.egEnv) # use globals() so that pprint can be used       
         self.autoprint()
     
+    self.goback() # refresh 
 
-# %% ../00_core.ipynb 285
+# %% ../00_core.ipynb 289
 @patch
 def autoprint(self:Fastdb):
     totalines = len(inspect.getsource(self.orisrc).split('\n'))
@@ -429,7 +437,7 @@ def autoprint(self:Fastdb):
         self.print(maxpcell, 1)
     print()
 
-# %% ../00_core.ipynb 287
+# %% ../00_core.ipynb 291
 @patch
 def takExample(self:Fastdb,
                eg, 
@@ -437,7 +445,7 @@ def takExample(self:Fastdb,
     self.eg = eg
     self.egEnv = env
 
-# %% ../00_core.ipynb 289
+# %% ../00_core.ipynb 293
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
@@ -514,20 +522,24 @@ def print(self:Fastdb,
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
 
-# %% ../00_core.ipynb 292
+# %% ../00_core.ipynb 296
 @patch
 def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../00_core.ipynb 301
+# %% ../00_core.ipynb 305
+import ipdb 
+# this handles the partial import error
+
+# %% ../00_core.ipynb 306
 @patch
 def explore(self:Fastdb, 
             idxsrc:int, # idxsrc can be an int or a list of int
             cmt:str, # comment can be a string or a list of strings
             showdbsrc:bool=False): # display dbsrc
     "insert 'import ipdb; ipdb.set_trace()' above srcline of idx to create dbsrc, and exec on dbsrc"
-    self.goback()
+#     self.goback()
     src = self.orisrc
 
 #     printsrc(src, idxsrc, cmt)
@@ -662,8 +674,9 @@ def explore(self:Fastdb,
         exec(self.eg, {}, self.egEnv)
         self.autoprint()
         
+    self.goback() # at the end will avoid some multi print of dbcodes
 
-# %% ../00_core.ipynb 311
+# %% ../00_core.ipynb 316
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal
