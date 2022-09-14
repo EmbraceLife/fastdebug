@@ -124,6 +124,7 @@ fdb = Fastdb(whatinside) # first, create an object of Fastdb class, using `whati
 fdb.print(20,1)
 ```
 
+    {}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -155,7 +156,7 @@ fdb.takExample("whatinside(fu)", whatinside=whatinside, fu=fu)
 fdb.explore(11, "what is getmembers")
 ```
 
-    <function save_history at 0x107c6a3a0>
+    <function save_history at 0x106d11ca0>
     *** SyntaxError: EOF while scanning triple-quoted string literal
     *** SyntaxError: invalid syntax
     *** SyntaxError: unmatched ')'
@@ -174,25 +175,8 @@ fdb.explore(11, "what is getmembers")
 
 ``` python
 # 2. you can set multiple breakpoints from the start if you like (but not necessary)
-fdb.explore([11, 16, 13], "what is getmembers")
+# fdb.explore([11, 16, 13], "what is getmembers")
 ```
-
-    <function save_history at 0x107c5c430>
-    *** SyntaxError: EOF while scanning triple-quoted string literal
-    *** SyntaxError: invalid syntax
-    *** SyntaxError: unmatched ')'
-    *** SyntaxError: invalid syntax
-    *** SyntaxError: EOF while scanning triple-quoted string literal
-    *** IndentationError: expected an indented block
-    *** AttributeError: module 'pdb' has no attribute 'Color'
-    *** AttributeError: module 'pdb' has no attribute 'Color'
-    *** AttributeError: module 'pdb' has no attribute 'Color'
-    > /tmp/whatinside.py(13)whatinside()
-         12     import ipdb; ipdb.set_trace()
-    ---> 13     classes = inspect.getmembers(mo, inspect.isclass)
-         14     builtins = inspect.getmembers(mo, inspect.isbuiltin)
-
-    ipdb> q
 
 ``` python
 test_eq(inspect.getsourcefile(whatinside), "/Users/Natsume/Documents/fastdebug/fastdebug/utils.py")
@@ -267,6 +251,7 @@ fdb = Fastdb(whatinside) # use either fu.whatinside or whatinside is fine
 fdb.print() # view the source code with idx
 ```
 
+    {}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -316,6 +301,10 @@ fdb.dbprint(9, "how many items inside mo.__all__?", "mo", \
     print(f'len(mo.__all__): {len(mo.__all__)}')")
 ```
 
+    =========================================================     Investigating whatinside     =========================================================
+    ================================================================     on line 9     =================================================================
+    =======================================================     with example whatinside(fu)     ========================================================
+
                  ):                                                                                                                                         (7)
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'                                                                (8)
         dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0==========================================================================================(9)
@@ -347,8 +336,10 @@ fdb.dbprint(9, "how many items inside mo.__all__?", "mo", \
     0 builtin funcs and methods, and
     9 callables.
 
+    None
 
     Review srcode with all comments added so far========================================================================================================
+    {9: 0}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -389,6 +380,10 @@ dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspe
             "inspect.getdoc(inspect.getmembers)", "funcs = inspect.getmembers(mo, inspect.isfunction)")
 ```
 
+    =========================================================     Investigating whatinside     =========================================================
+    ================================================================     on line 10     ================================================================
+    =======================================================     with example whatinside(fu)     ========================================================
+
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'                                                                (8)
         dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0                                                                                          (9)
         funcs = inspect.getmembers(mo, inspect.isfunction)==================================================================================================(10)
@@ -418,7 +413,7 @@ dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspe
     Optionally, only return members that satisfy a given predicate.
 
 
-    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('distribution', <function distribution at 0x107c0c1f0>), ('metadata', <function metadata at 0x107c24e50>), ('pprint', <function pprint at 0x105b7b3a0>), ('python_version', <function python_version at 0x1054ac040>), ('src', <function whatinside at 0x107bd6ee0>), ('tstenv', <function tstenv at 0x107c0c280>), ('version', <function version at 0x107c24ee0>), ('whatinside', <function whatinside at 0x107c28b80>), ('whichversion', <function whichversion at 0x107bd6550>)]
+    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('distribution', <function distribution at 0x1069d2af0>), ('metadata', <function metadata at 0x106d03c10>), ('pprint', <function pprint at 0x103c6f280>), ('python_version', <function python_version at 0x103936d30>), ('src', <function whatinside at 0x1069d2700>), ('tstenv', <function tstenv at 0x1069d2b80>), ('version', <function version at 0x106d03ca0>), ('whatinside', <function whatinside at 0x106d64c10>), ('whichversion', <function whichversion at 0x1069d2820>)]
     ======================================================================================================================End of my srcline exploration:
 
     fastdebug.utils has: 
@@ -428,8 +423,10 @@ dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspe
     0 builtin funcs and methods, and
     9 callables.
 
+    None
 
     Review srcode with all comments added so far========================================================================================================
+    {9: 0, 10: 1}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -471,6 +468,7 @@ dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspe
 fdb.print(maxlines=15, part=1)
 ```
 
+    {9: 0, 10: 1}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -501,6 +499,10 @@ dbsrc = fdb.dbprint(11, "get all classes from the module", \
 for c in clas:\\n\
     print(c)")
 ```
+
+    =========================================================     Investigating whatinside     =========================================================
+    ================================================================     on line 11     ================================================================
+    ======================================================     with example whatinside(core)     =======================================================
 
         dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0                                                                                          (9)
         funcs = inspect.getmembers(mo, inspect.isfunction)                                                                                                  (10)
@@ -545,8 +547,10 @@ for c in clas:\\n\
     2 builtin funcs and methods, and
     74 callables.
 
+    None
 
     Review srcode with all comments added so far========================================================================================================
+    {9: 0, 10: 1, 11: 2}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -586,6 +590,10 @@ for c in clas:\\n\
 dbsrc = fdb.dbprint(14, "get the file path of the module", "mo.__file__", "inspect.getdoc(os.path.dirname)", "pkgpath = os.path.dirname(mo.__file__)")
 ```
 
+    =========================================================     Investigating whatinside     =========================================================
+    ================================================================     on line 14     ================================================================
+    ======================================================     with example whatinside(core)     =======================================================
+
         builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
         callables = inspect.getmembers(mo, callable)                                                                                                        (13)
         pkgpath = os.path.dirname(mo.__file__)==============================================================================================================(14)
@@ -612,8 +620,10 @@ dbsrc = fdb.dbprint(14, "get the file path of the module", "mo.__file__", "inspe
     2 builtin funcs and methods, and
     74 callables.
 
+    None
 
     Review srcode with all comments added so far========================================================================================================
+    {9: 0, 10: 1, 11: 2, 14: 3}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -655,6 +665,10 @@ dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect
 "for a, b, c in pkgutil.iter_modules([pkgpath]):\\n\
     print(f'{a} ; {b}; {c}')")
 ```
+
+    =========================================================     Investigating whatinside     =========================================================
+    ================================================================     on line 30     ================================================================
+    =================================================     with example whatinside(core, lib=True)     ==================================================
 
             pprint([i[0] for i in callables])                                                                                                               (28)
         if lib:                                                                                                                                             (29)
@@ -735,8 +749,10 @@ dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect
      'utils',
      'xdg',
      'xtras']
+    None
 
     Review srcode with all comments added so far========================================================================================================
+    {9: 0, 10: 1, 11: 2, 14: 3, 30: 4}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -778,6 +794,7 @@ dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect
 fdb.print()
 ```
 
+    {9: 0, 10: 1, 11: 2, 14: 3, 30: 4}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -813,19 +830,19 @@ fdb.print()
             pprint(modules)===================================================================(32)      
                                                                                                                                                             (33)
 
-### To finish, I need to make `fu.whatinside` go back to normal
+### After running `.dbprint`, everything is back to normal automatically
 
 ``` python
-test_eq(inspect.getsourcefile(fu.whatinside) == '<string>', True)
+inspect.getsourcefile(fu.whatinside)
 ```
 
-``` python
-fdb.goback()
-```
+    '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'
 
 ``` python
-test_eq(inspect.getsourcefile(fu.whatinside) != '<string>', True)
+inspect.getsourcefile(whatinside)
 ```
+
+    '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'
 
 To check, when run `whatinside??` we should see the actually source code
 whereas the db version of

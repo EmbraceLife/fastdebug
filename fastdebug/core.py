@@ -445,7 +445,7 @@ def takExample(self:Fastdb,
     self.eg = eg
     self.egEnv = env
 
-# %% ../00_core.ipynb 293
+# %% ../00_core.ipynb 295
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
@@ -458,6 +458,9 @@ def print(self:Fastdb,
     lstsrc = inspect.getsource(self.orisrc).split('\n')
     numparts = len(lstsrc) // 33 + 1 if len(lstsrc) % 33 != 0 else len(lstsrc) // 33
     cmts = self.cmts
+    idxcmts = {k: idx for (k, v), idx in zip(cmts.items(), range(len(list(cmts))))} # order of cmts correspond to idxsrc
+
+    
     if part == 0: 
         for idx, l in zip(range(len(lstsrc)), lstsrc):
             lenl = len(l)
@@ -469,7 +472,7 @@ def print(self:Fastdb,
                 if bool(cmts):
                     cmtidx = [cmt[0] for cmt in list(cmts.items())]
                     if idx in cmtidx:
-                        print(l + " # " + cmts[idx] + " "*(totallen-lenl-lenidx-len(cmts[idx])-3) + "(" + str(idx) + ")")
+                        print(l + " # " + "step "+ str(idxcmts[idx]) + ": " + cmts[idx] + " "*(totallen-lenl-lenidx-len(cmts[idx])-3) + "(" + str(idx) + ")")
                     else:
                         print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
                 else: 
@@ -481,7 +484,7 @@ def print(self:Fastdb,
                 if bool(cmts):
                     cmtidx = [cmt[0] for cmt in list(cmts.items())]
                     if idx in cmtidx:
-                        print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + cmts[idx]))
+                        print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + "step "+ str(idxcmts[idx]) + ": " + cmts[idx]))
                     else:
                         print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                                                      
 
@@ -522,17 +525,17 @@ def print(self:Fastdb,
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
 
-# %% ../00_core.ipynb 296
+# %% ../00_core.ipynb 297
 @patch
 def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../00_core.ipynb 305
+# %% ../00_core.ipynb 306
 import ipdb 
 # this handles the partial import error
 
-# %% ../00_core.ipynb 306
+# %% ../00_core.ipynb 307
 @patch
 def explore(self:Fastdb, 
             idxsrc:int, # idxsrc can be an int or a list of int
@@ -676,7 +679,7 @@ def explore(self:Fastdb,
         
     self.goback() # at the end will avoid some multi print of dbcodes
 
-# %% ../00_core.ipynb 316
+# %% ../00_core.ipynb 317
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal
