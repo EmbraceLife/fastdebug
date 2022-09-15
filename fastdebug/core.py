@@ -758,17 +758,32 @@ def takeoutExample(self:Fastdb):
             example = l
     return example
 
-# %% ../00_core.ipynb 332
+# %% ../00_core.ipynb 334
 @patch
 def snoop(self:Fastdb):
 #     self.eg = "inspect._signature_from_callable(whatinside, sigcls=inspect.Signature)"
+    if bool(self.eg):
+        if inspect.isfunction(self.orisrc):
+            example = self.takeoutExample()
+            lst = example.split('(')
+            snp = "snoop.snoop(depth=1)(" + lst[0] + ")(" + lst[1]
+            exec("import snoop")
+            eval(snp, locals(), self.egEnv)
+        elif type(self.orisrc) == type:
+            dbsrc="import snoop\n"
+            for l in inspect.getsource(self.orisrc).split('\n'):
+                if "def __new__" in l:
+                    indent = len(l) - len(l.lstrip())
+                    dbsrc = dbsrc + " "*indent + "@snoop\n"
+                    dbsrc = dbsrc + l + '\n'
+                else:
+                    dbsrc = dbsrc + l + '\n'
+            pprint(dbsrc)
+            exec("import snoop")
+            exec(dbsrc)
+            self.egEnv[self.orisrc.__name__] = locals()[self.orisrc.__name__] 
+            exec(self.eg, {}, self.egEnv)
 
-    example = self.takeoutExample()
-    lst = example.split('(')
-    snp = "snoop.snoop(depth=1)(" + lst[0] + ")(" + lst[1]
-    exec("import snoop")
-    eval(snp, locals(), self.egEnv)
-    
 
 
 
