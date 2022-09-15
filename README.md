@@ -124,7 +124,6 @@ fdb = Fastdb(whatinside) # first, create an object of Fastdb class, using `whati
 fdb.print(20,1)
 ```
 
-    {}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -153,25 +152,8 @@ fdb.takExample("whatinside(fu)", whatinside=whatinside, fu=fu)
 ```
 
 ``` python
-fdb.explore(11, "what is getmembers")
+# fdb.explore(11, "what is getmembers")
 ```
-
-    <function save_history at 0x106d11ca0>
-    *** SyntaxError: EOF while scanning triple-quoted string literal
-    *** SyntaxError: invalid syntax
-    *** SyntaxError: unmatched ')'
-    *** SyntaxError: invalid syntax
-    *** SyntaxError: EOF while scanning triple-quoted string literal
-    *** IndentationError: expected an indented block
-    *** AttributeError: module 'pdb' has no attribute 'Color'
-    *** AttributeError: module 'pdb' has no attribute 'Color'
-    *** AttributeError: module 'pdb' has no attribute 'Color'
-    > /tmp/whatinside.py(13)whatinside()
-         12     import ipdb; ipdb.set_trace()
-    ---> 13     classes = inspect.getmembers(mo, inspect.isclass)
-         14     builtins = inspect.getmembers(mo, inspect.isbuiltin)
-
-    ipdb> q
 
 ``` python
 # 2. you can set multiple breakpoints from the start if you like (but not necessary)
@@ -179,18 +161,18 @@ fdb.explore(11, "what is getmembers")
 ```
 
 ``` python
-test_eq(inspect.getsourcefile(whatinside), "/Users/Natsume/Documents/fastdebug/fastdebug/utils.py")
-test_eq(inspect.getsourcefile(fu.whatinside), "/tmp/whatinside.py") # this is the actual source file we are exploring, 
+# test_eq(inspect.getsourcefile(whatinside), "/Users/Natsume/Documents/fastdebug/fastdebug/utils.py")
+# test_eq(inspect.getsourcefile(fu.whatinside), "/tmp/whatinside.py") # this is the actual source file we are exploring, 
 # so we are using fu.whatinside, not whatinside to run examples. 
 whatinside(fu) # whatinside is not touched
 ```
 
     fastdebug.utils has: 
     3 items in its __all__, and 
-    9 user defined functions, 
+    8 user defined functions, 
     0 classes or class objects, 
     0 builtin funcs and methods, and
-    9 callables.
+    8 callables.
 
 ``` python
 fdb.goback() # when you done exploring, return everything back to normal.
@@ -251,7 +233,10 @@ fdb = Fastdb(whatinside) # use either fu.whatinside or whatinside is fine
 fdb.print() # view the source code with idx
 ```
 
-    {}
+    ========================================================     Investigating whatinside     ========================================================
+    ==============================================================     on line None     ==============================================================
+    ===========================================================     with example None     ============================================================
+
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -301,9 +286,9 @@ fdb.dbprint(9, "how many items inside mo.__all__?", "mo", \
     print(f'len(mo.__all__): {len(mo.__all__)}')")
 ```
 
-    =========================================================     Investigating whatinside     =========================================================
-    ================================================================     on line 9     =================================================================
-    =======================================================     with example whatinside(fu)     ========================================================
+    ========================================================     Investigating whatinside     ========================================================
+    ===============================================================     on line 9     ================================================================
+    ======================================================     with example whatinside(fu)     =======================================================
 
                  ):                                                                                                                                         (7)
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'                                                                (8)
@@ -312,7 +297,7 @@ fdb.dbprint(9, "how many items inside mo.__all__?", "mo", \
         funcs = inspect.getmembers(mo, inspect.isfunction)                                                                                                  (10)
         classes = inspect.getmembers(mo, inspect.isclass)                                                                                                   (11)
 
-    ====================================================================================================================Start of my srcline exploration:
+    ==================================================================================================================Start of my srcline exploration:
 
 
                                                                mo => mo : <module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'>
@@ -327,7 +312,7 @@ fdb.dbprint(9, "how many items inside mo.__all__?", "mo", \
     mo: <module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'>
     mo.__all__: ['whatinside', 'whichversion', 'tstenv']
     len(mo.__all__): 3
-    ======================================================================================================================End of my srcline exploration:
+    ====================================================================================================================End of my srcline exploration:
 
     fastdebug.utils has: 
     3 items in its __all__, and 
@@ -338,8 +323,7 @@ fdb.dbprint(9, "how many items inside mo.__all__?", "mo", \
 
     None
 
-    Review srcode with all comments added so far========================================================================================================
-    {9: 0}
+    Review srcode with all comments added so far======================================================================================================
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -349,7 +333,7 @@ fdb.dbprint(9, "how many items inside mo.__all__?", "mo", \
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # step 0: how many items inside mo.__all__?
         funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10)      
         classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
@@ -380,9 +364,9 @@ dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspe
             "inspect.getdoc(inspect.getmembers)", "funcs = inspect.getmembers(mo, inspect.isfunction)")
 ```
 
-    =========================================================     Investigating whatinside     =========================================================
-    ================================================================     on line 10     ================================================================
-    =======================================================     with example whatinside(fu)     ========================================================
+    ========================================================     Investigating whatinside     ========================================================
+    ===============================================================     on line 10     ===============================================================
+    ======================================================     with example whatinside(fu)     =======================================================
 
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'                                                                (8)
         dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0                                                                                          (9)
@@ -391,7 +375,7 @@ dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspe
         classes = inspect.getmembers(mo, inspect.isclass)                                                                                                   (11)
         builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
 
-    ====================================================================================================================Start of my srcline exploration:
+    ==================================================================================================================Start of my srcline exploration:
 
 
                                                                mo => mo : <module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'>
@@ -413,8 +397,8 @@ dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspe
     Optionally, only return members that satisfy a given predicate.
 
 
-    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('distribution', <function distribution at 0x1069d2af0>), ('metadata', <function metadata at 0x106d03c10>), ('pprint', <function pprint at 0x103c6f280>), ('python_version', <function python_version at 0x103936d30>), ('src', <function whatinside at 0x1069d2700>), ('tstenv', <function tstenv at 0x1069d2b80>), ('version', <function version at 0x106d03ca0>), ('whatinside', <function whatinside at 0x106d64c10>), ('whichversion', <function whichversion at 0x1069d2820>)]
-    ======================================================================================================================End of my srcline exploration:
+    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('distribution', <function distribution at 0x10612c700>), ('metadata', <function metadata at 0x10617ef70>), ('pprint', <function pprint at 0x1034b3280>), ('python_version', <function python_version at 0x10317ad30>), ('src', <function whatinside at 0x10612c8b0>), ('tstenv', <function tstenv at 0x10612c790>), ('version', <function version at 0x106180040>), ('whatinside', <function whatinside at 0x13267fd30>), ('whichversion', <function whichversion at 0x10612c9d0>)]
+    ====================================================================================================================End of my srcline exploration:
 
     fastdebug.utils has: 
     3 items in its __all__, and 
@@ -425,8 +409,7 @@ dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspe
 
     None
 
-    Review srcode with all comments added so far========================================================================================================
-    {9: 0, 10: 1}
+    Review srcode with all comments added so far======================================================================================================
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -436,8 +419,8 @@ dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspe
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # step 0: how many items inside mo.__all__?
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # step 1: get all funcs of a module
         classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
@@ -468,7 +451,6 @@ dbsrc = fdb.dbprint(10, "get all funcs of a module", "mo", "inspect.getdoc(inspe
 fdb.print(maxlines=15, part=1)
 ```
 
-    {9: 0, 10: 1}
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -478,8 +460,8 @@ fdb.print(maxlines=15, part=1)
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # step 0: how many items inside mo.__all__?
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # step 1: get all funcs of a module
         classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
@@ -500,9 +482,9 @@ for c in clas:\\n\
     print(c)")
 ```
 
-    =========================================================     Investigating whatinside     =========================================================
-    ================================================================     on line 11     ================================================================
-    ======================================================     with example whatinside(core)     =======================================================
+    ========================================================     Investigating whatinside     ========================================================
+    ===============================================================     on line 11     ===============================================================
+    =====================================================     with example whatinside(core)     ======================================================
 
         dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0                                                                                          (9)
         funcs = inspect.getmembers(mo, inspect.isfunction)                                                                                                  (10)
@@ -511,7 +493,7 @@ for c in clas:\\n\
         builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
         callables = inspect.getmembers(mo, callable)                                                                                                        (13)
 
-    ====================================================================================================================Start of my srcline exploration:
+    ==================================================================================================================Start of my srcline exploration:
 
 
     clas = inspect.getmembers(mo, inspect.isclass)
@@ -538,7 +520,7 @@ for c in clas:\\n\
     ('attrgetter', <class 'operator.attrgetter'>)
     ('itemgetter', <class 'operator.itemgetter'>)
     ('partial', <class 'functools.partial'>)
-    ======================================================================================================================End of my srcline exploration:
+    ====================================================================================================================End of my srcline exploration:
 
     fastcore.meta has: 
     13 items in its __all__, and 
@@ -549,8 +531,7 @@ for c in clas:\\n\
 
     None
 
-    Review srcode with all comments added so far========================================================================================================
-    {9: 0, 10: 1, 11: 2}
+    Review srcode with all comments added so far======================================================================================================
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -560,9 +541,9 @@ for c in clas:\\n\
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module
-        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # step 0: how many items inside mo.__all__?
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # step 1: get all funcs of a module
+        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # step 2: get all classes from the module
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
         pkgpath = os.path.dirname(mo.__file__)================================================(14)      
@@ -590,9 +571,9 @@ for c in clas:\\n\
 dbsrc = fdb.dbprint(14, "get the file path of the module", "mo.__file__", "inspect.getdoc(os.path.dirname)", "pkgpath = os.path.dirname(mo.__file__)")
 ```
 
-    =========================================================     Investigating whatinside     =========================================================
-    ================================================================     on line 14     ================================================================
-    ======================================================     with example whatinside(core)     =======================================================
+    ========================================================     Investigating whatinside     ========================================================
+    ===============================================================     on line 14     ===============================================================
+    =====================================================     with example whatinside(core)     ======================================================
 
         builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
         callables = inspect.getmembers(mo, callable)                                                                                                        (13)
@@ -601,7 +582,7 @@ dbsrc = fdb.dbprint(14, "get the file path of the module", "mo.__file__", "inspe
         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (15)
         if hasattr(mo, "__all__") and dun: pprint(mo.__all__)                                                                                               (16)
 
-    ====================================================================================================================Start of my srcline exploration:
+    ==================================================================================================================Start of my srcline exploration:
 
 
                                                               mo.__file__ => mo.__file__ : /Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore/meta.py
@@ -611,7 +592,7 @@ dbsrc = fdb.dbprint(14, "get the file path of the module", "mo.__file__", "inspe
 
 
                                                 pkgpath = os.path.dirname(mo.__file__) => pkgpath: /Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore
-    ======================================================================================================================End of my srcline exploration:
+    ====================================================================================================================End of my srcline exploration:
 
     fastcore.meta has: 
     13 items in its __all__, and 
@@ -622,8 +603,7 @@ dbsrc = fdb.dbprint(14, "get the file path of the module", "mo.__file__", "inspe
 
     None
 
-    Review srcode with all comments added so far========================================================================================================
-    {9: 0, 10: 1, 11: 2, 14: 3}
+    Review srcode with all comments added so far======================================================================================================
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -633,12 +613,12 @@ dbsrc = fdb.dbprint(14, "get the file path of the module", "mo.__file__", "inspe
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module
-        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # step 0: how many items inside mo.__all__?
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # step 1: get all funcs of a module
+        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # step 2: get all classes from the module
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
-        pkgpath = os.path.dirname(mo.__file__)================================================(14) # get the file path of the module
+        pkgpath = os.path.dirname(mo.__file__)================================================(14) # step 3: get the file path of the module
         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (15)
         if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(16)      
         if func: =============================================================================(17)      
@@ -666,9 +646,9 @@ dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect
     print(f'{a} ; {b}; {c}')")
 ```
 
-    =========================================================     Investigating whatinside     =========================================================
-    ================================================================     on line 30     ================================================================
-    =================================================     with example whatinside(core, lib=True)     ==================================================
+    ========================================================     Investigating whatinside     ========================================================
+    ===============================================================     on line 30     ===============================================================
+    ================================================     with example whatinside(core, lib=True)     =================================================
 
             pprint([i[0] for i in callables])                                                                                                               (28)
         if lib:                                                                                                                                             (29)
@@ -684,7 +664,7 @@ dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect
     74 callables.
 
 
-    ====================================================================================================================Start of my srcline exploration:
+    ==================================================================================================================Start of my srcline exploration:
 
 
                                                                               pkgpath => pkgpath : /Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore
@@ -725,7 +705,7 @@ dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect
     FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; utils; False
     FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; xdg; False
     FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; xtras; False
-    ======================================================================================================================End of my srcline exploration:
+    ====================================================================================================================End of my srcline exploration:
 
     The library has 21 modules
     ['_modidx',
@@ -751,8 +731,7 @@ dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect
      'xtras']
     None
 
-    Review srcode with all comments added so far========================================================================================================
-    {9: 0, 10: 1, 11: 2, 14: 3, 30: 4}
+    Review srcode with all comments added so far======================================================================================================
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -762,12 +741,12 @@ dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module
-        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # step 0: how many items inside mo.__all__?
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # step 1: get all funcs of a module
+        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # step 2: get all classes from the module
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
-        pkgpath = os.path.dirname(mo.__file__)================================================(14) # get the file path of the module
+        pkgpath = os.path.dirname(mo.__file__)================================================(14) # step 3: get the file path of the module
         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (15)
         if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(16)      
         if func: =============================================================================(17)      
@@ -783,7 +762,7 @@ dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect
             print(f'The callables are: ')=====================================================(27)      
             pprint([i[0] for i in callables])=================================================(28)      
         if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # get names of all modules of a lib
+            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # step 4: get names of all modules of a lib
             print(f'The library has {len(modules)} modules')==================================(31)      
             pprint(modules)===================================================================(32)      
                                                                                                                                          part No.1 out of 2 parts
@@ -794,7 +773,10 @@ dbsrc = fdb.dbprint(30, "get names of all modules of a lib", "pkgpath", "inspect
 fdb.print()
 ```
 
-    {9: 0, 10: 1, 11: 2, 14: 3, 30: 4}
+    ========================================================     Investigating whatinside     ========================================================
+    ===============================================================     on line 30     ===============================================================
+    ================================================     with example whatinside(core, lib=True)     =================================================
+
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
                    func:bool=False, # print all user defined functions========================(2)       
@@ -804,12 +786,12 @@ fdb.print()
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module
-        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # step 0: how many items inside mo.__all__?
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # step 1: get all funcs of a module
+        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # step 2: get all classes from the module
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
-        pkgpath = os.path.dirname(mo.__file__)================================================(14) # get the file path of the module
+        pkgpath = os.path.dirname(mo.__file__)================================================(14) # step 3: get the file path of the module
         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (15)
         if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(16)      
         if func: =============================================================================(17)      
@@ -825,7 +807,7 @@ fdb.print()
             print(f'The callables are: ')=====================================================(27)      
             pprint([i[0] for i in callables])=================================================(28)      
         if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # get names of all modules of a lib
+            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # step 4: get names of all modules of a lib
             print(f'The library has {len(modules)} modules')==================================(31)      
             pprint(modules)===================================================================(32)      
                                                                                                                                                             (33)
