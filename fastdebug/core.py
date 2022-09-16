@@ -470,7 +470,9 @@ you are investigating. Run exec on the entire srcode with added expressions (dbs
     if bool(self.eg):
         self.egEnv[self.orisrc.__name__] = locals()[self.orisrc.__name__] 
         if type(self.orisrc) == type:
-            exec(self.eg, {}, self.egEnv)
+#             exec(self.eg, {}, self.egEnv) # working, but not including pprint from globals()
+            exec(self.eg, globals(), self.egEnv)  # working great
+#             exec(self.eg, globals(), self.egEnv.update(locals()))     # not working, not sure why!!!     
         elif inspect.isfunction(self.orisrc):
             example = self.takeoutExample()
             exec("pprint(" + example + ")", globals(), self.egEnv) # use globals() so that pprint can be used       
@@ -549,7 +551,7 @@ def print(self:Fastdb,
                 if bool(cmts):
                     cmtidx = [cmt[0] for cmt in list(cmts.items())]
                     if idx in cmtidx:
-                        print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + "step "+ str(idxcmts[idx]) + ": " + \
+                        print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + "spot "+ str(idxcmts[idx]) + ": " + \
                                                colorize(cmts[idx], color=randCol)))
                     else:
                         print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                                                      
@@ -580,7 +582,7 @@ def print(self:Fastdb,
                     if bool(cmts):
                         cmtidx = [cmt[0] for cmt in list(cmts.items())]
                         if idx in cmtidx:
-                            print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + "step "+ str(idxcmts[idx]) + ": " + \
+                            print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + "spot "+ str(idxcmts[idx]) + ": " + \
                                                colorize(cmts[idx], color=randCol)))
                         else:
                             print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                                                          
@@ -798,6 +800,7 @@ def snoop(self:Fastdb, db=False):
                 print(f"self.egEnv: {self.egEnv}")
                       
             exec(self.eg, self.egEnv.update(locals()), self.egEnv)
+#             exec(self.eg, globals(), self.egEnv.update(locals()))       # not working, not sure why??????     
 
 
 
