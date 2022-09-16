@@ -760,7 +760,7 @@ def takeoutExample(self:Fastdb):
 
 # %% ../00_core.ipynb 334
 @patch
-def snoop(self:Fastdb):
+def snoop(self:Fastdb, db=False):
 #     self.eg = "inspect._signature_from_callable(whatinside, sigcls=inspect.Signature)"
     if bool(self.eg):
         if inspect.isfunction(self.orisrc):
@@ -770,19 +770,35 @@ def snoop(self:Fastdb):
             exec("import snoop")
             eval(snp, locals(), self.egEnv)
         elif type(self.orisrc) == type:
-            dbsrc="import snoop\n"
+#             dbsrc="import snoop\n"
+            dbsrc=""
             for l in inspect.getsource(self.orisrc).split('\n'):
                 if "def __new__" in l:
                     indent = len(l) - len(l.lstrip())
+                    dbsrc = dbsrc + " "*indent + "import snoop\n"                    
                     dbsrc = dbsrc + " "*indent + "@snoop\n"
                     dbsrc = dbsrc + l + '\n'
                 else:
                     dbsrc = dbsrc + l + '\n'
-            pprint(dbsrc)
-            exec("import snoop")
-            exec(dbsrc)
-            self.egEnv[self.orisrc.__name__] = locals()[self.orisrc.__name__] 
-            exec(self.eg, {}, self.egEnv)
+            if db:
+                pprint(dbsrc)
+
+            file_name ='/tmp/' + self.orisrc.__name__ + '.py' # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
+            with open(file_name, 'w') as f:
+                f.write(dbsrc)
+            code = compile(dbsrc, file_name, 'exec')
+            
+            if db: 
+                print(f"before exec on snoop FixSigMeta, locals(): {locals()}")
+                      
+            exec(code, globals().update(self.outenv)) # when dbsrc is a method, it will update as part of a class
+                      
+            if db:
+                print(f"after exec on snoop FixSigMeta, locals(): {locals()}")
+                print(f"self.egEnv: {self.egEnv}")
+                      
+            exec(self.eg, self.egEnv.update(locals()), self.egEnv)
+
 
 
 
