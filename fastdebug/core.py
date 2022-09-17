@@ -500,7 +500,7 @@ def docsrc(self:Fastdb,
             cmt:str, # comment added to the srcline
             *codes, # a list of expressions (str) you write to be evaluated above the srcline
             expand:int=2, # span 2 lines of srcode up and down from the srcline investigated
-            showdbsrc:bool=False): # display dbsrc
+            db:bool=False): # display debugging print
     "create dbsrc the string and turn the string into actual dbsrc function, we have self.dbsrcstr and self.dbsrc available from now on."
 #     self.goback() # refresh, but put it in the front will cause multiple reprints of dbcodes outputs
     src = self.orisrc
@@ -521,7 +521,7 @@ def docsrc(self:Fastdb,
     self.create_dbsrc_from_string()
     
     # run example with dbsrc
-    self.run_example()
+    self.run_example(db=db)
 
 
 # %% ../00_core.ipynb 318
@@ -589,10 +589,10 @@ def create_dbsrc_string(self:Fastdb, idxsrc, *codes):
     self.dbsrcstr = dbsrc 
 
 
-# %% ../00_core.ipynb 325
+# %% ../00_core.ipynb 328
 @patch
 def replaceWithDbsrc(self:Fastdb, db=False):
-    "to replace self.orisrc.__name__ with 'self.dbsrc' and return this new self.eg"
+    "to replace self.orisrc.__name__ with 'self.dbsrc' and assign this new self.eg to self.eg"
     oldname = None
     new_eg = ""
     if type(self.orisrc) == type: # as class
@@ -606,35 +606,39 @@ def replaceWithDbsrc(self:Fastdb, db=False):
     else: # as function
         for l in self.eg.split('\n'):
             if self.orisrc.__name__ in l:
-                oldname = l.split('(')[0]
-                rest = l.split('(')[1]
-                new_eg = new_eg + "self.dbsrc" + "(" + rest
+                lst = l.split(self.orisrc.__name__ + '(')
+                start = lst[0]
+                rest = lst[1]
+                new_eg = new_eg + start + "self.dbsrc(" + rest
             else:
                 new_eg = new_eg + l + "\n"
-    if db:
-        print(f"old name: {oldname}")
+
     self.eg = new_eg
 
-# %% ../00_core.ipynb 328
+# %% ../00_core.ipynb 330
 @patch
-def run_example(self:Fastdb):
+def run_example(self:Fastdb, db=False):
     
     self.replaceWithDbsrc()
     # use locals() as global env to bring in self or obj to enable self.dbsrc to run
     # use globals() to see whether pprint can be brought in 
     # so combine them both can have them both, as globals() do not contain locals() fully
-    print(f"globals(): {list(globals().keys())}")
-    print(f"locals(): {list(locals().keys())}")
-    exec(self.eg, globals().update(locals()), self.egEnv)
+    if db:
+        print(f"globals(): {list(globals().keys())}")
+        print(f"locals(): {list(locals().keys())}") # 
+    exec(self.eg, globals().update(locals()), self.egEnv) # locals() gives me self, # globals() gives fastdebug env
     self.autoprint()
 
-# %% ../00_core.ipynb 334
+# %% ../00_core.ipynb 336
 @patch
 def autoprint(self:Fastdb):
     totalines = len(inspect.getsource(self.orisrc).split('\n'))
     maxpcell = 33
     idx = self.idxsrc
-    pt = idx // maxpcell
+    if bool(idx): 
+        pt = idx // maxpcell 
+    else:
+        return
     
     print()
     print('{:=<157}'.format(colorize("Review srcode with all comments added so far", color="y")))
@@ -646,7 +650,7 @@ def autoprint(self:Fastdb):
         self.print(maxpcell, 1)
     print()
 
-# %% ../00_core.ipynb 344
+# %% ../00_core.ipynb 346
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
@@ -732,17 +736,17 @@ def print(self:Fastdb,
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
 
-# %% ../00_core.ipynb 347
+# %% ../00_core.ipynb 349
 @patch
 def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../00_core.ipynb 356
+# %% ../00_core.ipynb 358
 import ipdb 
 # this handles the partial import error
 
-# %% ../00_core.ipynb 357
+# %% ../00_core.ipynb 359
 @patch
 def explore(self:Fastdb, 
             idxsrc:int, # idxsrc can be an int or a list of int
@@ -886,10 +890,10 @@ def explore(self:Fastdb,
         
     self.goback() # at the end will avoid some multi print of dbcodes
 
-# %% ../00_core.ipynb 359
+# %% ../00_core.ipynb 361
 import snoop
 
-# %% ../00_core.ipynb 360
+# %% ../00_core.ipynb 362
 @patch
 def takeoutExample(self:Fastdb):
     example = ""
@@ -898,55 +902,62 @@ def takeoutExample(self:Fastdb):
             example = l
     return example
 
-# %% ../00_core.ipynb 367
+# %% ../00_core.ipynb 371
 @patch
-def snoop(self:Fastdb, db=False):
+def create_snoop_str(self:Fastdb, deco=False, db=False):
+    dbsrc=""
+    if not deco:
+        for l in inspect.getsource(self.orisrc).split('\n'):
+            if "def " in l:
+                indent = len(l) - len(l.lstrip())
+                dbsrc = dbsrc + " "*indent + "import snoop\n"                    
+                dbsrc = dbsrc + " "*indent + "@snoop\n"
+                dbsrc = dbsrc + l + '\n'
+            else:
+                dbsrc = dbsrc + l + '\n'
 
-    if bool(self.eg):
-        if inspect.isfunction(self.orisrc):
-            example = self.takeoutExample()
-            lst = example.split('(')
-            snp = "snoop.snoop(depth=4)(" + lst[0] + ")(" + lst[1]
-            exec("import snoop")
-            # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
-            file_name ='/tmp/' + self.orisrc.__name__ + '.py' 
-            with open(file_name, 'w') as f:
-                f.write(snp)
-            code = compile(snp, file_name, 'exec')
-            exec(snp, locals(), self.egEnv)
-            
-        elif type(self.orisrc) == type:
-            dbsrc=""
-            for l in inspect.getsource(self.orisrc).split('\n'):
-                if "def " in l:
-                    indent = len(l) - len(l.lstrip())
+    if deco: # if self.orisrc is a decorator
+        countdef = 0
+        for l in inspect.getsource(self.orisrc).split('\n'):
+            if "def " in l:
+                indent = len(l) - len(l.lstrip())
+                if countdef == 0:
+                    dbsrc = dbsrc + " "*indent + "import snoop\n"
+                    countdef = countdef + 1
+                elif countdef == 1:
                     dbsrc = dbsrc + " "*indent + "import snoop\n"                    
                     dbsrc = dbsrc + " "*indent + "@snoop\n"
-                    dbsrc = dbsrc + l + '\n'
-                else:
-                    dbsrc = dbsrc + l + '\n'
-            if db:
-                pprint(dbsrc)
+                dbsrc = dbsrc + l + '\n'
+            else:
+                dbsrc = dbsrc + l + '\n'            
+    self.dbsrcstr = dbsrc
 
-            # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
-            file_name ='/tmp/' + self.orisrc.__name__ + '.py' 
-            with open(file_name, 'w') as f:
-                f.write(dbsrc)
-            code = compile(dbsrc, file_name, 'exec')
+# %% ../00_core.ipynb 373
+@patch
+def create_snoop_from_string(self:Fastdb, db=False):
+    # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
+    file_name ='/tmp/' + self.orisrc.__name__ + '.py' 
+    with open(file_name, 'w') as f:
+        f.write(self.dbsrcstr)
+    code = compile(self.dbsrcstr, file_name, 'exec')
+#             exec(dbsrc, locals(), self.egEnv)                
+#     exec(code, globals().update(self.outenv), locals()) # when dbsrc is a method, it will update as part of a class
+    exec(code, globals().update(self.outenv)) # when dbsrc is a method, it will update as part of a class
+    # store dbsrc func inside Fastdb obj
+    self.dbsrc = locals()[self.orisrc.__name__]
 
-            if db: 
-                print(f"before exec on snoop FixSigMeta, locals(): {locals()}")
 
-            exec(code, globals().update(self.outenv)) # when dbsrc is a method, it will update as part of a class
+# %% ../00_core.ipynb 375
+@patch
+def snoop(self:Fastdb, deco=False, db=False):
 
-            if db:
-                print(f"after exec on snoop FixSigMeta, locals(): {locals()}")
-                print(f"self.egEnv: {self.egEnv}")
+    if bool(self.eg):
+        self.create_snoop_str(deco=deco, db=db)
+        self.create_snoop_from_string(db=db)
+        self.run_example()
 
-            exec(self.eg, self.egEnv.update(locals()), self.egEnv) # working nicely, not sure why?????
-    #             exec(self.eg, globals(), self.egEnv.update(locals()))       # not working, not sure why??????     
 
-# %% ../00_core.ipynb 377
+# %% ../00_core.ipynb 383
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal

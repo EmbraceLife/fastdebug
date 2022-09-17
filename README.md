@@ -394,7 +394,7 @@ dbsrc = fdb.docsrc(10, "get all funcs of a module", "mo", "inspect.getdoc(inspec
     Optionally, only return members that satisfy a given predicate.
 
 
-    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('distribution', <function distribution at 0x1044709d0>), ('metadata', <function metadata at 0x1044c1e50>), ('pprint', <function pprint at 0x101b5b280>), ('python_version', <function python_version at 0x101822d30>), ('tstenv', <function tstenv at 0x104470280>), ('version', <function version at 0x1044c1ee0>), ('whatinside', <function whatinside at 0x104470940>), ('whichversion', <function whichversion at 0x104470ca0>)]
+    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('distribution', <function distribution at 0x108332af0>), ('metadata', <function metadata at 0x108363c10>), ('pprint', <function pprint at 0x1059f7280>), ('python_version', <function python_version at 0x1056bed30>), ('tstenv', <function tstenv at 0x108332b80>), ('version', <function version at 0x108363ca0>), ('whatinside', <function whatinside at 0x108332940>), ('whichversion', <function whichversion at 0x1083329d0>)]
     ====================================================================================================================End of my srcline exploration:
 
     fastdebug.utils has: 
@@ -641,7 +641,7 @@ dbsrc = fdb.docsrc(14, "get the file path of the module", "mo.__file__", "inspec
 fdb.eg = "whatinside(core, lib=True)"
 dbsrc = fdb.docsrc(30, "get names of all modules of a lib", "pkgpath", "inspect.getdoc(pkgutil.iter_modules)", \
 "for a, b, c in pkgutil.iter_modules([pkgpath]):\\n\
-    print(f'{a} ; {b}; {c}')", showdbsrc=True)
+    print(f'{a} ; {b}; {c}')", db=True)
 ```
 
     ========================================================     Investigating whatinside     ========================================================
@@ -655,6 +655,8 @@ dbsrc = fdb.docsrc(30, "get names of all modules of a lib", "pkgpath", "inspect.
                                                                                                                                 get names of all modules of a lib
             print(f'The library has {len(modules)} modules')                                                                                                (31)
             pprint(modules)                                                                                                                                 (32)
+    globals(): ['__name__', '__doc__', '__package__', '__loader__', '__spec__', '__file__', '__cached__', '__builtins__', '__all__', 'defaults', 'pprint', 'inspect', 'null', 'num_methods', 'rnum_methods', 'inum_methods', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'Self', 'ifnone', 'maybe_attr', 'basic_repr', 'is_array', 'listify', 'tuplify', 'true', 'NullType', 'tonull', 'get_class', 'mk_class', 'wrap_class', 'ignore_exceptions', 'exec_local', 'risinstance', 'Inf', 'in_', 'ret_true', 'ret_false', 'stop', 'gen', 'chunked', 'otherwise', 'custom_dir', 'AttrDict', 'get_annotations_ex', 'eval_type', 'type_hints', 'annotations', 'anno_ret', 'signature_ex', 'union2tuple', 'argnames', 'with_cast', 'store_attr', 'attrdict', 'properties', 'camel2words', 'camel2snake', 'snake2camel', 'class2attr', 'getcallable', 'getattrs', 'hasattrs', 'setattrs', 'try_attrs', 'GetAttrBase', 'GetAttr', 'delegate_attr', 'ShowPrint', 'Int', 'Str', 'Float', 'flatten', 'concat', 'strcat', 'detuplify', 'replicate', 'setify', 'merge', 'range_of', 'groupby', 'last_index', 'filter_dict', 'filter_keys', 'filter_values', 'cycle', 'zip_cycle', 'sorted_ex', 'not_', 'argwhere', 'filter_ex', 'renumerate', 'first', 'only', 'nested_attr', 'nested_setdefault', 'nested_callable', 'nested_idx', 'set_nested_idx', 'val2idx', 'uniqueify', 'loop_first_last', 'loop_first', 'loop_last', 'fastuple', 'bind', 'mapt', 'map_ex', 'compose', 'maps', 'partialler', 'instantiate', 'using_attr', 'copy_func', 'patch_to', 'patch', 'patch_property', 'compile_re', 'ImportEnum', 'StrEnum', 'str_enum', 'Stateful', 'PrettyString', 'even_mults', 'num_cpus', 'add_props', 'typed', 'exec_new', 'exec_import', 'str2bool', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'is_', 'is_not', 'dbcolors', 'random', 'randomColor', 'colorize', 're', 'strip_ansi', 'alignright', 'printsrclinewithidx', 'printsrc', 'ast', 'dbprintinsert', 'Fastdb', 'dbprint', 'printtitle', 'docsrc', 'create_dbsrc_from_string', 'create_dbsrc_string', 'replaceWithDbsrc', 'run_example', 'autoprint', 'print', 'goback', 'ipdb', 'explore', 'snoop', 'takeoutExample', 'reliveonce', 'os', 'pkgutil', 'whatinside', 'version', 'metadata', 'distribution', 'python_version', 'whichversion', 'tstenv', 'self', 'db', 'mo', 'dun', 'func', 'clas', 'bltin', 'lib', 'cal', 'dun_all', 'funcs', 'classes', 'builtins', 'callables']
+    locals(): ['self', 'db']
     fastcore.meta has: 
     13 items in its __all__, and 
     43 user defined functions, 
