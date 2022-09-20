@@ -149,43 +149,74 @@ fdb.print(20,1)
 
 ``` python
 # 2. after viewing source code, choose a srcline idx to set breakpoint and write down why I want to explore this line
-# fdb.takExample("whatinside(fu)", whatinside=whatinside, fu=fu)
+fdb.eg = "whatinside(fu)"
 ```
 
 ``` python
-# fdb.explore(11, "what is getmembers")
+# fdb.explore(11)
 ```
 
 ``` python
 # 2. you can set multiple breakpoints from the start if you like (but not necessary)
-# fdb.explore([11, 16, 13], "what is getmembers")
+# fdb.explore([11, 16, 13])
 ```
+
+## Fastdb.snoop
+
+But more often I just want to have an overview of what srclines get run
+so that I know which lines to dive into and start documenting.
+
+Note: I borrowed `snoop` from snoop library and automated it.
 
 ``` python
-# test_eq(inspect.getsourcefile(whatinside), "/Users/Natsume/Documents/fastdebug/fastdebug/utils.py")
-# test_eq(inspect.getsourcefile(fu.whatinside), "/tmp/whatinside.py") # this is the actual source file we are exploring, 
-# so we are using fu.whatinside, not whatinside to run examples. 
-# whatinside(fu) # whatinside is not touched
+fdb.snoop()
 ```
 
-``` python
-# fdb.goback() # when you done exploring, return everything back to normal.
-```
+    12:12:09.48 >>> Call to whatinside in File "/tmp/whatinside.py", line 3
+    12:12:09.48 ...... mo = <module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'>
+    12:12:09.48 ...... dun = False
+    12:12:09.48 ...... func = False
+    12:12:09.48 ...... clas = False
+    12:12:09.48 ...... bltin = False
+    12:12:09.48 ...... lib = False
+    12:12:09.48 ...... cal = False
+    12:12:09.48    3 | def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
+    12:12:09.48   12 |     dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0
+    12:12:09.48 .......... dun_all = 3
+    12:12:09.48   13 |     funcs = inspect.getmembers(mo, inspect.isfunction)
+    12:12:09.48 .......... funcs = [('distribution', <function distribution at 0x105edce50>), ('metadata', <function metadata at 0x105f2cf70>), ('pprint', <function pprint at 0x1035c7280>), ..., ('version', <function version at 0x105f2f040>), ('whatinside', <function whatinside at 0x105edc9d0>), ('whichversion', <function whichversion at 0x105edc160>)]
+    12:12:09.48 .......... len(funcs) = 8
+    12:12:09.48   14 |     classes = inspect.getmembers(mo, inspect.isclass)
+    12:12:09.48 .......... classes = []
+    12:12:09.48   15 |     builtins = inspect.getmembers(mo, inspect.isbuiltin)
+    12:12:09.48 .......... builtins = []
+    12:12:09.48   16 |     callables = inspect.getmembers(mo, callable)
+    12:12:09.49 .......... callables = [('distribution', <function distribution at 0x105edce50>), ('metadata', <function metadata at 0x105f2cf70>), ('pprint', <function pprint at 0x1035c7280>), ..., ('version', <function version at 0x105f2f040>), ('whatinside', <function whatinside at 0x105edc9d0>), ('whichversion', <function whichversion at 0x105edc160>)]
+    12:12:09.49 .......... len(callables) = 8
+    12:12:09.49   17 |     pkgpath = os.path.dirname(mo.__file__)
+    12:12:09.49 .......... pkgpath = '/Users/Natsume/Documents/fastdebug/fastdebug'
+    12:12:09.49   18 |     print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  
+    12:12:09.49   19 |     if hasattr(mo, "__all__") and dun: pprint(mo.__all__)
+    12:12:09.49   20 |     if func: 
+    12:12:09.49   23 |     if clas: 
+    12:12:09.49   26 |     if bltin: 
+    12:12:09.49   29 |     if cal: 
+    12:12:09.49   32 |     if lib: 
+    12:12:09.49 <<< Return value from whatinside: None
 
-``` python
-# test_eq(inspect.getsourcefile(whatinside), "/Users/Natsume/Documents/fastdebug/fastdebug/utils.py")
-```
+    fastdebug.utils has: 
+    3 items in its __all__, and 
+    8 user defined functions, 
+    0 classes or class objects, 
+    0 builtin funcs and methods, and
+    8 callables.
 
-``` python
-# test_eq(inspect.getsourcefile(fu.whatinside), "/Users/Natsume/Documents/fastdebug/fastdebug/utils.py")
-```
+## Fastdb.docsrc
 
-## [`Fastdb.dbprint`](https://EmbraceLife.github.io/fastdebug/core.html#fastdb.dbprint)
-
-After exploration, if you realize there is something new to learn and
-maybe want to come back for a second look, you will find `ipdb` and the
-alike are not designed to document your learning. Here comes `dbprint`
-to make my life easier because:
+After exploring and snooping, if I realize there is something new to
+learn and maybe want to come back for a second look, I find `ipdb` and
+the alike are not designed to document my learning. So, I created
+`docsrc` to make my life easier in the following ways:
 
 > I won’t need to scroll through a long cell output of pdb commands, src
 > prints and results to find what I learnt during exploration
@@ -196,8 +227,8 @@ to make my life easier because:
 > I can choose any srclines to explore and write any sinlge or
 > multi-line expressions to evaluate the srcline
 
-> I can write down what I learn or what is new on any srcline as comment
-> attached to the src code
+> I can write down what I learn or what is new on any srcline as
+> comment, and all comments are attached to the src code for review
 
 > All expressions with results and comments for each srcline under
 > exploration are documented for easy reviews
@@ -205,14 +236,11 @@ to make my life easier because:
 > Of course, no worry about your original source code, as it is
 > untouched.
 
-### Let me start documenting as I explore
-
 ### Import
 
 ``` python
 from fastdebug.core import * # to make Fastdb available
-from fastdebug.utils import whatinside # for making an example 
-import fastdebug.utils as fu # for using the dbsrc code
+from fastdebug.utils import whatinside # for making an example
 ```
 
 ### Initiating
@@ -222,15 +250,9 @@ g = locals()
 fdb = Fastdb(whatinside, outloc=g) # use either fu.whatinside or whatinside is fine
 ```
 
-### Print src with idx
-
 ``` python
-fdb.print() # view the source code with idx
+fdb.print(maxlines=20, part=1) # view the source code with idx
 ```
-
-    ========================================================     Investigating whatinside     ========================================================
-    ==============================================================     on line None     ==============================================================
-    ===========================================================     with example None     ============================================================
 
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
@@ -252,25 +274,11 @@ fdb.print() # view the source code with idx
         if func: =============================================================================(17)      
             print(f'The user defined functions are:')=========================================(18)      
             pprint([i[0] for i in funcs])=====================================================(19)      
-        if clas: =============================================================================(20)      
-            print(f'The class objects are:')==================================================(21)      
-            pprint([i[0] for i in classes])===================================================(22)      
-        if bltin: ============================================================================(23)      
-            print(f'The builtin functions or methods are:')===================================(24)      
-            pprint([i[0] for i in builtins])==================================================(25)      
-        if cal: ==============================================================================(26)      
-            print(f'The callables are: ')=====================================================(27)      
-            pprint([i[0] for i in callables])=================================================(28)      
-        if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30)      
-            print(f'The library has {len(modules)} modules')==================================(31)      
-            pprint(modules)===================================================================(32)      
-                                                                                                                                                            (33)
+                                                                                                                                         part No.1 out of 2 parts
 
 ### What does the first line do?
 
 ``` python
-# fdb.takExample("whatinside(fu)", whatinside=whatinside, fu=fu)
 fdb.eg = "whatinside(fu)"
 ```
 
@@ -362,7 +370,7 @@ dbsrc = fdb.docsrc(10, "get all funcs of a module", "mo", "inspect.getdoc(inspec
 
     ========================================================     Investigating whatinside     ========================================================
     ===============================================================     on line 10     ===============================================================
-    ======================================================     with example self.dbsrc(fu)     =======================================================
+    ======================================================     with example whatinside(fu)     =======================================================
 
     print selected srcline with expands below--------
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'                                                                (8)
@@ -394,7 +402,7 @@ dbsrc = fdb.docsrc(10, "get all funcs of a module", "mo", "inspect.getdoc(inspec
     Optionally, only return members that satisfy a given predicate.
 
 
-    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('distribution', <function distribution at 0x108332af0>), ('metadata', <function metadata at 0x108363c10>), ('pprint', <function pprint at 0x1059f7280>), ('python_version', <function python_version at 0x1056bed30>), ('tstenv', <function tstenv at 0x108332b80>), ('version', <function version at 0x108363ca0>), ('whatinside', <function whatinside at 0x108332940>), ('whichversion', <function whichversion at 0x1083329d0>)]
+    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('distribution', <function distribution at 0x105edce50>), ('metadata', <function metadata at 0x105f2cf70>), ('pprint', <function pprint at 0x1035c7280>), ('python_version', <function python_version at 0x10328ed30>), ('tstenv', <function tstenv at 0x105edcc10>), ('version', <function version at 0x105f2f040>), ('whatinside', <function whatinside at 0x105edc9d0>), ('whichversion', <function whichversion at 0x105edc160>)]
     ====================================================================================================================End of my srcline exploration:
 
     fastdebug.utils has: 
@@ -570,7 +578,7 @@ dbsrc = fdb.docsrc(14, "get the file path of the module", "mo.__file__", "inspec
 
     ========================================================     Investigating whatinside     ========================================================
     ===============================================================     on line 14     ===============================================================
-    =====================================================     with example self.dbsrc(core)     ======================================================
+    =====================================================     with example whatinside(core)     ======================================================
 
     print selected srcline with expands below--------
         builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
@@ -655,7 +663,7 @@ dbsrc = fdb.docsrc(30, "get names of all modules of a lib", "pkgpath", "inspect.
                                                                                                                                 get names of all modules of a lib
             print(f'The library has {len(modules)} modules')                                                                                                (31)
             pprint(modules)                                                                                                                                 (32)
-    globals(): ['__name__', '__doc__', '__package__', '__loader__', '__spec__', '__file__', '__cached__', '__builtins__', '__all__', 'defaults', 'pprint', 'inspect', 'null', 'num_methods', 'rnum_methods', 'inum_methods', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'Self', 'ifnone', 'maybe_attr', 'basic_repr', 'is_array', 'listify', 'tuplify', 'true', 'NullType', 'tonull', 'get_class', 'mk_class', 'wrap_class', 'ignore_exceptions', 'exec_local', 'risinstance', 'Inf', 'in_', 'ret_true', 'ret_false', 'stop', 'gen', 'chunked', 'otherwise', 'custom_dir', 'AttrDict', 'get_annotations_ex', 'eval_type', 'type_hints', 'annotations', 'anno_ret', 'signature_ex', 'union2tuple', 'argnames', 'with_cast', 'store_attr', 'attrdict', 'properties', 'camel2words', 'camel2snake', 'snake2camel', 'class2attr', 'getcallable', 'getattrs', 'hasattrs', 'setattrs', 'try_attrs', 'GetAttrBase', 'GetAttr', 'delegate_attr', 'ShowPrint', 'Int', 'Str', 'Float', 'flatten', 'concat', 'strcat', 'detuplify', 'replicate', 'setify', 'merge', 'range_of', 'groupby', 'last_index', 'filter_dict', 'filter_keys', 'filter_values', 'cycle', 'zip_cycle', 'sorted_ex', 'not_', 'argwhere', 'filter_ex', 'renumerate', 'first', 'only', 'nested_attr', 'nested_setdefault', 'nested_callable', 'nested_idx', 'set_nested_idx', 'val2idx', 'uniqueify', 'loop_first_last', 'loop_first', 'loop_last', 'fastuple', 'bind', 'mapt', 'map_ex', 'compose', 'maps', 'partialler', 'instantiate', 'using_attr', 'copy_func', 'patch_to', 'patch', 'patch_property', 'compile_re', 'ImportEnum', 'StrEnum', 'str_enum', 'Stateful', 'PrettyString', 'even_mults', 'num_cpus', 'add_props', 'typed', 'exec_new', 'exec_import', 'str2bool', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'is_', 'is_not', 'dbcolors', 'random', 'randomColor', 'colorize', 're', 'strip_ansi', 'alignright', 'printsrclinewithidx', 'printsrc', 'ast', 'dbprintinsert', 'Fastdb', 'dbprint', 'printtitle', 'docsrc', 'create_dbsrc_from_string', 'create_dbsrc_string', 'replaceWithDbsrc', 'run_example', 'autoprint', 'print', 'goback', 'ipdb', 'explore', 'snoop', 'takeoutExample', 'reliveonce', 'os', 'pkgutil', 'whatinside', 'version', 'metadata', 'distribution', 'python_version', 'whichversion', 'tstenv', 'self', 'db', 'mo', 'dun', 'func', 'clas', 'bltin', 'lib', 'cal', 'dun_all', 'funcs', 'classes', 'builtins', 'callables']
+    globals(): ['__name__', '__doc__', '__package__', '__loader__', '__spec__', '__file__', '__cached__', '__builtins__', '__all__', 'defaults', 'pprint', 'inspect', 'null', 'num_methods', 'rnum_methods', 'inum_methods', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'Self', 'ifnone', 'maybe_attr', 'basic_repr', 'is_array', 'listify', 'tuplify', 'true', 'NullType', 'tonull', 'get_class', 'mk_class', 'wrap_class', 'ignore_exceptions', 'exec_local', 'risinstance', 'Inf', 'in_', 'ret_true', 'ret_false', 'stop', 'gen', 'chunked', 'otherwise', 'custom_dir', 'AttrDict', 'get_annotations_ex', 'eval_type', 'type_hints', 'annotations', 'anno_ret', 'signature_ex', 'union2tuple', 'argnames', 'with_cast', 'store_attr', 'attrdict', 'properties', 'camel2words', 'camel2snake', 'snake2camel', 'class2attr', 'getcallable', 'getattrs', 'hasattrs', 'setattrs', 'try_attrs', 'GetAttrBase', 'GetAttr', 'delegate_attr', 'ShowPrint', 'Int', 'Str', 'Float', 'flatten', 'concat', 'strcat', 'detuplify', 'replicate', 'setify', 'merge', 'range_of', 'groupby', 'last_index', 'filter_dict', 'filter_keys', 'filter_values', 'cycle', 'zip_cycle', 'sorted_ex', 'not_', 'argwhere', 'filter_ex', 'renumerate', 'first', 'only', 'nested_attr', 'nested_setdefault', 'nested_callable', 'nested_idx', 'set_nested_idx', 'val2idx', 'uniqueify', 'loop_first_last', 'loop_first', 'loop_last', 'fastuple', 'bind', 'mapt', 'map_ex', 'compose', 'maps', 'partialler', 'instantiate', 'using_attr', 'copy_func', 'patch_to', 'patch', 'patch_property', 'compile_re', 'ImportEnum', 'StrEnum', 'str_enum', 'Stateful', 'PrettyString', 'even_mults', 'num_cpus', 'add_props', 'typed', 'exec_new', 'exec_import', 'str2bool', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'is_', 'is_not', 'dbcolors', 'random', 'randomColor', 'colorize', 're', 'strip_ansi', 'alignright', 'printsrclinewithidx', 'printsrc', 'ast', 'dbprintinsert', 'Fastdb', 'dbprint', 'printtitle', 'docsrc', 'create_dbsrc_from_string', 'create_dbsrc_string', 'replaceWithDbsrc', 'run_example', 'autoprint', 'print', 'goback', 'ipdb', 'create_explore_str', 'create_explore_from_string', 'explore', 'snoop', 'takeoutExample', 'create_snoop_str', 'create_snoop_from_string', 'reliveonce', 'os', 'pkgutil', 'whatinside', 'version', 'metadata', 'distribution', 'python_version', 'whichversion', 'tstenv', 'self', 'db', 'mo', 'dun', 'func', 'clas', 'bltin', 'lib', 'cal', 'dun_all', 'funcs', 'classes', 'builtins', 'callables']
     locals(): ['self', 'db']
     fastcore.meta has: 
     13 items in its __all__, and 
@@ -775,7 +783,7 @@ fdb.print()
 
     ========================================================     Investigating whatinside     ========================================================
     ===============================================================     on line 30     ===============================================================
-    ================================================     with example self.dbsrc(core, lib=True)     =================================================
+    ================================================     with example whatinside(core, lib=True)     =================================================
 
     def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                    dun:bool=False, # print all items in __all__===============================(1)       
