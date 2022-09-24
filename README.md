@@ -33,27 +33,27 @@ A great example of how fastai libraries can make life more
 
 ## What is the motivation behind `fastdebug` library?
 
-Please let me show you with a simple example here.
+I have always wanted to explore and learn the fastai libraries
+thoroughly. However, reading source code is intimidating for beginners
+even for well-designed and written libraries like fastcore, fastai. So,
+I have relied on pdbpp to explore source code previously. To do fastai
+is to do exploratory coding with jupyter, but pdbpp is not working for
+jupyter at the moment and none of debugging tools I know exactly suit my
+needs. So, with the help of the amazing nbdev, I created this little
+library with 4 little tools to assist me explore source code and
+document my learning along the way.
 
-I have always wanted to explore the wonderful fastai libraries (I am
-starting with fastcore). I like to learn the fastai coding style,
-exploratory coding approach in jupyter and of course all the knowledge
-Jeremy distilled in the fastai libraries :). Even though every fastai
-function or class is quite short, but for a novice like me every library
-looks massive. To really make sense of what each line does is certainly
-a daunting task. So, is it possible to explore the libraries efficiently
-and joyfully?
+Here are the four tools: \> Fastdb.snoop(): print out all the executed
+lines and local vars of the source code I am exploring
 
-Are there any nice tools out there can help me explore and even document
-my learnings along the way? Yes, they are jupyter notebook/lab and ipdb
-(or visual debugger). However, ipdb and visual debugger felt clunky to
-me for my exploration and documentation purpose.
+> Fastdb.explore(9): start pdb at source line 9 or any srcline at my
+> choose
 
-Therefore, I decided to write a little tool (it becomes fastdebug) to
-allow me explore and document fastai libraries with ease and joy. Of
-course, as a beginner I would not dare to try writing a library without
-the wonderful [nbdev](https://nbdev.fast.ai/) and the amazing team
-behind it.
+> Fastdb.print(10, 2): print out the 2nd part of source code, given the
+> source code is divded into multi parts (each part has 10 lines)
+
+> Fastdb.docsrc(10, “comments”, “code expression1”, “code expression2”,
+> “multi-line expressions”): to document the leanring of the srcline 10
 
 As you should know now, this lib does two things: explore and document
 source code. Let’s start with
@@ -153,8 +153,25 @@ fdb.eg = "whatinside(fu)"
 ```
 
 ``` python
-# fdb.explore(11)
+fdb.explore(11)
 ```
+
+    <function save_history>
+    *** SyntaxError: EOF while scanning triple-quoted string literal
+    *** SyntaxError: invalid syntax
+    *** SyntaxError: unmatched ')'
+    *** SyntaxError: invalid syntax
+    *** SyntaxError: EOF while scanning triple-quoted string literal
+    *** IndentationError: expected an indented block
+    *** AttributeError: module 'pdb' has no attribute 'Color'
+    *** AttributeError: module 'pdb' has no attribute 'Color'
+    *** AttributeError: module 'pdb' has no attribute 'Color'
+    > /tmp/whatinside.py(13)whatinside()
+         12     import ipdb; ipdb.set_trace()
+    ---> 13     classes = inspect.getmembers(mo, inspect.isclass)
+         14     builtins = inspect.getmembers(mo, inspect.isbuiltin)
+
+    ipdb> q
 
 ``` python
 # 2. you can set multiple breakpoints from the start if you like (but not necessary)
@@ -172,37 +189,37 @@ Note: I borrowed `snoop` from snoop library and automated it.
 fdb.snoop()
 ```
 
-    12:12:09.48 >>> Call to whatinside in File "/tmp/whatinside.py", line 3
-    12:12:09.48 ...... mo = <module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'>
-    12:12:09.48 ...... dun = False
-    12:12:09.48 ...... func = False
-    12:12:09.48 ...... clas = False
-    12:12:09.48 ...... bltin = False
-    12:12:09.48 ...... lib = False
-    12:12:09.48 ...... cal = False
-    12:12:09.48    3 | def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
-    12:12:09.48   12 |     dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0
-    12:12:09.48 .......... dun_all = 3
-    12:12:09.48   13 |     funcs = inspect.getmembers(mo, inspect.isfunction)
-    12:12:09.48 .......... funcs = [('distribution', <function distribution at 0x105edce50>), ('metadata', <function metadata at 0x105f2cf70>), ('pprint', <function pprint at 0x1035c7280>), ..., ('version', <function version at 0x105f2f040>), ('whatinside', <function whatinside at 0x105edc9d0>), ('whichversion', <function whichversion at 0x105edc160>)]
-    12:12:09.48 .......... len(funcs) = 8
-    12:12:09.48   14 |     classes = inspect.getmembers(mo, inspect.isclass)
-    12:12:09.48 .......... classes = []
-    12:12:09.48   15 |     builtins = inspect.getmembers(mo, inspect.isbuiltin)
-    12:12:09.48 .......... builtins = []
-    12:12:09.48   16 |     callables = inspect.getmembers(mo, callable)
-    12:12:09.49 .......... callables = [('distribution', <function distribution at 0x105edce50>), ('metadata', <function metadata at 0x105f2cf70>), ('pprint', <function pprint at 0x1035c7280>), ..., ('version', <function version at 0x105f2f040>), ('whatinside', <function whatinside at 0x105edc9d0>), ('whichversion', <function whichversion at 0x105edc160>)]
-    12:12:09.49 .......... len(callables) = 8
-    12:12:09.49   17 |     pkgpath = os.path.dirname(mo.__file__)
-    12:12:09.49 .......... pkgpath = '/Users/Natsume/Documents/fastdebug/fastdebug'
-    12:12:09.49   18 |     print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  
-    12:12:09.49   19 |     if hasattr(mo, "__all__") and dun: pprint(mo.__all__)
-    12:12:09.49   20 |     if func: 
-    12:12:09.49   23 |     if clas: 
-    12:12:09.49   26 |     if bltin: 
-    12:12:09.49   29 |     if cal: 
-    12:12:09.49   32 |     if lib: 
-    12:12:09.49 <<< Return value from whatinside: None
+    21:15:24.22 >>> Call to whatinside in File "/tmp/whatinside.py", line 3
+    21:15:24.22 ...... mo = <module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'>
+    21:15:24.22 ...... dun = False
+    21:15:24.22 ...... func = False
+    21:15:24.22 ...... clas = False
+    21:15:24.22 ...... bltin = False
+    21:15:24.22 ...... lib = False
+    21:15:24.22 ...... cal = False
+    21:15:24.22    3 | def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
+    21:15:24.22   12 |     dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0
+    21:15:24.22 .......... dun_all = 3
+    21:15:24.22   13 |     funcs = inspect.getmembers(mo, inspect.isfunction)
+    21:15:24.22 .......... funcs = [('distribution', <function distribution>), ('metadata', <function metadata>), ('pprint', <function pprint>), ..., ('version', <function version>), ('whatinside', <function whatinside>), ('whichversion', <function whichversion>)]
+    21:15:24.22 .......... len(funcs) = 8
+    21:15:24.22   14 |     classes = inspect.getmembers(mo, inspect.isclass)
+    21:15:24.22 .......... classes = []
+    21:15:24.22   15 |     builtins = inspect.getmembers(mo, inspect.isbuiltin)
+    21:15:24.22 .......... builtins = []
+    21:15:24.22   16 |     callables = inspect.getmembers(mo, callable)
+    21:15:24.23 .......... callables = [('distribution', <function distribution>), ('metadata', <function metadata>), ('pprint', <function pprint>), ..., ('version', <function version>), ('whatinside', <function whatinside>), ('whichversion', <function whichversion>)]
+    21:15:24.23 .......... len(callables) = 8
+    21:15:24.23   17 |     pkgpath = os.path.dirname(mo.__file__)
+    21:15:24.23 .......... pkgpath = '/Users/Natsume/Documents/fastdebug/fastdebug'
+    21:15:24.23   18 |     print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  
+    21:15:24.23   19 |     if hasattr(mo, "__all__") and dun: pprint(mo.__all__)
+    21:15:24.23   20 |     if func: 
+    21:15:24.23   23 |     if clas: 
+    21:15:24.23   26 |     if bltin: 
+    21:15:24.23   29 |     if cal: 
+    21:15:24.23   32 |     if lib: 
+    21:15:24.23 <<< Return value from whatinside: None
 
     fastdebug.utils has: 
     3 items in its __all__, and 
@@ -285,9 +302,9 @@ fdb.eg = "whatinside(fu)"
 ``` python
 fdb.docsrc(9, "how many items inside mo.__all__?", "mo", \
 "if hasattr(mo, '__all__'):\\n\
-    print(f'mo: {mo}')\\n\
-    print(f'mo.__all__: {mo.__all__}')\\n\
-    print(f'len(mo.__all__): {len(mo.__all__)}')")
+    printright(f'mo: {mo}')\\n\
+    printright(f'mo.__all__: {mo.__all__}')\\n\
+    printright(f'len(mo.__all__): {len(mo.__all__)}')")
 ```
 
     ========================================================     Investigating whatinside     ========================================================
@@ -309,14 +326,15 @@ fdb.docsrc(9, "how many items inside mo.__all__?", "mo", \
 
 
     if hasattr(mo, '__all__'):
-        print(f'mo: {mo}')
-        print(f'mo.__all__: {mo.__all__}')
-        print(f'len(mo.__all__): {len(mo.__all__)}')                    
-                                                                                                                                      Running your code block => 
-    The code block printout => : 
-    mo: <module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'>
-    mo.__all__: ['whatinside', 'whichversion', 'tstenv']
-    len(mo.__all__): 3
+        printright(f'mo: {mo}')
+        printright(f'mo.__all__: {mo.__all__}')
+        printright(f'len(mo.__all__): {len(mo.__all__)}')     
+
+    Running the code block above => ====================================================================
+
+                                                                      mo: <module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'>
+                                                                                                             mo.__all__: ['whatinside', 'whichversion', 'tstenv']
+                                                                                                                                               len(mo.__all__): 3
     ====================================================================================================================End of my srcline exploration:
 
     fastdebug.utils has: 
@@ -337,7 +355,7 @@ fdb.docsrc(9, "how many items inside mo.__all__?", "mo", \
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # spot 0: how many items inside mo.__all__?
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
         funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10)      
         classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
@@ -348,19 +366,6 @@ fdb.docsrc(9, "how many items inside mo.__all__?", "mo", \
         if func: =============================================================================(17)      
             print(f'The user defined functions are:')=========================================(18)      
             pprint([i[0] for i in funcs])=====================================================(19)      
-        if clas: =============================================================================(20)      
-            print(f'The class objects are:')==================================================(21)      
-            pprint([i[0] for i in classes])===================================================(22)      
-        if bltin: ============================================================================(23)      
-            print(f'The builtin functions or methods are:')===================================(24)      
-            pprint([i[0] for i in builtins])==================================================(25)      
-        if cal: ==============================================================================(26)      
-            print(f'The callables are: ')=====================================================(27)      
-            pprint([i[0] for i in callables])=================================================(28)      
-        if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30)      
-            print(f'The library has {len(modules)} modules')==================================(31)      
-            pprint(modules)===================================================================(32)      
                                                                                                                                          part No.1 out of 2 parts
 
 ``` python
@@ -402,7 +407,7 @@ dbsrc = fdb.docsrc(10, "get all funcs of a module", "mo", "inspect.getdoc(inspec
     Optionally, only return members that satisfy a given predicate.
 
 
-    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('distribution', <function distribution at 0x105edce50>), ('metadata', <function metadata at 0x105f2cf70>), ('pprint', <function pprint at 0x1035c7280>), ('python_version', <function python_version at 0x10328ed30>), ('tstenv', <function tstenv at 0x105edcc10>), ('version', <function version at 0x105f2f040>), ('whatinside', <function whatinside at 0x105edc9d0>), ('whichversion', <function whichversion at 0x105edc160>)]
+    funcs = inspect.getmembers(mo, inspect.isfunction) => funcs: [('distribution', <function distribution>), ('metadata', <function metadata>), ('pprint', <function pprint>), ('python_version', <function python_version>), ('tstenv', <function tstenv>), ('version', <function version>), ('whatinside', <function whatinside>), ('whichversion', <function whichversion>)]
     ====================================================================================================================End of my srcline exploration:
 
     fastdebug.utils has: 
@@ -423,8 +428,8 @@ dbsrc = fdb.docsrc(10, "get all funcs of a module", "mo", "inspect.getdoc(inspec
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # spot 0: how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # spot 1: get all funcs of a module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module; 
         classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
@@ -434,19 +439,6 @@ dbsrc = fdb.docsrc(10, "get all funcs of a module", "mo", "inspect.getdoc(inspec
         if func: =============================================================================(17)      
             print(f'The user defined functions are:')=========================================(18)      
             pprint([i[0] for i in funcs])=====================================================(19)      
-        if clas: =============================================================================(20)      
-            print(f'The class objects are:')==================================================(21)      
-            pprint([i[0] for i in classes])===================================================(22)      
-        if bltin: ============================================================================(23)      
-            print(f'The builtin functions or methods are:')===================================(24)      
-            pprint([i[0] for i in builtins])==================================================(25)      
-        if cal: ==============================================================================(26)      
-            print(f'The callables are: ')=====================================================(27)      
-            pprint([i[0] for i in callables])=================================================(28)      
-        if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30)      
-            print(f'The library has {len(modules)} modules')==================================(31)      
-            pprint(modules)===================================================================(32)      
                                                                                                                                          part No.1 out of 2 parts
 
 ### If I find the src is too long, and I customize the print out of src the way I like
@@ -464,13 +456,13 @@ fdb.print(maxlines=15, part=1)
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # spot 0: how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # spot 1: get all funcs of a module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module; 
         classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
         pkgpath = os.path.dirname(mo.__file__)================================================(14)      
-                                                                                                                                         part No.1 out of 2 parts
+                                                                                                                                         part No.1 out of 3 parts
 
 ### I can write a block of codes to evaluate
 
@@ -505,8 +497,9 @@ for c in clas:\\n\
     clas = inspect.getmembers(mo, inspect.isclass)
     for c in clas:
         print(c)                                                                                   
-                                                                                                                                      Running your code block => 
-    The code block printout => : 
+
+    Running the code block above => ====================================================================
+
     ('AutoInit', <class 'fastcore.meta.AutoInit'>)
     ('BuiltinFunctionType', <class 'builtin_function_or_method'>)
     ('BuiltinMethodType', <class 'builtin_function_or_method'>)
@@ -546,9 +539,9 @@ for c in clas:\\n\
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # spot 0: how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # spot 1: get all funcs of a module
-        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # spot 2: get all classes from the module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module; 
+        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module; 
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
         pkgpath = os.path.dirname(mo.__file__)================================================(14)      
@@ -557,19 +550,6 @@ for c in clas:\\n\
         if func: =============================================================================(17)      
             print(f'The user defined functions are:')=========================================(18)      
             pprint([i[0] for i in funcs])=====================================================(19)      
-        if clas: =============================================================================(20)      
-            print(f'The class objects are:')==================================================(21)      
-            pprint([i[0] for i in classes])===================================================(22)      
-        if bltin: ============================================================================(23)      
-            print(f'The builtin functions or methods are:')===================================(24)      
-            pprint([i[0] for i in builtins])==================================================(25)      
-        if cal: ==============================================================================(26)      
-            print(f'The callables are: ')=====================================================(27)      
-            pprint([i[0] for i in callables])=================================================(28)      
-        if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30)      
-            print(f'The library has {len(modules)} modules')==================================(31)      
-            pprint(modules)===================================================================(32)      
                                                                                                                                          part No.1 out of 2 parts
 
 ``` python
@@ -618,30 +598,17 @@ dbsrc = fdb.docsrc(14, "get the file path of the module", "mo.__file__", "inspec
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # spot 0: how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # spot 1: get all funcs of a module
-        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # spot 2: get all classes from the module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module; 
+        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module; 
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
-        pkgpath = os.path.dirname(mo.__file__)================================================(14) # spot 3: get the file path of the module
+        pkgpath = os.path.dirname(mo.__file__)================================================(14) # get the file path of the module; 
         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (15)
         if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(16)      
         if func: =============================================================================(17)      
             print(f'The user defined functions are:')=========================================(18)      
             pprint([i[0] for i in funcs])=====================================================(19)      
-        if clas: =============================================================================(20)      
-            print(f'The class objects are:')==================================================(21)      
-            pprint([i[0] for i in classes])===================================================(22)      
-        if bltin: ============================================================================(23)      
-            print(f'The builtin functions or methods are:')===================================(24)      
-            pprint([i[0] for i in builtins])==================================================(25)      
-        if cal: ==============================================================================(26)      
-            print(f'The callables are: ')=====================================================(27)      
-            pprint([i[0] for i in callables])=================================================(28)      
-        if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30)      
-            print(f'The library has {len(modules)} modules')==================================(31)      
-            pprint(modules)===================================================================(32)      
                                                                                                                                          part No.1 out of 2 parts
 
 ``` python
@@ -649,7 +616,7 @@ dbsrc = fdb.docsrc(14, "get the file path of the module", "mo.__file__", "inspec
 fdb.eg = "whatinside(core, lib=True)"
 dbsrc = fdb.docsrc(30, "get names of all modules of a lib", "pkgpath", "inspect.getdoc(pkgutil.iter_modules)", \
 "for a, b, c in pkgutil.iter_modules([pkgpath]):\\n\
-    print(f'{a} ; {b}; {c}')", db=True)
+    printright(f'{a} ; {b}; {c}')", db=True)
 ```
 
     ========================================================     Investigating whatinside     ========================================================
@@ -663,7 +630,7 @@ dbsrc = fdb.docsrc(30, "get names of all modules of a lib", "pkgpath", "inspect.
                                                                                                                                 get names of all modules of a lib
             print(f'The library has {len(modules)} modules')                                                                                                (31)
             pprint(modules)                                                                                                                                 (32)
-    globals(): ['__name__', '__doc__', '__package__', '__loader__', '__spec__', '__file__', '__cached__', '__builtins__', '__all__', 'defaults', 'pprint', 'inspect', 'null', 'num_methods', 'rnum_methods', 'inum_methods', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'Self', 'ifnone', 'maybe_attr', 'basic_repr', 'is_array', 'listify', 'tuplify', 'true', 'NullType', 'tonull', 'get_class', 'mk_class', 'wrap_class', 'ignore_exceptions', 'exec_local', 'risinstance', 'Inf', 'in_', 'ret_true', 'ret_false', 'stop', 'gen', 'chunked', 'otherwise', 'custom_dir', 'AttrDict', 'get_annotations_ex', 'eval_type', 'type_hints', 'annotations', 'anno_ret', 'signature_ex', 'union2tuple', 'argnames', 'with_cast', 'store_attr', 'attrdict', 'properties', 'camel2words', 'camel2snake', 'snake2camel', 'class2attr', 'getcallable', 'getattrs', 'hasattrs', 'setattrs', 'try_attrs', 'GetAttrBase', 'GetAttr', 'delegate_attr', 'ShowPrint', 'Int', 'Str', 'Float', 'flatten', 'concat', 'strcat', 'detuplify', 'replicate', 'setify', 'merge', 'range_of', 'groupby', 'last_index', 'filter_dict', 'filter_keys', 'filter_values', 'cycle', 'zip_cycle', 'sorted_ex', 'not_', 'argwhere', 'filter_ex', 'renumerate', 'first', 'only', 'nested_attr', 'nested_setdefault', 'nested_callable', 'nested_idx', 'set_nested_idx', 'val2idx', 'uniqueify', 'loop_first_last', 'loop_first', 'loop_last', 'fastuple', 'bind', 'mapt', 'map_ex', 'compose', 'maps', 'partialler', 'instantiate', 'using_attr', 'copy_func', 'patch_to', 'patch', 'patch_property', 'compile_re', 'ImportEnum', 'StrEnum', 'str_enum', 'Stateful', 'PrettyString', 'even_mults', 'num_cpus', 'add_props', 'typed', 'exec_new', 'exec_import', 'str2bool', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'is_', 'is_not', 'dbcolors', 'random', 'randomColor', 'colorize', 're', 'strip_ansi', 'alignright', 'printsrclinewithidx', 'printsrc', 'ast', 'dbprintinsert', 'Fastdb', 'dbprint', 'printtitle', 'docsrc', 'create_dbsrc_from_string', 'create_dbsrc_string', 'replaceWithDbsrc', 'run_example', 'autoprint', 'print', 'goback', 'ipdb', 'create_explore_str', 'create_explore_from_string', 'explore', 'snoop', 'takeoutExample', 'create_snoop_str', 'create_snoop_from_string', 'reliveonce', 'os', 'pkgutil', 'whatinside', 'version', 'metadata', 'distribution', 'python_version', 'whichversion', 'tstenv', 'self', 'db', 'mo', 'dun', 'func', 'clas', 'bltin', 'lib', 'cal', 'dun_all', 'funcs', 'classes', 'builtins', 'callables']
+    globals(): ['__name__', '__doc__', '__package__', '__loader__', '__spec__', '__file__', '__cached__', '__builtins__', '__all__', 'defaults', 'pprint', 'inspect', 'null', 'num_methods', 'rnum_methods', 'inum_methods', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'Self', 'ifnone', 'maybe_attr', 'basic_repr', 'is_array', 'listify', 'tuplify', 'true', 'NullType', 'tonull', 'get_class', 'mk_class', 'wrap_class', 'ignore_exceptions', 'exec_local', 'risinstance', 'Inf', 'in_', 'ret_true', 'ret_false', 'stop', 'gen', 'chunked', 'otherwise', 'custom_dir', 'AttrDict', 'get_annotations_ex', 'eval_type', 'type_hints', 'annotations', 'anno_ret', 'signature_ex', 'union2tuple', 'argnames', 'with_cast', 'store_attr', 'attrdict', 'properties', 'camel2words', 'camel2snake', 'snake2camel', 'class2attr', 'getcallable', 'getattrs', 'hasattrs', 'setattrs', 'try_attrs', 'GetAttrBase', 'GetAttr', 'delegate_attr', 'ShowPrint', 'Int', 'Str', 'Float', 'flatten', 'concat', 'strcat', 'detuplify', 'replicate', 'setify', 'merge', 'range_of', 'groupby', 'last_index', 'filter_dict', 'filter_keys', 'filter_values', 'cycle', 'zip_cycle', 'sorted_ex', 'not_', 'argwhere', 'filter_ex', 'renumerate', 'first', 'only', 'nested_attr', 'nested_setdefault', 'nested_callable', 'nested_idx', 'set_nested_idx', 'val2idx', 'uniqueify', 'loop_first_last', 'loop_first', 'loop_last', 'fastuple', 'bind', 'mapt', 'map_ex', 'compose', 'maps', 'partialler', 'instantiate', 'using_attr', 'copy_func', 'patch_to', 'patch', 'patch_property', 'compile_re', 'ImportEnum', 'StrEnum', 'str_enum', 'Stateful', 'PrettyString', 'even_mults', 'num_cpus', 'add_props', 'typed', 'exec_new', 'exec_import', 'str2bool', 'lt', 'gt', 'le', 'ge', 'eq', 'ne', 'add', 'sub', 'mul', 'truediv', 'is_', 'is_not', 'dbcolors', 'random', 'randomColor', 'colorize', 're', 'strip_ansi', 'printright', 'printsrclinewithidx', 'printsrc', 'ast', 'dbprintinsert', 'Fastdb', 'printtitle', 'docsrc', 'create_dbsrc_from_string', 'create_dbsrc_string', 'replaceWithDbsrc', 'run_example', 'autoprint', 'printcmts1', 'printcmts2', 'randomize_cmtparts_color', 'print', 'goback', 'ipdb', 'create_explore_str', 'create_explore_from_string', 'explore', 'snoop', 'takeoutExample', 'create_snoop_str', 'create_snoop_from_string', 'reliveonce', 'os', 'pkgutil', 'whatinside', 'version', 'metadata', 'distribution', 'python_version', 'whichversion', 'tstenv', 'self', 'db', 'mo', 'dun', 'func', 'clas', 'bltin', 'lib', 'cal', 'dun_all', 'funcs', 'classes', 'builtins', 'callables']
     locals(): ['self', 'db']
     fastcore.meta has: 
     13 items in its __all__, and 
@@ -690,30 +657,31 @@ dbsrc = fdb.docsrc(30, "get names of all modules of a lib", "pkgpath", "inspect.
 
 
     for a, b, c in pkgutil.iter_modules([pkgpath]):
-        print(f'{a} ; {b}; {c}')                                                                                 
-                                                                                                                                      Running your code block => 
-    The code block printout => : 
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; _modidx; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; _nbdev; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; all; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; basics; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; dispatch; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; docments; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; docscrape; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; foundation; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; imports; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; meta; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; nb_imports; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; net; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; parallel; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; script; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; shutil; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; style; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; test; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; transform; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; utils; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; xdg; False
-    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; xtras; False
+        printright(f'{a} ; {b}; {c}')                                                                            
+
+    Running the code block above => ====================================================================
+
+                                                                    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; _modidx; False
+                                                                     FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; _nbdev; False
+                                                                        FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; all; False
+                                                                     FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; basics; False
+                                                                   FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; dispatch; False
+                                                                   FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; docments; False
+                                                                  FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; docscrape; False
+                                                                 FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; foundation; False
+                                                                    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; imports; False
+                                                                       FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; meta; False
+                                                                 FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; nb_imports; False
+                                                                        FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; net; False
+                                                                   FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; parallel; False
+                                                                     FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; script; False
+                                                                     FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; shutil; False
+                                                                      FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; style; False
+                                                                       FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; test; False
+                                                                  FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; transform; False
+                                                                      FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; utils; False
+                                                                        FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; xdg; False
+                                                                      FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; xtras; False
     ====================================================================================================================End of my srcline exploration:
 
     The library has 21 modules
@@ -740,26 +708,6 @@ dbsrc = fdb.docsrc(30, "get names of all modules of a lib", "pkgpath", "inspect.
      'xtras']
 
     Review srcode with all comments added so far======================================================================================================
-    def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
-                   dun:bool=False, # print all items in __all__===============================(1)       
-                   func:bool=False, # print all user defined functions========================(2)       
-                   clas:bool=False, # print all class objects=================================(3)       
-                   bltin:bool=False, # print all builtin funcs or methods=====================(4)       
-                   lib:bool=False, # print all the modules of the library it belongs to=======(5)       
-                   cal:bool=False # print all callables=======================================(6)       
-                 ): ==========================================================================(7)       
-        'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # spot 0: how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # spot 1: get all funcs of a module
-        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # spot 2: get all classes from the module
-        builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
-        callables = inspect.getmembers(mo, callable)==========================================(13)      
-        pkgpath = os.path.dirname(mo.__file__)================================================(14) # spot 3: get the file path of the module
-        print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (15)
-        if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(16)      
-        if func: =============================================================================(17)      
-            print(f'The user defined functions are:')=========================================(18)      
-            pprint([i[0] for i in funcs])=====================================================(19)      
         if clas: =============================================================================(20)      
             print(f'The class objects are:')==================================================(21)      
             pprint([i[0] for i in classes])===================================================(22)      
@@ -770,10 +718,11 @@ dbsrc = fdb.docsrc(30, "get names of all modules of a lib", "pkgpath", "inspect.
             print(f'The callables are: ')=====================================================(27)      
             pprint([i[0] for i in callables])=================================================(28)      
         if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # spot 4: get names of all modules of a lib
+            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # get names of all modules of a lib; 
             print(f'The library has {len(modules)} modules')==================================(31)      
             pprint(modules)===================================================================(32)      
-                                                                                                                                         part No.1 out of 2 parts
+                                                                                                                                                            (33)
+                                                                                                                                         part No.2 out of 2 parts
 
 ### Print out the entire src with idx and comments, when I finish documenting
 
@@ -794,12 +743,12 @@ fdb.print()
                    cal:bool=False # print all callables=======================================(6)       
                  ): ==========================================================================(7)       
         'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # spot 0: how many items inside mo.__all__?
-        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # spot 1: get all funcs of a module
-        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # spot 2: get all classes from the module
+        dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+        funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module; 
+        classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module; 
         builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
         callables = inspect.getmembers(mo, callable)==========================================(13)      
-        pkgpath = os.path.dirname(mo.__file__)================================================(14) # spot 3: get the file path of the module
+        pkgpath = os.path.dirname(mo.__file__)================================================(14) # get the file path of the module; 
         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (15)
         if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(16)      
         if func: =============================================================================(17)      
@@ -815,7 +764,7 @@ fdb.print()
             print(f'The callables are: ')=====================================================(27)      
             pprint([i[0] for i in callables])=================================================(28)      
         if lib: ==============================================================================(29)      
-            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # spot 4: get names of all modules of a lib
+            modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(30) # get names of all modules of a lib; 
             print(f'The library has {len(modules)} modules')==================================(31)      
             pprint(modules)===================================================================(32)      
                                                                                                                                                             (33)

@@ -4,7 +4,7 @@
 __all__ = ['defaults', 'pprint', 'inspect', 'dbcolors', 'randomColor', 'colorize', 'strip_ansi', 'printright',
            'printsrclinewithidx', 'printsrc', 'dbprintinsert', 'Fastdb', 'randomize_cmtparts_color', 'reliveonce']
 
-# %% ../00_core.ipynb 9
+# %% ../00_core.ipynb 8
 defaults = type('defaults', (object,), {'margin': 157, # align to the right by 157
                                         'orisrc': None, # keep a copy of original official src code
                                         'outenv': globals(), # outside global env
@@ -13,22 +13,22 @@ defaults = type('defaults', (object,), {'margin': 157, # align to the right by 1
                                         # 'src': None, # official src
                                        }) 
 
-# %% ../00_core.ipynb 24
+# %% ../00_core.ipynb 23
 import pprint
 
-# %% ../00_core.ipynb 25
+# %% ../00_core.ipynb 24
 pprint = pprint.pprint # so that pprint is included inside __all__
 
-# %% ../00_core.ipynb 36
+# %% ../00_core.ipynb 35
 import inspect
 
-# %% ../00_core.ipynb 37
+# %% ../00_core.ipynb 36
 inspect = inspect # so that inspect is included inside __all__
 
-# %% ../00_core.ipynb 57
+# %% ../00_core.ipynb 56
 from fastcore.basics import *
 
-# %% ../00_core.ipynb 58
+# %% ../00_core.ipynb 57
 class dbcolors: # removing ;1 will return to normal color, with ;1 is bright color
     g = '\033[92;1m' #GREEN
     y = '\033[93;1m' #YELLOW
@@ -39,17 +39,17 @@ class dbcolors: # removing ;1 will return to normal color, with ;1 is bright col
     w = '\u001b[37;1m' # white
     reset = '\033[0m' #RESET COLOR
 
-# %% ../00_core.ipynb 59
+# %% ../00_core.ipynb 58
 import random
 
-# %% ../00_core.ipynb 61
+# %% ../00_core.ipynb 60
 def randomColor():
     colst = ['b', 'c', 'm', 'r', 'y', 'w', 'g']
     dictNumColor = {i:v for i, v in zip(range(len(colst)), colst)}
 
     return dictNumColor[random.randint(0, 6)]
 
-# %% ../00_core.ipynb 63
+# %% ../00_core.ipynb 62
 def colorize(cmt, color:str=None):
     if type(cmt) != str:
         cmt = str(cmt)
@@ -70,14 +70,14 @@ def colorize(cmt, color:str=None):
     else: 
         return cmt
 
-# %% ../00_core.ipynb 67
+# %% ../00_core.ipynb 66
 import re
 
-# %% ../00_core.ipynb 68
+# %% ../00_core.ipynb 67
 def strip_ansi(source):
     return re.sub(r'\033\[(\d|;)+?m', '', source)
 
-# %% ../00_core.ipynb 72
+# %% ../00_core.ipynb 71
 def printright(blocks, margin:int=157):
     lst = blocks.split('\n')
     maxlen = max(map(lambda l : len(strip_ansi(l)) , lst ))
@@ -85,17 +85,17 @@ def printright(blocks, margin:int=157):
     for l in lst:
         print(' '*indent + format(l))
 
-# %% ../00_core.ipynb 87
+# %% ../00_core.ipynb 86
 import inspect
 
-# %% ../00_core.ipynb 102
+# %% ../00_core.ipynb 101
 def printsrclinewithidx(idx, l, fill=" "):
     totallen = 157
     lenidx = 5
     lenl = len(l)
     print(l + fill*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
 
-# %% ../00_core.ipynb 109
+# %% ../00_core.ipynb 108
 def printsrc(src, # name of src code such as foo, or delegates
              dbcode, # string of codes or int of code idx number
              cmt,
@@ -134,10 +134,10 @@ def printsrc(src, # name of src code such as foo, or delegates
             printsrclinewithidx(idx, l)
 
 
-# %% ../00_core.ipynb 161
+# %% ../00_core.ipynb 160
 import ast
 
-# %% ../00_core.ipynb 162
+# %% ../00_core.ipynb 161
 def dbprintinsert(*codes, env={}): 
 
         
@@ -155,8 +155,8 @@ def dbprintinsert(*codes, env={}):
             block = ast.parse(c, mode='exec')
             exec(compile(block, '<string>', mode='exec'), globals().update(env))
         
-        # handle assignment: 2. when = occur before if; 1. when no if only =
-        elif ("=" in c and "if" not in c) or ("=" in c and c.find("=") < c.find("if")): # make sure assignment and !== and == are differentiated
+        # handle assignment:  1. when no if only =; 2. when = occur before if;
+        elif ("=" in c and "if" not in c) or ("=" in c and c.find("=") < c.find("if")): 
             
             # print('k' in locals())
             exec(c, globals().update(env)) 
@@ -262,14 +262,12 @@ def dbprintinsert(*codes, env={}):
         
         # handle evaluation
         else: 
-            # print(f"{c} => {c} : {eval(c, globals().update(env))}") 
-            output = f"{c} => {c} : {eval(c, globals().update(env))}"
-            print('{:>157}'.format(output))   
+            print('{:>157}'.format(f"{c} => {c} : {eval(c, globals().update(env))}"))   
             
         # the benefit of using global().update(env) is 
         # to ensure we don't need to include the same env fo
 
-# %% ../00_core.ipynb 270
+# %% ../00_core.ipynb 269
 class Fastdb():
     "Create a Fastdebug class which has two functionalities: dbprint and print."
     def __init__(self, 
@@ -283,7 +281,8 @@ class Fastdb():
         self.margin = 157
         if inspect.isfunction(src):
             self.outenv = src.__globals__
-        elif type(src) == type:
+#         elif type(src) == type:
+        elif inspect.isclass(src):
             exec(f"import {src.__module__}")
             self.outenv = eval(src.__module__ + ".__dict__")
 #             self.outenv = env # this approach works
@@ -295,18 +294,18 @@ class Fastdb():
         if db:
             print(f"self.orisrc: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
 
-# %% ../00_core.ipynb 316
+# %% ../00_core.ipynb 318
 @patch
 def printtitle(self:Fastdb):
 
-    if 'self' not in self.eg:
+    if 'self.dbsrc' not in self.eg:
         self.orieg = self.eg  # make sure self.orieg has no self inside
     print('{:=^157}'.format(f"     Investigating {colorize(self.orisrc.__name__, color='r')}     ")) 
     print('{:=^157}'.format(f"     on line {colorize(str(self.idxsrc), color='r')}     "))
     print('{:=^157}'.format(f"     with example {colorize(self.orieg, color='r')}     ")) 
     print()
 
-# %% ../00_core.ipynb 323
+# %% ../00_core.ipynb 325
 @patch
 def docsrc(self:Fastdb, 
             idxsrc:int, # idx of a srcline under investigation, can only be int
@@ -337,21 +336,29 @@ def docsrc(self:Fastdb,
     self.run_example(db=db)
 
 
-# %% ../00_core.ipynb 325
+# %% ../00_core.ipynb 329
 @patch
 def create_dbsrc_from_string(self:Fastdb):
     file_name ='/tmp/' + self.orisrc.__name__ + '.py' 
     # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
     with open(file_name, 'w') as f:
         f.write(self.dbsrcstr)
+    
     code = compile(self.dbsrcstr, file_name, 'exec')
     exec(code, globals().update(self.outenv)) # when dbsrc is a method, it will update as part of a class
-
+    
     # store dbsrc func inside Fastdb obj
     self.dbsrc = locals()[self.orisrc.__name__]
 
+    # replace original srcode with self.
+#     self.egEnv[self.orisrc.__name__] = self.dbsrc
 
-# %% ../00_core.ipynb 327
+#     print(f'create_dbsrc_from_string, locals(): {locals()}')
+#     print(f'locals()[self.orisrc.__name__] src is {inspect.getsource(locals()[self.orisrc.__name__])}')
+#     print(f'create_dbsrc_from_string, self.dbsrcstr: {self.dbsrcstr}')
+#     print(f'create_dbsrc_from_string, inspect.getsource(self.dbsrc): {inspect.getsource(self.dbsrc)}')
+
+# %% ../00_core.ipynb 333
 @patch
 def create_dbsrc_string(self:Fastdb, idxsrc, *codes): 
     dbsrc = ""
@@ -381,7 +388,7 @@ def create_dbsrc_string(self:Fastdb, idxsrc, *codes):
                     count = count + 1
 
                 emptyline = "print()"
-                exploreStart = "print('{:=>157}'.format(colorize('Start of my srcline exploration:', color='r')))"
+                exploreStart = "print('{:=>157}'.format(colorize(f'Start of my srcline exploration:', color='r')))"
                 exploreEnd = "print('{:=>157}'.format(colorize('End of my srcline exploration:', color='r')))"
                 dbsrc = dbsrc + " "*numindent + emptyline + '\n'                   
                 dbsrc = dbsrc + " "*numindent + exploreStart + '\n'   
@@ -402,16 +409,22 @@ def create_dbsrc_string(self:Fastdb, idxsrc, *codes):
     self.dbsrcstr = dbsrc 
 
 
-# %% ../00_core.ipynb 342
+# %% ../00_core.ipynb 352
 @patch
 def replaceWithDbsrc(self:Fastdb, db=False):
     "to replace self.orisrc.__name__ with 'self.dbsrc' and assign this new self.eg to self.eg"
     new_eg = ""
-    if type(self.orisrc) == type: # as class
+#     if type(self.orisrc) == type: # as class
+    if inspect.isclass(self.orisrc):
         for l in self.eg.split('\n'):
-            if "(" + self.orisrc.__name__ + ")" in l or "(metaclass=" + self.orisrc.__name__ + ")" in l: # (target) or (metaclass=targe)
+            # 1. class Foo(TargetCalss): ; 2. class Foo(metaclass=TargetClass): ; 4: class _T(_TestA, metaclass=BypassNewMeta):
+            if "(" + self.orisrc.__name__ + ")" in l or "(metaclass=" + self.orisrc.__name__ + ")" in l \
+            or ", metaclass=" + self.orisrc.__name__ + ")" in l: 
                 lst = l.split(f'{self.orisrc.__name__ + ")"}')
                 new_eg = new_eg + lst[0] + "self.dbsrc)" + lst[1] + "\n"
+            elif "(" + self.orisrc.__name__ + "," in l: # 3. class Foo(TargetClass, OtherClass)
+                lst = l.split(f'{self.orisrc.__name__ + ","}')
+                new_eg = new_eg + lst[0] + "self.dbsrc," + lst[1] + "\n"
             else:
                 new_eg = new_eg + l + "\n"
     
@@ -439,21 +452,24 @@ def replaceWithDbsrc(self:Fastdb, db=False):
 
     self.eg = new_eg
 
-# %% ../00_core.ipynb 352
+# %% ../00_core.ipynb 363
 @patch
 def run_example(self:Fastdb, db=False):
     
     self.replaceWithDbsrc()
     # use locals() as global env to bring in self or obj to enable self.dbsrc to run
     # use globals() to see whether pprint can be brought in 
-    # so combine them both can have them both, as globals() do not contain locals() fully
-    if db:
-        print(f"globals(): {list(globals().keys())}")
-        print(f"locals(): {list(locals().keys())}") # 
-    exec(self.eg, globals().update(locals()), self.egEnv) # locals() gives me self, # globals() gives fastdebug env
+    # so combine them both can have them both, as globals() do not contain locals() fully  
+    exec(self.eg, globals().update(self.egEnv), locals()) # locals() gives me self, # globals() gives fastdebug env
     self.autoprint()
+    
+#     print(f"run_example: globals(): {list(globals().keys())}")
+#     print(f"run_example: locals(): {locals()}") 
+#     print(f"run_example: locals()['self'].dbsrc: {locals()['self'].dbsrc}") 
+#     print(f'get the source of self.dbsrc: {inspect.getsource(self.dbsrc)}')
+#     print(f'get the source of self.dbsrc: {inspect.getsource(locals()["self"].dbsrc)}')  
 
-# %% ../00_core.ipynb 358
+# %% ../00_core.ipynb 368
 @patch
 def autoprint(self:Fastdb, maxpcell=20):
     totalines = len(inspect.getsource(self.orisrc).split('\n'))
@@ -473,7 +489,7 @@ def autoprint(self:Fastdb, maxpcell=20):
         self.print(maxpcell, 1)
     print()
 
-# %% ../00_core.ipynb 372
+# %% ../00_core.ipynb 382
 @patch
 def printcmts1(self:Fastdb, maxlines):
     totallen = 157
@@ -517,7 +533,7 @@ def printcmts1(self:Fastdb, maxlines):
                 print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))      
 
 
-# %% ../00_core.ipynb 373
+# %% ../00_core.ipynb 383
 @patch
 def printcmts2(self:Fastdb, maxlines, part):
     totallen = 157
@@ -565,7 +581,7 @@ def printcmts2(self:Fastdb, maxlines, part):
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
 
-# %% ../00_core.ipynb 375
+# %% ../00_core.ipynb 385
 def randomize_cmtparts_color(cmt):
     newcmt = ""
     for p in cmt.split('; '):
@@ -573,7 +589,7 @@ def randomize_cmtparts_color(cmt):
         newcmt = newcmt + colorize(p, color=col) + "; "
     return newcmt
 
-# %% ../00_core.ipynb 377
+# %% ../00_core.ipynb 387
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
@@ -591,17 +607,17 @@ def print(self:Fastdb,
 
 
 
-# %% ../00_core.ipynb 383
+# %% ../00_core.ipynb 393
 @patch
 def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../00_core.ipynb 392
+# %% ../00_core.ipynb 402
 import ipdb 
 # this handles the partial import error
 
-# %% ../00_core.ipynb 395
+# %% ../00_core.ipynb 405
 @patch
 def create_explore_str(self:Fastdb):
     dbsrc = ""
@@ -640,7 +656,7 @@ def create_explore_str(self:Fastdb):
     self.dbsrcstr = dbsrc
 
 
-# %% ../00_core.ipynb 396
+# %% ../00_core.ipynb 406
 @patch
 def create_explore_from_string(self:Fastdb):
     file_name ='/tmp/' + self.orisrc.__name__ + '.py' # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
@@ -651,7 +667,7 @@ def create_explore_from_string(self:Fastdb):
 
     self.dbsrc = locals()[self.orisrc.__name__]
 
-# %% ../00_core.ipynb 397
+# %% ../00_core.ipynb 407
 @patch
 def explore(self:Fastdb, 
             idxsrc:int, # idxsrc can be an int or a list of int
@@ -666,10 +682,10 @@ def explore(self:Fastdb,
     
  
 
-# %% ../00_core.ipynb 401
+# %% ../00_core.ipynb 411
 import snoop
 
-# %% ../00_core.ipynb 402
+# %% ../00_core.ipynb 412
 @patch
 def takeoutExample(self:Fastdb):
     example = ""
@@ -678,18 +694,28 @@ def takeoutExample(self:Fastdb):
             example = l
     return example
 
-# %% ../00_core.ipynb 414
+# %% ../00_core.ipynb 428
 @patch
 def create_snoop_str(self:Fastdb, 
+                     watch:list=None,
                      deco=False, # whether it is a decorator or a normal func
                      db=False):
     dbsrc=""
     if not deco:
         for l in inspect.getsource(self.orisrc).split('\n'):
-            if "def " + self.orisrc.__name__ in l:
+            if "def " + self.orisrc.__name__ in l or "def __" in l:
                 indent = len(l) - len(l.lstrip())
-                dbsrc = dbsrc + " "*indent + "import snoop\n"                    
-                dbsrc = dbsrc + " "*indent + "@snoop\n"
+                dbsrc = dbsrc + " "*indent + "import snoop\n"
+                if bool(watch):
+                    spreadlst = ''
+                    for idx, i in zip(range(len(watch)), watch):
+                        if idx < len(watch)-1:
+                            spreadlst = spreadlst + '"' + i + '"' + ','
+                        else:
+                            spreadlst = spreadlst + '"' + i + '"'
+                    dbsrc = dbsrc + " "*indent + f"@snoop(watch=({spreadlst}))\n"
+                else:
+                    dbsrc = dbsrc + " "*indent + "@snoop\n"
                 dbsrc = dbsrc + l + '\n'
             else:
                 dbsrc = dbsrc + l + '\n'
@@ -710,7 +736,7 @@ def create_snoop_str(self:Fastdb,
                 dbsrc = dbsrc + l + '\n'          
     self.dbsrcstr = dbsrc
 
-# %% ../00_core.ipynb 417
+# %% ../00_core.ipynb 431
 @patch
 def create_snoop_from_string(self:Fastdb, db=False):
     # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
@@ -725,18 +751,19 @@ def create_snoop_from_string(self:Fastdb, db=False):
     self.dbsrc = locals()[self.orisrc.__name__]
 
 
-# %% ../00_core.ipynb 419
+# %% ../00_core.ipynb 437
 @patch
-def snoop(self:Fastdb, deco=False, db=False):
+def snoop(self:Fastdb, watch:list=None, deco=False, db=False):
 
     self.idxsrc = None # so that autoprint won't print src at all for snoop
+    self.printtitle() # maybe at some point, I should use await to make the output of printtitle appear first
     if bool(self.eg):
-        self.create_snoop_str(deco=deco, db=db)
+        self.create_snoop_str(watch=watch, deco=deco, db=db)
         self.create_snoop_from_string(db=db)
         self.run_example()
 
 
-# %% ../00_core.ipynb 427
+# %% ../00_core.ipynb 445
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal
@@ -756,3 +783,14 @@ def reliveonce(func, # the current func
             print(f"after update: inspect.getsourcefile(func.__globals__[func.__name__]): {inspect.getsourcefile(func.__globals__[func.__name__])}")
     else:
         func.__globals__[func.__name__] = func.__globals__['safety']
+
+# %% ../00_core.ipynb 448
+@patch
+def debug(self:Fastdb):
+    print(f"{self.orisrc.__name__}\'s dbsrc code: ==============")
+    address = "/tmp/BypassNewMeta.py"
+    dbsrc = open(address, "r+")
+    print(dbsrc.read())
+    print()
+    print(f"{self.orisrc.__name__}\'s example processed with dbsrc: ===============")
+    print(self.eg)
