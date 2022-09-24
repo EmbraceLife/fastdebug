@@ -42,6 +42,5 @@ d = { 'settings': { 'branch': 'master',
             'fastdebug.utils': { 'fastdebug.utils.expandcell': ('utils.html#expandcell', 'fastdebug/utils.py'),
                                  'fastdebug.utils.inspect_class': ('utils.html#inspect_class', 'fastdebug/utils.py'),
                                  'fastdebug.utils.ismetaclass': ('utils.html#ismetaclass', 'fastdebug/utils.py'),
-                                 'fastdebug.utils.tstenv': ('utils.html#tstenv', 'fastdebug/utils.py'),
                                  'fastdebug.utils.whatinside': ('utils.html#whatinside', 'fastdebug/utils.py'),
                                  'fastdebug.utils.whichversion': ('utils.html#whichversion', 'fastdebug/utils.py')}}}
