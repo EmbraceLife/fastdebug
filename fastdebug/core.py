@@ -267,13 +267,13 @@ def dbprintinsert(*codes, env={}):
         # the benefit of using global().update(env) is 
         # to ensure we don't need to include the same env fo
 
-# %% ../00_core.ipynb 269
+# %% ../00_core.ipynb 271
 class Fastdb():
     "Create a Fastdebug class which has two functionalities: dbprint and print."
     def __init__(self, 
                  src, # name of src code you are exploring
                  db=False, # db=True will run some debugging prints
-                 outloc=None): # outloc = g; g = locals() from the outer cell
+                 outloc={}): # outloc = g; g = locals() from the outer cell
         self.orisrc = src # important: it is making a real copy
         self.dbsrc = None # store dbsrc func
         self.dbsrcstr = None # store dbsrc string
@@ -787,7 +787,7 @@ def reliveonce(func, # the current func
 @patch
 def debug(self:Fastdb):
     print(f"{self.orisrc.__name__}\'s dbsrc code: ==============")
-    address = "/tmp/BypassNewMeta.py"
+    address = f"/tmp/{self.orisrc.__name__}.py"
     dbsrc = open(address, "r+")
     print(dbsrc.read())
     print()
