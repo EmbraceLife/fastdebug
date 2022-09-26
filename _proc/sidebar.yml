@@ -12,6 +12,7 @@ website:
           - demos/06_fastcore.meta.NewChkMeta.ipynb
           - demos/07_fastcore.meta.BypassNewMeta.ipynb
           - demos/08_use_kwargs_dict.ipynb
+          - demos/09_method_funcs_kwargs.ipynb
       - section: lib
         contents:
           - lib/00_core.ipynb

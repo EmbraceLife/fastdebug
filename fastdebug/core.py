@@ -305,7 +305,7 @@ def printtitle(self:Fastdb):
     print('{:=^157}'.format(f"     with example {colorize(self.orieg, color='r')}     ")) 
     print()
 
-# %% ../nbs/lib/00_core.ipynb 325
+# %% ../nbs/lib/00_core.ipynb 327
 @patch
 def docsrc(self:Fastdb, 
             idxsrc:int, # idx of a srcline under investigation, can only be int
@@ -326,6 +326,8 @@ def docsrc(self:Fastdb,
     print('{:-<60}'.format(colorize("print selected srcline with expands below", color="y")))    
     printsrc(src, idxsrc, cmt, expand)
     
+    if not bool(codes): return
+    
     # create dbsrc the string
     self.create_dbsrc_string(idxsrc, *codes)
     
@@ -336,7 +338,7 @@ def docsrc(self:Fastdb,
     self.run_example(db=db)
 
 
-# %% ../nbs/lib/00_core.ipynb 329
+# %% ../nbs/lib/00_core.ipynb 333
 @patch
 def create_dbsrc_from_string(self:Fastdb):
     file_name ='/tmp/' + self.orisrc.__name__ + '.py' 
@@ -358,7 +360,7 @@ def create_dbsrc_from_string(self:Fastdb):
 #     print(f'create_dbsrc_from_string, self.dbsrcstr: {self.dbsrcstr}')
 #     print(f'create_dbsrc_from_string, inspect.getsource(self.dbsrc): {inspect.getsource(self.dbsrc)}')
 
-# %% ../nbs/lib/00_core.ipynb 333
+# %% ../nbs/lib/00_core.ipynb 337
 @patch
 def create_dbsrc_string(self:Fastdb, idxsrc, *codes): 
     dbsrc = ""
@@ -409,7 +411,7 @@ def create_dbsrc_string(self:Fastdb, idxsrc, *codes):
     self.dbsrcstr = dbsrc 
 
 
-# %% ../nbs/lib/00_core.ipynb 352
+# %% ../nbs/lib/00_core.ipynb 356
 @patch
 def replaceWithDbsrc(self:Fastdb, db=False):
     "to replace self.orisrc.__name__ with 'self.dbsrc' and assign this new self.eg to self.eg"
@@ -434,7 +436,7 @@ def replaceWithDbsrc(self:Fastdb, db=False):
                 indent = len(l) - len(l.lstrip())
                 lst = l.split("@" + self.orisrc.__name__)
                 new_eg = new_eg + " "*indent + "@self.dbsrc" + lst[1] + "\n"
-            elif self.orisrc.__name__ in l:
+            elif self.orisrc.__name__ + "(" in l:
                 lst = l.split(self.orisrc.__name__ + '(') 
                 start = ""
                 if lst[0].endswith(".") and "(" not in lst[0]: # if lst[0] = inspect.
@@ -446,13 +448,13 @@ def replaceWithDbsrc(self:Fastdb, db=False):
                 else:
                     start = lst[0]
                 rest = lst[1]
-                new_eg = new_eg + start + "self.dbsrc(" + rest
+                new_eg = new_eg + start + "self.dbsrc(" + rest + "\n"
             else:
                 new_eg = new_eg + l + "\n"
 
     self.eg = new_eg
 
-# %% ../nbs/lib/00_core.ipynb 365
+# %% ../nbs/lib/00_core.ipynb 369
 @patch
 def run_example(self:Fastdb, db=False):
     
@@ -468,7 +470,7 @@ def run_example(self:Fastdb, db=False):
     self.autoprint()
       
 
-# %% ../nbs/lib/00_core.ipynb 370
+# %% ../nbs/lib/00_core.ipynb 374
 @patch
 def autoprint(self:Fastdb, maxpcell=20):
     totalines = len(inspect.getsource(self.orisrc).split('\n'))
@@ -488,7 +490,7 @@ def autoprint(self:Fastdb, maxpcell=20):
         self.print(maxpcell, 1)
     print()
 
-# %% ../nbs/lib/00_core.ipynb 384
+# %% ../nbs/lib/00_core.ipynb 388
 @patch
 def printcmts1(self:Fastdb, maxlines):
     totallen = 157
@@ -532,7 +534,7 @@ def printcmts1(self:Fastdb, maxlines):
                 print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))      
 
 
-# %% ../nbs/lib/00_core.ipynb 385
+# %% ../nbs/lib/00_core.ipynb 389
 @patch
 def printcmts2(self:Fastdb, maxlines, part):
     totallen = 157
@@ -580,7 +582,7 @@ def printcmts2(self:Fastdb, maxlines, part):
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
 
-# %% ../nbs/lib/00_core.ipynb 387
+# %% ../nbs/lib/00_core.ipynb 391
 def randomize_cmtparts_color(cmt):
     newcmt = ""
     for p in cmt.split('; '):
@@ -588,7 +590,7 @@ def randomize_cmtparts_color(cmt):
         newcmt = newcmt + colorize(p, color=col) + "; "
     return newcmt
 
-# %% ../nbs/lib/00_core.ipynb 389
+# %% ../nbs/lib/00_core.ipynb 393
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
@@ -606,17 +608,17 @@ def print(self:Fastdb,
 
 
 
-# %% ../nbs/lib/00_core.ipynb 395
+# %% ../nbs/lib/00_core.ipynb 399
 @patch
 def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../nbs/lib/00_core.ipynb 404
+# %% ../nbs/lib/00_core.ipynb 408
 import ipdb 
 # this handles the partial import error
 
-# %% ../nbs/lib/00_core.ipynb 407
+# %% ../nbs/lib/00_core.ipynb 411
 @patch
 def create_explore_str(self:Fastdb):
     dbsrc = ""
@@ -655,7 +657,7 @@ def create_explore_str(self:Fastdb):
     self.dbsrcstr = dbsrc
 
 
-# %% ../nbs/lib/00_core.ipynb 408
+# %% ../nbs/lib/00_core.ipynb 412
 @patch
 def create_explore_from_string(self:Fastdb):
     file_name ='/tmp/' + self.orisrc.__name__ + '.py' # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
@@ -666,7 +668,7 @@ def create_explore_from_string(self:Fastdb):
 
     self.dbsrc = locals()[self.orisrc.__name__]
 
-# %% ../nbs/lib/00_core.ipynb 409
+# %% ../nbs/lib/00_core.ipynb 413
 @patch
 def explore(self:Fastdb, 
             idxsrc:int, # idxsrc can be an int or a list of int
@@ -681,10 +683,10 @@ def explore(self:Fastdb,
     
  
 
-# %% ../nbs/lib/00_core.ipynb 413
+# %% ../nbs/lib/00_core.ipynb 417
 import snoop
 
-# %% ../nbs/lib/00_core.ipynb 414
+# %% ../nbs/lib/00_core.ipynb 418
 @patch
 def takeoutExample(self:Fastdb):
     example = ""
@@ -693,7 +695,7 @@ def takeoutExample(self:Fastdb):
             example = l
     return example
 
-# %% ../nbs/lib/00_core.ipynb 430
+# %% ../nbs/lib/00_core.ipynb 434
 @patch
 def create_snoop_str(self:Fastdb, 
                      watch:list=None,
@@ -735,7 +737,7 @@ def create_snoop_str(self:Fastdb,
                 dbsrc = dbsrc + l + '\n'          
     self.dbsrcstr = dbsrc
 
-# %% ../nbs/lib/00_core.ipynb 433
+# %% ../nbs/lib/00_core.ipynb 437
 @patch
 def create_snoop_from_string(self:Fastdb, db=False):
     # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
@@ -750,7 +752,7 @@ def create_snoop_from_string(self:Fastdb, db=False):
     self.dbsrc = locals()[self.orisrc.__name__]
 
 
-# %% ../nbs/lib/00_core.ipynb 439
+# %% ../nbs/lib/00_core.ipynb 443
 @patch
 def snoop(self:Fastdb, watch:list=None, deco=False, db=False):
 
@@ -762,7 +764,7 @@ def snoop(self:Fastdb, watch:list=None, deco=False, db=False):
         self.run_example()
 
 
-# %% ../nbs/lib/00_core.ipynb 447
+# %% ../nbs/lib/00_core.ipynb 451
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal
@@ -783,7 +785,7 @@ def reliveonce(func, # the current func
     else:
         func.__globals__[func.__name__] = func.__globals__['safety']
 
-# %% ../nbs/lib/00_core.ipynb 450
+# %% ../nbs/lib/00_core.ipynb 454
 @patch
 def debug(self:Fastdb):
     print(f"{self.orisrc.__name__}\'s dbsrc code: ==============")
