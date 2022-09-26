@@ -2,7 +2,65 @@ website:
   sidebar:
     contents:
       - index.html
-      - index.ipynb
-      - 00_core.ipynb
+      - Untitled.ipynb
       - utils.html
-      - utils.ipynb
+      - section: nbs
+        contents:
+          - section: demos
+            contents:
+              - nbs/demos/index.ipynb
+      - section: nbs
+        contents:
+          - section: demos
+            contents:
+              - nbs/demos/00_fastcore_meta_delegates.ipynb
+      - section: nbs
+        contents:
+          - section: demos
+            contents:
+              - nbs/demos/01_signature_from_callable_with_FixSigMeta.ipynb
+      - section: nbs
+        contents:
+          - section: demos
+            contents:
+              - nbs/demos/03_Explore_document_FixSigMeta_PrePostInitMeta_AutoInit.ipynb
+      - section: nbs
+        contents:
+          - section: demos
+            contents:
+              - nbs/demos/04_fastcore.meta._rm_self.ipynb
+      - section: nbs
+        contents:
+          - section: demos
+            contents:
+              - nbs/demos/05_fastcore.meta.test_sig.ipynb
+      - section: nbs
+        contents:
+          - section: demos
+            contents:
+              - nbs/demos/06_fastcore.meta.NewChkMeta.ipynb
+      - section: nbs
+        contents:
+          - section: demos
+            contents:
+              - nbs/demos/07_fastcore.meta.BypassNewMeta.ipynb
+      - section: nbs
+        contents:
+          - section: demos
+            contents:
+              - nbs/demos/08_use_kwargs_dict.ipynb
+      - section: nbs
+        contents:
+          - section: lib
+            contents:
+              - nbs/lib/00_core.ipynb
+      - section: nbs
+        contents:
+          - section: lib
+            contents:
+              - nbs/lib/utils.ipynb
+      - section: nbs
+        contents:
+          - section: questions
+            contents:
+              - nbs/questions/00_question_anno_dict.ipynb
