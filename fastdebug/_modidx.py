@@ -43,6 +43,7 @@ d = { 'settings': { 'branch': 'master',
                                 'fastdebug.core.strip_ansi': ('lib/core.html#strip_ansi', 'fastdebug/core.py')},
             'fastdebug.utils': { 'fastdebug.utils.expandcell': ('lib/utils.html#expandcell', 'fastdebug/utils.py'),
                                  'fastdebug.utils.inspect_class': ('lib/utils.html#inspect_class', 'fastdebug/utils.py'),
+                                 'fastdebug.utils.isdecorator': ('lib/utils.html#isdecorator', 'fastdebug/utils.py'),
                                  'fastdebug.utils.ismetaclass': ('lib/utils.html#ismetaclass', 'fastdebug/utils.py'),
                                  'fastdebug.utils.whatinside': ('lib/utils.html#whatinside', 'fastdebug/utils.py'),
                                  'fastdebug.utils.whichversion': ('lib/utils.html#whichversion', 'fastdebug/utils.py')}}}

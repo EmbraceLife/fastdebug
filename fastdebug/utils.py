@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['expand', 'test_eq', 'test_is', 'FunctionType', 'MethodType', 'expandcell', 'inspect_class', 'ismetaclass',
-           'whatinside', 'whichversion']
+           'isdecorator', 'whatinside', 'whichversion']
 
 # %% ../nbs/lib/utils.ipynb 3
 def expandcell():
@@ -84,16 +84,44 @@ def inspect_class(c):
 
 # %% ../nbs/lib/utils.ipynb 14
 def ismetaclass(mc): 
-    return type in mc.__mro__
+    if inspect.isclass(mc):
+        return type in mc.__mro__ 
 
 # %% ../nbs/lib/utils.ipynb 19
+def isdecorator(obj):
+    if inspect.isfunction(obj):
+        count = 0
+        defretn = ""
+        for l in inspect.getsource(obj).split('\n'):
+            if "def " in l:
+                if count >=1:
+                    defretn = l
+                count = count + 1
+            if "return " in l and "partial(" in l:
+                return True
+            if "return " in l: 
+                retn = l.split('return ')[1]
+                if "(" not in retn:
+                    if retn in defretn:
+                        return True
+                    try:
+                        retneval = eval(retn, obj.__globals__)
+                    except NameError:
+                        return False
+                    if type(retneval).__name__ == 'function':
+                        return True
+                
+        return False
+
+
+# %% ../nbs/lib/utils.ipynb 21
 # from inspect import getmembers, isfunction, isclass, isbuiltin, getsource
 import os.path, pkgutil
 from pprint import pprint
 import inspect
 
 
-# %% ../nbs/lib/utils.ipynb 20
+# %% ../nbs/lib/utils.ipynb 24
 def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
                dun:bool=False, # print all items in __all__
                func:bool=False, # print all user defined functions
@@ -109,15 +137,51 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
     builtins = inspect.getmembers(mo, inspect.isbuiltin)
     callables = inspect.getmembers(mo, callable)
     pkgpath = os.path.dirname(mo.__file__)
+    module_env = mo.__dict__
     if not lib:
         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  
-    if hasattr(mo, "__all__") and dun: pprint(mo.__all__)
+    if hasattr(mo, "__all__") and dun: 
+        maxlen = max(map(lambda i : len(i) , mo.__all__ ))
+        for i in mo.__all__:
+            obj = eval(i, module_env)
+            if ismetaclass(obj):
+                kind = "metaclass" 
+            elif inspect.isclass(obj):
+                kind = "class"
+            elif isdecorator(obj):
+                kind = "decorator"
+            elif inspect.isfunction(obj):
+                kind = "function"
+            tp = type(eval(i, module_env)).__name__
+            startlen = len(i)
+            if tp == kind: print(i + ":" + " "*(maxlen-startlen + 5) + kind + "    " + \
+                                 str(inspect.signature(eval(i, module_env))))   
+            else: print(i + ":" + " "*(maxlen-startlen+5) + kind + ", " + tp + "    " + \
+                                 str(inspect.signature(eval(i, module_env))))                   
     if func: 
         print(f'The user defined functions are:')
-        pprint([i[0] for i in funcs])
+        maxlen = max(map(lambda i : len(i[0]) , funcs ))
+        for i in funcs:
+            if isdecorator(i[1]):
+                kind = "decorator"
+            elif inspect.isfunction(i[1]):
+                kind = "function"
+#             print(f"{i[0]}: {kind}")  
+            startlen = len(i[0])
+            print(i[0] + ":" + " "*(maxlen-startlen + 5) + kind + "    " + \
+                                 str(inspect.signature(i[1])))               
     if clas: 
         print(f'The class objects are:')
-        pprint([i[0] for i in classes])
+        maxlen = max(map(lambda i : len(i[0]) , funcs ))
+        for i in classes:
+            if ismetaclass(i[1]):
+                kind = "metaclass"
+            elif inspect.isclass(i[1]):
+                kind = "class"
+#             print(f"{i[0]}: {kind}")  
+            startlen = len(i[0])
+            if not inspect.isbuiltin(i[1]):         
+                print(i[0] + ":" + " "*(maxlen-startlen + 5) + kind)
     if bltin: 
         print(f'The builtin functions or methods are:')
         pprint([i[0] for i in builtins])
@@ -129,11 +193,11 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
         print(f'The library has {len(modules)} modules')
         pprint(modules)
 
-# %% ../nbs/lib/utils.ipynb 25
+# %% ../nbs/lib/utils.ipynb 29
 from importlib.metadata import version, metadata, distribution
 from platform import python_version 
 
-# %% ../nbs/lib/utils.ipynb 26
+# %% ../nbs/lib/utils.ipynb 30
 def whichversion(libname:str, # library name not string
                 req:bool=False, # print lib requirements 
                 file:bool=False): # print all lib files
