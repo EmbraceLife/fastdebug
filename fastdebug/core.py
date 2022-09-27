@@ -490,9 +490,12 @@ def autoprint(self:Fastdb, maxpcell=20):
         self.print(maxpcell, 1)
     print()
 
-# %% ../nbs/lib/00_core.ipynb 388
+# %% ../nbs/lib/00_core.ipynb 390
+import os
+
+# %% ../nbs/lib/00_core.ipynb 391
 @patch
-def printcmts1(self:Fastdb, maxlines):
+def printcmts1(self:Fastdb, maxlines, save=False):
     totallen = 157
     lenidx = 5
     lspace = 10
@@ -502,12 +505,21 @@ def printcmts1(self:Fastdb, maxlines):
     idxcmts = {k: idx for (k, v), idx in zip(cmts.items(), range(len(list(cmts))))} # order of cmts correspond to idxsrc
 
     randCol1 = randomColor()
-    randCol2 = randomColor()            
+    randCol2 = randomColor()    
+    
+    file_name ='/Users/Natsume/Documents/fastdebug/learnings/' + self.orisrc.__name__ + '.py' 
+    # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
+#     open(file_name, 'w').close()
+    if os.path.exists(file_name):
+        os.remove(file_name)
+    
     for idx, l in zip(range(len(lstsrc)), lstsrc):
         lenl = len(l)
 
         if not bool(l.strip()):
             print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+            with open(file_name, 'a') as f:
+                f.write(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")"+ "\n")
 
         elif lenl + lspace >= 100:
             if bool(cmts):
@@ -516,25 +528,37 @@ def printcmts1(self:Fastdb, maxlines):
                     print(l + " # " + randomize_cmtparts_color(cmts[idx]) + \
                           #colorize(cmts[idx], color=randCol1) + \
                           " "*(totallen-lenl-lenidx-len(cmts[idx])-3) + " (" + str(idx) + ")")
+                    with open(file_name, 'a') as f:
+                        f.write(l + " # " + randomize_cmtparts_color(cmts[idx]) + \
+                          " "*(totallen-lenl-lenidx-len(cmts[idx])-3) + " (" + str(idx) + ")" + "\n")
                 else:
                     print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
+                    with open(file_name, 'a') as f:
+                        f.write(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")" + "\n")
             else: 
                 print(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
-
+                with open(file_name, 'a') as f:
+                    f.write(l + " "*(totallen-lenl-lenidx) + "(" + str(idx) + ")" + "\n")
         else:                
             if bool(cmts):
                 cmtidx = [cmt[0] for cmt in list(cmts.items())]
                 if idx in cmtidx:
                     print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + \
                                            randomize_cmtparts_color(cmts[idx])))#colorize(cmts[idx], color=randCol1)))
+                    with open(file_name, 'a') as f:
+                        f.write('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})" + " # " + \
+                                           randomize_cmtparts_color(cmts[idx])) + "\n")
                 else:
                     print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))                                                      
-
+                    with open(file_name, 'a') as f:
+                        f.write('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})") + "\n")                                                      
             else:
-                print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))      
+                print('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})"))    
+                with open(file_name, 'a') as f:
+                    f.write('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})") + "\n")                    
 
 
-# %% ../nbs/lib/00_core.ipynb 389
+# %% ../nbs/lib/00_core.ipynb 395
 @patch
 def printcmts2(self:Fastdb, maxlines, part):
     totallen = 157
@@ -582,7 +606,7 @@ def printcmts2(self:Fastdb, maxlines, part):
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
 
-# %% ../nbs/lib/00_core.ipynb 391
+# %% ../nbs/lib/00_core.ipynb 397
 def randomize_cmtparts_color(cmt):
     newcmt = ""
     for p in cmt.split('; '):
@@ -590,7 +614,7 @@ def randomize_cmtparts_color(cmt):
         newcmt = newcmt + colorize(p, color=col) + "; "
     return newcmt
 
-# %% ../nbs/lib/00_core.ipynb 393
+# %% ../nbs/lib/00_core.ipynb 399
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
@@ -608,17 +632,17 @@ def print(self:Fastdb,
 
 
 
-# %% ../nbs/lib/00_core.ipynb 399
+# %% ../nbs/lib/00_core.ipynb 405
 @patch
 def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../nbs/lib/00_core.ipynb 408
+# %% ../nbs/lib/00_core.ipynb 414
 import ipdb 
 # this handles the partial import error
 
-# %% ../nbs/lib/00_core.ipynb 411
+# %% ../nbs/lib/00_core.ipynb 417
 @patch
 def create_explore_str(self:Fastdb):
     dbsrc = ""
@@ -657,7 +681,7 @@ def create_explore_str(self:Fastdb):
     self.dbsrcstr = dbsrc
 
 
-# %% ../nbs/lib/00_core.ipynb 412
+# %% ../nbs/lib/00_core.ipynb 418
 @patch
 def create_explore_from_string(self:Fastdb):
     file_name ='/tmp/' + self.orisrc.__name__ + '.py' # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
@@ -668,7 +692,7 @@ def create_explore_from_string(self:Fastdb):
 
     self.dbsrc = locals()[self.orisrc.__name__]
 
-# %% ../nbs/lib/00_core.ipynb 413
+# %% ../nbs/lib/00_core.ipynb 419
 @patch
 def explore(self:Fastdb, 
             idxsrc:int, # idxsrc can be an int or a list of int
@@ -683,10 +707,10 @@ def explore(self:Fastdb,
     
  
 
-# %% ../nbs/lib/00_core.ipynb 417
+# %% ../nbs/lib/00_core.ipynb 423
 import snoop
 
-# %% ../nbs/lib/00_core.ipynb 418
+# %% ../nbs/lib/00_core.ipynb 424
 @patch
 def takeoutExample(self:Fastdb):
     example = ""
@@ -695,7 +719,7 @@ def takeoutExample(self:Fastdb):
             example = l
     return example
 
-# %% ../nbs/lib/00_core.ipynb 434
+# %% ../nbs/lib/00_core.ipynb 440
 @patch
 def create_snoop_str(self:Fastdb, 
                      watch:list=None,
@@ -737,7 +761,7 @@ def create_snoop_str(self:Fastdb,
                 dbsrc = dbsrc + l + '\n'          
     self.dbsrcstr = dbsrc
 
-# %% ../nbs/lib/00_core.ipynb 437
+# %% ../nbs/lib/00_core.ipynb 443
 @patch
 def create_snoop_from_string(self:Fastdb, db=False):
     # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
@@ -752,7 +776,7 @@ def create_snoop_from_string(self:Fastdb, db=False):
     self.dbsrc = locals()[self.orisrc.__name__]
 
 
-# %% ../nbs/lib/00_core.ipynb 443
+# %% ../nbs/lib/00_core.ipynb 449
 @patch
 def snoop(self:Fastdb, watch:list=None, deco=False, db=False):
 
@@ -764,7 +788,7 @@ def snoop(self:Fastdb, watch:list=None, deco=False, db=False):
         self.run_example()
 
 
-# %% ../nbs/lib/00_core.ipynb 451
+# %% ../nbs/lib/00_core.ipynb 457
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal
@@ -785,7 +809,7 @@ def reliveonce(func, # the current func
     else:
         func.__globals__[func.__name__] = func.__globals__['safety']
 
-# %% ../nbs/lib/00_core.ipynb 454
+# %% ../nbs/lib/00_core.ipynb 460
 @patch
 def debug(self:Fastdb):
     print(f"{self.orisrc.__name__}\'s dbsrc code: ==============")

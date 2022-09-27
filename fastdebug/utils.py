@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['expand', 'test_eq', 'test_is', 'FunctionType', 'MethodType', 'expandcell', 'inspect_class', 'ismetaclass',
-           'isdecorator', 'whatinside', 'whichversion']
+           'isdecorator', 'whatinside', 'whichversion', 'fastview', 'fastlist']
 
 # %% ../nbs/lib/utils.ipynb 3
 def expandcell():
@@ -217,3 +217,24 @@ def whichversion(libname:str, # library name not string
         print(f"\n{libname} has: ")
         pprint(distribution(libname).files)
     
+
+# %% ../nbs/lib/utils.ipynb 40
+def fastview(name # object itself, e.g., delegates, FixSigMeta
+            ):
+    file_name ='/Users/Natsume/Documents/fastdebug/learnings/' + name.__name__ + '.py' 
+
+    with open(file_name, 'r') as f:
+        # Read and print the entire file line by line
+        for l in f:
+            print(l, end='')
+
+# %% ../nbs/lib/utils.ipynb 42
+import os
+
+# %% ../nbs/lib/utils.ipynb 43
+def fastlist():
+    folder ='/Users/Natsume/Documents/fastdebug/learnings/'
+    for f in os.listdir(folder):
+        if f.endswith(".py"):
+            # Prints only text file present in My Folder
+            print(f)
