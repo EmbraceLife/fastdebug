@@ -156,9 +156,9 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
             tp = type(eval(i, module_env)).__name__
             startlen = len(i)
             if tp == kind: print(i + ":" + " "*(maxlen-startlen + 5) + kind + "    " + \
-                                 str(inspect.signature(eval(i, module_env))))   
+                                 inspect.getdoc(eval(i, module_env)))  
             else: print(i + ":" + " "*(maxlen-startlen+5) + kind + ", " + tp + "    " + \
-                                 str(inspect.signature(eval(i, module_env))))                   
+                                 inspect.getdoc(eval(i, module_env)))
     if func: 
         print(f'The user defined functions are:')
         maxlen = max(map(lambda i : len(i[0]) , funcs ))
@@ -194,11 +194,11 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
         print(f'The library has {len(modules)} modules')
         pprint(modules)
 
-# %% ../nbs/lib/utils.ipynb 29
+# %% ../nbs/lib/utils.ipynb 26
 from importlib.metadata import version, metadata, distribution
 from platform import python_version 
 
-# %% ../nbs/lib/utils.ipynb 30
+# %% ../nbs/lib/utils.ipynb 27
 def whichversion(libname:str, # library name not string
                 req:bool=False, # print lib requirements 
                 file:bool=False): # print all lib files
@@ -219,7 +219,7 @@ def whichversion(libname:str, # library name not string
         pprint(distribution(libname).files)
     
 
-# %% ../nbs/lib/utils.ipynb 40
+# %% ../nbs/lib/utils.ipynb 37
 def fastview(name # can be both object itself or str, e.g., delegates, FixSigMeta
             ):
     "to view the commented src code in color print"
@@ -233,10 +233,10 @@ def fastview(name # can be both object itself or str, e.g., delegates, FixSigMet
         for l in f:
             print(l, end='')
 
-# %% ../nbs/lib/utils.ipynb 42
+# %% ../nbs/lib/utils.ipynb 39
 import os
 
-# %% ../nbs/lib/utils.ipynb 44
+# %% ../nbs/lib/utils.ipynb 41
 def fastlist():
     "to list all commented src files"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
@@ -245,7 +245,7 @@ def fastlist():
             # Prints only text file present in My Folder
             print(f)
 
-# %% ../nbs/lib/utils.ipynb 47
+# %% ../nbs/lib/utils.ipynb 44
 def openNB(name, folder='nbs/demos/'):
     "Get a link to the notebook at by name locally"
     root = "/Users/Natsume/Documents/fastdebug/"
@@ -258,13 +258,13 @@ def openNB(name, folder='nbs/demos/'):
                 file_name = path_server + f
                 jn_link(name, file_name)
 
-# %% ../nbs/lib/utils.ipynb 49
+# %% ../nbs/lib/utils.ipynb 46
 def jn_link(name, file_path):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(f'[Open `{name}` in Jupyter Notebook]({file_path})'))                
 
-# %% ../nbs/lib/utils.ipynb 53
+# %% ../nbs/lib/utils.ipynb 50
 def fastsearch(question:str, nb=False):
     questlst = question.split(' ')
     # loop through all pyfile in learnings folder
@@ -289,13 +289,13 @@ def fastsearch(question:str, nb=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/utils.ipynb 57
+# %% ../nbs/lib/utils.ipynb 54
 def display_md(text):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(text))                
 
-# %% ../nbs/lib/utils.ipynb 59
+# %% ../nbs/lib/utils.ipynb 56
 def fastnotes(question:str, n=10):
     "display found notes with key words search"
     questlst = question.split(' ')
@@ -310,11 +310,11 @@ def fastnotes(question:str, n=10):
                     pct = sum(truelst)/len(truelst)
                     if pct >= 0.8:
                         print()
-                        print('{:=>157}'.format("Found a line: "))
+                        print('{:=<157}'.format(f"Found a line: in {f}"))
                         l = highlight(question, l)
                         display_md(l)
                         print()                        
-                        print('{:=>157}'.format(f"Show {n} lines above and after :"))
+                        print('{:=<157}'.format(f"Show {n} lines above and after in {f}:"))
                         idx = count
                         with open(file_name, 'r') as file:
                             for count, l in enumerate(file):
@@ -322,7 +322,7 @@ def fastnotes(question:str, n=10):
                                     if count == idx: display_md(highlight(question, l))
                                     else: display_md(l)
 
-# %% ../nbs/lib/utils.ipynb 63
+# %% ../nbs/lib/utils.ipynb 60
 def highlight(question:str, line:str):
     "highlight a string with yellow background"
     questlst = question.split(' ')

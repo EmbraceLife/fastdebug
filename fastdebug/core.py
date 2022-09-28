@@ -297,7 +297,7 @@ class Fastdb():
 # %% ../nbs/lib/00_core.ipynb 318
 @patch
 def printtitle(self:Fastdb):
-
+    "print title which includes src name, line number under investigation, example."
     if 'self.dbsrc' not in self.eg:
         self.orieg = self.eg  # make sure self.orieg has no self inside
     print('{:=^157}'.format(f"     Investigating {colorize(self.orisrc.__name__, color='r')}     ")) 
@@ -513,6 +513,9 @@ def printcmts1(self:Fastdb, maxlines, save=False):
     if os.path.exists(file_name):
         os.remove(file_name)
     
+    with open(file_name, 'w') as f:
+        f.write(self.orieg + "\n")
+        
     for idx, l in zip(range(len(lstsrc)), lstsrc):
         lenl = len(l)
 
@@ -722,7 +725,7 @@ def takeoutExample(self:Fastdb):
 # %% ../nbs/lib/00_core.ipynb 440
 @patch
 def create_snoop_str(self:Fastdb, 
-                     watch:list=None,
+                     watch:list=None, # add a list to be watched, seems not working or not used correctly?
                      deco=False, # whether it is a decorator or a normal func
                      db=False):
     dbsrc=""
@@ -779,7 +782,7 @@ def create_snoop_from_string(self:Fastdb, db=False):
 # %% ../nbs/lib/00_core.ipynb 449
 @patch
 def snoop(self:Fastdb, watch:list=None, deco=False, db=False):
-
+    "run snoop on the func or class under investigation only when example is available"
     self.idxsrc = None # so that autoprint won't print src at all for snoop
     self.printtitle() # maybe at some point, I should use await to make the output of printtitle appear first
     if bool(self.eg):
