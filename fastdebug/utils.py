@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['expand', 'test_eq', 'test_is', 'FunctionType', 'MethodType', 'expandcell', 'inspect_class', 'ismetaclass',
-           'isdecorator', 'whatinside', 'whichversion', 'fastview', 'fastlist']
+           'isdecorator', 'whatinside', 'whichversion', 'fastview', 'fastlist', 'openNB', 'jn_link', 'fastsearch']
 
 # %% ../nbs/lib/utils.ipynb 3
 def expandcell():
@@ -219,9 +219,13 @@ def whichversion(libname:str, # library name not string
     
 
 # %% ../nbs/lib/utils.ipynb 40
-def fastview(name # object itself, e.g., delegates, FixSigMeta
+def fastview(name # can be both object itself or str, e.g., delegates, FixSigMeta
             ):
-    file_name ='/Users/Natsume/Documents/fastdebug/learnings/' + name.__name__ + '.py' 
+    "to view the commented src code in color print"
+    if type(name) == str:
+        file_name ='/Users/Natsume/Documents/fastdebug/learnings/' + name + '.py'
+    else:
+        file_name ='/Users/Natsume/Documents/fastdebug/learnings/' + name.__name__ + '.py' 
 
     with open(file_name, 'r') as f:
         # Read and print the entire file line by line
@@ -233,8 +237,53 @@ import os
 
 # %% ../nbs/lib/utils.ipynb 43
 def fastlist():
+    "to list all commented src files"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
     for f in os.listdir(folder):
         if f.endswith(".py"):
             # Prints only text file present in My Folder
             print(f)
+
+# %% ../nbs/lib/utils.ipynb 45
+def openNB(name, folder='nbs/demos/'):
+    "Get a link to the notebook at by name locally"
+    root = "/Users/Natsume/Documents/fastdebug/"
+    root_server = "http://localhost:8888/tree/"
+    path = root + folder
+    path_server = root_server + folder
+    for f in os.listdir(path):  
+        if f.endswith(".ipynb"):
+            if name in f: 
+                file_name = path_server + f
+                jn_link(name, file_name)
+
+# %% ../nbs/lib/utils.ipynb 46
+def jn_link(name, file_path):
+    "Get a link to the notebook at `path` on Jupyter Notebook"
+    from IPython.display import Markdown
+    display(Markdown(f'[Open `{name}` in Jupyter Notebook]({file_path})'))                
+
+# %% ../nbs/lib/utils.ipynb 47
+def fastsearch(question:str, nb=False):
+    questlst = question.split(' ')
+    # loop through all pyfile in learnings folder
+    folder ='/Users/Natsume/Documents/fastdebug/learnings/'
+    for f in os.listdir(folder):  
+        if f.endswith(".py"):
+            name = f.split('.py')[0]
+            # open each pyfile and read each line
+            file_name ='/Users/Natsume/Documents/fastdebug/learnings/' + f
+            with open(file_name, 'r') as file:
+                for l in file:
+                    # if search match >= 0.8, print the line and the pyfile
+                    truelst = [q in l for q in questlst]
+                    pct = sum(truelst)/len(truelst)
+                    if pct >= 0.8:
+                        print("Found a line: ========>")
+                        print(l, end='')
+                        print()                        
+                        print("The source where the line is from ==========>")
+                        fastview(name)
+                        print()
+                        if nb:
+                            openNB(name)
