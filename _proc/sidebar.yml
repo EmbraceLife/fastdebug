@@ -4,15 +4,17 @@ website:
       - index.ipynb
       - section: demos
         contents:
-          - demos/00_fastcore_meta_delegates.ipynb
-          - demos/01_signature_from_callable_with_FixSigMeta.ipynb
-          - demos/03_Explore_document_FixSigMeta_PrePostInitMeta_AutoInit.ipynb
-          - demos/04_fastcore.meta._rm_self.ipynb
-          - demos/05_fastcore.meta.test_sig.ipynb
-          - demos/06_fastcore.meta.NewChkMeta.ipynb
-          - demos/07_fastcore.meta.BypassNewMeta.ipynb
-          - demos/08_use_kwargs_dict.ipynb
-          - demos/09_method_funcs_kwargs.ipynb
+          - demos/0000_tour.ipynb
+          - demos/0001_fastcore_meta_delegates.ipynb
+          - demos/0002_signature_from_callable_with_FixSigMeta.ipynb
+          - demos/0003_Explore_document_FixSigMeta_PrePostInitMeta_AutoInit.ipynb
+          - demos/0004_fastcore.meta._rm_self.ipynb
+          - demos/0005_fastcore.meta.test_sig.ipynb
+          - demos/0006_fastcore.meta.NewChkMeta.ipynb
+          - demos/0007_fastcore.meta.BypassNewMeta.ipynb
+          - demos/0008_use_kwargs_dict.ipynb
+          - demos/0009_funcs_kwargs.ipynb
+          - demos/0010_fastcore_meta_summary.ipynb
       - section: lib
         contents:
           - lib/00_core.ipynb

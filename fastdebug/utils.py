@@ -2,7 +2,8 @@
 
 # %% auto 0
 __all__ = ['expand', 'test_eq', 'test_is', 'FunctionType', 'MethodType', 'expandcell', 'inspect_class', 'ismetaclass',
-           'isdecorator', 'whatinside', 'whichversion', 'fastview', 'fastlist', 'openNB', 'jn_link', 'fastsearch']
+           'isdecorator', 'whatinside', 'whichversion', 'fastview', 'fastlist', 'openNB', 'jn_link', 'fastsearch',
+           'display_md', 'fastnotes', 'highlight']
 
 # %% ../nbs/lib/utils.ipynb 3
 def expandcell():
@@ -235,7 +236,7 @@ def fastview(name # can be both object itself or str, e.g., delegates, FixSigMet
 # %% ../nbs/lib/utils.ipynb 42
 import os
 
-# %% ../nbs/lib/utils.ipynb 43
+# %% ../nbs/lib/utils.ipynb 44
 def fastlist():
     "to list all commented src files"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
@@ -244,7 +245,7 @@ def fastlist():
             # Prints only text file present in My Folder
             print(f)
 
-# %% ../nbs/lib/utils.ipynb 45
+# %% ../nbs/lib/utils.ipynb 47
 def openNB(name, folder='nbs/demos/'):
     "Get a link to the notebook at by name locally"
     root = "/Users/Natsume/Documents/fastdebug/"
@@ -257,13 +258,13 @@ def openNB(name, folder='nbs/demos/'):
                 file_name = path_server + f
                 jn_link(name, file_name)
 
-# %% ../nbs/lib/utils.ipynb 46
+# %% ../nbs/lib/utils.ipynb 49
 def jn_link(name, file_path):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(f'[Open `{name}` in Jupyter Notebook]({file_path})'))                
 
-# %% ../nbs/lib/utils.ipynb 47
+# %% ../nbs/lib/utils.ipynb 53
 def fastsearch(question:str, nb=False):
     questlst = question.split(' ')
     # loop through all pyfile in learnings folder
@@ -287,3 +288,47 @@ def fastsearch(question:str, nb=False):
                         print()
                         if nb:
                             openNB(name)
+
+# %% ../nbs/lib/utils.ipynb 57
+def display_md(text):
+    "Get a link to the notebook at `path` on Jupyter Notebook"
+    from IPython.display import Markdown
+    display(Markdown(text))                
+
+# %% ../nbs/lib/utils.ipynb 59
+def fastnotes(question:str, n=10):
+    "display found notes with key words search"
+    questlst = question.split(' ')
+    folder ='/Users/Natsume/Documents/divefastai/lectures/'
+    for f in os.listdir(folder):  
+        if f.endswith(".md"):
+            name = f.split('.md')[0]
+            file_name =folder + f
+            with open(file_name, 'r') as file:
+                for count, l in enumerate(file):
+                    truelst = [q in l.lower() for q in questlst]
+                    pct = sum(truelst)/len(truelst)
+                    if pct >= 0.8:
+                        print()
+                        print('{:=>157}'.format("Found a line: "))
+                        l = highlight(question, l)
+                        display_md(l)
+                        print()                        
+                        print('{:=>157}'.format(f"Show {n} lines above and after :"))
+                        idx = count
+                        with open(file_name, 'r') as file:
+                            for count, l in enumerate(file):
+                                if count >= idx - n and count <= idx + n:
+                                    if count == idx: display_md(highlight(question, l))
+                                    else: display_md(l)
+
+# %% ../nbs/lib/utils.ipynb 63
+def highlight(question:str, line:str):
+    "highlight a string with yellow background"
+    questlst = question.split(' ')
+    questlst_hl = ['<mark style="background-color: #FFFF00">' + q + '</mark>' for q in questlst]
+    for q, q_hl in zip(questlst, questlst_hl):
+        if " " + q + " " in line and not '<mark style="background-color: #FFFF00">' + q in line:
+            line = line.replace(" " + q + " ", q_hl)
+
+    return line
