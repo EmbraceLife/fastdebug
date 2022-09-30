@@ -1,3 +1,4 @@
+whatinside(core, lib=True)
 def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
                dun:bool=False, # print all items in __all__===============================(1)       
                func:bool=False, # print all user defined functions========================(2)       
@@ -7,12 +8,12 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here===
                cal:bool=False # print all callables=======================================(6)       
              ): ==========================================================================(7)       
     'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
-    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # [35;1mhow many items inside mo.__all__?[0m; 
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # [93;1mhow many items inside mo.__all__?[0m; 
     funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # [37;1mget all funcs of a module[0m; 
-    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # [36;1mget all classes from the module[0m; 
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # [37;1mget all classes from the module[0m; 
     builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
     callables = inspect.getmembers(mo, callable)==========================================(13)      
-    pkgpath = os.path.dirname(mo.__file__)================================================(14) # [37;1mget the file path of the module[0m; 
+    pkgpath = os.path.dirname(mo.__file__)================================================(14) # [92;1mget the file path of the module[0m; 
     module_env = mo.__dict__==============================================================(15)      
     if not lib:===========================================================================(16)      
         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (17)
@@ -28,12 +29,12 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here===
                 kind = "decorator"========================================================(27)      
             elif inspect.isfunction(obj):=================================================(28)      
                 kind = "function"=========================================================(29)      
-            tp = type(eval(i, module_env)).__name__=======================================(30) # [35;1mget names of all modules of a lib[0m; 
+            tp = type(eval(i, module_env)).__name__=======================================(30) # [92;1mget names of all modules of a lib[0m; 
             startlen = len(i)=============================================================(31)      
             if tp == kind: print(i + ":" + " "*(maxlen-startlen + 5) + kind + "    " + \==(32)      
-                                 str(inspect.signature(eval(i, module_env))))   ==========(33)      
+                                 inspect.getdoc(eval(i, module_env)))  ===================(33)      
             else: print(i + ":" + " "*(maxlen-startlen+5) + kind + ", " + tp + "    " + \=(34)      
-                                 str(inspect.signature(eval(i, module_env))))                                                                           (35)
+                                 inspect.getdoc(eval(i, module_env)))=====================(35)      
     if func: =============================================================================(36)      
         print(f'The user defined functions are:')=========================================(37)      
         maxlen = max(map(lambda i : len(i[0]) , funcs ))==================================(38)      

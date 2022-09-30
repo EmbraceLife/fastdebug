@@ -2,11 +2,14 @@ website:
   sidebar:
     contents:
       - index.ipynb
+      - section: 2022part1
+        contents:
+          - 2022part1/0001_is_it_a_bird.ipynb
       - section: demos
         contents:
           - demos/0000_tour.ipynb
           - demos/0001_fastcore_meta_delegates.ipynb
-          - demos/0002_signature_from_callable_with_FixSigMeta.ipynb
+          - demos/0002_signature_from_callable.ipynb
           - demos/0003_Explore_document_FixSigMeta_PrePostInitMeta_AutoInit.ipynb
           - demos/0004_fastcore.meta._rm_self.ipynb
           - demos/0005_fastcore.meta.test_sig.ipynb
@@ -15,6 +18,7 @@ website:
           - demos/0008_use_kwargs_dict.ipynb
           - demos/0009_funcs_kwargs.ipynb
           - demos/0010_fastcore_meta_summary.ipynb
+          - demos/0011_Fastdb.ipynb
       - section: lib
         contents:
           - lib/00_core.ipynb
