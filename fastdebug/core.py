@@ -30,6 +30,7 @@ from fastcore.basics import *
 
 # %% ../nbs/lib/00_core.ipynb 57
 class dbcolors: # removing ;1 will return to normal color, with ;1 is bright color
+    # "to access color in string for print, using dbcolors.g or dbcolors.r etc."
     g = '\033[92;1m' #GREEN
     y = '\033[93;1m' #YELLOW
     r = '\033[91;1m' #RED
@@ -44,6 +45,7 @@ import random
 
 # %% ../nbs/lib/00_core.ipynb 60
 def randomColor():
+    "create a random color by return a random dbcolor from dbcolors"
     colst = ['b', 'c', 'm', 'r', 'y', 'w', 'g']
     dictNumColor = {i:v for i, v in zip(range(len(colst)), colst)}
 
@@ -51,6 +53,7 @@ def randomColor():
 
 # %% ../nbs/lib/00_core.ipynb 62
 def colorize(cmt, color:str=None):
+    "return the string with dbcolors"
     if type(cmt) != str:
         cmt = str(cmt)
     if color == "g":
@@ -75,10 +78,12 @@ import re
 
 # %% ../nbs/lib/00_core.ipynb 67
 def strip_ansi(source):
+    "to make printright work using regex"
     return re.sub(r'\033\[(\d|;)+?m', '', source)
 
 # %% ../nbs/lib/00_core.ipynb 71
 def printright(blocks, margin:int=157):
+    "print a block of text to the right of the cell"
     lst = blocks.split('\n')
     maxlen = max(map(lambda l : len(strip_ansi(l)) , lst ))
     indent = margin - maxlen
@@ -90,6 +95,7 @@ import inspect
 
 # %% ../nbs/lib/00_core.ipynb 101
 def printsrclinewithidx(idx, l, fill=" "):
+    "add idx number to a srcline"
     totallen = 157
     lenidx = 5
     lenl = len(l)
@@ -139,7 +145,7 @@ import ast
 
 # %% ../nbs/lib/00_core.ipynb 161
 def dbprintinsert(*codes, env={}): 
-
+    "insert arbitary code expressions into source code for evaluation"
         
     # trial and error version for real code, still not quite why globals vs locals work in exec and eval
     for c in codes:
@@ -269,11 +275,12 @@ def dbprintinsert(*codes, env={}):
 
 # %% ../nbs/lib/00_core.ipynb 271
 class Fastdb():
-    "Create a Fastdebug class which has two functionalities: dbprint and print."
+
     def __init__(self, 
                  src, # name of src code you are exploring
                  db=False, # db=True will run some debugging prints
                  outloc={}): # outloc = g; g = locals() from the outer cell
+        "Create a Fastdebug class which has two functionalities: dbprint and print."
         self.orisrc = src # important: it is making a real copy
         self.dbsrc = None # store dbsrc func
         self.dbsrcstr = None # store dbsrc string
@@ -341,6 +348,7 @@ def docsrc(self:Fastdb,
 # %% ../nbs/lib/00_core.ipynb 333
 @patch
 def create_dbsrc_from_string(self:Fastdb):
+    "create dbsrc from a string"
     file_name ='/tmp/' + self.orisrc.__name__ + '.py' 
     # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
     with open(file_name, 'w') as f:
@@ -362,7 +370,8 @@ def create_dbsrc_from_string(self:Fastdb):
 
 # %% ../nbs/lib/00_core.ipynb 337
 @patch
-def create_dbsrc_string(self:Fastdb, idxsrc, *codes): 
+def create_dbsrc_string(self:Fastdb, idxsrc, *codes):
+    "create the dbsrc string"
     dbsrc = ""
     indent = 4
 
@@ -457,7 +466,7 @@ def replaceWithDbsrc(self:Fastdb, db=False):
 # %% ../nbs/lib/00_core.ipynb 369
 @patch
 def run_example(self:Fastdb, db=False):
-    
+    "run self.eg with self.dbsrc"
     self.replaceWithDbsrc()
     # use locals() as global env to bring in self or obj to enable self.dbsrc to run
     # use globals() to see whether pprint can be brought in 
@@ -473,6 +482,7 @@ def run_example(self:Fastdb, db=False):
 # %% ../nbs/lib/00_core.ipynb 374
 @patch
 def autoprint(self:Fastdb, maxpcell=20):
+    "print srcode with appropriate number of lines automatically"
     totalines = len(inspect.getsource(self.orisrc).split('\n'))
     idx = self.idxsrc
     if bool(idx): 
@@ -496,6 +506,7 @@ import os
 # %% ../nbs/lib/00_core.ipynb 391
 @patch
 def printcmts1(self:Fastdb, maxlines, save=False):
+    "print the entire srcode and save it to a file if save=True"
     totallen = 157
     lenidx = 5
     lspace = 10
@@ -564,6 +575,7 @@ def printcmts1(self:Fastdb, maxlines, save=False):
 # %% ../nbs/lib/00_core.ipynb 395
 @patch
 def printcmts2(self:Fastdb, maxlines, part):
+    "print the srcodes in parts"
     totallen = 157
     lenidx = 5
     lspace = 10
@@ -611,6 +623,7 @@ def printcmts2(self:Fastdb, maxlines, part):
 
 # %% ../nbs/lib/00_core.ipynb 397
 def randomize_cmtparts_color(cmt):
+    "give each comment a different color for easy viewing"
     newcmt = ""
     for p in cmt.split('; '):
         col = randomColor()
@@ -624,13 +637,10 @@ def print(self:Fastdb,
             part:int=0): # if the src is more than 33 lines, then divide the src by 33 into a few parts
     "Print the source code in whole or parts with idx and comments you added with dbprint along the way."
 
-
-    
     if part == 0: 
         self.printtitle()
         self.printcmts1(maxlines=maxlines)
         
-           
     self.printcmts2(maxlines=maxlines, part=part)
 
 
@@ -648,6 +658,7 @@ import ipdb
 # %% ../nbs/lib/00_core.ipynb 417
 @patch
 def create_explore_str(self:Fastdb):
+    "create the explore dbsrc string"
     dbsrc = ""
     indent = 4
 
@@ -687,6 +698,7 @@ def create_explore_str(self:Fastdb):
 # %% ../nbs/lib/00_core.ipynb 418
 @patch
 def create_explore_from_string(self:Fastdb):
+    "evaluate the explore dbsrc from string"
     file_name ='/tmp/' + self.orisrc.__name__ + '.py' # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
     with open(file_name, 'w') as f:
         f.write(self.dbsrcstr)
@@ -716,6 +728,7 @@ import snoop
 # %% ../nbs/lib/00_core.ipynb 424
 @patch
 def takeoutExample(self:Fastdb):
+    "get the line of example code with srcode name in it"
     example = ""
     for l in self.eg.split('\n'):
         if self.orisrc.__name__ in l:
@@ -728,6 +741,7 @@ def create_snoop_str(self:Fastdb,
                      watch:list=None, # add a list to be watched, seems not working or not used correctly?
                      deco=False, # whether it is a decorator or a normal func
                      db=False):
+    "creat the snoop dbsrc string"
     dbsrc=""
     if not deco:
         for l in inspect.getsource(self.orisrc).split('\n'):
@@ -767,6 +781,7 @@ def create_snoop_str(self:Fastdb,
 # %% ../nbs/lib/00_core.ipynb 443
 @patch
 def create_snoop_from_string(self:Fastdb, db=False):
+    "evaluate the snoop dbsrc from string"
     # learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm
     file_name ='/tmp/' + self.orisrc.__name__ + '.py' 
     with open(file_name, 'w') as f:
@@ -815,6 +830,7 @@ def reliveonce(func, # the current func
 # %% ../nbs/lib/00_core.ipynb 460
 @patch
 def debug(self:Fastdb):
+    "to quickly check for clues of errors"
     print(f"{self.orisrc.__name__}\'s dbsrc code: ==============")
     address = f"/tmp/{self.orisrc.__name__}.py"
     dbsrc = open(address, "r+")

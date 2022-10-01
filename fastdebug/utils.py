@@ -6,36 +6,37 @@ __all__ = ['expand', 'test_eq', 'test_is', 'FunctionType', 'MethodType', 'expand
            'openNB', 'highlight', 'display_md', 'display_block', 'fastnbs', 'fastcodes', 'fastnotes', 'fastlistnbs',
            'fastlistsrcs']
 
-# %% ../nbs/lib/utils.ipynb 3
+# %% ../nbs/lib/utils.ipynb 4
 def expandcell():
     "expand cells of the current notebook to its full width"
     from IPython.display import display, HTML 
     display(HTML("<style>.container { width:100% !important; }</style>"))
 
-# %% ../nbs/lib/utils.ipynb 4
+# %% ../nbs/lib/utils.ipynb 5
 expand = expandcell()
 
-# %% ../nbs/lib/utils.ipynb 6
+# %% ../nbs/lib/utils.ipynb 7
 from fastcore.test import * # so that it automated
 
-# %% ../nbs/lib/utils.ipynb 7
+# %% ../nbs/lib/utils.ipynb 8
 test_eq = test_eq
 test_is = test_is
 
-# %% ../nbs/lib/utils.ipynb 8
+# %% ../nbs/lib/utils.ipynb 9
 from fastcore.imports import FunctionType, MethodType
 
-# %% ../nbs/lib/utils.ipynb 9
+# %% ../nbs/lib/utils.ipynb 10
 FunctionType = FunctionType
 MethodType = MethodType
 
-# %% ../nbs/lib/utils.ipynb 11
-def inspect_class(c):
+# %% ../nbs/lib/utils.ipynb 15
+def inspect_class(c, src=False):
     "examine the details of a class"
-    try:
-        print(inspect.getsource(c))
-    except: 
-        pass
+    if src:
+        try:
+            print(inspect.getsource(c))
+        except: 
+            pass
     print()
     print(f'is {c.__name__} a metaclass: {ismetaclass(c)}')
     print(f'is {c.__name__} created by a metaclass: {False if c.__class__ == type else True}')
@@ -63,8 +64,6 @@ def inspect_class(c):
                  if inspect.isfunction(getattr(c.__class__, item[0], None))}   
         pprint(funcs)
         
-    
-    
     funcs = {item[0]: item[1] for item in inspect.getmembers(c) \
              if inspect.isfunction(getattr(c, item[0], None))}
     methods = {item[0]: item[1] for item in inspect.getmembers(c) \
@@ -74,7 +73,9 @@ def inspect_class(c):
     
     print()
     print(f'{c.__name__}\'s function members are:')
-    pprint(funcs)
+    # todos: print some space between k and v
+    for k, v in funcs.items():
+        print(f"{k}: {inspect.getdoc(v)}")
     print()
     print(f'{c.__name__}\'s method members are:')
     pprint(methods)
@@ -85,13 +86,13 @@ def inspect_class(c):
     print(f'{c.__name__}\'s namespace are:')
     pprint(c.__dict__)
 
-# %% ../nbs/lib/utils.ipynb 14
+# %% ../nbs/lib/utils.ipynb 18
 def ismetaclass(mc): 
     "check whether a class is a metaclass or not"
     if inspect.isclass(mc):
         return type in mc.__mro__ 
 
-# %% ../nbs/lib/utils.ipynb 21
+# %% ../nbs/lib/utils.ipynb 25
 def isdecorator(obj):
     "check whether a function is a decorator"
     if inspect.isfunction(obj):
@@ -119,17 +120,18 @@ def isdecorator(obj):
         return False
 
 
-# %% ../nbs/lib/utils.ipynb 25
+# %% ../nbs/lib/utils.ipynb 29
 # from inspect import getmembers, isfunction, isclass, isbuiltin, getsource
 import os.path, pkgutil
 from pprint import pprint
 import inspect
 
 
-# %% ../nbs/lib/utils.ipynb 28
+# %% ../nbs/lib/utils.ipynb 36
 def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
                dun:bool=False, # print all items in __all__
                func:bool=False, # print all user defined functions
+               method:bool=False, 
                clas:bool=False, # print all class objects
                bltin:bool=False, # print all builtin funcs or methods
                lib:bool=False, # print all the modules of the library it belongs to
@@ -138,6 +140,7 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
     'Check what inside a module: `__all__`, functions, classes, builtins, and callables'
     dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0
     funcs = inspect.getmembers(mo, inspect.isfunction)
+    methods = inspect.getmembers(mo, inspect.ismethod)    
     classes = inspect.getmembers(mo, inspect.isclass)
     builtins = inspect.getmembers(mo, inspect.isbuiltin)
     callables = inspect.getmembers(mo, callable)
@@ -162,8 +165,10 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
             startlen = len(i)
             if tp == kind: print(i + ":" + " "*(maxlen-startlen + 5) + kind + "    " + \
                                  inspect.getdoc(eval(i, module_env)))  
-            elif tp != 'NoneType': print(i + ":" + " "*(maxlen-startlen+5) + kind + ", " + tp + "    " + \
-                                 inspect.getdoc(eval(i, module_env)))
+            elif kind != None and callable(eval(i, module_env)): print(i + ":" + " "*(maxlen-startlen+5) + kind + ", " + tp + "    " + \
+                                 str(inspect.getdoc(eval(i, module_env))))
+#             elif tp != 'NoneType': print(i + ":" + " "*(maxlen-startlen+5) + kind + ", " + tp + "    " + \
+#                                  inspect.getdoc(eval(i, module_env)))
             else: print(i + ":" + tp)
     if func: 
         print(f'The user defined functions are:')
@@ -189,6 +194,9 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
             startlen = len(i[0])
             if not inspect.isbuiltin(i[1]):         
                 print(i[0] + ":" + " "*(maxlen-startlen + 5) + kind)
+    if method: 
+        print(f'The methods are:')
+        pprint([i[0] for i in methods])
     if bltin: 
         print(f'The builtin functions or methods are:')
         pprint([i[0] for i in builtins])
@@ -200,11 +208,11 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
         print(f'The library has {len(modules)} modules')
         pprint(modules)
 
-# %% ../nbs/lib/utils.ipynb 31
+# %% ../nbs/lib/utils.ipynb 41
 from importlib.metadata import version, metadata, distribution
 from platform import python_version 
 
-# %% ../nbs/lib/utils.ipynb 32
+# %% ../nbs/lib/utils.ipynb 42
 def whichversion(libname:str, # library name not string
                 req:bool=False, # print lib requirements 
                 file:bool=False): # print all lib files
@@ -225,7 +233,7 @@ def whichversion(libname:str, # library name not string
         pprint(distribution(libname).files)
     
 
-# %% ../nbs/lib/utils.ipynb 42
+# %% ../nbs/lib/utils.ipynb 52
 def fastview(name, # can be both object itself or str, e.g., delegates, FixSigMeta
             nb=False # add a link to the notebook where comments are added
             ): 
@@ -242,10 +250,10 @@ def fastview(name, # can be both object itself or str, e.g., delegates, FixSigMe
     if nb:
         openNB(name)    
 
-# %% ../nbs/lib/utils.ipynb 44
+# %% ../nbs/lib/utils.ipynb 54
 import os
 
-# %% ../nbs/lib/utils.ipynb 48
+# %% ../nbs/lib/utils.ipynb 58
 def fastsrcs():
     "to list all commented src files"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
@@ -254,7 +262,7 @@ def fastsrcs():
             # Prints only text file present in My Folder
             print(f)
 
-# %% ../nbs/lib/utils.ipynb 52
+# %% ../nbs/lib/utils.ipynb 62
 def getrootport():
     "get the local port and notebook dir"
     from notebook import notebookapp
@@ -266,34 +274,40 @@ def getrootport():
             root_dir = note['notebook_dir']
     return (root_server, root_dir)
 
-# %% ../nbs/lib/utils.ipynb 56
+# %% ../nbs/lib/utils.ipynb 66
 def jn_link(name, file_path):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(f'[Open `{name}` in Jupyter Notebook]({file_path})'))                
 
-# %% ../nbs/lib/utils.ipynb 61
+# %% ../nbs/lib/utils.ipynb 75
 def get_all_nbs():
     "return paths for all nbs both in md and ipynb format into lists"
 #     md_folder = '/Users/Natsume/Documents/divefastai/Debuggable/jupytext/'
     md_folder = '/Users/Natsume/Documents/fastdebug/mds/'
+    md_output_folder = '/Users/Natsume/Documents/fastdebug/mds_output/'    
     ipy_folder = '/Users/Natsume/Documents/fastdebug/nbs/'
     md_nbs = []
     for i in os.listdir(md_folder):
         if "." not in i:
             md_nbs = md_nbs + [md_folder + i + "/" + j for j in os.listdir(md_folder + i) if j.endswith('.md')]
 
+    md_output_nbs = [md_output_folder + i for i in os.listdir(md_output_folder) if ".md" in i]        
+            
     ipy_nbs = []
     for i in os.listdir(ipy_folder):
-        if "." not in i:
+        if ".ipynb" in i: 
+            ipy_nbs.append(ipy_folder + i)
+        elif "." not in i:
             ipy_nbs = ipy_nbs + [ipy_folder + i + "/" + j for j in os.listdir(ipy_folder + i) if j.endswith('.ipynb')]
-            
-    return (md_nbs, md_folder, ipy_nbs, ipy_folder)
 
-# %% ../nbs/lib/utils.ipynb 67
+            
+    return (md_nbs, md_folder, ipy_nbs, ipy_folder, md_output_nbs, md_output_folder)
+
+# %% ../nbs/lib/utils.ipynb 82
 def openNB(name, db=False):
     "Get a link to the notebook at by searching keyword or notebook name"
-    _, _, ipynbs, _ = get_all_nbs()
+    _, _, ipynbs, _, _, _= get_all_nbs()
     name = name.split(".md")[0]
     root = getrootport()[1]
     nb_path = ""
@@ -314,7 +328,7 @@ def openNB(name, db=False):
                 file_name = path_server + f
                 jn_link(name, file_name)
 
-# %% ../nbs/lib/utils.ipynb 74
+# %% ../nbs/lib/utils.ipynb 89
 def highlight(question:str, line:str, db=False):
     "highlight a string with yellow background"
     questlst = question.split(' ')
@@ -326,63 +340,77 @@ def highlight(question:str, line:str, db=False):
     if db: print(f'line: {line}')
     return line
 
-# %% ../nbs/lib/utils.ipynb 78
+# %% ../nbs/lib/utils.ipynb 93
 def display_md(text):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(text))                
 
-# %% ../nbs/lib/utils.ipynb 82
-def display_block(line, file):
+# %% ../nbs/lib/utils.ipynb 101
+def display_block(line, file, output=False, keywords=""):
     "`line` is a section title, find all subsequent lines which belongs to the same section and display them together"
     from IPython.display import Markdown
-    with open(file, 'r') as file:
-        entire = file.read()
-        belowline = entire.split(line)[1]
-        head_no = line.count("#")
-        lochead2 = belowline.find("##")
-        lochead3 = belowline.find("###")
-        lochead4 = belowline.find("####")
-        loclst = [lochead2,lochead3, lochead4]
-        loclst = [i for i in loclst if i != -1]
-        num_hash = 0
-        if bool(loclst):
-            if lochead2 == min(loclst):
-                num_hash = 2
-            elif lochead3 == min(loclst):
-                num_hash = 3
-            elif lochead4 == min(loclst):
-                num_hash = 4
-        if num_hash == 0:
-            section_content = belowline
-        else:
-            section_content = belowline.split("#"*num_hash)[0]
-        entire_section = line + "\n" + section_content
-        display(Markdown(entire_section))
+    entire = ""
+    if file.endswith(".md") or file.endswith(".ipynb"):
+        with open(file, 'r') as file:
+            entire = file.read()
+    else:
+        entire = file
+        
+    belowline = entire.split(line)[1]
+    head_no = line.count("#")
+    lochead2 = belowline.find("##")
+    lochead3 = belowline.find("###")
+    lochead4 = belowline.find("####")
+    loclst = [lochead2,lochead3, lochead4]
+    loclst = [i for i in loclst if i != -1]
+    num_hash = 0
+    if bool(loclst):
+        if lochead2 == min(loclst):
+            num_hash = 2
+        elif lochead3 == min(loclst):
+            num_hash = 3
+        elif lochead4 == min(loclst):
+            num_hash = 4
+    if num_hash == 0:
+        section_content = belowline
+    else:
+        section_content = belowline.split("#"*num_hash)[0]
+#         entire_content = line + "\n" + section_content
+#         display(Markdown(entire_content))        
+    title_hl = highlight(keywords, line)
+    display(Markdown(title_hl))
+    if not output: display(Markdown(section_content))
+    else: print(section_content)
 
-# %% ../nbs/lib/utils.ipynb 88
-def fastnbs(question:str, accu:float=0.8, nb=True, db=False):
-    "using keywords to search learning points (a section title and a section itself) from my documented fastai notebooks"
+
+# %% ../nbs/lib/utils.ipynb 107
+def fastnbs(question:str, output=False, accu:float=0.8, nb=True, db=False):
+    "check with fastlistnbs() to find interesting things to search \
+fastnbs() can use keywords to search learning points (a section title and a section itself) from my documented fastai notebooks"
     questlst = question.split(' ')
-    all_nbs, folder, ipynbs, ipyfolder = get_all_nbs()
-    for file_fullname in all_nbs:
+    mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd = get_all_nbs()
+    if not output: mds = mds_no_output
+    else: mds = mds_output
+        
+    for file_fullname in mds:
         file_name = file_fullname.split('/')[-1]
         with open(file_fullname, 'r') as file:
             for count, l in enumerate(file):
                 truelst = [q.lower() in l.lower() for q in questlst]
                 pct = sum(truelst)/len(truelst)
                 if pct >= accu and (l.startswith("##") or l.startswith("###") or l.startswith("####")):
-                    head1 = f"keyword match is {pct}, Found a section: in {file_name}"
-                    head1 = highlight(str(pct), head1)
-                    head1 = highlight(file_name, head1)
-                    display_md(head1)
-                    highlighted_line = highlight(question, l, db=db)                        
-                    display_md(highlighted_line)
-                    print()
-                    display_block(l, file_fullname)
+                    if db: 
+                        head1 = f"keyword match is {pct}, Found a section: in {file_name}"
+                        head1 = highlight(str(pct), head1)
+                        head1 = highlight(file_name, head1)
+                        display_md(head1)
+                        highlighted_line = highlight(question, l, db=db)                        
+                        print()
+                    display_block(l, file_fullname, output=output, keywords=question)
                     if nb: openNB(file_name, db=db)
 
-# %% ../nbs/lib/utils.ipynb 92
+# %% ../nbs/lib/utils.ipynb 111
 def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
     "using keywords to search learning points from commented sources files"
     questlst = question.split(' ')
@@ -413,7 +441,7 @@ def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/utils.ipynb 99
+# %% ../nbs/lib/utils.ipynb 118
 def fastnotes(question:str, accu:float=0.8, n=2, folder="lec", # folder: 'lec' or 'live' or 'all'
               db=False):
     "using key words to search notes and display the found line and lines surround it"
@@ -457,19 +485,19 @@ def fastnotes(question:str, accu:float=0.8, n=2, folder="lec", # folder: 'lec' o
                                     if count == idx: display_md(highlight(question, l))
                                     else: display_md(l)
 
-# %% ../nbs/lib/utils.ipynb 104
+# %% ../nbs/lib/utils.ipynb 124
 def fastlistnbs():
-    "display all my commented notebooks subheadings in a long list"
-    nbs, folder, _, _ = get_all_nbs()
+    "display all my commented notebooks subheadings in a long list. Best to work with fastnbs together."
+    nbs, folder, _, _, _, _ = get_all_nbs()
     for nb in nbs:
         print("\n"+nb)
         with open(nb, 'r') as file:
             for idx, l in enumerate(file):
-                if "##" in l:
+                if l.startswith("##"):
                     print(l, end="") # no extra new line between each line printed
         
 
-# %% ../nbs/lib/utils.ipynb 108
+# %% ../nbs/lib/utils.ipynb 129
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
