@@ -4,7 +4,11 @@ website:
       - index.ipynb
       - section: 2022part1
         contents:
-          - 2022part1/0001_is_it_a_bird.ipynb
+          - 2022part1/0001_fastai_is_it_a_bird.ipynb
+          - 2022part1/0002_fastai_Saving_Model_fastai.ipynb
+          - 2022part1/0003_fastai_which_image_model_best.ipynb
+          - 2022part1/0004_fastai_how_neuralnet_work.ipynb
+          - 2022part1/Untitled.ipynb
       - section: demos
         contents:
           - demos/0000_tour.ipynb
@@ -19,6 +23,7 @@ website:
           - demos/0009_funcs_kwargs.ipynb
           - demos/0010_fastcore_meta_summary.ipynb
           - demos/0011_Fastdb.ipynb
+          - demos/0012_fastcore_foundation_L.ipynb
       - section: lib
         contents:
           - lib/00_core.ipynb
