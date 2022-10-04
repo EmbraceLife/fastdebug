@@ -63,5 +63,6 @@ d = { 'settings': { 'branch': 'master',
                                  'fastdebug.utils.nb_path': ('lib/utils.html#nb_path', 'fastdebug/utils.py'),
                                  'fastdebug.utils.nb_url': ('lib/utils.html#nb_url', 'fastdebug/utils.py'),
                                  'fastdebug.utils.openNB': ('lib/utils.html#opennb', 'fastdebug/utils.py'),
+                                 'fastdebug.utils.openNBKaggle': ('lib/utils.html#opennbkaggle', 'fastdebug/utils.py'),
                                  'fastdebug.utils.whatinside': ('lib/utils.html#whatinside', 'fastdebug/utils.py'),
                                  'fastdebug.utils.whichversion': ('lib/utils.html#whichversion', 'fastdebug/utils.py')}}}

@@ -170,6 +170,10 @@ ipy2md()
 ```
 
 ```python
+fastnbs("export model")
+```
+
+```python
 fastlistnbs()
 ```
 

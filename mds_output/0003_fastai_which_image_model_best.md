@@ -179,6 +179,36 @@ ipy2md()
 
 
 ```
+fastnbs("export model")
+```
+
+
+## how to  <mark style="background-color: #ffff00">export</mark>   <mark style="background-color: #FFFF00">model</mark>  to a pickle file and download it from kaggle
+
+
+
+
+
+
+Now we can export our trained `Learner`. This contains all the information needed to run the model:
+
+```python
+#|eval: false
+learn.export('model.pkl')
+```
+
+Finally, open the Kaggle sidebar on the right if it's not already, and find the section marked "Output". Open the `/kaggle/working` folder, and you'll see `model.pkl`. Click on it, then click on the menu on the right that appears, and choose "Download". After a few seconds, your model will be downloaded to your computer, where you can then create your app that uses the model.
+
+
+
+
+
+
+[Open `0002_fastai_Saving_Model_fastai` in Jupyter Notebook](http://localhost:8888/tree/nbs/2022part1/0002_fastai_Saving_Model_fastai.ipynb)
+
+
+
+```
 fastlistnbs()
 ```
 
@@ -202,15 +232,6 @@ fastlistnbs()
     ### How to build my model with dataloaders and pretrained model; how to train my model
     ### How to predict with my model; how to avoid running cells in nbdev_prepare
     
-    /Users/Natsume/Documents/fastdebug/mds/2022part1/0002_Saving_Model_fastai.md
-    ## what to import to handle vision problems in fastai
-    ## how to download and decompress datasets prepared by fastai
-    ## how to tell it is a cat by reading filename
-    ## how to create dataloaders with `from_name_func`
-    ## how to create a pretrained model with resnet18 and error_rate; how to fine tune it 3 epochs
-    ## how to export model to a pickle file and download it from Kaggle
-    ## how to convert ipynb to md
-    
     /Users/Natsume/Documents/fastdebug/mds/2022part1/0002_fastai_Saving_Model_fastai.md
     ## what to import to handle vision problems in fastai
     ## how to download and decompress datasets prepared by fastai
@@ -219,25 +240,6 @@ fastlistnbs()
     ## how to create a pretrained model with resnet18 and error_rate; how to fine tune it 3 epochs
     ## how to export model to a pickle file and download it from Kaggle
     ## how to convert ipynb to md
-    
-    /Users/Natsume/Documents/fastdebug/mds/2022part1/0001_is_it_a_bird.md
-    ## Useful Course sites
-    ## How to use autoreload
-    ## How to install and update libraries
-    ## Know a little about the libraries
-    ### what is fastai
-    ### what is duckduckgo
-    ## How to use fastdebug with fastai notebooks
-    ### how to use fastdebug
-    ### Did I document it in a notebook before?
-    ### Did I document it in a src before?
-    ## how to search and get a url of an image; how to download with an url; how to view an image;
-    ### how to create folders using path; how to search and download images in folders; how to resize images 
-    ## Train my model
-    ### How to find and unlink images not properly downloaded
-    ### How to create a DataLoaders with DataBlock; how to view data with it
-    ### How to build my model with dataloaders and pretrained model; how to train my model
-    ### How to predict with my model; how to avoid running cells in nbdev_prepare
     
     /Users/Natsume/Documents/fastdebug/mds/2022part1/0003_fastai_which_image_model_best.md
     ## timm

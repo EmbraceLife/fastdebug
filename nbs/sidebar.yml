@@ -8,7 +8,7 @@ website:
           - 2022part1/0002_fastai_Saving_Model_fastai.ipynb
           - 2022part1/0003_fastai_which_image_model_best.ipynb
           - 2022part1/0004_fastai_how_neuralnet_work.ipynb
-          - 2022part1/Untitled.ipynb
+          - 2022part1/0005_fastai_linear_neuralnet_scratch.ipynb
       - section: demos
         contents:
           - demos/0000_tour.ipynb
