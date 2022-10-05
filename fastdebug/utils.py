@@ -422,25 +422,25 @@ def openNBKaggle(filename_full, db=False):
                 if db: print(f'pct is {pct}')
                 jn_link(filename_full.split(".md")[0], f, where="on Kaggle") 
 
-# %% ../nbs/lib/utils.ipynb 114
+# %% ../nbs/lib/utils.ipynb 116
 def highlight(question:str, line:str, db=False):
     "highlight a string with yellow background"
     questlst = question.split(' ')
     questlst_hl = [' <mark style="background-color: #FFFF00">' + q.lower() + '</mark> ' for q in questlst]
     for q, q_hl in zip(questlst, questlst_hl):
         if " " + q.lower() in line.lower(): # don't do anything to [q] or <>q<>. Using regex can be more accurate here
-            line = line.lower().replace(q.lower(), q_hl)
+            line = line.lower().replace(" "+ q.lower(), q_hl)
             
     if db: print(f'line: {line}')
     return line
 
-# %% ../nbs/lib/utils.ipynb 118
+# %% ../nbs/lib/utils.ipynb 120
 def display_md(text):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(text))                
 
-# %% ../nbs/lib/utils.ipynb 126
+# %% ../nbs/lib/utils.ipynb 128
 def display_block(line, file, output=False, keywords=""):
     "`line` is a section title, find all subsequent lines which belongs to the same section and display them together"
     from IPython.display import Markdown
@@ -478,7 +478,7 @@ def display_block(line, file, output=False, keywords=""):
     else: print(section_content)
 
 
-# %% ../nbs/lib/utils.ipynb 132
+# %% ../nbs/lib/utils.ipynb 134
 def fastnbs(question:str, output=False, accu:float=0.8, nb=True, db=False):
     "check with fastlistnbs() to find interesting things to search \
 fastnbs() can use keywords to search learning points (a section title and a section itself) from my documented fastai notebooks"
@@ -506,7 +506,7 @@ fastnbs() can use keywords to search learning points (a section title and a sect
                         openNB(file_name, db=db)
                         openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/utils.ipynb 136
+# %% ../nbs/lib/utils.ipynb 138
 def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
     "using keywords to search learning points from commented sources files"
     questlst = question.split(' ')
@@ -537,7 +537,7 @@ def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/utils.ipynb 143
+# %% ../nbs/lib/utils.ipynb 145
 def fastnotes(question:str, accu:float=0.8, n=2, folder="lec", # folder: 'lec' or 'live' or 'all'
               db=False):
     "using key words to search notes and display the found line and lines surround it"
@@ -566,14 +566,14 @@ def fastnotes(question:str, accu:float=0.8, n=2, folder="lec", # folder: 'lec' o
                         head1 = highlight(str(pct), head1)
                         head1 = highlight(f.split(root)[1], head1)
                         display_md(head1)
-                        l = highlight(question, l, db=db)
-                        display_md(l)
+#                         l = highlight(question, l, db=db)
+#                         display_md(l)
                         print()                        
 #                         print('{:=<157}'.format(f"Show {n} lines above and after in {f}:"))
-                        head2 = f"Show {n} lines above and after in {f.split(root)[1]}:"
-                        head2 = highlight(f.split(root)[1], head2)
-                        head2 = highlight(str(n), head2)
-                        display_md(head2)                        
+#                         head2 = f"Show {n} lines above and after in {f.split(root)[1]}:"
+#                         head2 = highlight(f.split(root)[1], head2)
+#                         head2 = highlight(str(n), head2)
+#                         display_md(head2)                        
                         idx = count
                         with open(f, 'r') as file:
                             for count, l in enumerate(file):
@@ -581,19 +581,29 @@ def fastnotes(question:str, accu:float=0.8, n=2, folder="lec", # folder: 'lec' o
                                     if count == idx: display_md(highlight(question, l))
                                     else: display_md(l)
 
-# %% ../nbs/lib/utils.ipynb 149
-def fastlistnbs():
+# %% ../nbs/lib/utils.ipynb 153
+def fastlistnbs(filter="fastai"):
     "display all my commented notebooks subheadings in a long list. Best to work with fastnbs together."
     nbs, folder, _, _, _, _ = get_all_nbs()
+    nb_rt = ""
     for nb in nbs:
-        print("\n"+nb)
-        with open(nb, 'r') as file:
+        if filter == "fastai" and "_fastai_" in nb: 
+            nb_rt = nb
+        elif filter == "all": 
+            nb_rt = nb
+        else: 
+            continue
+            
+        print("\n"+nb_rt)
+        with open(nb_rt, 'r') as file:
             for idx, l in enumerate(file):
-                if l.startswith("##"):
+                if "##" in l:
                     print(l, end="") # no extra new line between each line printed
-        
 
-# %% ../nbs/lib/utils.ipynb 154
+                    
+                    
+
+# %% ../nbs/lib/utils.ipynb 158
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'

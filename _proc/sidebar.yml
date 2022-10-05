@@ -5,12 +5,23 @@ website:
       - section: 2022part1
         contents:
           - 2022part1/0001_fastai_is_it_a_bird.ipynb
-          - 2022part1/0002_fastai_Saving_Model_fastai.ipynb
+          - 2022part1/0002_fastai_saving_a_basic_fastai_model.ipynb
           - 2022part1/0003_fastai_which_image_model_best.ipynb
           - 2022part1/0004_fastai_how_neuralnet_work.ipynb
           - 2022part1/0005_fastai_linear_neuralnet_scratch.ipynb
+          - 2022part1/0006_fastai_why_should_use_framework.ipynb
+          - 2022part1/0007_fastai_how_random_forests_really_work.ipynb
+          - 2022part1/0008_fastai_first_steps_road_to_top_part_1.ipynb
+          - 2022part1/0009_fastai_small_models_road_to_the_top_part_2.ipynb
+          - 2022part1/0010_fastai_scaling_up_road_to_top_part_3.ipynb
+          - 2022part1/multi-target-road-to-the-top-part-4.ipynb
+      - section: Interesting_fastai
+        contents:
+          - Interesting_fastai/0001_The_origin_of_APL .ipynb
+          - Interesting_fastai/Interesting_things_fastai.ipynb
       - section: demos
         contents:
+          - demos/0000_Intro_fastdebug.ipynb
           - demos/0000_tour.ipynb
           - demos/0001_fastcore_meta_delegates.ipynb
           - demos/0002_signature_from_callable.ipynb

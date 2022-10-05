@@ -14,6 +14,11 @@ jupyter:
 
 # 0006_fastai_why_should_use_framework
 
+<!-- #raw -->
+---
+skip_exec: true
+---
+<!-- #endraw -->
 
 **Official course site**:  for lesson [3](https://course.fast.ai/Lessons/lesson3.html)    
 
@@ -237,6 +242,9 @@ Since it's so easy to create a model now, it's easier to play with more advanced
 
 To create our ensemble, first we copy the three steps we used above to create and train a model, and apply it to the test set:
 
+
+### how to create an ensemble function to create multiple models and generate predictions from each of them
+
 ```python
 def ensemble():
     learn = tabular_learner(dls, metrics=accuracy, layers=[10,10])
@@ -250,6 +258,9 @@ Now we run this five times, and collect the results into a list:
 learns = [ensemble() for _ in range(5)]
 ```
 
+### how to get the average predictions from all ensembed models
+
+
 We stack this predictions together and take their average predictions:
 
 ```python
@@ -257,6 +268,9 @@ ens_preds = torch.stack(learns).mean(0)
 ```
 
 Finally, use the same code as before to generate a submission file, which we can submit to Kaggle after the notebook is saved and run:
+
+
+### how to create the csv file to Titanic competition
 
 ```python
 tst_df['Survived'] = (ens_preds[:,1]>0.5).int()
@@ -272,6 +286,17 @@ At the time of writing, this submission is well within the top 25% of entries to
 ## Final thoughts
 
 
+### Why you should use a framework like fastai
+
+
 As you can see, using fastai and PyTorch made things much easier than doing it from scratch, but it also hid away a lot of the details. So if you only ever use a framework, you're not going to as fully understand what's going on under the hood. That understanding can be really helpful when it comes to debugging and improving your models. But do use fastai when you're creating models on Kaggle or in "real life", because otherwise you're not taking advantage of all the research that's gone into optimising the models for you, and you'll end up spending more time debugging and implementing menial boiler-plate than actually solving the real problem!
 
 If you found this notebook useful, please remember to click the little up-arrow at the top to upvote it, since I like to know when people have found my work useful, and it helps others find it too. (BTW, be sure you're looking at my [original notebook](https://www.kaggle.com/jhoward/why-you-should-use-a-framework) here when you do that, and are not on your own copy of it, otherwise your upvote won't get counted!) And if you have any questions or comments, please pop them below -- I read every comment I receive!
+
+```python
+
+```
+
+```python
+
+```
