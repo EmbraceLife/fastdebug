@@ -2,19 +2,6 @@ website:
   sidebar:
     contents:
       - index.ipynb
-      - section: 2022part1
-        contents:
-          - 2022part1/0001_fastai_is_it_a_bird.ipynb
-          - 2022part1/0002_fastai_saving_a_basic_fastai_model.ipynb
-          - 2022part1/0003_fastai_which_image_model_best.ipynb
-          - 2022part1/0004_fastai_how_neuralnet_work.ipynb
-          - 2022part1/0005_fastai_linear_neuralnet_scratch.ipynb
-          - 2022part1/0006_fastai_why_should_use_framework.ipynb
-          - 2022part1/0007_fastai_how_random_forests_really_work.ipynb
-          - 2022part1/0008_fastai_first_steps_road_to_top_part_1.ipynb
-          - 2022part1/0009_fastai_small_models_road_to_the_top_part_2.ipynb
-          - 2022part1/0010_fastai_scaling_up_road_to_top_part_3.ipynb
-          - 2022part1/multi-target-road-to-the-top-part-4.ipynb
       - section: Interesting_fastai
         contents:
           - Interesting_fastai/0001_The_origin_of_APL .ipynb
@@ -35,6 +22,25 @@ website:
           - demos/0010_fastcore_meta_summary.ipynb
           - demos/0011_Fastdb.ipynb
           - demos/0012_fastcore_foundation_L.ipynb
+      - section: fastai_notebooks
+        contents:
+          - fastai_notebooks/0001_fastai_is_it_a_bird.ipynb
+          - fastai_notebooks/0002_fastai_saving_a_basic_fastai_model.ipynb
+          - fastai_notebooks/0003_fastai_which_image_model_best.ipynb
+          - fastai_notebooks/0004_fastai_how_neuralnet_work.ipynb
+          - fastai_notebooks/0005_fastai_linear_neuralnet_scratch.ipynb
+          - fastai_notebooks/0006_fastai_why_should_use_framework.ipynb
+          - fastai_notebooks/0007_fastai_how_random_forests_really_work.ipynb
+          - fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb
+          - fastai_notebooks/0009_fastai_small_models_road_to_the_top_part_2.ipynb
+          - fastai_notebooks/0010_fastai_scaling_up_road_to_top_part_3.ipynb
+          - fastai_notebooks/0011_fastai_multi_target_road_to_top_part_4.ipynb
+          - fastai_notebooks/0012_fastai_using_nbdev_export_in_kaggle_notebook.ipynb
+          - fastai_notebooks/0013_best_vision_models_for_fine_tuning.ipynb
+          - fastai_notebooks/0014_iterate_like_grandmaster.ipynb
+          - fastai_notebooks/0015_getting_started_with_nlp_for_absolute_beginner.ipynb
+          - fastai_notebooks/0016_collaborative_filtering_deep_dive.ipynb
+          - fastai_notebooks/0017_fastai_pt2_2019_matmul.ipynb
       - section: lib
         contents:
           - lib/00_core.ipynb

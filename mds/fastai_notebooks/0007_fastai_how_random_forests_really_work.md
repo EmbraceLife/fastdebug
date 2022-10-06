@@ -101,7 +101,7 @@ df.Sex.cat.codes.head()
 ## Binary splits
 
 
-### what is binary splits and who does it work
+### what is binary splits and how does it work
 
 
 Before we create a Random Forest or Gradient Boosting Machine, we'll first need to learn how to create a *decision tree*, from which both of these models are built.

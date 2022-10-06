@@ -8,9 +8,9 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here===
                lib:bool=False, # print all the modules of the library it belongs to=======(6)       
                cal:bool=False # print all callables=======================================(7)       
              ): ==========================================================================(8)       
-    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(9) # [34;1mhow many items inside mo.__all__?[0m; 
-    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(10) # [35;1mget all funcs of a module[0m; 
-    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(11) # [91;1mget all classes from the module[0m; 
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(9) # [37;1mhow many items inside mo.__all__?[0m; 
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(10) # [37;1mget all funcs of a module[0m; 
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(11) # [37;1mget all classes from the module[0m; 
     methods = inspect.getmembers(mo, inspect.ismethod)    ================================(12)      
     classes = inspect.getmembers(mo, inspect.isclass)=====================================(13)      
     builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(14) # [93;1mget the file path of the module[0m; 
