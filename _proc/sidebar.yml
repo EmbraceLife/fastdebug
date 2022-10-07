@@ -41,6 +41,7 @@ website:
           - fastai_notebooks/0015_getting_started_with_nlp_for_absolute_beginner.ipynb
           - fastai_notebooks/0016_collaborative_filtering_deep_dive.ipynb
           - fastai_notebooks/0017_fastai_pt2_2019_matmul.ipynb
+          - fastai_notebooks/0018_fastai_pt2_2019_exports.ipynb
       - section: lib
         contents:
           - lib/00_core.ipynb

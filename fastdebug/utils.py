@@ -2,41 +2,41 @@
 
 # %% auto 0
 __all__ = ['multioutput', 'expand', 'test_eq', 'test_is', 'FunctionType', 'MethodType', 'kagglenbs', 'multi_output', 'nb_url',
-           'nb_path', 'nb_name', 'ipy2md', 'expandcell', 'inspect_class', 'ismetaclass', 'isdecorator', 'whatinside',
-           'whichversion', 'fastview', 'fastsrcs', 'getrootport', 'jn_link', 'get_all_nbs', 'openNB', 'openNBKaggle',
-           'highlight', 'display_md', 'display_block', 'fastnbs', 'fastcodes', 'fastnotes', 'fastlistnbs',
-           'fastlistsrcs']
+           'nb_path', 'nb_name', 'ipy2md', 'autoreload', 'expandcell', 'inspect_class', 'ismetaclass', 'isdecorator',
+           'whatinside', 'whichversion', 'fastview', 'fastsrcs', 'getrootport', 'jn_link', 'get_all_nbs', 'openNB',
+           'openNBKaggle', 'highlight', 'display_md', 'display_block', 'fastnbs', 'fastcodes', 'fastnotes',
+           'fastlistnbs', 'fastlistsrcs']
 
 # %% ../nbs/lib/utils.ipynb 3
 import os
 
-# %% ../nbs/lib/utils.ipynb 5
+# %% ../nbs/lib/utils.ipynb 4
 def multi_output():
     from IPython.core.interactiveshell import InteractiveShell
     InteractiveShell.ast_node_interactivity = "all"
 
-# %% ../nbs/lib/utils.ipynb 6
+# %% ../nbs/lib/utils.ipynb 5
 multioutput = multi_output()
 
-# %% ../nbs/lib/utils.ipynb 10
+# %% ../nbs/lib/utils.ipynb 9
 def nb_url():
     "run this func to get nb_url of this current notebook"
     import ipyparams
     return eval("ipyparams.raw_url")
 
-# %% ../nbs/lib/utils.ipynb 12
+# %% ../nbs/lib/utils.ipynb 11
 def nb_path():
     "run this func to get nb_path of this current notebook"
     import ipyparams
     return eval("os.path.join(os.getcwd(), ipyparams.notebook_name)")
 
-# %% ../nbs/lib/utils.ipynb 14
+# %% ../nbs/lib/utils.ipynb 13
 def nb_name():
     "run this func to get nb_path of this current notebook"
     import ipyparams
     return eval("ipyparams.notebook_name")
 
-# %% ../nbs/lib/utils.ipynb 17
+# %% ../nbs/lib/utils.ipynb 16
 def ipy2md(db=True):
     "convert the current notebook to md"
     import ipyparams
@@ -45,13 +45,14 @@ def ipy2md(db=True):
     name = nb_name()
     url = nb_url()
     obs_path = "/Users/Natsume/Documents/divefastai/Debuggable/jupytext"
+    obs_last_folder = nb_path().split(nb_name())[0].split('/')[-2]
     obs_output_path = "/Users/Natsume/Documents/divefastai/Debuggable/nbconvert"    
     mds_path = path.replace("nbs", "mds").split(name)[0]
     mds_output = "/Users/Natsume/Documents/fastdebug/mds_output"
     # https://stackabuse.com/executing-shell-commands-with-python/
     os.system(f"jupytext --to md {path}")
-    os.system(f"cp {path.split('.ipynb')[0]+'.md'} {obs_path}")
-    if db: print(f'cp to : {obs_path}')
+    os.system(f"cp {path.split('.ipynb')[0]+'.md'} {obs_path + '/' + obs_last_folder}")
+    if db: print(f'cp to : {obs_path + "/" + obs_last_folder}')
     os.system(f"mv {path.split('.ipynb')[0]+'.md'} {mds_path}")
     if db: print(f'move to : {mds_path}')
     os.system(f"jupyter nbconvert --to markdown {path}")
@@ -59,6 +60,12 @@ def ipy2md(db=True):
     os.system(f"mv {path.split('.ipynb')[0]+'.md'} {obs_output_path}")
     if db: print(f'copy to : {mds_output}')
     if db: print(f'move to : {obs_output_path}')        
+
+# %% ../nbs/lib/utils.ipynb 24
+def autoreload():
+    from IPython.core.interactiveshell import InteractiveShell
+    get_ipython().run_line_magic(magic_name="load_ext", line = "autoreload")
+    get_ipython().run_line_magic(magic_name="autoreload", line = "2")
 
 # %% ../nbs/lib/utils.ipynb 27
 def expandcell():
@@ -615,13 +622,15 @@ def fastnotes(question:str, accu:float=0.8, n=2, folder="lec", # folder: 'lec' o
                                         display_md(l)
 
 
-# %% ../nbs/lib/utils.ipynb 159
-def fastlistnbs(filter="fastai"):
+# %% ../nbs/lib/utils.ipynb 161
+def fastlistnbs(filter="fastai"): # other options: "part2", "all"
     "display all my commented notebooks subheadings in a long list. Best to work with fastnbs together."
     nbs, folder, _, _, _, _ = get_all_nbs()
     nb_rt = ""
     for nb in nbs:
-        if filter == "fastai" and "_fastai_" in nb: 
+        if filter == "fastai" and "_fastai_" in nb and not "_fastai_pt2" in nb: 
+            nb_rt = nb
+        elif filter == "part2" and "_fastai_pt2" in nb:
             nb_rt = nb
         elif filter == "all": 
             nb_rt = nb
@@ -632,12 +641,9 @@ def fastlistnbs(filter="fastai"):
         with open(nb_rt, 'r') as file:
             for idx, l in enumerate(file):
                 if "##" in l:
-                    print(l, end="") # no extra new line between each line printed
+                    print(l, end="") # no extra new line between each line printed       
 
-                    
-                    
-
-# %% ../nbs/lib/utils.ipynb 164
+# %% ../nbs/lib/utils.ipynb 166
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'

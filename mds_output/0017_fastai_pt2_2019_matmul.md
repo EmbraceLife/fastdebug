@@ -23,7 +23,9 @@ The *foundations* we'll assume throughout this course are:
 
 [Jump_to lesson 8 video](https://course19.fast.ai/videos/?lesson=8&t=1850)
 
-### [35:23](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=2123) - why it is great to have a unit testing with jupyter
+### [31:11](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1871) - how to build a test framework using the source code of `test`, `test_eq`, and run tests for all notebooks (fastforward to 2022, we have the test source code in [fastcore.test](https://nbviewer.org/github/fastai/fastcore/blob/master/nbs/00_test.ipynb) `nbdev_test` to run tests for all notebooks) [35:23](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=2123) - why it is great to have a unit testing with jupyter
+
+
 
 
 ```
