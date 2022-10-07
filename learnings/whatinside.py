@@ -8,12 +8,12 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here===
                lib:bool=False, # print all the modules of the library it belongs to=======(6)       
                cal:bool=False # print all callables=======================================(7)       
              ): ==========================================================================(8)       
-    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(9) # [91;1mhow many items inside mo.__all__?[0m; 
-    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(10) # [35;1mget all funcs of a module[0m; 
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(9) # [35;1mhow many items inside mo.__all__?[0m; 
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(10) # [36;1mget all funcs of a module[0m; 
     funcs = inspect.getmembers(mo, inspect.isfunction)====================================(11) # [93;1mget all classes from the module[0m; 
     methods = inspect.getmembers(mo, inspect.ismethod)    ================================(12)      
     classes = inspect.getmembers(mo, inspect.isclass)=====================================(13)      
-    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(14) # [37;1mget the file path of the module[0m; 
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(14) # [36;1mget the file path of the module[0m; 
     callables = inspect.getmembers(mo, callable)==========================================(15)      
     pkgpath = os.path.dirname(mo.__file__)================================================(16)      
     module_env = mo.__dict__==============================================================(17)      
@@ -29,7 +29,7 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here===
             elif inspect.isclass(obj):====================================================(27)      
                 kind = "class"============================================================(28)      
             elif isdecorator(obj):========================================================(29)      
-                kind = "decorator"========================================================(30) # [91;1mget names of all modules of a lib[0m; 
+                kind = "decorator"========================================================(30) # [34;1mget names of all modules of a lib[0m; 
             elif inspect.isfunction(obj):=================================================(31)      
                 kind = "function"=========================================================(32)      
             tp = type(eval(i, module_env)).__name__=======================================(33)      

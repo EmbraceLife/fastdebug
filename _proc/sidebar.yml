@@ -42,6 +42,9 @@ website:
           - fastai_notebooks/0016_collaborative_filtering_deep_dive.ipynb
           - fastai_notebooks/0017_fastai_pt2_2019_matmul.ipynb
           - fastai_notebooks/0018_fastai_pt2_2019_exports.ipynb
+          - fastai_notebooks/0019_fastai_pt2_2019_lecture1_intro.ipynb
+          - fastai_notebooks/0020_fastai_pt2_2019_source_explained.ipynb
+          - fastai_notebooks/0021_fastai_pt2_2019_fully_connected.ipynb
       - section: lib
         contents:
           - lib/00_core.ipynb

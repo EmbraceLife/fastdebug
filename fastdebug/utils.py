@@ -494,8 +494,13 @@ def display_block(line, file, output=False, keywords=""):
     else: print(section_content)
 
 
-# %% ../nbs/lib/utils.ipynb 138
-def fastnbs(question:str, output=False, accu:float=0.8, nb=True, db=False):
+# %% ../nbs/lib/utils.ipynb 140
+def fastnbs(question:str, # query in string
+            filter_folder="all", # options: all, fastai, part2
+            output=False, # True for nice print of cell output
+            accu:float=0.8, 
+            nb=True, 
+            db=False):
     "check with fastlistnbs() to find interesting things to search \
 fastnbs() can use keywords to search learning points (a section title and a section itself) from my documented fastai notebooks"
     questlst = question.split(' ')
@@ -503,7 +508,15 @@ fastnbs() can use keywords to search learning points (a section title and a sect
     if not output: mds = mds_no_output
     else: mds = mds_output
         
-    for file_fullname in mds:
+    for file_path in mds:
+        if filter_folder == "fastai" and "_fastai_" in file_path and not "_fastai_pt2_" in file_path:
+            file_fullname = file_path
+        elif filter_folder == "part2" and "_fastai_pt2_" in file_path:
+            file_fullname = file_path
+        elif filter_folder == "all": 
+            file_fullname = file_path
+        else: continue
+
         file_name = file_fullname.split('/')[-1]
         with open(file_fullname, 'r') as file:
             for count, l in enumerate(file):
@@ -516,13 +529,13 @@ fastnbs() can use keywords to search learning points (a section title and a sect
                         head1 = highlight(file_name, head1)
                         display_md(head1)
                         highlighted_line = highlight(question, l, db=db)                        
-                        print()
+#                         print()
                     display_block(l, file_fullname, output=output, keywords=question)
                     if nb: 
                         openNB(file_name, db=db)
                         openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/utils.ipynb 142
+# %% ../nbs/lib/utils.ipynb 144
 def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
     "using keywords to search learning points from commented sources files"
     questlst = question.split(' ')
@@ -553,7 +566,7 @@ def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/utils.ipynb 151
+# %% ../nbs/lib/utils.ipynb 153
 def fastnotes(question:str, accu:float=0.8, n=2, folder="lec", # folder: 'lec' or 'live' or 'all'
               db=False):
     "using key words to search notes and display the found line and lines surround it"
@@ -622,17 +635,17 @@ def fastnotes(question:str, accu:float=0.8, n=2, folder="lec", # folder: 'lec' o
                                         display_md(l)
 
 
-# %% ../nbs/lib/utils.ipynb 161
-def fastlistnbs(filter="fastai"): # other options: "part2", "all"
+# %% ../nbs/lib/utils.ipynb 163
+def fastlistnbs(flt_fd="fastai"): # other options: "part2", "all"
     "display all my commented notebooks subheadings in a long list. Best to work with fastnbs together."
     nbs, folder, _, _, _, _ = get_all_nbs()
     nb_rt = ""
     for nb in nbs:
-        if filter == "fastai" and "_fastai_" in nb and not "_fastai_pt2" in nb: 
+        if flt_fd == "fastai" and "_fastai_" in nb and not "_fastai_pt2" in nb: 
             nb_rt = nb
-        elif filter == "part2" and "_fastai_pt2" in nb:
+        elif flt_fd == "part2" and "_fastai_pt2" in nb:
             nb_rt = nb
-        elif filter == "all": 
+        elif flt_fd == "all": 
             nb_rt = nb
         else: 
             continue
@@ -643,7 +656,7 @@ def fastlistnbs(filter="fastai"): # other options: "part2", "all"
                 if "##" in l:
                     print(l, end="") # no extra new line between each line printed       
 
-# %% ../nbs/lib/utils.ipynb 166
+# %% ../nbs/lib/utils.ipynb 168
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
