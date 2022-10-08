@@ -66,6 +66,7 @@ def autoreload():
     from IPython.core.interactiveshell import InteractiveShell
     get_ipython().run_line_magic(magic_name="load_ext", line = "autoreload")
     get_ipython().run_line_magic(magic_name="autoreload", line = "2")
+    get_ipython().run_line_magic(magic_name="matplotlib", line = "inline")
 
 # %% ../nbs/lib/utils.ipynb 27
 def expandcell():
@@ -566,76 +567,97 @@ def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/utils.ipynb 153
-def fastnotes(question:str, accu:float=0.8, n=2, folder="lec", # folder: 'lec' or 'live' or 'all'
+# %% ../nbs/lib/utils.ipynb 157
+def fastnotes(question:str, 
+              search_code:bool=False, # if search code, do check True for nicer printing
+              accu:float=0.8, 
+              n=2, 
+              folder="all", # folder: 'lec' or 'live' or 'all'
               db=False):
     "using key words to search notes and display the found line and lines surround it"
     questlst = question.split(' ')
-    root = '/Users/Natsume/Documents/divefastai/'
+#     root = '/Users/Natsume/Documents/divefastai/'
+    root = '/Users/Natsume/Documents/fastdebug/mds/'
 #     folder1 = '2022_part1/'
 #     folder2 = '2022_livecoding/'
-    folder1 = '2019_part2/'
-    folder2 = '2019_walkthrus'
-    lectures = [root + folder1 + f for f in os.listdir(root + folder1)]
-    livecodings = [root + folder2 + f for f in os.listdir(root + folder2)]
-    all_notes = lectures + livecodings
-    if folder == "lec": files = lectures
-    elif folder == "live": files = livecodings
-    else: files = all_notes
-    for f in files:
-#     for f in os.listdir(folder):  
-        if f.endswith(".md"):
-#             name = f.split('.md')[0]
-#             file_name =folder + f
-            with open(f, 'r') as file:
-                for count, l in enumerate(file):
-                    truelst = [q in l.lower() for q in questlst]
-                    pct = sum(truelst)/len(truelst)
-                    if pct >= accu:
-                        print()
-                        head1 = f"keyword match is {pct}, Found a line: in {f.split(root)[1]}"
-                        head1 = highlight(str(pct), head1)
-                        head1 = highlight(f.split(root)[1], head1)
-                        display_md(head1)
+#     folder1 = '2019_part2/'
+#     folder2 = '2019_walkthrus'
+#     lectures = [root + folder1 + f for f in os.listdir(root + folder1)]
+#     livecodings = [root + folder2 + f for f in os.listdir(root + folder2)]
+#     all_notes = lectures + livecodings
+#     if folder == "lec": files = lectures
+#     elif folder == "live": files = livecodings
+#     else: files = all_notes
+
+#     for f in files:
+    all_md_files = []
+    for f in os.listdir(root):  
+        if f.endswith(".md"): all_md_files.append(root + f)
+        elif not "." in f: 
+            for subf in os.listdir(root + f):
+                if subf.endswith(".md"): all_md_files.append(root + f + "/" + subf)
+
+    if db: pprint(all_md_files)
+    for md in all_md_files:
+        if folder == "part2" and "_fastai_pt2" in md: f = md
+        elif folder == "part1" and "_fastai_" in md and not "_fastai_pt2" in md: f = md
+        elif folder == "all": f = md
+        else: 
+            print("no folder is selected")
+            return
+        with open(f, 'r') as file:
+            for count, l in enumerate(file):
+                truelst = [q in l.lower() for q in questlst]
+                pct = sum(truelst)/len(truelst)
+                if pct >= accu:
+                    print()
+                    head1 = f"keyword match is {pct}, Found a line: in {f.split(root)[1]}"
+                    head1 = highlight(str(pct), head1)
+                    head1 = highlight(f.split(root)[1], head1)
+                    display_md(head1)
 #                         l = highlight(question, l, db=db)
 #                         display_md(l)
-                        print()                        
+                    print()                        
 #                         print('{:=<157}'.format(f"Show {n} lines above and after in {f}:"))
 #                         head2 = f"Show {n} lines above and after in {f.split(root)[1]}:"
 #                         head2 = highlight(f.split(root)[1], head2)
 #                         head2 = highlight(str(n), head2)
 #                         display_md(head2)                        
-                        idx = count
-                        code = False
-                        codeblock = ""
-                        with open(f, 'r') as file:
-                            for count, l in enumerate(file):
-                                if count >= idx - n and count <= idx + n:
-                                    if count == idx and bool(l.strip()): 
-                                        display_md(highlight(question, l))
-                                    elif bool(l.strip()) and "```python" == l.strip() and not code: 
-                                        codeblock = codeblock + l
-                                        code = True
-                                    # make sure one elif won't be skipped/blocked by another elif above
-                                    elif bool(l.strip()) and code and "```" != l.strip()and count < idx + n: 
-                                        codeblock = codeblock + l
-                                    elif bool(l.strip()) and code and "```" == l.strip():
-                                        codeblock = codeblock + l                    
-                                        code = False
-                                        display_md(codeblock)
-                                        codeblock = ""
-                                    elif bool(l.strip()) and code and count == idx + n:
-                                        codeblock = codeblock + l
-                                        codeblock = codeblock + "# code block continues below" + "\n"                                        
-                                        codeblock = codeblock + "```" + "\n"
-                                        code = False
-                                        display_md(codeblock)
-                                        codeblock = ""
-                                    elif bool(l.strip()): 
-                                        display_md(l)
+                    idx = count
+                    code = search_code
+                    codeblock = ""
+                    with open(f, 'r') as file:
+                        for count, l in enumerate(file):
+                            if count >= idx - n and count <= idx + n:
+                                if count == idx and bool(l.strip()) and not code: 
+                                    display_md(highlight(question, l))
+                                elif count == idx and bool(l.strip()) and code: 
+                                    codeblock = codeblock + l
+                                elif count == idx-n and code and bool(l.strip()) and "```" != l.strip():
+                                    codeblock = codeblock + "```python\n" + l
+                                elif bool(l.strip()) and "```python" == l.strip() and not code: 
+                                    codeblock = codeblock + l
+                                    code = True
+                                # make sure one elif won't be skipped/blocked by another elif above
+                                elif bool(l.strip()) and code and "```" != l.strip()and count < idx + n: 
+                                    codeblock = codeblock + l
+                                elif bool(l.strip()) and code and "```" == l.strip():
+                                    codeblock = codeblock + l                    
+                                    code = False
+                                    display_md(codeblock)
+                                    codeblock = ""
+                                elif bool(l.strip()) and code and count == idx + n:
+                                    codeblock = codeblock + l
+                                    codeblock = codeblock + "# code block continues below" + "\n"                                        
+                                    codeblock = codeblock + "```" + "\n"
+                                    code = False
+                                    display_md(codeblock)
+                                    codeblock = ""
+                                elif bool(l.strip()) and not code: 
+                                    display_md(l)
 
 
-# %% ../nbs/lib/utils.ipynb 163
+# %% ../nbs/lib/utils.ipynb 167
 def fastlistnbs(flt_fd="fastai"): # other options: "part2", "all"
     "display all my commented notebooks subheadings in a long list. Best to work with fastnbs together."
     nbs, folder, _, _, _, _ = get_all_nbs()
@@ -656,7 +678,7 @@ def fastlistnbs(flt_fd="fastai"): # other options: "part2", "all"
                 if "##" in l:
                     print(l, end="") # no extra new line between each line printed       
 
-# %% ../nbs/lib/utils.ipynb 168
+# %% ../nbs/lib/utils.ipynb 172
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'

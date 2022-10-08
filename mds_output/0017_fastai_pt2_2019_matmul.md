@@ -731,7 +731,6 @@ m1.shape,m2.shape
 
 ### [1:22:33](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=4953) - What to do next; after having matrix multiplication fast enough, we need to initialize weights and biases, then create ReLU, then backward
 
-[1:23:03](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=4983)
 
 ## Export
 
