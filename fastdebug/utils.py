@@ -495,7 +495,7 @@ def display_block(line, file, output=False, keywords=""):
     else: print(section_content)
 
 
-# %% ../nbs/lib/utils.ipynb 140
+# %% ../nbs/lib/utils.ipynb 142
 def fastnbs(question:str, # query in string
             filter_folder="all", # options: all, fastai, part2
             output=False, # True for nice print of cell output
@@ -521,22 +521,23 @@ fastnbs() can use keywords to search learning points (a section title and a sect
         file_name = file_fullname.split('/')[-1]
         with open(file_fullname, 'r') as file:
             for count, l in enumerate(file):
-                truelst = [q.lower() in l.lower() for q in questlst]
-                pct = sum(truelst)/len(truelst)
-                if pct >= accu and (l.startswith("##") or l.startswith("###") or l.startswith("####")):
-                    if db: 
-                        head1 = f"keyword match is {pct}, Found a section: in {file_name}"
-                        head1 = highlight(str(pct), head1)
-                        head1 = highlight(file_name, head1)
-                        display_md(head1)
-                        highlighted_line = highlight(question, l, db=db)                        
-#                         print()
-                    display_block(l, file_fullname, output=output, keywords=question)
-                    if nb: 
-                        openNB(file_name, db=db)
-                        openNBKaggle(file_name, db=db)
+                if l.startswith("##") or l.startswith("###") or l.startswith("####"):
+                    truelst = [q.lower() in l.lower() for q in questlst]
+                    pct = sum(truelst)/len(truelst)
+                    if pct >= accu:
+                        if db: 
+                            head1 = f"keyword match is {pct}, Found a section: in {file_name}"
+                            head1 = highlight(str(pct), head1)
+                            head1 = highlight(file_name, head1)
+                            display_md(head1)
+                            highlighted_line = highlight(question, l, db=db)                        
+    #                         print()
+                        display_block(l, file_fullname, output=output, keywords=question)
+                        if nb: 
+                            openNB(file_name, db=db)
+                            openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/utils.ipynb 144
+# %% ../nbs/lib/utils.ipynb 146
 def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
     "using keywords to search learning points from commented sources files"
     questlst = question.split(' ')
@@ -567,29 +568,18 @@ def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/utils.ipynb 157
+# %% ../nbs/lib/utils.ipynb 159
 def fastnotes(question:str, 
               search_code:bool=False, # if search code, do check True for nicer printing
               accu:float=0.8, 
               n=2, 
               folder="all", # folder: 'lec' or 'live' or 'all'
+              nb=True, # to provide a link to open notebook
               db=False):
-    "using key words to search notes and display the found line and lines surround it"
+    "using key words to search every line of fastai notes (include codes) \
+and display the found line and lines surround it. more detailed search than fastnbs."
     questlst = question.split(' ')
-#     root = '/Users/Natsume/Documents/divefastai/'
     root = '/Users/Natsume/Documents/fastdebug/mds/'
-#     folder1 = '2022_part1/'
-#     folder2 = '2022_livecoding/'
-#     folder1 = '2019_part2/'
-#     folder2 = '2019_walkthrus'
-#     lectures = [root + folder1 + f for f in os.listdir(root + folder1)]
-#     livecodings = [root + folder2 + f for f in os.listdir(root + folder2)]
-#     all_notes = lectures + livecodings
-#     if folder == "lec": files = lectures
-#     elif folder == "live": files = livecodings
-#     else: files = all_notes
-
-#     for f in files:
     all_md_files = []
     for f in os.listdir(root):  
         if f.endswith(".md"): all_md_files.append(root + f)
@@ -615,18 +605,11 @@ def fastnotes(question:str,
                     head1 = highlight(str(pct), head1)
                     head1 = highlight(f.split(root)[1], head1)
                     display_md(head1)
-#                         l = highlight(question, l, db=db)
-#                         display_md(l)
-                    print()                        
-#                         print('{:=<157}'.format(f"Show {n} lines above and after in {f}:"))
-#                         head2 = f"Show {n} lines above and after in {f.split(root)[1]}:"
-#                         head2 = highlight(f.split(root)[1], head2)
-#                         head2 = highlight(str(n), head2)
-#                         display_md(head2)                        
+                    print()                                              
                     idx = count
                     code = search_code
                     codeblock = ""
-                    with open(f, 'r') as file:
+                    with open(f, 'r') as file: # must open the file again to read surrounding lines
                         for count, l in enumerate(file):
                             if count >= idx - n and count <= idx + n:
                                 if count == idx and bool(l.strip()) and not code: 
@@ -655,9 +638,12 @@ def fastnotes(question:str,
                                     codeblock = ""
                                 elif bool(l.strip()) and not code: 
                                     display_md(l)
+                    if nb:
+                        file_name = f.split('/')[-1]
+                        openNB(file_name, db=db)
+                        openNBKaggle(file_name, db=db)
 
-
-# %% ../nbs/lib/utils.ipynb 167
+# %% ../nbs/lib/utils.ipynb 169
 def fastlistnbs(flt_fd="fastai"): # other options: "part2", "all"
     "display all my commented notebooks subheadings in a long list. Best to work with fastnbs together."
     nbs, folder, _, _, _, _ = get_all_nbs()
@@ -678,7 +664,7 @@ def fastlistnbs(flt_fd="fastai"): # other options: "part2", "all"
                 if "##" in l:
                     print(l, end="") # no extra new line between each line printed       
 
-# %% ../nbs/lib/utils.ipynb 172
+# %% ../nbs/lib/utils.ipynb 174
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
