@@ -11,7 +11,10 @@ skip_exec: true
 ```
 
 ## The forward and backward passes
-### [1:23:03](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=4983) - how to download and prepare the mnist dataset and wrap the process into a function called `get_data`; 
+
+### get_data
+
+#### [1:23:03](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=4983) - how to download and prepare the mnist dataset and wrap the process into a function called `get_data`; 
 
 
 
@@ -34,7 +37,9 @@ def get_data():
 x_train,y_train,x_valid,y_valid = get_data()
 ```
 
-### [1:23:48](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5028) - how to create `normalize` function to use broadcast to normalize the Xs and Ys; what does normalization to Xs and Ys mean (make Xs and Ys to have a distribution whose mean is 0 and std is 1)? how to make the mean and std of Xs and Ys to be 0 and 1 (using the formula of normalization below) Why we don't use validation set's mean and std to normalization Xs and Ys of validation set but use those of training set? (make sure validation set and training set share the same scale as training set) What example did Jeremy give to explain the importance of using training set's mean and std for normalization of validation set
+### normalize(x, m, s)
+
+#### [1:23:48](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5028) - how to create `normalize` function to use broadcast to normalize the Xs and Ys; what does normalization to Xs and Ys mean (make Xs and Ys to have a distribution whose mean is 0 and std is 1)? how to make the mean and std of Xs and Ys to be 0 and 1 (using the formula of normalization below) Why we don't use validation set's mean and std to normalization Xs and Ys of validation set but use those of training set? (make sure validation set and training set share the same scale as training set) What example did Jeremy give to explain the importance of using training set's mean and std for normalization of validation set
 
 
 
@@ -56,7 +61,9 @@ x_train = normalize(x_train, train_mean, train_std)
 x_valid = normalize(x_valid, train_mean, train_std)
 ```
 
-### [1:24:52](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5092) - how to check the mean and std values are close to 0 and 1 using `test_near_zero` using `assert`
+### test_near_zero  and  assert
+
+#### [1:24:52](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5092) - how to check the mean and std values are close to 0 and 1 using `test_near_zero` using `assert`
 
 
 ```
@@ -76,7 +83,9 @@ test_near_zero(x_train.mean())
 test_near_zero(1-x_train.std())
 ```
 
-### [1:25:16](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5116) - how to get the number of activations of each layer `n` (rows of input), `m` (columns of input), `c` (number of targets/classes) from the shape of `x_train` and `y_train`
+### getting dimensions of weights of different layers
+
+#### [1:25:16](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5116) - how to get the number of activations of each layer `n` (rows of input), `m` (columns of input), `c` (number of targets/classes) from the shape of `x_train` and `y_train`
 
 
 
@@ -90,10 +99,13 @@ n,m,c
 
 ## Basic architecture
 
-### [1:25:36](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5136) - Let's create a simplest neuralnet with one hidden layer and a single output layer using mean absolute error for the single output rather than cross-entropy for 10 output; 
+### initialize weights/biases using Xavier init to ensure the first layer's activation with mean 0 and std 1
+
+#### [1:25:36](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5136) - Let's create a simplest neuralnet with one hidden layer and a single output layer using mean absolute error for the single output rather than cross-entropy for 10 output; 
 [Jump_to lesson 8 video](https://course19.fast.ai/videos/?lesson=8&t=5128)
 
-### [1:26:15](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5175) - how to use the matricies with random number for creating the weights and biases between input layer and the hidden layer, and the weights and biases between the hidden layer and the output layer; [1:26:46](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5206) - with only randomly initialized weights and biases, the activations of the hidden layer will have terrible mean and std   [1:27:36](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5256) - the simplifed version of he init or kaiming init for initializing weights can ensure the activation to have mean 0 and std 1; and use `test_near_zero` to test whether the activation mean is near 0 and std is near 1; [1:29:04](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5344) - how important is the initialization of weights and biases to make training work and even researches to prove with carful initialization of weights without normalization of activations or inputs can make training work for a model with 10000 layers; and even one-cycle training and super convergence are turned out to be all about initializations
+
+#### [1:26:15](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5175) - how to use the matricies with random number for creating the weights and biases between input layer and the hidden layer, and the weights and biases between the hidden layer and the output layer; [1:26:46](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5206) - with only randomly initialized weights and biases, the activations of the hidden layer will have terrible mean and std   [1:27:36](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5256) - the simplifed version of Xavier init for initializing weights can ensure the activation to have mean 0 and std 1; and use `test_near_zero` to test whether the activation mean is near 0 and std is near 1; [1:29:04](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5344) - how important is the initialization of weights and biases to make training work; there are even researches to prove with carful initialization of weights without normalization of activations or inputs can make training work for a model with even 10000 layers; and even one-cycle training and super convergence are turned out to be all about initializations
 
 input shape [n, m] xx (weights [m, nh] + biases[nh]) => hidden layer (activations or neurons) [nh]
 hidden layer (activation layer) shape [hn] xx (weights [hn, 1] + biases [1] => output layer (neuron) [1]
@@ -105,6 +117,8 @@ nh = 50
 ```
 
 [Tinker practice](https://course19.fast.ai/videos/?lesson=8&t=5255)
+
+#### using standared xavier init to initialize weights and biases
 
 
 ```
@@ -121,16 +135,22 @@ test_near_zero(w1.mean())
 test_near_zero(w1.std()-1/math.sqrt(m))
 ```
 
+#### x_valid has alread by normalized to have mean 0 and std 1
+
 
 ```
 # This should be ~ (0,1) (mean,std)...
 x_valid.mean(),x_valid.std()
 ```
 
+#### write linear layer from scratch
+
 
 ```
 def lin(x, w, b): return x@w + b
 ```
+
+#### check mean and std of activations of first layer
 
 
 ```
@@ -143,7 +163,9 @@ t = lin(x_valid, w1, b1)
 t.mean(),t.std()
 ```
 
-### [1:30:09](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5409) - what is the first layer look like; how should we write relu function to maximize the speed `x.clamp_min(0.)`; how should we write functions in pytorch to maximize the speed in general;
+### writing a linear layer with relu from scratch
+
+#### [1:30:09](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5409) - what is the first layer look like; how should we write relu function to maximize the speed `x.clamp_min(0.)`; how should we write functions in pytorch to maximize the speed in general;
 
 
 

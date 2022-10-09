@@ -457,53 +457,45 @@ def display_md(text):
     from IPython.display import Markdown
     display(Markdown(text))                
 
-# %% ../nbs/lib/utils.ipynb 132
+# %% ../nbs/lib/utils.ipynb 135
 def display_block(line, file, output=False, keywords=""):
     "`line` is a section title, find all subsequent lines which belongs to the same section and display them together"
     from IPython.display import Markdown
     entire = ""
-    if file.endswith(".md") or file.endswith(".ipynb"):
+    if file.endswith(".md"): #or file.endswith(".ipynb"):
         with open(file, 'r') as file:
             entire = file.read()
-    else:
-        entire = file
-        
+            
     belowline = entire.split(line)[1]
     head_no = line.count("#")
-    lochead2 = belowline.find("##")
-    lochead3 = belowline.find("###")
-    lochead4 = belowline.find("####")
-    loclst = [lochead2,lochead3, lochead4]
-    loclst = [i for i in loclst if i != -1]
-    num_hash = 0
-    if bool(loclst):
-        if lochead2 == min(loclst):
-            num_hash = 2
-        elif lochead3 == min(loclst):
-            num_hash = 3
-        elif lochead4 == min(loclst):
-            num_hash = 4
-    if num_hash == 0:
-        section_content = belowline
-    else:
-        section_content = belowline.split("#"*num_hash)[0]
-#         entire_content = line + "\n" + section_content
-#         display(Markdown(entire_content))        
+    full_section = "" + f"This section contains only the current heading {head_no} and its subheadings"
+    lst_belowline = belowline.split("\n")
+    for idx, l in zip(range(len(lst_belowline)), lst_belowline):
+        if l.strip().startswith("#"*(head_no-1)+" ") and not bool(lst_belowline[idx-1].strip()) \
+        and not bool(lst_belowline[idx+1].strip()):
+            full_section = full_section + f"start of heading {head_no-1}" + "\n" + l
+            break
+        elif l.strip().startswith("#"*head_no + " "):
+            full_section = full_section + f"start of another heading {head_no}" + "\n" + l
+            break
+        else:  full_section = full_section + l + "\n"
+    
     title_hl = highlight(keywords, line)
     display(Markdown(title_hl))
-    if not output: display(Markdown(section_content))
-    else: print(section_content)
+    if not output: display(Markdown(full_section))
+    else: print(full_section)
 
 
-# %% ../nbs/lib/utils.ipynb 142
+# %% ../nbs/lib/utils.ipynb 145
 def fastnbs(question:str, # query in string
             filter_folder="all", # options: all, fastai, part2
             output=False, # True for nice print of cell output
             accu:float=0.8, 
             nb=True, 
             db=False):
-    "check with fastlistnbs() to find interesting things to search \
-fastnbs() can use keywords to search learning points (a section title and a section itself) from my documented fastai notebooks"
+    "check with fastlistnbs() to skim through all the learning points as section titles; \
+then use fastnotes() to find interesting lines which can be notes or codes, and finally \
+use fastnbs() display the entire learning points section including notes and codes."
     questlst = question.split(' ')
     mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd = get_all_nbs()
     if not output: mds = mds_no_output
@@ -521,7 +513,7 @@ fastnbs() can use keywords to search learning points (a section title and a sect
         file_name = file_fullname.split('/')[-1]
         with open(file_fullname, 'r') as file:
             for count, l in enumerate(file):
-                if l.startswith("##") or l.startswith("###") or l.startswith("####"):
+                if l.startswith("## ") or l.startswith("### ") or l.startswith("#### "):
                     truelst = [q.lower() in l.lower() for q in questlst]
                     pct = sum(truelst)/len(truelst)
                     if pct >= accu:
@@ -537,7 +529,7 @@ fastnbs() can use keywords to search learning points (a section title and a sect
                             openNB(file_name, db=db)
                             openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/utils.ipynb 146
+# %% ../nbs/lib/utils.ipynb 149
 def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
     "using keywords to search learning points from commented sources files"
     questlst = question.split(' ')
@@ -568,7 +560,7 @@ def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/utils.ipynb 159
+# %% ../nbs/lib/utils.ipynb 162
 def fastnotes(question:str, 
               search_code:bool=False, # if search code, do check True for nicer printing
               accu:float=0.8, 
@@ -577,7 +569,9 @@ def fastnotes(question:str,
               nb=True, # to provide a link to open notebook
               db=False):
     "using key words to search every line of fastai notes (include codes) \
-and display the found line and lines surround it. more detailed search than fastnbs."
+and display the found line and lines surround it. fastnotes can search both notes and codes\
+to do primary search, and then use fastnbs to display the whole interested section instead\
+of surrounding lines."
     questlst = question.split(' ')
     root = '/Users/Natsume/Documents/fastdebug/mds/'
     all_md_files = []
@@ -643,7 +637,7 @@ and display the found line and lines surround it. more detailed search than fast
                         openNB(file_name, db=db)
                         openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/utils.ipynb 169
+# %% ../nbs/lib/utils.ipynb 172
 def fastlistnbs(flt_fd="fastai"): # other options: "part2", "all"
     "display all my commented notebooks subheadings in a long list. Best to work with fastnbs together."
     nbs, folder, _, _, _, _ = get_all_nbs()
@@ -664,7 +658,7 @@ def fastlistnbs(flt_fd="fastai"): # other options: "part2", "all"
                 if "##" in l:
                     print(l, end="") # no extra new line between each line printed       
 
-# %% ../nbs/lib/utils.ipynb 174
+# %% ../nbs/lib/utils.ipynb 177
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'

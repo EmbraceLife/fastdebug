@@ -11,6 +11,36 @@ skip_exec: true
 ```
 
 ## Does nn.Conv2d init work well?
+### [00:00](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=0) one of the purpose of part 2 is to demonstrate how Jeremy does research; Jeremy is going to show us how he does research to find out how well does a mysterious line of code in the pytorch work
+
+[01:28](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=88) - 
+
+[02:28](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=148) - how to resize a 3 color channel image into a single changel image 28x28
+
+[03:06](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=186) - when would Jeremy create a function during research; experiment to show that the line is not performing well
+
+[08:55](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=535) - Jeremy writing his own version of kaiming init
+
+[15:59](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=959) - Jeremy reimplemented what pytorch had on kaiming init; Jeremy used an example to test on how useless or useful of the line in pytorch;
+
+[17:30](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1050) -  using kaiming_uniform_ to test the line, and the result is better but still problematic
+
+[18:58](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1138) - look at 2b why need a good init; why in the past neuralnet is so hard to train; why weights initialization is so crucial to training or learning
+
+[21:04](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1264) - Sylvian further explained something interesting 
+
+[21:30](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1290) - how pytorch team responded
+
+[23:52](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1433) - many init papers and approaches
+
+[27:11](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1631) - ground up so that we can ask questions on pytorch strange and historical edges
+
+[28:56](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1736) - let's train a model with our fully connected architecture with cross-entropy
+
+[30:21](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1821) - how to understand  log cross-entropy from scratch
+
+[34:26](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=2066) - how to write negative log likelihood in pytorch with a trick
+
 
 [Jump_to lesson 9 video](https://course19.fast.ai/videos/?lesson=9&t=21)
 
@@ -49,26 +79,12 @@ x_train.shape,x_valid.shape
 ```
 
 
-
-
-    (torch.Size([50000, 1, 28, 28]), torch.Size([10000, 1, 28, 28]))
-
-
-
-
 ```
 n,*_ = x_train.shape
 c = y_train.max()+1
 nh = 32
 n,c
 ```
-
-
-
-
-    (50000, tensor(10))
-
-
 
 
 ```
@@ -86,13 +102,6 @@ x.shape
 ```
 
 
-
-
-    torch.Size([100, 1, 28, 28])
-
-
-
-
 ```
 def stats(x): return x.mean(),x.std()
 ```
@@ -103,26 +112,9 @@ l1.weight.shape
 ```
 
 
-
-
-    torch.Size([32, 1, 5, 5])
-
-
-
-
 ```
 stats(l1.weight),stats(l1.bias)
 ```
-
-
-
-
-    ((tensor(-0.0043, grad_fn=<MeanBackward1>),
-      tensor(0.1156, grad_fn=<StdBackward0>)),
-     (tensor(0.0212, grad_fn=<MeanBackward1>),
-      tensor(0.1176, grad_fn=<StdBackward0>)))
-
-
 
 
 ```
@@ -135,26 +127,10 @@ stats(t)
 ```
 
 
-
-
-    (tensor(0.0107, grad_fn=<MeanBackward1>),
-     tensor(0.5978, grad_fn=<StdBackward0>))
-
-
-
-
 ```
 init.kaiming_normal_(l1.weight, a=1.)
 stats(l1(x))
 ```
-
-
-
-
-    (tensor(0.0267, grad_fn=<MeanBackward1>),
-     tensor(1.1067, grad_fn=<StdBackward0>))
-
-
 
 
 ```
@@ -173,38 +149,15 @@ stats(f1(x))
 ```
 
 
-
-
-    (tensor(0.5547, grad_fn=<MeanBackward1>),
-     tensor(1.0199, grad_fn=<StdBackward0>))
-
-
-
-
 ```
 l1 = nn.Conv2d(1, nh, 5)
 stats(f1(x))
 ```
 
 
-
-
-    (tensor(0.2219, grad_fn=<MeanBackward1>),
-     tensor(0.3653, grad_fn=<StdBackward0>))
-
-
-
-
 ```
 l1.weight.shape
 ```
-
-
-
-
-    torch.Size([32, 1, 5, 5])
-
-
 
 
 ```
@@ -214,24 +167,10 @@ rec_fs
 ```
 
 
-
-
-    25
-
-
-
-
 ```
 nf,ni,*_ = l1.weight.shape
 nf,ni
 ```
-
-
-
-
-    (32, 1)
-
-
 
 
 ```
@@ -239,13 +178,6 @@ fan_in  = ni*rec_fs
 fan_out = nf*rec_fs
 fan_in,fan_out
 ```
-
-
-
-
-    (25, 800)
-
-
 
 
 ```
@@ -258,39 +190,14 @@ gain(1),gain(0),gain(0.01),gain(0.1),gain(math.sqrt(5.))
 ```
 
 
-
-
-    (1.0,
-     1.4142135623730951,
-     1.4141428569978354,
-     1.4071950894605838,
-     0.5773502691896257)
-
-
-
-
 ```
 torch.zeros(10000).uniform_(-1,1).std()
 ```
 
 
-
-
-    tensor(0.5788)
-
-
-
-
 ```
 1/math.sqrt(3.)
 ```
-
-
-
-
-    0.5773502691896258
-
-
 
 
 ```
@@ -310,26 +217,10 @@ stats(f1(x))
 ```
 
 
-
-
-    (tensor(0.5603, grad_fn=<MeanBackward1>),
-     tensor(1.0921, grad_fn=<StdBackward0>))
-
-
-
-
 ```
 kaiming2(l1.weight, a=math.sqrt(5.))
 stats(f1(x))
 ```
-
-
-
-
-    (tensor(0.2186, grad_fn=<MeanBackward1>),
-     tensor(0.3437, grad_fn=<StdBackward0>))
-
-
 
 
 ```
@@ -361,14 +252,6 @@ stats(t)
 ```
 
 
-
-
-    (tensor(0.0875, grad_fn=<MeanBackward1>),
-     tensor(0.0065, grad_fn=<StdBackward0>))
-
-
-
-
 ```
 l = mse(t,y)
 l.backward()
@@ -378,13 +261,6 @@ l.backward()
 ```
 stats(m[0].weight.grad)
 ```
-
-
-
-
-    (tensor(0.0054), tensor(0.0333))
-
-
 
 
 ```
@@ -406,26 +282,11 @@ stats(t)
 ```
 
 
-
-
-    (tensor(-0.0352, grad_fn=<MeanBackward1>),
-     tensor(0.4043, grad_fn=<StdBackward0>))
-
-
-
-
 ```
 l = mse(t,y)
 l.backward()
 stats(m[0].weight.grad)
 ```
-
-
-
-
-    (tensor(0.0093), tensor(0.4231))
-
-
 
 ## Export
 

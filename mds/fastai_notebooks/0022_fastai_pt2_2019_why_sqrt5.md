@@ -28,6 +28,37 @@ skip_exec: true
 ```
 
 ## Does nn.Conv2d init work well?
+### [00:00](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=0) one of the purpose of part 2 is to demonstrate how Jeremy does research; Jeremy is going to show us how he does research to find out how well does a mysterious line of code in the pytorch work
+
+[01:28](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=88) - 
+
+[02:28](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=148) - how to resize a 3 color channel image into a single changel image 28x28
+
+[03:06](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=186) - when would Jeremy create a function during research; experiment to show that the line is not performing well
+
+[08:55](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=535) - Jeremy writing his own version of kaiming init
+
+[15:59](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=959) - Jeremy reimplemented what pytorch had on kaiming init; Jeremy used an example to test on how useless or useful of the line in pytorch;
+
+[17:30](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1050) -  using kaiming_uniform_ to test the line, and the result is better but still problematic
+
+[18:58](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1138) - look at 2b why need a good init; why in the past neuralnet is so hard to train; why weights initialization is so crucial to training or learning
+
+
+[21:04](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1264) - Sylvian further explained something interesting 
+
+[21:30](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1290) - how pytorch team responded
+
+[23:52](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1433) - many init papers and approaches
+
+[27:11](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1631) - ground up so that we can ask questions on pytorch strange and historical edges
+
+[28:56](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1736) - let's train a model with our fully connected architecture with cross-entropy
+
+[30:21](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=1821) - how to understand  log cross-entropy from scratch
+
+[34:26](https://youtu.be/AcA8HAYh7IE?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=2066) - how to write negative log likelihood in pytorch with a trick
+
 
 
 [Jump_to lesson 9 video](https://course19.fast.ai/videos/?lesson=9&t=21)
