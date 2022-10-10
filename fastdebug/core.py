@@ -4,7 +4,7 @@
 __all__ = ['defaults', 'pprint', 'inspect', 'dbcolors', 'randomColor', 'colorize', 'strip_ansi', 'printright',
            'printsrclinewithidx', 'printsrc', 'dbprintinsert', 'Fastdb', 'randomize_cmtparts_color', 'reliveonce']
 
-# %% ../nbs/lib/00_core.ipynb 8
+# %% ../nbs/lib/00_core.ipynb 6
 defaults = type('defaults', (object,), {'margin': 157, # align to the right by 157
                                         'orisrc': None, # keep a copy of original official src code
                                         'outenv': globals(), # outside global env
@@ -13,22 +13,22 @@ defaults = type('defaults', (object,), {'margin': 157, # align to the right by 1
                                         # 'src': None, # official src
                                        }) 
 
-# %% ../nbs/lib/00_core.ipynb 23
+# %% ../nbs/lib/00_core.ipynb 21
 import pprint
 
-# %% ../nbs/lib/00_core.ipynb 24
+# %% ../nbs/lib/00_core.ipynb 22
 pprint = pprint.pprint # so that pprint is included inside __all__
 
-# %% ../nbs/lib/00_core.ipynb 35
+# %% ../nbs/lib/00_core.ipynb 33
 import inspect
 
-# %% ../nbs/lib/00_core.ipynb 36
+# %% ../nbs/lib/00_core.ipynb 34
 inspect = inspect # so that inspect is included inside __all__
 
-# %% ../nbs/lib/00_core.ipynb 56
+# %% ../nbs/lib/00_core.ipynb 54
 from fastcore.basics import *
 
-# %% ../nbs/lib/00_core.ipynb 57
+# %% ../nbs/lib/00_core.ipynb 55
 class dbcolors: # removing ;1 will return to normal color, with ;1 is bright color
     # "to access color in string for print, using dbcolors.g or dbcolors.r etc."
     g = '\033[92;1m' #GREEN
@@ -40,10 +40,10 @@ class dbcolors: # removing ;1 will return to normal color, with ;1 is bright col
     w = '\u001b[37;1m' # white
     reset = '\033[0m' #RESET COLOR
 
-# %% ../nbs/lib/00_core.ipynb 58
+# %% ../nbs/lib/00_core.ipynb 56
 import random
 
-# %% ../nbs/lib/00_core.ipynb 60
+# %% ../nbs/lib/00_core.ipynb 58
 def randomColor():
     "create a random color by return a random dbcolor from dbcolors"
     colst = ['b', 'c', 'm', 'r', 'y', 'w', 'g']
@@ -51,7 +51,7 @@ def randomColor():
 
     return dictNumColor[random.randint(0, 6)]
 
-# %% ../nbs/lib/00_core.ipynb 62
+# %% ../nbs/lib/00_core.ipynb 60
 def colorize(cmt, color:str=None):
     "return the string with dbcolors"
     if type(cmt) != str:
@@ -73,15 +73,15 @@ def colorize(cmt, color:str=None):
     else: 
         return cmt
 
-# %% ../nbs/lib/00_core.ipynb 66
+# %% ../nbs/lib/00_core.ipynb 64
 import re
 
-# %% ../nbs/lib/00_core.ipynb 67
+# %% ../nbs/lib/00_core.ipynb 65
 def strip_ansi(source):
     "to make printright work using regex"
     return re.sub(r'\033\[(\d|;)+?m', '', source)
 
-# %% ../nbs/lib/00_core.ipynb 71
+# %% ../nbs/lib/00_core.ipynb 69
 def printright(blocks, margin:int=157):
     "print a block of text to the right of the cell"
     lst = blocks.split('\n')
@@ -90,10 +90,10 @@ def printright(blocks, margin:int=157):
     for l in lst:
         print(' '*indent + format(l))
 
-# %% ../nbs/lib/00_core.ipynb 86
+# %% ../nbs/lib/00_core.ipynb 84
 import inspect
 
-# %% ../nbs/lib/00_core.ipynb 101
+# %% ../nbs/lib/00_core.ipynb 99
 def printsrclinewithidx(idx, l, fill=" "):
     "add idx number to a srcline"
     totallen = 157
@@ -101,7 +101,7 @@ def printsrclinewithidx(idx, l, fill=" "):
     lenl = len(l)
     print(l + fill*(totallen-lenl-lenidx) + "(" + str(idx) + ")")
 
-# %% ../nbs/lib/00_core.ipynb 108
+# %% ../nbs/lib/00_core.ipynb 106
 def printsrc(src, # name of src code such as foo, or delegates
              dbcode, # string of codes or int of code idx number
              cmt,
@@ -140,10 +140,10 @@ def printsrc(src, # name of src code such as foo, or delegates
             printsrclinewithidx(idx, l)
 
 
-# %% ../nbs/lib/00_core.ipynb 160
+# %% ../nbs/lib/00_core.ipynb 158
 import ast
 
-# %% ../nbs/lib/00_core.ipynb 161
+# %% ../nbs/lib/00_core.ipynb 159
 def dbprintinsert(*codes, env={}): 
     "insert arbitary code expressions into source code for evaluation"
         
@@ -273,7 +273,7 @@ def dbprintinsert(*codes, env={}):
         # the benefit of using global().update(env) is 
         # to ensure we don't need to include the same env fo
 
-# %% ../nbs/lib/00_core.ipynb 271
+# %% ../nbs/lib/00_core.ipynb 269
 class Fastdb():
 
     def __init__(self, 
@@ -301,7 +301,7 @@ class Fastdb():
         if db:
             print(f"self.orisrc: {self.orisrc.__name__} is self.outenv['{self.orisrc.__name__}']: {self.orisrc is self.outenv[self.orisrc.__name__]}")
 
-# %% ../nbs/lib/00_core.ipynb 318
+# %% ../nbs/lib/00_core.ipynb 316
 @patch
 def printtitle(self:Fastdb):
     "print title which includes src name, line number under investigation, example."
@@ -312,7 +312,7 @@ def printtitle(self:Fastdb):
     print('{:=^157}'.format(f"     with example {colorize(self.orieg, color='r')}     ")) 
     print()
 
-# %% ../nbs/lib/00_core.ipynb 327
+# %% ../nbs/lib/00_core.ipynb 325
 @patch
 def docsrc(self:Fastdb, 
             idxsrc:int, # idx of a srcline under investigation, can only be int
@@ -345,7 +345,7 @@ def docsrc(self:Fastdb,
     self.run_example(db=db)
 
 
-# %% ../nbs/lib/00_core.ipynb 333
+# %% ../nbs/lib/00_core.ipynb 331
 @patch
 def create_dbsrc_from_string(self:Fastdb):
     "create dbsrc from a string"
@@ -368,7 +368,7 @@ def create_dbsrc_from_string(self:Fastdb):
 #     print(f'create_dbsrc_from_string, self.dbsrcstr: {self.dbsrcstr}')
 #     print(f'create_dbsrc_from_string, inspect.getsource(self.dbsrc): {inspect.getsource(self.dbsrc)}')
 
-# %% ../nbs/lib/00_core.ipynb 337
+# %% ../nbs/lib/00_core.ipynb 335
 @patch
 def create_dbsrc_string(self:Fastdb, idxsrc, *codes):
     "create the dbsrc string"
@@ -420,7 +420,7 @@ def create_dbsrc_string(self:Fastdb, idxsrc, *codes):
     self.dbsrcstr = dbsrc 
 
 
-# %% ../nbs/lib/00_core.ipynb 356
+# %% ../nbs/lib/00_core.ipynb 354
 @patch
 def replaceWithDbsrc(self:Fastdb, db=False):
     "to replace self.orisrc.__name__ with 'self.dbsrc' and assign this new self.eg to self.eg"
@@ -463,7 +463,7 @@ def replaceWithDbsrc(self:Fastdb, db=False):
 
     self.eg = new_eg
 
-# %% ../nbs/lib/00_core.ipynb 369
+# %% ../nbs/lib/00_core.ipynb 367
 @patch
 def run_example(self:Fastdb, db=False):
     "run self.eg with self.dbsrc"
@@ -479,7 +479,7 @@ def run_example(self:Fastdb, db=False):
     self.autoprint()
       
 
-# %% ../nbs/lib/00_core.ipynb 374
+# %% ../nbs/lib/00_core.ipynb 372
 @patch
 def autoprint(self:Fastdb, maxpcell=20):
     "print srcode with appropriate number of lines automatically"
@@ -500,10 +500,10 @@ def autoprint(self:Fastdb, maxpcell=20):
         self.print(maxpcell, 1)
     print()
 
-# %% ../nbs/lib/00_core.ipynb 390
+# %% ../nbs/lib/00_core.ipynb 388
 import os
 
-# %% ../nbs/lib/00_core.ipynb 391
+# %% ../nbs/lib/00_core.ipynb 389
 @patch
 def printcmts1(self:Fastdb, maxlines, save=False):
     "print the entire srcode and save it to a file if save=True"
@@ -572,7 +572,7 @@ def printcmts1(self:Fastdb, maxlines, save=False):
                     f.write('{:<100}'.format(l + "="*(100-lenl-lspace) + f"({idx})") + "\n")                    
 
 
-# %% ../nbs/lib/00_core.ipynb 395
+# %% ../nbs/lib/00_core.ipynb 393
 @patch
 def printcmts2(self:Fastdb, maxlines, part):
     "print the srcodes in parts"
@@ -621,7 +621,7 @@ def printcmts2(self:Fastdb, maxlines, part):
                 print('{:>157}'.format(f"part No.{p+1} out of {numparts} parts"))
                 return
 
-# %% ../nbs/lib/00_core.ipynb 397
+# %% ../nbs/lib/00_core.ipynb 395
 def randomize_cmtparts_color(cmt):
     "give each comment a different color for easy viewing"
     newcmt = ""
@@ -630,7 +630,7 @@ def randomize_cmtparts_color(cmt):
         newcmt = newcmt + colorize(p, color=col) + "; "
     return newcmt
 
-# %% ../nbs/lib/00_core.ipynb 399
+# %% ../nbs/lib/00_core.ipynb 397
 @patch
 def print(self:Fastdb, 
             maxlines:int=33, # maximum num of lines per page
@@ -645,17 +645,17 @@ def print(self:Fastdb,
 
 
 
-# %% ../nbs/lib/00_core.ipynb 405
+# %% ../nbs/lib/00_core.ipynb 403
 @patch
 def goback(self:Fastdb):
     "Return src back to original state."
     self.outenv[self.orisrc.__name__] = self.orisrc
 
-# %% ../nbs/lib/00_core.ipynb 414
+# %% ../nbs/lib/00_core.ipynb 412
 import ipdb 
 # this handles the partial import error
 
-# %% ../nbs/lib/00_core.ipynb 417
+# %% ../nbs/lib/00_core.ipynb 415
 @patch
 def create_explore_str(self:Fastdb):
     "create the explore dbsrc string"
@@ -695,7 +695,7 @@ def create_explore_str(self:Fastdb):
     self.dbsrcstr = dbsrc
 
 
-# %% ../nbs/lib/00_core.ipynb 418
+# %% ../nbs/lib/00_core.ipynb 416
 @patch
 def create_explore_from_string(self:Fastdb):
     "evaluate the explore dbsrc from string"
@@ -707,7 +707,7 @@ def create_explore_from_string(self:Fastdb):
 
     self.dbsrc = locals()[self.orisrc.__name__]
 
-# %% ../nbs/lib/00_core.ipynb 419
+# %% ../nbs/lib/00_core.ipynb 417
 @patch
 def explore(self:Fastdb, 
             idxsrc:int, # idxsrc can be an int or a list of int
@@ -722,10 +722,10 @@ def explore(self:Fastdb,
     
  
 
-# %% ../nbs/lib/00_core.ipynb 423
+# %% ../nbs/lib/00_core.ipynb 421
 import snoop
 
-# %% ../nbs/lib/00_core.ipynb 424
+# %% ../nbs/lib/00_core.ipynb 422
 @patch
 def takeoutExample(self:Fastdb):
     "get the line of example code with srcode name in it"
@@ -735,7 +735,7 @@ def takeoutExample(self:Fastdb):
             example = l
     return example
 
-# %% ../nbs/lib/00_core.ipynb 440
+# %% ../nbs/lib/00_core.ipynb 438
 @patch
 def create_snoop_str(self:Fastdb, 
                      watch:list=None, # add a list to be watched, seems not working or not used correctly?
@@ -778,7 +778,7 @@ def create_snoop_str(self:Fastdb,
                 dbsrc = dbsrc + l + '\n'          
     self.dbsrcstr = dbsrc
 
-# %% ../nbs/lib/00_core.ipynb 443
+# %% ../nbs/lib/00_core.ipynb 441
 @patch
 def create_snoop_from_string(self:Fastdb, db=False):
     "evaluate the snoop dbsrc from string"
@@ -794,7 +794,7 @@ def create_snoop_from_string(self:Fastdb, db=False):
     self.dbsrc = locals()[self.orisrc.__name__]
 
 
-# %% ../nbs/lib/00_core.ipynb 449
+# %% ../nbs/lib/00_core.ipynb 447
 @patch
 def snoop(self:Fastdb, watch:list=None, deco=False, db=False):
     "run snoop on the func or class under investigation only when example is available"
@@ -806,7 +806,7 @@ def snoop(self:Fastdb, watch:list=None, deco=False, db=False):
         self.run_example()
 
 
-# %% ../nbs/lib/00_core.ipynb 457
+# %% ../nbs/lib/00_core.ipynb 455
 def reliveonce(func, # the current func
                oldfunc:str, # the old version of func in string
                alive:bool=True, # True to bring old to live, False to return back to normal
@@ -827,7 +827,7 @@ def reliveonce(func, # the current func
     else:
         func.__globals__[func.__name__] = func.__globals__['safety']
 
-# %% ../nbs/lib/00_core.ipynb 460
+# %% ../nbs/lib/00_core.ipynb 458
 @patch
 def debug(self:Fastdb):
     "to quickly check for clues of errors"

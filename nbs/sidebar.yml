@@ -45,10 +45,19 @@ website:
           - fastai_notebooks/0019_fastai_pt2_2019_lecture1_intro.ipynb
           - fastai_notebooks/0020_fastai_pt2_2019_source_explained.ipynb
           - fastai_notebooks/0021_fastai_pt2_2019_fully_connected.ipynb
+          - fastai_notebooks/0022_fastai_pt2_2019_why_sqrt5.ipynb
       - section: lib
         contents:
           - lib/00_core.ipynb
           - lib/utils.ipynb
+          - section: fastai_from_scratch
+            contents:
+              - lib/fastai_from_scratch/0000_fastscratch_export.ipynb
+      - section: lib
+        contents:
+          - section: fastai_from_scratch
+            contents:
+              - lib/fastai_from_scratch/0001_fastscratch_matmul.ipynb
       - section: questions
         contents:
           - questions/00_question_anno_dict.ipynb
