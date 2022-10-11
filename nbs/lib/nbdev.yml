@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "fastdebug"
+  site-url: "https://EmbraceLife.github.io/fastdebug"
+  description: "make fastai debuggable"
+  repo-branch: master
+  repo-url: "https://github.com/EmbraceLife/fastdebug"
