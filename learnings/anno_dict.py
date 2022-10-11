@@ -9,6 +9,6 @@ test_eq(_f.__annotations__, {'a': int, 'b': L, 'return': str})
 test_eq(anno_dict(_f), {'a': int, 'b': L, 'return': str})
 
 def anno_dict(f):=========================================================================(0)       
-    "`__annotation__ dictionary with `empty` cast to `None`, returning empty if doesn't exist" # [93;1mempty2none works on paramter.default especially when the default is Parameter.empty[0m; [35;1manno_dict works on the types of params, not the value of params[0m; [37;1mso it is odd to use empty2none in anno_dict;[0m;  (1)
+    "`__annotation__ dictionary with `empty` cast to `None`, returning empty if doesn't exist" # [35;1mempty2none works on paramter.default especially when the default is Parameter.empty[0m; [37;1manno_dict works on the types of params, not the value of params[0m; [35;1mso it is odd to use empty2none in anno_dict;[0m;  (1)
     return {k:empty2none(v) for k,v in getattr(f, '__annotations__', {}).items()}=========(2)       
                                                                                                                                                         (3)
