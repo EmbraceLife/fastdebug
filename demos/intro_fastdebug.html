@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="a little tool to help me explore fastai with joy and ease">
+
+<title>fastdebug - Introducing fastdebug</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - Introducing fastdebug">
+<meta property="og:description" content="a little tool to help me explore fastai with joy and ease">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - Introducing fastdebug">
+<meta name="twitter:description" content="a little tool to help me explore fastai with joy and ease">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Introducing fastdebug</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link active">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#references-i-use-when-i-explore" id="toc-references-i-use-when-i-explore" class="nav-link active" data-scroll-target="#references-i-use-when-i-explore">References I use when I explore</a>
+  <ul class="collapse">
+  <li><a href="#fastai-style" id="toc-fastai-style" class="nav-link" data-scroll-target="#fastai-style">fastai style</a></li>
+  </ul></li>
+  <li><a href="#what-is-the-motivation-behind-fastdebug-library" id="toc-what-is-the-motivation-behind-fastdebug-library" class="nav-link" data-scroll-target="#what-is-the-motivation-behind-fastdebug-library">What is the motivation behind <code>fastdebug</code> library?</a></li>
+  <li><a href="#fastdb.explore" id="toc-fastdb.explore" class="nav-link" data-scroll-target="#fastdb.explore">Fastdb.explore</a>
+  <ul class="collapse">
+  <li><a href="#why-not-explore-with-pure-ipdb.set_trace" id="toc-why-not-explore-with-pure-ipdb.set_trace" class="nav-link" data-scroll-target="#why-not-explore-with-pure-ipdb.set_trace">Why not explore with pure <code>ipdb.set_trace</code>?</a></li>
+  <li><a href="#how-to-use-fastdb.explore" id="toc-how-to-use-fastdb.explore" class="nav-link" data-scroll-target="#how-to-use-fastdb.explore">How to use <code>Fastdb.explore</code>?</a></li>
+  </ul></li>
+  <li><a href="#fastdb.snoop" id="toc-fastdb.snoop" class="nav-link" data-scroll-target="#fastdb.snoop">Fastdb.snoop</a></li>
+  <li><a href="#fastdb.docsrc" id="toc-fastdb.docsrc" class="nav-link" data-scroll-target="#fastdb.docsrc">Fastdb.docsrc</a>
+  <ul class="collapse">
+  <li><a href="#import" id="toc-import" class="nav-link" data-scroll-target="#import">Import</a></li>
+  <li><a href="#initiating" id="toc-initiating" class="nav-link" data-scroll-target="#initiating">Initiating</a></li>
+  <li><a href="#what-does-the-first-line-do" id="toc-what-does-the-first-line-do" class="nav-link" data-scroll-target="#what-does-the-first-line-do">What does the first line do?</a></li>
+  <li><a href="#if-i-find-the-src-is-too-long-and-i-customize-the-print-out-of-src-the-way-i-like" id="toc-if-i-find-the-src-is-too-long-and-i-customize-the-print-out-of-src-the-way-i-like" class="nav-link" data-scroll-target="#if-i-find-the-src-is-too-long-and-i-customize-the-print-out-of-src-the-way-i-like">If I find the src is too long, and I customize the print out of src the way I like</a></li>
+  <li><a href="#i-can-write-a-block-of-codes-to-evaluate" id="toc-i-can-write-a-block-of-codes-to-evaluate" class="nav-link" data-scroll-target="#i-can-write-a-block-of-codes-to-evaluate">I can write a block of codes to evaluate</a></li>
+  <li><a href="#print-out-the-entire-src-with-idx-and-comments-when-i-finish-documenting" id="toc-print-out-the-entire-src-with-idx-and-comments-when-i-finish-documenting" class="nav-link" data-scroll-target="#print-out-the-entire-src-with-idx-and-comments-when-i-finish-documenting">Print out the entire src with idx and comments, when I finish documenting</a></li>
+  <li><a href="#after-running-.dbprint-everything-is-back-to-normal-automatically" id="toc-after-running-.dbprint-everything-is-back-to-normal-automatically" class="nav-link" data-scroll-target="#after-running-.dbprint-everything-is-back-to-normal-automatically">After running <code>.dbprint</code>, everything is back to normal automatically</a></li>
+  </ul></li>
+  <li><a href="#install" id="toc-install" class="nav-link" data-scroll-target="#install">Install</a></li>
+  <li><a href="#how-to-use" id="toc-how-to-use" class="nav-link" data-scroll-target="#how-to-use">How to use</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Introducing fastdebug</h1>
+</div>
+
+<div>
+  <div class="description">
+    a little tool to help me explore fastai with joy and ease
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="references-i-use-when-i-explore" class="level2">
+<h2 class="anchored" data-anchor-id="references-i-use-when-i-explore">References I use when I explore</h2>
+<section id="fastai-style" class="level3">
+<h3 class="anchored" data-anchor-id="fastai-style">fastai style</h3>
+<p>What is the fastai coding <a href="https://docs.fast.ai/dev/style.html#style-guide">style</a></p>
+<p>How to do <a href="https://docs.fast.ai/dev/abbr.html">abbreviation</a> the fastai way</p>
+<p>A great example of how fastai libraries can make life more <a href="https://www.fast.ai/2019/08/06/delegation/">comfortable</a></p>
+</section>
+</section>
+<section id="what-is-the-motivation-behind-fastdebug-library" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-the-motivation-behind-fastdebug-library">What is the motivation behind <code>fastdebug</code> library?</h2>
+<p>I have always wanted to explore and learn the fastai libraries thoroughly. However, reading source code is intimidating for beginners even for well-designed and written libraries like fastcore, fastai. So, I have relied on pdbpp to explore source code previously. To do fastai is to do exploratory coding with jupyter, but pdbpp is not working for jupyter at the moment and none of debugging tools I know exactly suit my needs. So, with the help of the amazing nbdev, I created this little library with 4 little tools to assist me explore source code and document my learning along the way.</p>
+<p>Here are the four tools: &gt; Fastdb.snoop(): print out all the executed lines and local vars of the source code I am exploring</p>
+<blockquote class="blockquote">
+<p>Fastdb.explore(9): start pdb at source line 9 or any srcline at my choose</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Fastdb.print(10, 2): print out the 2nd part of source code, given the source code is divded into multi parts (each part has 10 lines)</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Fastdb.docsrc(10, “comments”, “code expression1”, “code expression2”, “multi-line expressions”): to document the leanring of the srcline 10</p>
+</blockquote>
+<p>As you should know now, this lib does two things: explore and document source code. Let’s start with <a href="https://EmbraceLife.github.io/fastdebug/lib/core.html#fastdb.explore"><code>Fastdb.explore</code></a> first on a simple example. If you would like to see it working on a more complex real world example, I have <a href="https://fastcore.fast.ai/meta.html#fixsigmeta"><code>fastcore.meta.FixSigMeta</code></a> <a href="./FixSigMeta.ipynb">ready</a> for you.</p>
+<p>If you find anything confusing or bug-like, please inform me in this forum <a href="https://forums.fast.ai/t/hidden-docs-of-fastcore/98455">post</a>.</p>
+</section>
+<section id="fastdb.explore" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="fastdb.explore">Fastdb.explore</h2>
+<section id="why-not-explore-with-pure-ipdb.set_trace" class="level3">
+<h3 class="anchored" data-anchor-id="why-not-explore-with-pure-ipdb.set_trace">Why not explore with pure <code>ipdb.set_trace</code>?</h3>
+<p><a href="https://EmbraceLife.github.io/fastdebug/lib/core.html#fastdb.explore"><code>Fastdb.explore</code></a> is a wrapper around <code>ipdb.set_trace</code> and make my life easier when I am exploring because:</p>
+<blockquote class="blockquote">
+<p>I don’t need to write <code>from ipdb import set_trace</code> for every notebook</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>I don’t need to manually open the source code file and scroll down the source code</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>I don’t need to insert <code>set_trace()</code> above every line of source code (srcline) I want to start exploring</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>I don’t need to remove <code>set_trace()</code> from the source code every time after exploration</p>
+</blockquote>
+</section>
+<section id="how-to-use-fastdb.explore" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="how-to-use-fastdb.explore">How to use <a href="https://EmbraceLife.github.io/fastdebug/lib/core.html#fastdb.explore"><code>Fastdb.explore</code></a>?</h3>
+<p>Let’s explore the source code of <a href="https://EmbraceLife.github.io/fastdebug/lib/utils.html#whatinside"><code>whatinside</code></a> from <code>fastdebug.utils</code> using this tool.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span> <span class="co"># for making an example </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.test <span class="im">import</span> <span class="op">*</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> inspect</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>.container { width:100% !important; }</style>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastdebug.utils <span class="im">as</span> fu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>whatinside(fu) <span class="co"># this is the example we are going to explore whatinside with</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>fastdebug.utils has: 
+8 items in its __all__, and 
+23 user defined functions, 
+1 classes or class objects, 
+0 builtin funcs and methods, and
+24 callables.
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.core <span class="im">import</span> <span class="op">*</span> <span class="co"># Let's import Fastdb and its dependencies</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># g = locals()</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fdb = Fastdb(whatinside, outloc=g) # first, create an object of Fastdb class, using `whatinside` as param</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(whatinside)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. you can view source code in whole or in parts with the length you set, </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and it gives you srcline idx so that you can set breakpoint with ease.</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: screen</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(<span class="dv">20</span>,<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9)       
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10)      
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+    if not lib:===========================================================================(15)      
+        print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (16)
+    if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(17)      
+    if func: =============================================================================(18)      
+        print(f'The user defined functions are:')=========================================(19)      
+                                                                                                                                     part No.1 out of 2 parts</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. after viewing source code, choose a srcline idx to set breakpoint and write down why I want to explore this line</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">import fastdebug.utils as fu</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">whatinside(fu)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fdb.explore(11)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. you can set multiple breakpoints from the start if you like (but not necessary)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fdb.explore([11, 16, 13])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="fastdb.snoop" class="level2">
+<h2 class="anchored" data-anchor-id="fastdb.snoop">Fastdb.snoop</h2>
+<p>But more often I just want to have an overview of what srclines get run so that I know which lines to dive into and start documenting.</p>
+<p>Note: I borrowed <code>snoop</code> from snoop library and automated it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fdb.snoop()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>06:33:11.07 &gt;&gt;&gt; Call to whatinside in File "/tmp/whatinside.py", line 3
+06:33:11.07 ...... mo = &lt;module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'&gt;
+06:33:11.07 ...... dun = False
+06:33:11.07 ...... func = False
+06:33:11.07 ...... clas = False
+06:33:11.07 ...... bltin = False
+06:33:11.07 ...... lib = False
+06:33:11.07 ...... cal = False
+06:33:11.07    3 | def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
+06:33:11.07   12 |     dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0
+06:33:11.07 .......... dun_all = 8
+06:33:11.07   13 |     funcs = inspect.getmembers(mo, inspect.isfunction)
+06:33:11.07 .......... funcs = [('distribution', &lt;function distribution&gt;), ('expandcell', &lt;function expandcell&gt;), ('inspect_class', &lt;function inspect_class&gt;), ..., ('version', &lt;function version&gt;), ('whatinside', &lt;function whatinside&gt;), ('whichversion', &lt;function whichversion&gt;)]
+06:33:11.07 .......... len(funcs) = 23
+06:33:11.07   14 |     classes = inspect.getmembers(mo, inspect.isclass)
+06:33:11.07 .......... classes = [('ExceptionExpected', &lt;class 'fastcore.test.ExceptionExpected'&gt;)]
+06:33:11.07 .......... len(classes) = 1
+06:33:11.07   15 |     builtins = inspect.getmembers(mo, inspect.isbuiltin)
+06:33:11.07 .......... builtins = []
+06:33:11.07   16 |     callables = inspect.getmembers(mo, callable)
+06:33:11.07 .......... callables = [('ExceptionExpected', &lt;class 'fastcore.test.ExceptionExpected'&gt;), ('distribution', &lt;function distribution&gt;), ('expandcell', &lt;function expandcell&gt;), ..., ('version', &lt;function version&gt;), ('whatinside', &lt;function whatinside&gt;), ('whichversion', &lt;function whichversion&gt;)]
+06:33:11.07 .......... len(callables) = 24
+06:33:11.07   17 |     pkgpath = os.path.dirname(mo.__file__)
+06:33:11.07 .......... pkgpath = '/Users/Natsume/Documents/fastdebug/fastdebug'
+06:33:11.07   18 |     if not lib:
+06:33:11.07   19 |         print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  
+06:33:11.07   20 |     if hasattr(mo, "__all__") and dun: pprint(mo.__all__)
+06:33:11.08   21 |     if func: 
+06:33:11.08   24 |     if clas: 
+06:33:11.08   27 |     if bltin: 
+06:33:11.08   30 |     if cal: 
+06:33:11.08   33 |     if lib: 
+06:33:11.08 &lt;&lt;&lt; Return value from whatinside: None</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating whatinside     ========================================================
+==============================================================     on line None     ==============================================================
+=======================================     with example 
+import fastdebug.utils as fu
+whatinside(fu)
+     =======================================
+
+fastdebug.utils has: 
+8 items in its __all__, and 
+23 user defined functions, 
+1 classes or class objects, 
+0 builtin funcs and methods, and
+24 callables.
+</code></pre>
+</div>
+</div>
+</section>
+<section id="fastdb.docsrc" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="fastdb.docsrc">Fastdb.docsrc</h2>
+<p>After exploring and snooping, if I realize there is something new to learn and maybe want to come back for a second look, I find <code>ipdb</code> and the alike are not designed to document my learning. So, I created <code>docsrc</code> to make my life easier in the following ways:</p>
+<blockquote class="blockquote">
+<p>I won’t need to scroll through a long cell output of pdb commands, src prints and results to find what I learnt during exploration</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>I won’t need to type all the expressions during last exploration to regenerate the findings for me</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>I can choose any srclines to explore and write any sinlge or multi-line expressions to evaluate the srcline</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>I can write down what I learn or what is new on any srcline as comment, and all comments are attached to the src code for review</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>All expressions with results and comments for each srcline under exploration are documented for easy reviews</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Of course, no worry about your original source code, as it is untouched.</p>
+</blockquote>
+<section id="import" class="level3">
+<h3 class="anchored" data-anchor-id="import">Import</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.core <span class="im">import</span> <span class="op">*</span> <span class="co"># to make Fastdb available</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> whatinside <span class="co"># for making an example</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="initiating" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="initiating">Initiating</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> <span class="bu">locals</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(whatinside, outloc<span class="op">=</span>g) <span class="co"># use either fu.whatinside or whatinside is fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">20</span>, part<span class="op">=</span><span class="dv">1</span>) <span class="co"># view the source code with idx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9)       
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10)      
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+    if not lib:===========================================================================(15)      
+        print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (16)
+    if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(17)      
+    if func: =============================================================================(18)      
+        print(f'The user defined functions are:')=========================================(19)      
+                                                                                                                                     part No.1 out of 2 parts</code></pre>
+</div>
+</div>
+</section>
+<section id="what-does-the-first-line-do" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="what-does-the-first-line-do">What does the first line do?</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"whatinside(fu)"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">9</span>, <span class="st">"how many items inside mo.__all__?"</span>, <span class="st">"mo"</span>, <span class="op">\</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="st">"if hasattr(mo, '__all__'):</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="st">    printright(f'mo: </span><span class="sc">{mo}</span><span class="st">')</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="st">    printright(f'mo.__all__: </span><span class="sc">{mo.__all__}</span><span class="st">')</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="st">    printright(f'len(mo.__all__): {len(mo.__all__)}')"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating whatinside     ========================================================
+===============================================================     on line 9     ================================================================
+======================================================     with example whatinside(fu)     =======================================================
+
+print selected srcline with expands below--------
+             ):                                                                                                                                         (7)
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'                                                                (8)
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0==========================================================================================(9)
+                                                                                                                            how many items inside mo.__all__?
+    funcs = inspect.getmembers(mo, inspect.isfunction)                                                                                                  (10)
+    classes = inspect.getmembers(mo, inspect.isclass)                                                                                                   (11)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                           mo =&gt; mo : &lt;module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'&gt;
+
+
+if hasattr(mo, '__all__'):
+    printright(f'mo: {mo}')
+    printright(f'mo.__all__: {mo.__all__}')
+    printright(f'len(mo.__all__): {len(mo.__all__)}')     
+
+Running the code block above =&gt; ====================================================================
+
+                                                                  mo: &lt;module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'&gt;
+                                     mo.__all__: ['expand', 'test_eq', 'test_is', 'expandcell', 'inspect_class', 'ismetaclass', 'whatinside', 'whichversion']
+                                                                                                                                           len(mo.__all__): 8
+====================================================================================================================End of my srcline exploration:
+
+fastdebug.utils has: 
+8 items in its __all__, and 
+23 user defined functions, 
+1 classes or class objects, 
+0 builtin funcs and methods, and
+24 callables.
+
+
+Review srcode with all comments added so far======================================================================================================
+def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10)      
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+    if not lib:===========================================================================(15)      
+        print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (16)
+    if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(17)      
+    if func: =============================================================================(18)      
+        print(f'The user defined functions are:')=========================================(19)      
+                                                                                                                                     part No.1 out of 2 parts
+</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.docsrc(<span class="dv">10</span>, <span class="st">"get all funcs of a module"</span>, <span class="st">"mo"</span>, <span class="st">"inspect.getdoc(inspect.isfunction)"</span>, <span class="op">\</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">"inspect.getdoc(inspect.getmembers)"</span>, <span class="st">"funcs = inspect.getmembers(mo, inspect.isfunction)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating whatinside     ========================================================
+===============================================================     on line 10     ===============================================================
+======================================================     with example whatinside(fu)     =======================================================
+
+print selected srcline with expands below--------
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'                                                                (8)
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0                                                                                          (9)
+    funcs = inspect.getmembers(mo, inspect.isfunction)==================================================================================================(10)
+                                                                                                                                    get all funcs of a module
+    classes = inspect.getmembers(mo, inspect.isclass)                                                                                                   (11)
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                           mo =&gt; mo : &lt;module 'fastdebug.utils' from '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'&gt;
+
+
+inspect.getdoc(inspect.isfunction) =&gt; inspect.getdoc(inspect.isfunction) : Return true if the object is a user-defined function.
+
+Function objects provide these attributes:
+    __doc__         documentation string
+    __name__        name with which this function was defined
+    __code__        code object containing compiled function bytecode
+    __defaults__    tuple of any default values for arguments
+    __globals__     global namespace in which this function was defined
+    __annotations__ dict of parameter annotations
+    __kwdefaults__  dict of keyword only parameters with defaults
+
+
+inspect.getdoc(inspect.getmembers) =&gt; inspect.getdoc(inspect.getmembers) : Return all members of an object as (name, value) pairs sorted by name.
+Optionally, only return members that satisfy a given predicate.
+
+
+funcs = inspect.getmembers(mo, inspect.isfunction) =&gt; funcs: [('distribution', &lt;function distribution&gt;), ('expandcell', &lt;function expandcell&gt;), ('inspect_class', &lt;function inspect_class&gt;), ('is_close', &lt;function is_close&gt;), ('ismetaclass', &lt;function ismetaclass&gt;), ('metadata', &lt;function metadata&gt;), ('nequals', &lt;function nequals&gt;), ('pprint', &lt;function pprint&gt;), ('python_version', &lt;function python_version&gt;), ('test', &lt;function test&gt;), ('test_close', &lt;function test_close&gt;), ('test_eq', &lt;function test_eq&gt;), ('test_eq_type', &lt;function test_eq_type&gt;), ('test_fail', &lt;function test_fail&gt;), ('test_fig_exists', &lt;function test_fig_exists&gt;), ('test_is', &lt;function test_is&gt;), ('test_ne', &lt;function test_ne&gt;), ('test_shuffled', &lt;function test_shuffled&gt;), ('test_stdout', &lt;function test_stdout&gt;), ('test_warns', &lt;function test_warns&gt;), ('version', &lt;function version&gt;), ('whatinside', &lt;function whatinside&gt;), ('whichversion', &lt;function whichversion&gt;)]
+====================================================================================================================End of my srcline exploration:
+
+fastdebug.utils has: 
+8 items in its __all__, and 
+23 user defined functions, 
+1 classes or class objects, 
+0 builtin funcs and methods, and
+24 callables.
+
+
+Review srcode with all comments added so far======================================================================================================
+def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module; 
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+    if not lib:===========================================================================(15)      
+        print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (16)
+    if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(17)      
+    if func: =============================================================================(18)      
+        print(f'The user defined functions are:')=========================================(19)      
+                                                                                                                                     part No.1 out of 2 parts
+</code></pre>
+</div>
+</div>
+</section>
+<section id="if-i-find-the-src-is-too-long-and-i-customize-the-print-out-of-src-the-way-i-like" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="if-i-find-the-src-is-too-long-and-i-customize-the-print-out-of-src-the-way-i-like">If I find the src is too long, and I customize the print out of src the way I like</h3>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>(maxlines<span class="op">=</span><span class="dv">15</span>, part<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module; 
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11)      
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+                                                                                                                                     part No.1 out of 3 parts</code></pre>
+</div>
+</div>
+</section>
+<section id="i-can-write-a-block-of-codes-to-evaluate" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="i-can-write-a-block-of-codes-to-evaluate">I can write a block of codes to evaluate</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastcore.meta <span class="im">as</span> core</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fdb.takExample("whatinside(core)", whatinside=whatinside, core=core)</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"whatinside(core)"</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.docsrc(<span class="dv">11</span>, <span class="st">"get all classes from the module"</span>, <span class="op">\</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="st">"clas = inspect.getmembers(mo, inspect.isclass)</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="st">for c in clas:</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="st">    print(c)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating whatinside     ========================================================
+===============================================================     on line 11     ===============================================================
+=====================================================     with example whatinside(core)     ======================================================
+
+print selected srcline with expands below--------
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0                                                                                          (9)
+    funcs = inspect.getmembers(mo, inspect.isfunction)                                                                                                  (10)
+    classes = inspect.getmembers(mo, inspect.isclass)===================================================================================================(11)
+                                                                                                                              get all classes from the module
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
+    callables = inspect.getmembers(mo, callable)                                                                                                        (13)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+clas = inspect.getmembers(mo, inspect.isclass)
+for c in clas:
+    print(c)                                                                                   
+
+Running the code block above =&gt; ====================================================================
+
+('AutoInit', &lt;class 'fastcore.meta.AutoInit'&gt;)
+('BuiltinFunctionType', &lt;class 'builtin_function_or_method'&gt;)
+('BuiltinMethodType', &lt;class 'builtin_function_or_method'&gt;)
+('BypassNewMeta', &lt;class 'fastcore.meta.BypassNewMeta'&gt;)
+('ExceptionExpected', &lt;class 'fastcore.test.ExceptionExpected'&gt;)
+('FixSigMeta', &lt;class 'fastcore.meta.FixSigMeta'&gt;)
+('FunctionType', &lt;class 'function'&gt;)
+('MethodDescriptorType', &lt;class 'method_descriptor'&gt;)
+('MethodType', &lt;class 'method'&gt;)
+('MethodWrapperType', &lt;class 'method-wrapper'&gt;)
+('NewChkMeta', &lt;class 'fastcore.meta.NewChkMeta'&gt;)
+('NoneType', &lt;class 'NoneType'&gt;)
+('Path', &lt;class 'pathlib.Path'&gt;)
+('PrePostInitMeta', &lt;class 'fastcore.meta.PrePostInitMeta'&gt;)
+('SimpleNamespace', &lt;class 'types.SimpleNamespace'&gt;)
+('WrapperDescriptorType', &lt;class 'wrapper_descriptor'&gt;)
+('attrgetter', &lt;class 'operator.attrgetter'&gt;)
+('itemgetter', &lt;class 'operator.itemgetter'&gt;)
+('partial', &lt;class 'functools.partial'&gt;)
+====================================================================================================================End of my srcline exploration:
+
+fastcore.meta has: 
+13 items in its __all__, and 
+43 user defined functions, 
+19 classes or class objects, 
+2 builtin funcs and methods, and
+74 callables.
+
+
+Review srcode with all comments added so far======================================================================================================
+def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module; 
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module; 
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14)      
+    if not lib:===========================================================================(15)      
+        print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (16)
+    if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(17)      
+    if func: =============================================================================(18)      
+        print(f'The user defined functions are:')=========================================(19)      
+                                                                                                                                     part No.1 out of 2 parts
+</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.docsrc(<span class="dv">14</span>, <span class="st">"get the file path of the module"</span>, <span class="st">"mo.__file__"</span>, <span class="st">"inspect.getdoc(os.path.dirname)"</span>, <span class="st">"pkgpath = os.path.dirname(mo.__file__)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating whatinside     ========================================================
+===============================================================     on line 14     ===============================================================
+=====================================================     with example whatinside(core)     ======================================================
+
+print selected srcline with expands below--------
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)                                                                                                (12)
+    callables = inspect.getmembers(mo, callable)                                                                                                        (13)
+    pkgpath = os.path.dirname(mo.__file__)==============================================================================================================(14)
+                                                                                                                              get the file path of the module
+    if not lib:                                                                                                                                         (15)
+        print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (16)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                          mo.__file__ =&gt; mo.__file__ : /Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore/meta.py
+
+
+                                           inspect.getdoc(os.path.dirname) =&gt; inspect.getdoc(os.path.dirname) : Returns the directory component of a pathname
+
+
+                                            pkgpath = os.path.dirname(mo.__file__) =&gt; pkgpath: /Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore
+====================================================================================================================End of my srcline exploration:
+
+fastcore.meta has: 
+13 items in its __all__, and 
+43 user defined functions, 
+19 classes or class objects, 
+2 builtin funcs and methods, and
+74 callables.
+
+
+Review srcode with all comments added so far======================================================================================================
+def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module; 
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module; 
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14) # get the file path of the module; 
+    if not lib:===========================================================================(15)      
+        print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (16)
+    if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(17)      
+    if func: =============================================================================(18)      
+        print(f'The user defined functions are:')=========================================(19)      
+                                                                                                                                     part No.1 out of 2 parts
+</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fdb.takExample("whatinside(core, lib=True)", whatinside=whatinside, core=core)</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"whatinside(core, lib=True)"</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>dbsrc <span class="op">=</span> fdb.docsrc(<span class="dv">30</span>, <span class="st">"get names of all modules of a lib"</span>, <span class="st">"pkgpath"</span>, <span class="st">"inspect.getdoc(pkgutil.iter_modules)"</span>, <span class="op">\</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="st">"for a, b, c in pkgutil.iter_modules([pkgpath]):</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="st">    printright(f'</span><span class="sc">{a}</span><span class="st"> ; </span><span class="sc">{b}</span><span class="st">; </span><span class="sc">{c}</span><span class="st">')"</span>, db<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating whatinside     ========================================================
+===============================================================     on line 30     ===============================================================
+================================================     with example whatinside(core, lib=True)     =================================================
+
+print selected srcline with expands below--------
+        print(f'The callables are: ')                                                                                                                   (28)
+        pprint([i[0] for i in callables])                                                                                                               (29)
+    if lib: ============================================================================================================================================(30)
+                                                                                                                            get names of all modules of a lib
+        modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]                                                                              (31)
+        print(f'The library has {len(modules)} modules')                                                                                                (32)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                                          pkgpath =&gt; pkgpath : /Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore
+
+
+inspect.getdoc(pkgutil.iter_modules) =&gt; inspect.getdoc(pkgutil.iter_modules) : Yields ModuleInfo for all submodules on path,
+or, if path is None, all top-level modules on sys.path.
+
+'path' should be either None or a list of paths to look for
+modules in.
+
+'prefix' is a string to output on the front of every module name
+on output.
+
+
+for a, b, c in pkgutil.iter_modules([pkgpath]):
+    printright(f'{a} ; {b}; {c}')                                                                            
+
+Running the code block above =&gt; ====================================================================
+
+                                                                FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; _modidx; False
+                                                                 FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; _nbdev; False
+                                                                    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; all; False
+                                                                 FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; basics; False
+                                                               FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; dispatch; False
+                                                               FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; docments; False
+                                                              FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; docscrape; False
+                                                             FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; foundation; False
+                                                                FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; imports; False
+                                                                   FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; meta; False
+                                                             FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; nb_imports; False
+                                                                    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; net; False
+                                                               FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; parallel; False
+                                                                 FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; script; False
+                                                                 FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; shutil; False
+                                                                  FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; style; False
+                                                                   FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; test; False
+                                                              FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; transform; False
+                                                                  FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; utils; False
+                                                                    FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; xdg; False
+                                                                  FileFinder('/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore') ; xtras; False
+====================================================================================================================End of my srcline exploration:
+
+The library has 21 modules
+['_modidx',
+ '_nbdev',
+ 'all',
+ 'basics',
+ 'dispatch',
+ 'docments',
+ 'docscrape',
+ 'foundation',
+ 'imports',
+ 'meta',
+ 'nb_imports',
+ 'net',
+ 'parallel',
+ 'script',
+ 'shutil',
+ 'style',
+ 'test',
+ 'transform',
+ 'utils',
+ 'xdg',
+ 'xtras']
+
+Review srcode with all comments added so far======================================================================================================
+        pprint([i[0] for i in funcs])=====================================================(20)      
+    if clas: =============================================================================(21)      
+        print(f'The class objects are:')==================================================(22)      
+        pprint([i[0] for i in classes])===================================================(23)      
+    if bltin: ============================================================================(24)      
+        print(f'The builtin functions or methods are:')===================================(25)      
+        pprint([i[0] for i in builtins])==================================================(26)      
+    if cal: ==============================================================================(27)      
+        print(f'The callables are: ')=====================================================(28)      
+        pprint([i[0] for i in callables])=================================================(29)      
+    if lib: ==============================================================================(30) # get names of all modules of a lib; 
+        modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(31)      
+        print(f'The library has {len(modules)} modules')==================================(32)      
+        pprint(modules)===================================================================(33)      
+                                                                                                                                                        (34)
+                                                                                                                                     part No.2 out of 2 parts
+</code></pre>
+</div>
+</div>
+</section>
+<section id="print-out-the-entire-src-with-idx-and-comments-when-i-finish-documenting" class="level3">
+<h3 class="anchored" data-anchor-id="print-out-the-entire-src-with-idx-and-comments-when-i-finish-documenting">Print out the entire src with idx and comments, when I finish documenting</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating whatinside     ========================================================
+===============================================================     on line 30     ===============================================================
+================================================     with example whatinside(core, lib=True)     =================================================
+
+def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+               dun:bool=False, # print all items in __all__===============================(1)       
+               func:bool=False, # print all user defined functions========================(2)       
+               clas:bool=False, # print all class objects=================================(3)       
+               bltin:bool=False, # print all builtin funcs or methods=====================(4)       
+               lib:bool=False, # print all the modules of the library it belongs to=======(5)       
+               cal:bool=False # print all callables=======================================(6)       
+             ): ==========================================================================(7)       
+    'Check what inside a module: `__all__`, functions, classes, builtins, and callables'==(8)       
+    dun_all = len(mo.__all__) if hasattr(mo, "__all__") else 0============================(9) # how many items inside mo.__all__?; 
+    funcs = inspect.getmembers(mo, inspect.isfunction)====================================(10) # get all funcs of a module; 
+    classes = inspect.getmembers(mo, inspect.isclass)=====================================(11) # get all classes from the module; 
+    builtins = inspect.getmembers(mo, inspect.isbuiltin)==================================(12)      
+    callables = inspect.getmembers(mo, callable)==========================================(13)      
+    pkgpath = os.path.dirname(mo.__file__)================================================(14) # get the file path of the module; 
+    if not lib:===========================================================================(15)      
+        print(f"{mo.__name__} has: \n{dun_all} items in its __all__, and \n{len(funcs)} user defined functions, \n{len(classes)} classes or class objects, \n{len(builtins)} builtin funcs and methods, and\n{len(callables)} callables.\n")  (16)
+    if hasattr(mo, "__all__") and dun: pprint(mo.__all__)=================================(17)      
+    if func: =============================================================================(18)      
+        print(f'The user defined functions are:')=========================================(19)      
+        pprint([i[0] for i in funcs])=====================================================(20)      
+    if clas: =============================================================================(21)      
+        print(f'The class objects are:')==================================================(22)      
+        pprint([i[0] for i in classes])===================================================(23)      
+    if bltin: ============================================================================(24)      
+        print(f'The builtin functions or methods are:')===================================(25)      
+        pprint([i[0] for i in builtins])==================================================(26)      
+    if cal: ==============================================================================(27)      
+        print(f'The callables are: ')=====================================================(28)      
+        pprint([i[0] for i in callables])=================================================(29)      
+    if lib: ==============================================================================(30) # get names of all modules of a lib; 
+        modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]================(31)      
+        print(f'The library has {len(modules)} modules')==================================(32)      
+        pprint(modules)===================================================================(33)      
+                                                                                                                                                        (34)</code></pre>
+</div>
+</div>
+</section>
+<section id="after-running-.dbprint-everything-is-back-to-normal-automatically" class="level3">
+<h3 class="anchored" data-anchor-id="after-running-.dbprint-everything-is-back-to-normal-automatically">After running <code>.dbprint</code>, everything is back to normal automatically</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>inspect.getsourcefile(fu.whatinside)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>inspect.getsourcefile(whatinside)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'/Users/Natsume/Documents/fastdebug/fastdebug/utils.py'</code></pre>
+</div>
+</div>
+<p>To check, when run <code>whatinside??</code> we should see the actually source code whereas the db version of <a href="https://EmbraceLife.github.io/fastdebug/lib/utils.html#whatinside"><code>whatinside</code></a> does not have.</p>
+</section>
+</section>
+<section id="install" class="level2">
+<h2 class="anchored" data-anchor-id="install">Install</h2>
+<div class="sourceCode" id="cb39"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install fastdebug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="how-to-use" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-use">How to use</h2>
+<p>Fill me in please! Don’t forget code examples:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="op">+</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>2</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

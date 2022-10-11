@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 0003_fastai_which_image_model_best</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 0003_fastai_which_image_model_best">
+<meta property="og:description" content="The data, concept, and initial implementation of this notebook was done in Colab by Ross Wightman, the creator of timm.">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 0003_fastai_which_image_model_best">
+<meta name="twitter:description" content="The data, concept, and initial implementation of this notebook was done in Colab by Ross Wightman, the creator of timm.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">0003_fastai_which_image_model_best</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link active">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#timm" id="toc-timm" class="nav-link active" data-scroll-target="#timm">timm</a></li>
+  <li><a href="#how-to-git-clone-timm-analysis-data-how-to-enter-a-directory-with-cd" id="toc-how-to-git-clone-timm-analysis-data-how-to-enter-a-directory-with-cd" class="nav-link" data-scroll-target="#how-to-git-clone-timm-analysis-data-how-to-enter-a-directory-with-cd">how to git clone TIMM analysis data; how to enter a directory with %cd</a></li>
+  <li><a href="#how-to-read-a-csv-file-with-pandas" id="toc-how-to-read-a-csv-file-with-pandas" class="nav-link" data-scroll-target="#how-to-read-a-csv-file-with-pandas">how to read a csv file with pandas</a></li>
+  <li><a href="#how-to-merge-data-with-pandas-how-to-create-new-column-with-pandas-how-to-string-extract-with-regex-expression-how-to-select-columns-up-to-a-particular-column-with-pandas-how-to-do-loc-in-pandas-how-to-select-a-group-of-columns-using-str.contains-and-regex" id="toc-how-to-merge-data-with-pandas-how-to-create-new-column-with-pandas-how-to-string-extract-with-regex-expression-how-to-select-columns-up-to-a-particular-column-with-pandas-how-to-do-loc-in-pandas-how-to-select-a-group-of-columns-using-str.contains-and-regex" class="nav-link" data-scroll-target="#how-to-merge-data-with-pandas-how-to-create-new-column-with-pandas-how-to-string-extract-with-regex-expression-how-to-select-columns-up-to-a-particular-column-with-pandas-how-to-do-loc-in-pandas-how-to-select-a-group-of-columns-using-str.contains-and-regex">how to merge data with pandas; how to create new column with pandas; how to string extract with regex expression; how to select columns up to a particular column with pandas; how to do loc in pandas; how to select a group of columns using str.contains and regex</a></li>
+  <li><a href="#inference-results" id="toc-inference-results" class="nav-link" data-scroll-target="#inference-results">Inference results</a>
+  <ul class="collapse">
+  <li><a href="#how-to-scatterplot-with-plotly.express-how-to-set-the-plots-width-height-size-title-x-y-log_x-color-hover_name-hover_data" id="toc-how-to-scatterplot-with-plotly.express-how-to-set-the-plots-width-height-size-title-x-y-log_x-color-hover_name-hover_data" class="nav-link" data-scroll-target="#how-to-scatterplot-with-plotly.express-how-to-set-the-plots-width-height-size-title-x-y-log_x-color-hover_name-hover_data">how to scatterplot with plotly.express; how to set the plot’s width, height, size, title, x, y, log_x, color, hover_name, hover_data;</a></li>
+  <li><a href="#how-to-scatterplot-on-a-subgroup-of-data-using-regex-and-plotly" id="toc-how-to-scatterplot-on-a-subgroup-of-data-using-regex-and-plotly" class="nav-link" data-scroll-target="#how-to-scatterplot-on-a-subgroup-of-data-using-regex-and-plotly">how to scatterplot on a subgroup of data using regex and plotly</a></li>
+  </ul></li>
+  <li><a href="#training-results" id="toc-training-results" class="nav-link" data-scroll-target="#training-results">Training results</a>
+  <ul class="collapse">
+  <li><a href="#convert-ipynb-to-md" id="toc-convert-ipynb-to-md" class="nav-link" data-scroll-target="#convert-ipynb-to-md">convert ipynb to md</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">0003_fastai_which_image_model_best</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p><em>The data, concept, and initial implementation of this notebook was done in Colab by Ross Wightman, the creator of timm. I (Jeremy Howard) did some refactoring, curating, and expanding of the analysis, and added prose.</em></p>
+<section id="timm" class="level2">
+<h2 class="anchored" data-anchor-id="timm">timm</h2>
+<p><a href="https://timm.fast.ai/">PyTorch Image Models</a> (timm) is a wonderful library by Ross Wightman which provides state-of-the-art pre-trained computer vision models. It’s like Huggingface Transformers, but for computer vision instead of NLP (and it’s not restricted to transformers-based models)!</p>
+<p>Ross has been kind enough to help me understand how to best take advantage of this library by identifying the top models. I’m going to share here so of what I’ve learned from him, plus some additional ideas.</p>
+</section>
+<section id="how-to-git-clone-timm-analysis-data-how-to-enter-a-directory-with-cd" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-git-clone-timm-analysis-data-how-to-enter-a-directory-with-cd">how to git clone TIMM analysis data; how to enter a directory with %cd</h2>
+<p>Ross regularly benchmarks new models as they are added to timm, and puts the results in a CSV in the project’s GitHub repo. To analyse the data, we’ll first clone the repo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span> git clone <span class="op">--</span>depth <span class="dv">1</span> https:<span class="op">//</span>github.com<span class="op">/</span>rwightman<span class="op">/</span>pytorch<span class="op">-</span>image<span class="op">-</span>models.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-read-a-csv-file-with-pandas" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-read-a-csv-file-with-pandas">how to read a csv file with pandas</h2>
+<p>Using Pandas, we can read the two CSV files we need, and merge them together.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_results <span class="op">=</span> pd.read_csv(<span class="st">'results-imagenet.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-merge-data-with-pandas-how-to-create-new-column-with-pandas-how-to-string-extract-with-regex-expression-how-to-select-columns-up-to-a-particular-column-with-pandas-how-to-do-loc-in-pandas-how-to-select-a-group-of-columns-using-str.contains-and-regex" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-merge-data-with-pandas-how-to-create-new-column-with-pandas-how-to-string-extract-with-regex-expression-how-to-select-columns-up-to-a-particular-column-with-pandas-how-to-do-loc-in-pandas-how-to-select-a-group-of-columns-using-str.contains-and-regex">how to merge data with pandas; how to create new column with pandas; how to string extract with regex expression; how to select columns up to a particular column with pandas; how to do loc in pandas; how to select a group of columns using str.contains and regex</h2>
+<p>We’ll also add a “family” column that will allow us to group architectures into categories with similar characteristics:</p>
+<p>Ross has told me which models he’s found the most usable in practice, so I’ll limit the charts to just look at these. (I also include VGG, not because it’s good, but as a comparison to show how far things have come in the last few years.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_data(part, col):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.read_csv(<span class="ss">f'benchmark-</span><span class="sc">{</span>part<span class="sc">}</span><span class="ss">-amp-nhwc-pt111-cu113-rtx3090.csv'</span>).merge(df_results, on<span class="op">=</span><span class="st">'model'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'secs'</span>] <span class="op">=</span> <span class="fl">1.</span> <span class="op">/</span> df[col]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'family'</span>] <span class="op">=</span> df.model.<span class="bu">str</span>.extract(<span class="st">'^([a-z]+?(?:v2)?)(?:\d|_|$)'</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df[<span class="op">~</span>df.model.<span class="bu">str</span>.endswith(<span class="st">'gn'</span>)]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    df.loc[df.model.<span class="bu">str</span>.contains(<span class="st">'in22'</span>),<span class="st">'family'</span>] <span class="op">=</span> df.loc[df.model.<span class="bu">str</span>.contains(<span class="st">'in22'</span>),<span class="st">'family'</span>] <span class="op">+</span> <span class="st">'_in22'</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    df.loc[df.model.<span class="bu">str</span>.contains(<span class="st">'resnet.*d'</span>),<span class="st">'family'</span>] <span class="op">=</span> df.loc[df.model.<span class="bu">str</span>.contains(<span class="st">'resnet.*d'</span>),<span class="st">'family'</span>] <span class="op">+</span> <span class="st">'d'</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df[df.family.<span class="bu">str</span>.contains(<span class="st">'^re[sg]netd?|beit|convnext|levit|efficient|vit|vgg'</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> get_data(<span class="st">'infer'</span>, <span class="st">'infer_samples_per_sec'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="inference-results" class="level2">
+<h2 class="anchored" data-anchor-id="inference-results">Inference results</h2>
+<section id="how-to-scatterplot-with-plotly.express-how-to-set-the-plots-width-height-size-title-x-y-log_x-color-hover_name-hover_data" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-scatterplot-with-plotly.express-how-to-set-the-plots-width-height-size-title-x-y-log_x-color-hover_name-hover_data">how to scatterplot with plotly.express; how to set the plot’s width, height, size, title, x, y, log_x, color, hover_name, hover_data;</h3>
+<p>Here’s the results for inference performance (see the last section for training performance). In this chart:</p>
+<ul>
+<li>the x axis shows how many seconds it takes to process one image (<strong>note</strong>: it’s a log scale)</li>
+<li>the y axis is the accuracy on Imagenet</li>
+<li>the size of each bubble is proportional to the size of images used in testing</li>
+<li>the color shows what “family” the architecture is from.</li>
+</ul>
+<p>Hover your mouse over a marker to see details about the model. Double-click in the legend to display just one family. Single-click in the legend to show or hide a family.</p>
+<p><strong>Note</strong>: on my screen, Kaggle cuts off the family selector and some plotly functionality – to see the whole thing, collapse the table of contents on the right by clicking the little arrow to the right of “<em>Contents</em>”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>w,h <span class="op">=</span> <span class="dv">1000</span>,<span class="dv">800</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> show_all(df, title, size):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> px.scatter(df, width<span class="op">=</span>w, height<span class="op">=</span>h, size<span class="op">=</span>df[size]<span class="op">**</span><span class="dv">2</span>, title<span class="op">=</span>title,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="st">'secs'</span>,  y<span class="op">=</span><span class="st">'top1'</span>, log_x<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">'family'</span>, hover_name<span class="op">=</span><span class="st">'model'</span>, hover_data<span class="op">=</span>[size])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>show_all(df, <span class="st">'Inference'</span>, <span class="st">'infer_img_size'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>That number of families can be a bit overwhelming, so I’ll just pick a subset which represents a single key model from each of the families that are looking best in our plot. I’ve also separated convnext models into those which have been pretrained on the larger 22,000 category imagenet sample (<code>convnext_in22</code>) vs those that haven’t (<code>convnext</code>). (Note that many of the best performing models were trained on the larger sample – see the papers for details before coming to conclusions about the effectiveness of these architectures more generally.)</p>
+</section>
+<section id="how-to-scatterplot-on-a-subgroup-of-data-using-regex-and-plotly" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-scatterplot-on-a-subgroup-of-data-using-regex-and-plotly">how to scatterplot on a subgroup of data using regex and plotly</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>subs <span class="op">=</span> <span class="st">'levit|resnetd?|regnetx|vgg|convnext.*|efficientnetv2|beit'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In this chart, I’ll add lines through the points of each family, to help see how they compare – but note that we can see that a linear fit isn’t actually ideal here! It’s just there to help visually see the groups.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> show_subs(df, title, size):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    df_subs <span class="op">=</span> df[df.family.<span class="bu">str</span>.fullmatch(subs)]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> px.scatter(df_subs, width<span class="op">=</span>w, height<span class="op">=</span>h, size<span class="op">=</span>df_subs[size]<span class="op">**</span><span class="dv">2</span>, title<span class="op">=</span>title,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        trendline<span class="op">=</span><span class="st">"ols"</span>, trendline_options<span class="op">=</span>{<span class="st">'log_x'</span>:<span class="va">True</span>},</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="st">'secs'</span>,  y<span class="op">=</span><span class="st">'top1'</span>, log_x<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">'family'</span>, hover_name<span class="op">=</span><span class="st">'model'</span>, hover_data<span class="op">=</span>[size])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>show_subs(df, <span class="st">'Inference'</span>, <span class="st">'infer_img_size'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>From this, we can see that the <em>levit</em> family models are extremely fast for image recognition, and clearly the most accurate amongst the faster models. That’s not surprising, since these models are a hybrid of the best ideas from CNNs and transformers, so get the benefit of each. In fact, we see a similar thing even in the middle category of speeds – the best is the ConvNeXt, which is a pure CNN, but which takes advantage of ideas from the transformers literature.</p>
+<p>For the slowest models, <em>beit</em> is the most accurate – although we need to be a bit careful of interpreting this, since it’s trained on a larger dataset (ImageNet-21k, which is also used for <em>vit</em> models).</p>
+<p>I’ll add one other plot here, which is of speed vs parameter count. Often, parameter count is used in papers as a proxy for speed. However, as we see, there is a wide variation in speeds at each level of parameter count, so it’s really not a useful proxy.</p>
+<p>(Parameter count may be be useful for identifying how much memory a model needs, but even for that it’s not always a great proxy.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>px.scatter(df, width<span class="op">=</span>w, height<span class="op">=</span>h,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'param_count_x'</span>,  y<span class="op">=</span><span class="st">'secs'</span>, log_x<span class="op">=</span><span class="va">True</span>, log_y<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">'infer_img_size'</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    hover_name<span class="op">=</span><span class="st">'model'</span>, hover_data<span class="op">=</span>[<span class="st">'infer_samples_per_sec'</span>, <span class="st">'family'</span>]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="training-results" class="level2">
+<h2 class="anchored" data-anchor-id="training-results">Training results</h2>
+<p>We’ll now replicate the above analysis for training performance. First we grab the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tdf <span class="op">=</span> get_data(<span class="st">'train'</span>, <span class="st">'train_samples_per_sec'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we can repeat the same <em>family</em> plot we did above:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>show_all(tdf, <span class="st">'Training'</span>, <span class="st">'train_img_size'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>…and we’ll also look at our chosen subset of models:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>show_subs(tdf, <span class="st">'Training'</span>, <span class="st">'train_img_size'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we should remember that speed depends on hardware. If you’re using something other than a modern NVIDIA GPU, your results may be different. In particular, I suspect that transformers-based models might have worse performance in general on CPUs (although I need to study this more to be sure).</p>
+<section id="convert-ipynb-to-md" class="level3">
+<h3 class="anchored">convert ipynb to md</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>.container { width:100% !important; }</style>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ipy2md()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[jupytext] Reading /Users/Natsume/Documents/fastdebug/nbs/2022part1/0003_fastai_which_image_model_best.ipynb in format ipynb
+[jupytext] Writing /Users/Natsume/Documents/fastdebug/nbs/2022part1/0003_fastai_which_image_model_best.md
+cp to : /Users/Natsume/Documents/divefastai/Debuggable/jupytext
+move to : /Users/Natsume/Documents/fastdebug/mds/2022part1/</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[NbConvertApp] Converting notebook /Users/Natsume/Documents/fastdebug/nbs/2022part1/0003_fastai_which_image_model_best.ipynb to markdown
+[NbConvertApp] Writing 7289 bytes to /Users/Natsume/Documents/fastdebug/nbs/2022part1/0003_fastai_which_image_model_best.md</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>move to : /Users/Natsume/Documents/fastdebug/mds_output</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fastnbs(<span class="st">"export model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="how-to-export-model-to-a-pickle-file-and-download-it-from-kaggle" class="level2 cell-output cell-output-display">
+<h2 class="anchored" data-anchor-id="how-to-export-model-to-a-pickle-file-and-download-it-from-kaggle">how to <mark style="background-color: #ffff00">export</mark> <mark style="background-color: #FFFF00">model</mark> to a pickle file and download it from kaggle</h2>
+</section>
+<div class="cell-output cell-output-display">
+<p>Now we can export our trained <code>Learner</code>. This contains all the information needed to run the model:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|eval: false</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>learn.export(<span class="st">'model.pkl'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Finally, open the Kaggle sidebar on the right if it’s not already, and find the section marked “Output”. Open the <code>/kaggle/working</code> folder, and you’ll see <code>model.pkl</code>. Click on it, then click on the menu on the right that appears, and choose “Download”. After a few seconds, your model will be downloaded to your computer, where you can then create your app that uses the model.</p>
+</div>
+<div class="cell-output cell-output-display">
+<p><a href="http://localhost:8888/tree/nbs/2022part1/0002_fastai_Saving_Model_fastai.ipynb">Open <code>0002_fastai_Saving_Model_fastai</code> in Jupyter Notebook</a></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fastlistnbs()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+/Users/Natsume/Documents/fastdebug/mds/2022part1/0001_fastai_is_it_a_bird.md
+## Useful Course sites
+## How to use autoreload
+## How to install and update libraries
+## Know a little about the libraries
+### what is fastai
+### what is duckduckgo
+## How to use fastdebug with fastai notebooks
+### how to use fastdebug
+### Did I document it in a notebook before?
+### Did I document it in a src before?
+## how to search and get a url of an image; how to download with an url; how to view an image;
+### how to create folders using path; how to search and download images in folders; how to resize images 
+## Train my model
+### How to find and unlink images not properly downloaded
+### How to create a DataLoaders with DataBlock; how to view data with it
+### How to build my model with dataloaders and pretrained model; how to train my model
+### How to predict with my model; how to avoid running cells in nbdev_prepare
+
+/Users/Natsume/Documents/fastdebug/mds/2022part1/0002_fastai_Saving_Model_fastai.md
+## what to import to handle vision problems in fastai
+## how to download and decompress datasets prepared by fastai
+## how to tell it is a cat by reading filename
+## how to create dataloaders with `from_name_func`
+## how to create a pretrained model with resnet18 and error_rate; how to fine tune it 3 epochs
+## how to export model to a pickle file and download it from Kaggle
+## how to convert ipynb to md
+
+/Users/Natsume/Documents/fastdebug/mds/2022part1/0003_fastai_which_image_model_best.md
+## timm
+## how to git clone TIMM analysis data; how to enter a directory with %cd
+## how to read a csv file with pandas
+## how to merge data with pandas; how to create new column with pandas; how to string extract with regex expression; how to select columns up to a particular column with pandas; how to do loc in pandas; how to select a group of columns using str.contains and regex
+## Inference results
+### how to scatterplot with plotly.express; how to set the plot's width, height, size, title, x, y, log_x, color, hover_name, hover_data; 
+### how to scatterplot on a subgroup of data using regex and plotly
+## Training results
+### convert ipynb to md
+
+/Users/Natsume/Documents/fastdebug/mds/lib/utils.md
+## setup for exporting to a module
+## how to get current notebook's name, path and url
+## how to convert ipynb to md automatically; how to run commands in python
+## Autoreload for every notebook
+## Expand cells
+## Import fastcore env
+## to inspect a class
+### get the docs for each function of a class
+## is it a metaclass?
+## is it a decorator
+### handle all kinds of exceptions for evaluating retn 
+## whatinside a module of a library
+### show the type of objects inside `__all__`
+### working for fastdebug.core
+### to show Fastdb methods
+## whichversion of a library
+## fastview
+## fastscrs
+## getrootport
+## jn_link
+## get_all_nbs
+### get all nbs path for both md and ipynb
+### add index.ipynb
+## openNB
+## highlight
+## display_md
+## display_block
+### handle both file path and file content at the same time
+## fastnbs
+## fastcodes
+## fastnotes
+### multiple folders
+## fastlistnbs
+## fastlistsrcs
+## Best practice of fastdebug.core
+## Best practice of fastdebug.utils
+## Export
+
+/Users/Natsume/Documents/fastdebug/mds/lib/00_core.md
+## make life easier with defaults  
+## globals() and locals()
+## Execute strings
+### new variable or updated variable by exec will only be accessible from locals()
+### eval can override its own globals() and locals()
+### when exec update existing functions
+### when the func to be udpated involve other libraries
+### inside a function, exec() allow won't give you necessary env from function namespace
+### magic of `exec(b, globals().update(locals()))`
+### Bring variables from a func namespace to the sideout world
+### globals() in a cell vs globals() in a func
+## make a colorful string
+## align text to the most right
+## printsrcwithidx
+### print the entire source code with idx from 0
+### print the whole src with idx or print them in parts
+### use cmts from dbprint to print out src with comments
+### no more update for printsrcwithidx, for the latest see Fastdb.print
+## print out src code
+### basic version
+### print src with specific number of lines
+### make the naming more sensible
+### Allow a dbline occur more than once
+### adding idx to the selected srclines
+#### printsrclinewithidx
+### dblines can be string of code or idx number
+### avoid multi-occurrance of the same srcline
+## dbprint on expression
+### basic version
+### insert dbcode and make a new dbfunc
+### Bring outside namespace variables into exec()
+### Bring what inside the func namespace variables to the outside world
+### Adding g = locals() to dbprintinsert to avoid adding env individually
+### enable srclines to be either string or int 
+### enable = to be used as assignment in codes
+### avoid adding "env=g" for dbprintinsert
+### collect cmt for later printsrcwithidx to print comments together
+### make sure only one line with correct idx is debugged
+### avoid typing "" when there is no codes
+### no more update for dbprint, for the latest see Fastdb.dbprint
+### use dbprint to override the original official code without changing its own pyfile
+## dbprintinsert
+### Run and display the inserted dbcodes 
+### use locals() inside the dbsrc code to avoid adding env individually
+### enable dbprintinsert to do exec on a block of code
+## printrunsrclines() 
+### Examples
+#### simple example
+#### complex example
+### insert a line after each srcline to add idx
+### add correct indentation to each inserted line
+#### count the indentation for each srcline
+### indentation special case: if, else, for, def
+### remove pure comments or docs from dbsrc
+### print out the srclines which get run
+### Make sure all if, else, for get printed
+### Put all together into the function printrunsrclines()
+#### no more renaming of foo
+#### add example as a param into the function
+#### improve on search for `if`, else, for, def to avoid errors for more examples
+#### remove an empty line with indentation
+### make it work
+### more difficult examples to test printrunsrc()
+## Make fastdebug a class
+### improve on the line idx readability
+### collect cmt from dbprint and print
+### make sure only the line with correct idx is debugged
+### having "" or "   " inside codes without causing error
+### replace Fastdb.printsrcwithdix with Fastdb.print
+### add idx to dbsrc when showdbsrc=True
+### not load the inner locals() to outenv can prevent mysterious printing of previous db messages
+### using @patch to enable docs for instance methods like `dbprint` and `print`
+### move param env into `__init__`
+### Add example to the obj
+### Take not only function but also class
+### To remove the necessity of self.takExample()
+### Try to remove g = locals()
+### Make sure `showdbsrc=True` give us the line starting with 'dbprintinsert'
+### Make sure `showdbsrc=True` give us info on changes in g or outenv
+### exit and print a warning message: idx has to be int
+### handle errors by codes with trailing spaces 
+### showdbsrc=True, check whether Fastdb.dbprint and fdb.dbprint are same object using `is`
+### remove unnecessary db printout when showdbsrc=True and add printout to display sections
+### raise TypeError when decode are not integer and showdbsrc=true working on both method and function
+### when debugging dbprint, make sure dbsrc is printed with the same idx as original
+### update dbsrc to the global env
+### go back to normal before running dbprint again
+### auto print src with cmt and idx as the ending part of dbprint
+### to mark my explorations (expressions to evaluate) to stand out
+### Add the print of src with idx and comments at the end of dbsrc
+### embed example and autoprint to shorten the code to type
+### Make title for dbprint
+### Adding self.eg info and color group into dbprint and print
+#### todo: make the comments with same self.eg have the same color
+### make dbsrc print idx right
+### add self.eg to a dict with keys are idxsrc
+### handle both function and class as src
+### documenting on Fastdb.dbprint itself
+## mk_dbsrc
+## Turn mk_dbsrc into docsrc 
+### handle when no codes are given
+## create_dbsrc_from_string
+## replaceWithDbsrc
+### handle class and metaclass
+### improve on handling function as decorator
+### Handling `inspect._signature_from_callable` to become `self.dbsrc`
+### handling usage of `@delegates`
+### handling `@delegates` with indentation before it
+### handling classes by inspect.isclass() rather than == type and add more class situations
+### handling `class _T(_TestA, metaclass=BypassNewMeta): `
+## run_example
+### `exec(self.eg, globals().update(self.egEnv), locals())` works better than `...update(locals()), self.egEnv)
+### no more env cells run before `fdb.eg` to make `fdb.run_example` work
+## Autoprint
+## Take an example and its env into Fastdb obj
+## print src with idx and cmt in whole or parts
+### print self.eg after each comment and colorize comments
+### color examples and cmts separately and make the func simpler
+### split each cmt and colorize parts randomly
+### printcmts1 while saving into a file
+## goback
+## Fastdb.explore
+### adding one breakpoint with comment
+### Adding multiple breakpoints by multiple set_trace()
+### Go back to normal before running explore again
+### enable fdb.takExample("whatinside(fu), ...) without using `fu.whatinside`
+### refactory explore
+## snoop
+### snoop on both function and class
+### snoop on class and method and all???
+### snoop
+### simplify adding @snoop for both normal function and decorator
+### handling classes
+### add watch
+## Snoop
+### add watch
+### use guide on Fastdb.dbprint
+## reliveonce
+## Fastdb.debug
+## Export
+## Send to Obsidian
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0001_fastcore_meta_delegates.md
+## Import
+## Initiate Fastdb and example in str
+## Example
+## docsrc
+## Snoop
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0003_Explore_document_FixSigMeta_PrePostInitMeta_AutoInit.md
+## Initialize fastdebug objects
+## class FixSigMeta(type) vs class Foo(type)
+## class Foo()
+## class PrePostInitMeta(FixSigMeta)
+## class Foo(metaclass=FixSigMeta)
+## class AutoInit(metaclass=PrePostInitMeta)
+## Prepare examples for FixSigMeta, PrePostInitMeta, AutoInit 
+## Snoop them together in one go
+### embed the dbsrc of FixSigMeta into PrePostInitMeta
+### embed dbsrc of PrePostInitMeta into AutoInit
+## Explore and Document on them together 
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0004_fastcore.meta._rm_self.md
+## imports
+## set up
+## document
+## snoop
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0005_fastcore.meta.test_sig.md
+## imports
+## setups
+## documents
+## snoop
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0007_fastcore.meta.BypassNewMeta.md
+## Reading official docs
+## Inspecting class
+## Initiating with examples
+## Snoop
+## Document
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0002_signature_from_callable.md
+## Expand cell
+## Imports and initiate
+## Examples
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0008_use_kwargs_dict.md
+## Imports
+## Reading official docs
+## empty2none
+## `_mk_param`
+## use_kwargs_dict
+### Reading docs
+## use_kwargs
+### Reading docs
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0006_fastcore.meta.NewChkMeta.md
+## Import and Initalization
+## Official docs
+## Prepare Example
+## Inspect classes
+## Snoop
+## Document
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0000_tour.md
+### Documentation
+### Testing
+### Foundations
+### L
+### Transforms
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0012_fastcore_foundation_L.md
+## Document `L` with fastdebug
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0011_Fastdb.md
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0009_funcs_kwargs.md
+## fastcore.meta.method
+### Reading Docs
+### Running codes
+### Document
+### snoop
+## funcs_kwargs
+### Official docs
+### snoop: from _funcs_kwargs to funcs_kwargs
+### snoop only '_funcs_kwargs' by breaking up 'funcs_kwargs'
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0010_fastcore_meta_summary.md
+## import
+## fastcore and fastcore.meta
+### What's inside fastcore.meta
+## Review individual funcs and classes
+### What is fastcore.meta all about? 
+### What can these metaclasses do for me?
+#### FixSigMeta
+#### PrePostInitMeta
+#### AutoInit
+#### NewChkMeta
+#### BypassNewMeta
+### What can those decorators do for me?
+#### use_kwargs_dict
+#### use_kwargs
+#### delegates
+#### funcs_kwargs
+### The remaining functions
+## What is fastcore.meta all about
+
+/Users/Natsume/Documents/fastdebug/mds/questions/00_question_anno_dict.md
+## `anno_dict` docs
+## Dive in
+## `anno_dict` seems not add anything new to `__annotations__`
+## use fastdebug to double check
+## Does fastcore want anno_dict to include params with no annos?
+## Jeremy's response</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

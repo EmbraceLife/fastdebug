@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 0008_fastai_first_steps_road_to_top_part_1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 0008_fastai_first_steps_road_to_top_part_1">
+<meta property="og:description" content="In Iterate Like a Grandmaster I explained that when working on a Kaggle project:">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 0008_fastai_first_steps_road_to_top_part_1">
+<meta name="twitter:description" content="In Iterate Like a Grandmaster I explained that when working on a Kaggle project:">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">0008_fastai_first_steps_road_to_top_part_1</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link active">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#how-to-install-fastkaggle-if-not-available" id="toc-how-to-install-fastkaggle-if-not-available" class="nav-link active" data-scroll-target="#how-to-install-fastkaggle-if-not-available">how to install fastkaggle if not available</a></li>
+  <li><a href="#how-to-iterate-like-a-grandmaster" id="toc-how-to-iterate-like-a-grandmaster" class="nav-link" data-scroll-target="#how-to-iterate-like-a-grandmaster">how to iterate like a grandmaster</a></li>
+  <li><a href="#what-are-the-related-walkthrus-on-paddy-doctor-competition" id="toc-what-are-the-related-walkthrus-on-paddy-doctor-competition" class="nav-link" data-scroll-target="#what-are-the-related-walkthrus-on-paddy-doctor-competition">what are the related walkthrus on paddy doctor competition</a></li>
+  <li><a href="#getting-set-up" id="toc-getting-set-up" class="nav-link" data-scroll-target="#getting-set-up">Getting set up</a>
+  <ul class="collapse">
+  <li><a href="#how-to-setup-for-fastkaggle-how-to-use-fastkaggle-to-download-dataset-from-kaggle-how-to-access-the-path" id="toc-how-to-setup-for-fastkaggle-how-to-use-fastkaggle-to-download-dataset-from-kaggle-how-to-access-the-path" class="nav-link" data-scroll-target="#how-to-setup-for-fastkaggle-how-to-use-fastkaggle-to-download-dataset-from-kaggle-how-to-access-the-path">how to setup for fastkaggle; how to use fastkaggle to download dataset from kaggle; how to access the path</a></li>
+  <li><a href="#which-fastai-module-to-use-for-vision-problem-how-to-check-files-inside-the-dataset-path-why-jeremy-recommend-not-to-use-seed-in-your-own-analysis" id="toc-which-fastai-module-to-use-for-vision-problem-how-to-check-files-inside-the-dataset-path-why-jeremy-recommend-not-to-use-seed-in-your-own-analysis" class="nav-link" data-scroll-target="#which-fastai-module-to-use-for-vision-problem-how-to-check-files-inside-the-dataset-path-why-jeremy-recommend-not-to-use-seed-in-your-own-analysis">which fastai module to use for vision problem; how to check files inside the dataset path; why Jeremy recommend not to use seed in your own analysis;</a></li>
+  </ul></li>
+  <li><a href="#looking-at-the-data" id="toc-looking-at-the-data" class="nav-link" data-scroll-target="#looking-at-the-data">Looking at the data</a>
+  <ul class="collapse">
+  <li><a href="#how-to-access-a-subfolder-by-name-using-path-from-setup_comp-how-to-extract-all-image-files-from-a-folder" id="toc-how-to-access-a-subfolder-by-name-using-path-from-setup_comp-how-to-extract-all-image-files-from-a-folder" class="nav-link" data-scroll-target="#how-to-access-a-subfolder-by-name-using-path-from-setup_comp-how-to-extract-all-image-files-from-a-folder">how to access a subfolder by name using path from <code>setup_comp</code>; how to extract all image files from a folder</a></li>
+  <li><a href="#how-to-create-an-image-from-an-image-file-how-to-access-the-size-of-an-image-how-to-display-it-with-specified-size-for-viewing" id="toc-how-to-create-an-image-from-an-image-file-how-to-access-the-size-of-an-image-how-to-display-it-with-specified-size-for-viewing" class="nav-link" data-scroll-target="#how-to-create-an-image-from-an-image-file-how-to-access-the-size-of-an-image-how-to-display-it-with-specified-size-for-viewing">how to create an image from an image file; how to access the size of an image; how to display it with specified size for viewing</a></li>
+  <li><a href="#how-to-use-fastcore.parallel-to-quickly-access-size-of-all-images-how-to-count-the-occurance-of-each-unique-value-in-a-pandas" id="toc-how-to-use-fastcore.parallel-to-quickly-access-size-of-all-images-how-to-count-the-occurance-of-each-unique-value-in-a-pandas" class="nav-link" data-scroll-target="#how-to-use-fastcore.parallel-to-quickly-access-size-of-all-images-how-to-count-the-occurance-of-each-unique-value-in-a-pandas">how to use <code>fastcore.parallel</code> to quickly access size of all images; how to count the occurance of each unique value in a pandas</a></li>
+  <li><a href="#how-to-create-an-image-dataloaders-how-to-setup-item_tfms-and-batch_tfms-on-image-sizes-why-to-start-with-the-smallest-sizes-first-how-to-display-images-in-batch" id="toc-how-to-create-an-image-dataloaders-how-to-setup-item_tfms-and-batch_tfms-on-image-sizes-why-to-start-with-the-smallest-sizes-first-how-to-display-images-in-batch" class="nav-link" data-scroll-target="#how-to-create-an-image-dataloaders-how-to-setup-item_tfms-and-batch_tfms-on-image-sizes-why-to-start-with-the-smallest-sizes-first-how-to-display-images-in-batch">how to create an image dataloaders; how to setup <code>item_tfms</code> and <code>batch_tfms</code> on image sizes; why to start with the smallest sizes first; how to display images in batch</a></li>
+  </ul></li>
+  <li><a href="#our-first-model" id="toc-our-first-model" class="nav-link" data-scroll-target="#our-first-model">Our first model</a>
+  <ul class="collapse">
+  <li><a href="#how-to-pick-the-first-pretrained-model-for-our-model-how-to-build-our-model-based-on-the-selected-pretrained-model" id="toc-how-to-pick-the-first-pretrained-model-for-our-model-how-to-build-our-model-based-on-the-selected-pretrained-model" class="nav-link" data-scroll-target="#how-to-pick-the-first-pretrained-model-for-our-model-how-to-build-our-model-based-on-the-selected-pretrained-model">how to pick the first pretrained model for our model; how to build our model based on the selected pretrained model</a></li>
+  <li><a href="#how-to-find-the-learning-rate-for-our-model" id="toc-how-to-find-the-learning-rate-for-our-model" class="nav-link" data-scroll-target="#how-to-find-the-learning-rate-for-our-model">how to find the learning rate for our model</a></li>
+  </ul></li>
+  <li><a href="#submitting-to-kaggle" id="toc-submitting-to-kaggle" class="nav-link" data-scroll-target="#submitting-to-kaggle">Submitting to Kaggle</a>
+  <ul class="collapse">
+  <li><a href="#how-to-check-the-kaggle-submission-sample-csv-file" id="toc-how-to-check-the-kaggle-submission-sample-csv-file" class="nav-link" data-scroll-target="#how-to-check-the-kaggle-submission-sample-csv-file">how to check the kaggle submission sample csv file</a></li>
+  <li><a href="#how-to-sort-the-files-in-the-test-set-in-the-alphabetical-order-how-to-create-dataloaders-for-the-test-set-based-on-the-dataloaders-of-the-training-set" id="toc-how-to-sort-the-files-in-the-test-set-in-the-alphabetical-order-how-to-create-dataloaders-for-the-test-set-based-on-the-dataloaders-of-the-training-set" class="nav-link" data-scroll-target="#how-to-sort-the-files-in-the-test-set-in-the-alphabetical-order-how-to-create-dataloaders-for-the-test-set-based-on-the-dataloaders-of-the-training-set">how to sort the files in the test set in the alphabetical order; how to create dataloaders for the test set based on the dataloaders of the training set</a></li>
+  <li><a href="#how-to-make-predictions-for-all-test-set-and-what-does-learn.get_preds-return" id="toc-how-to-make-predictions-for-all-test-set-and-what-does-learn.get_preds-return" class="nav-link" data-scroll-target="#how-to-make-predictions-for-all-test-set-and-what-does-learn.get_preds-return">how to make predictions for all test set; and what does <code>learn.get_preds</code> return</a></li>
+  <li><a href="#how-to-access-all-the-classes-of-labels-with-dataloaders" id="toc-how-to-access-all-the-classes-of-labels-with-dataloaders" class="nav-link" data-scroll-target="#how-to-access-all-the-classes-of-labels-with-dataloaders">how to access all the classes of labels with dataloaders</a></li>
+  <li><a href="#how-to-map-classes-to-each-idx-from-the-predictions" id="toc-how-to-map-classes-to-each-idx-from-the-predictions" class="nav-link" data-scroll-target="#how-to-map-classes-to-each-idx-from-the-predictions">how to map classes to each idx from the predictions</a></li>
+  <li><a href="#how-to-save-result-into-csv-file" id="toc-how-to-save-result-into-csv-file" class="nav-link" data-scroll-target="#how-to-save-result-into-csv-file">how to save result into csv file</a></li>
+  <li><a href="#how-to-submit-to-kaggle-with-fastkaggle-api" id="toc-how-to-submit-to-kaggle-with-fastkaggle-api" class="nav-link" data-scroll-target="#how-to-submit-to-kaggle-with-fastkaggle-api">how to submit to kaggle with fastkaggle api</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#what-is-the-most-important-thing-for-your-first-model" id="toc-what-is-the-most-important-thing-for-your-first-model" class="nav-link" data-scroll-target="#what-is-the-most-important-thing-for-your-first-model">what is the most important thing for your first model</a></li>
+  </ul></li>
+  <li><a href="#addendum" id="toc-addendum" class="nav-link" data-scroll-target="#addendum">Addendum</a>
+  <ul class="collapse">
+  <li><a href="#how-to-quickly-push-your-local-notebook-to-become-kaggle-notebook-online" id="toc-how-to-quickly-push-your-local-notebook-to-become-kaggle-notebook-online" class="nav-link" data-scroll-target="#how-to-quickly-push-your-local-notebook-to-become-kaggle-notebook-online">how to quickly push your local notebook to become kaggle notebook online</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">0008_fastai_first_steps_road_to_top_part_1</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="how-to-install-fastkaggle-if-not-available" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-install-fastkaggle-if-not-available">how to install fastkaggle if not available</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install fastkaggle if not available</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>: <span class="im">import</span> fastkaggle</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> ModuleNotFoundError:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>pip install <span class="op">-</span>Uq fastkaggle</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastkaggle <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-iterate-like-a-grandmaster" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-iterate-like-a-grandmaster">how to iterate like a grandmaster</h3>
+<p>In <a href="https://www.kaggle.com/code/jhoward/iterate-like-a-grandmaster">Iterate Like a Grandmaster</a> I explained that when working on a Kaggle project:</p>
+<blockquote class="blockquote">
+<p>…the focus generally should be two things:</p>
+<ol type="1">
+<li>Creating an effective validation set</li>
+<li>Iterating rapidly to find changes which improve results on the validation set.</li>
+</ol>
+</blockquote>
+<p>Here I’m going to go further, showing the process I used to tackle the <a href="https://www.kaggle.com/competitions/paddy-disease-classification">Paddy Doctor</a> competition, leading to four submissions in a row which all were (at the time of submission) in 1st place, each one more accurate than the last. You might be surprised to discover that the process of doing this was nearly entirely mechanistic and didn’t involve any consideration of the actual data or evaluation details at all.</p>
+<p>This notebook is the first in a series showing every step of the process. At the end of this notebook we’ll have a basic submission; by the end of the series you’ll see how I got to the top of the table!:</p>
+<p><img src="https://user-images.githubusercontent.com/346999/174389920-60d67ead-0f36-41d0-9649-e23b08720c8a.png" width="600"></p>
+</section>
+<section id="what-are-the-related-walkthrus-on-paddy-doctor-competition" class="level3">
+<h3 class="anchored" data-anchor-id="what-are-the-related-walkthrus-on-paddy-doctor-competition">what are the related walkthrus on paddy doctor competition</h3>
+<p>As a special extra, I’m also opening up early a selection of “walkthru” videos that we’ve been preparing for the new upcoming fast.ai course. Each day I do a walkthru with fast.ai fellows and registered students, and we record those sessions. They’ll all be released at the same time as the next course (probably August 2022), but I’m releasing the ones covering this competition right now! Here they are:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=-Scs4gbwWXg">Walkthru 8</a></li>
+<li><a href="https://www.youtube.com/watch?v=EK5wJRzffas">Walkthru 9</a></li>
+<li><a href="https://youtu.be/zhBRynq9Yvo">Walkthru 10</a></li>
+<li><a href="https://youtu.be/j-zMF2VirA8">Walkthru 11</a></li>
+<li><a href="https://youtu.be/GuCkpjXHdTc">Walkthru 12</a></li>
+<li><a href="https://youtu.be/INrkhUGCXHg">Walkthru 13</a></li>
+</ul>
+</section>
+<section id="getting-set-up" class="level2">
+<h2 class="anchored" data-anchor-id="getting-set-up">Getting set up</h2>
+<section id="how-to-setup-for-fastkaggle-how-to-use-fastkaggle-to-download-dataset-from-kaggle-how-to-access-the-path" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-setup-for-fastkaggle-how-to-use-fastkaggle-to-download-dataset-from-kaggle-how-to-access-the-path">how to setup for fastkaggle; how to use fastkaggle to download dataset from kaggle; how to access the path</h3>
+<p>First, we’ll get the data. I’ve just created a new library called <a href="https://fastai.github.io/fastkaggle/">fastkaggle</a> which has a few handy features, including getting the data for a competition correctly regardless of whether we’re running on Kaggle or elsewhere. Note you’ll need to first accept the competition rules and join the competition, and you’ll need your kaggle API key file <code>kaggle.json</code> downloaded if you’re running this somewhere other than on Kaggle. <code>setup_comp</code> is the function we use in <code>fastkaggle</code> to grab the data, and install or upgrade our needed python modules when we’re running on Kaggle:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>comp <span class="op">=</span> <span class="st">'paddy-disease-classification'</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> setup_comp(comp, install<span class="op">=</span><span class="st">'fastai "timm&gt;=0.6.2.dev0"'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>path</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>Path('paddy-disease-classification')</code></pre>
+</div>
+</div>
+</section>
+<section id="which-fastai-module-to-use-for-vision-problem-how-to-check-files-inside-the-dataset-path-why-jeremy-recommend-not-to-use-seed-in-your-own-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="which-fastai-module-to-use-for-vision-problem-how-to-check-files-inside-the-dataset-path-why-jeremy-recommend-not-to-use-seed-in-your-own-analysis">which fastai module to use for vision problem; how to check files inside the dataset path; why Jeremy recommend not to use seed in your own analysis;</h3>
+<p>Now we can import the stuff we’ll need from fastai, set a seed (for reproducibility – just for the purposes of making this notebook easier to write; I don’t recommend doing that in your own analysis however) and check what’s in the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.vision.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>set_seed(<span class="dv">42</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>path.ls()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(#6) [Path('paddy-disease-classification/sample_submission.csv'),Path('paddy-disease-classification/test_images'),Path('paddy-disease-classification/subm.csv'),Path('paddy-disease-classification/train_images'),Path('paddy-disease-classification/train.csv'),Path('paddy-disease-classification/models')]</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="looking-at-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="looking-at-the-data">Looking at the data</h2>
+<section id="how-to-access-a-subfolder-by-name-using-path-from-setup_comp-how-to-extract-all-image-files-from-a-folder" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-access-a-subfolder-by-name-using-path-from-setup_comp-how-to-extract-all-image-files-from-a-folder">how to access a subfolder by name using path from <code>setup_comp</code>; how to extract all image files from a folder</h3>
+<p>The images are in <code>train_images</code>, so let’s grab a list of all of them:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>trn_path <span class="op">=</span> path<span class="op">/</span><span class="st">'train_images'</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>files <span class="op">=</span> get_image_files(trn_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>…and take a look at one:</p>
+</section>
+<section id="how-to-create-an-image-from-an-image-file-how-to-access-the-size-of-an-image-how-to-display-it-with-specified-size-for-viewing" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-an-image-from-an-image-file-how-to-access-the-size-of-an-image-how-to-display-it-with-specified-size-for-viewing">how to create an image from an image file; how to access the size of an image; how to display it with specified size for viewing</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> PILImage.create(files[<span class="dv">0</span>])</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(img.size)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>img.to_thumb(<span class="dv">128</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(480, 640)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="0008_fastai_first_steps_road_to_top_part_1_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="how-to-use-fastcore.parallel-to-quickly-access-size-of-all-images-how-to-count-the-occurance-of-each-unique-value-in-a-pandas" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-use-fastcore.parallel-to-quickly-access-size-of-all-images-how-to-count-the-occurance-of-each-unique-value-in-a-pandas">how to use <code>fastcore.parallel</code> to quickly access size of all images; how to count the occurance of each unique value in a pandas</h3>
+<p>Looks like the images might be 480x640 – let’s check all their sizes. This is faster if we do it in parallel, so we’ll use fastcore’s <code>parallel</code> for this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.parallel <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(o): <span class="cf">return</span> PILImage.create(o).size</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>sizes <span class="op">=</span> parallel(f, files, n_workers<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>pd.Series(sizes).value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(480, 640)    10403
+(640, 480)        4
+dtype: int64</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-create-an-image-dataloaders-how-to-setup-item_tfms-and-batch_tfms-on-image-sizes-why-to-start-with-the-smallest-sizes-first-how-to-display-images-in-batch" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-an-image-dataloaders-how-to-setup-item_tfms-and-batch_tfms-on-image-sizes-why-to-start-with-the-smallest-sizes-first-how-to-display-images-in-batch">how to create an image dataloaders; how to setup <code>item_tfms</code> and <code>batch_tfms</code> on image sizes; why to start with the smallest sizes first; how to display images in batch</h3>
+<p>They’re nearly all the same size, except for a few. Because of those few, however, we’ll need to make sure we always resize each image to common dimensions first, otherwise fastai won’t be able to create batches. For now, we’ll just squish them to 480x480 images, and then once they’re in batches we do a random resized crop down to a smaller size, along with the other default fastai augmentations provided by <code>aug_transforms</code>. We’ll start out with small resized images, since we want to be able to iterate quickly:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dls <span class="op">=</span> ImageDataLoaders.from_folder(trn_path, valid_pct<span class="op">=</span><span class="fl">0.2</span>, seed<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    item_tfms<span class="op">=</span>Resize(<span class="dv">480</span>, method<span class="op">=</span><span class="st">'squish'</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    batch_tfms<span class="op">=</span>aug_transforms(size<span class="op">=</span><span class="dv">128</span>, min_scale<span class="op">=</span><span class="fl">0.75</span>))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>dls.show_batch(max_n<span class="op">=</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="0008_fastai_first_steps_road_to_top_part_1_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="our-first-model" class="level2">
+<h2 class="anchored" data-anchor-id="our-first-model">Our first model</h2>
+<section id="how-to-pick-the-first-pretrained-model-for-our-model-how-to-build-our-model-based-on-the-selected-pretrained-model" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-pick-the-first-pretrained-model-for-our-model-how-to-build-our-model-based-on-the-selected-pretrained-model">how to pick the first pretrained model for our model; how to build our model based on the selected pretrained model</h3>
+<p>Let’s create a model. To pick an architecture, we should look at the options in <a href="https://www.kaggle.com/code/jhoward/the-best-vision-models-for-fine-tuning">The best vision models for fine-tuning</a>. I like the looks of <code>resnet26d</code>, which is the fastest resolution-independent model which gets into the top-15 lists there.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>learn <span class="op">=</span> vision_learner(dls, <span class="st">'resnet26d'</span>, metrics<span class="op">=</span>error_rate, path<span class="op">=</span><span class="st">'.'</span>).to_fp16()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-find-the-learning-rate-for-our-model" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-find-the-learning-rate-for-our-model">how to find the learning rate for our model</h3>
+<p>Let’s see what the learning rate finder shows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>learn.lr_find(suggest_funcs<span class="op">=</span>(valley, slide))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>SuggestedLRs(valley=0.0008317637839354575, slide=0.0030199517495930195)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="0008_fastai_first_steps_road_to_top_part_1_files/figure-html/cell-11-output-4.png" class="img-fluid"></p>
+</div>
+</div>
+<p><code>lr_find</code> generally recommends rather conservative learning rates, to ensure that your model will train successfully. I generally like to push it a bit higher if I can. Let’s train a few epochs and see how it looks:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>learn.fine_tune(<span class="dv">3</span>, <span class="fl">0.01</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>error_rate</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1.805964</td>
+      <td>1.233453</td>
+      <td>0.403652</td>
+      <td>00:14</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>error_rate</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1.129876</td>
+      <td>0.785891</td>
+      <td>0.266218</td>
+      <td>00:15</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>0.777808</td>
+      <td>0.456637</td>
+      <td>0.143681</td>
+      <td>00:15</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>0.557498</td>
+      <td>0.407197</td>
+      <td>0.136473</td>
+      <td>00:15</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<p>We’re now ready to build our first submission. Let’s take a look at the sample Kaggle provided to see what it needs to look like:</p>
+</section>
+</section>
+<section id="submitting-to-kaggle" class="level2">
+<h2 class="anchored" data-anchor-id="submitting-to-kaggle">Submitting to Kaggle</h2>
+<section id="how-to-check-the-kaggle-submission-sample-csv-file" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-check-the-kaggle-submission-sample-csv-file">how to check the kaggle submission sample csv file</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ss <span class="op">=</span> pd.read_csv(path<span class="op">/</span><span class="st">'sample_submission.csv'</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>image_id</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>200001.jpg</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>200002.jpg</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>200003.jpg</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>200004.jpg</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>200005.jpg</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3464</th>
+      <td>203465.jpg</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3465</th>
+      <td>203466.jpg</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3466</th>
+      <td>203467.jpg</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3467</th>
+      <td>203468.jpg</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3468</th>
+      <td>203469.jpg</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>3469 rows × 2 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="how-to-sort-the-files-in-the-test-set-in-the-alphabetical-order-how-to-create-dataloaders-for-the-test-set-based-on-the-dataloaders-of-the-training-set" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-sort-the-files-in-the-test-set-in-the-alphabetical-order-how-to-create-dataloaders-for-the-test-set-based-on-the-dataloaders-of-the-training-set">how to sort the files in the test set in the alphabetical order; how to create dataloaders for the test set based on the dataloaders of the training set</h3>
+<p>OK so we need a CSV containing all the test images, in alphabetical order, and the predicted label for each one. We can create the needed test set using fastai like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tst_files <span class="op">=</span> get_image_files(path<span class="op">/</span><span class="st">'test_images'</span>).<span class="bu">sorted</span>()</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>tst_dl <span class="op">=</span> dls.test_dl(tst_files)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-make-predictions-for-all-test-set-and-what-does-learn.get_preds-return" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-make-predictions-for-all-test-set-and-what-does-learn.get_preds-return">how to make predictions for all test set; and what does <code>learn.get_preds</code> return</h3>
+<p>We can now get the probabilities of each class, and the index of the most likely class, from this test set (the 2nd thing returned by <code>get_preds</code> are the targets, which are blank for a test set, so we discard them):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>probs,_,idxs <span class="op">=</span> learn.get_preds(dl<span class="op">=</span>tst_dl, with_decoded<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>idxs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>TensorBase([7, 8, 7,  ..., 8, 7, 5])</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-access-all-the-classes-of-labels-with-dataloaders" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-access-all-the-classes-of-labels-with-dataloaders">how to access all the classes of labels with dataloaders</h3>
+<p>These need to be mapped to the names of each of these diseases, these names are stored by fastai automatically in the <code>vocab</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>dls.vocab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>['bacterial_leaf_blight', 'bacterial_leaf_streak', 'bacterial_panicle_blight', 'blast', 'brown_spot', 'dead_heart', 'downy_mildew', 'hispa', 'normal', 'tungro']</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-map-classes-to-each-idx-from-the-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-map-classes-to-each-idx-from-the-predictions">how to map classes to each idx from the predictions</h3>
+<p>We can create an apply this mapping using pandas:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mapping <span class="op">=</span> <span class="bu">dict</span>(<span class="bu">enumerate</span>(dls.vocab))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> pd.Series(idxs.numpy(), name<span class="op">=</span><span class="st">"idxs"</span>).<span class="bu">map</span>(mapping)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>0            hispa
+1           normal
+2            hispa
+3            blast
+4            blast
+           ...    
+3464    dead_heart
+3465         hispa
+3466        normal
+3467         hispa
+3468    dead_heart
+Name: idxs, Length: 3469, dtype: object</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-save-result-into-csv-file" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-save-result-into-csv-file">how to save result into csv file</h3>
+<p>Kaggle expects the submission as a CSV file, so let’s save it, and check the first few lines:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>ss[<span class="st">'label'</span>] <span class="op">=</span> results</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>ss.to_csv(<span class="st">'subm.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>head subm.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>image_id,label
+200001.jpg,hispa
+200002.jpg,normal
+200003.jpg,hispa
+200004.jpg,blast
+200005.jpg,blast
+200006.jpg,brown_spot
+200007.jpg,dead_heart
+200008.jpg,brown_spot
+200009.jpg,hispa</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-submit-to-kaggle-with-fastkaggle-api" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-submit-to-kaggle-with-fastkaggle-api">how to submit to kaggle with fastkaggle api</h3>
+<p>Let’s submit this to kaggle. We can do it from the notebook if we’re running on Kaggle, otherwise we can use the API:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> iskaggle:</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> kaggle <span class="im">import</span> api</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    api.competition_submit_cli(<span class="st">'subm.csv'</span>, <span class="st">'initial rn26d 128px'</span>, comp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>100%|██████████████████████████████████████████| 70.0k/70.0k [00:05&lt;00:00, 13.8kB/s]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>Successfully submitted to Paddy Doctor: Paddy Disease Classification</code></pre>
+</div>
+</div>
+<p>Success! We successfully created a submission.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<section id="what-is-the-most-important-thing-for-your-first-model" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-the-most-important-thing-for-your-first-model">what is the most important thing for your first model</h3>
+<p>Our initial submission is not very good (top 80% of teams) but it only took a minute to train. The important thing is that we have a good starting point to iterate from, and we can do rapid iterations. Every step from loading the data to creating the model to submitting to Kaggle is all automated and runs quickly.</p>
+<p>Therefore, we can now try lots of things quickly and easily and use those experiments to improve our results. In the next notebook, we’ll do exactly that!</p>
+<p>If you found this notebook useful, please remember to click the little up-arrow at the top to upvote it, since I like to know when people have found my work useful, and it helps others find it too. And if you have any questions or comments, please pop them below – I read every comment I receive!</p>
+</section>
+</section>
+<section id="addendum" class="level2">
+<h2 class="anchored" data-anchor-id="addendum">Addendum</h2>
+<section id="how-to-quickly-push-your-local-notebook-to-become-kaggle-notebook-online" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-quickly-push-your-local-notebook-to-become-kaggle-notebook-online">how to quickly push your local notebook to become kaggle notebook online</h3>
+<p><code>fastkaggle</code> also provides a function that pushes a notebook to Kaggle Notebooks. I wrote this notebook on my own machine, and pushed it to Kaggle from there – here’s the command I used:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> iskaggle:</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    push_notebook(<span class="st">'jhoward'</span>, <span class="st">'first-steps-road-to-the-top-part-1'</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                  title<span class="op">=</span><span class="st">'First Steps: Road to the Top, Part 1'</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                  <span class="bu">file</span><span class="op">=</span><span class="st">'first-steps-road-to-the-top-part-1.ipynb'</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                  competition<span class="op">=</span>comp, private<span class="op">=</span><span class="va">False</span>, gpu<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Kernel version 10 successfully pushed.  Please check progress at https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>.container { width:100% !important; }</style>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>nb_name()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'0008_fastai_first_steps_road_to_top_part_1.ipynb'</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ipy2md()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[jupytext] Reading /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1.ipynb in format ipynb
+[jupytext] Writing /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1.md
+cp to : /Users/Natsume/Documents/divefastai/Debuggable/jupytext
+move to : /Users/Natsume/Documents/fastdebug/mds/2022part1/</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[NbConvertApp] Converting notebook /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1.ipynb to markdown</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>copy to : /Users/Natsume/Documents/fastdebug/mds_output
+move to : /Users/Natsume/Documents/divefastai/Debuggable/nbconvert</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[NbConvertApp] Support files will be in 0008_fastai_first_steps_road_to_top_part_1_files/
+[NbConvertApp] Making directory /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1_files
+[NbConvertApp] Making directory /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1_files
+[NbConvertApp] Making directory /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1_files
+[NbConvertApp] Writing 20191 bytes to /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1.md</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>fastnbs(<span class="st">"push kaggle"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="how-to-quickly-push-your-local-notebook-to-become-kaggle-notebook-online-1" class="level3 cell-output cell-output-display">
+<h3 class="anchored" data-anchor-id="how-to-quickly-push-your-local-notebook-to-become-kaggle-notebook-online-1">how to quickly <mark style="background-color: #ffff00">push</mark> your local notebook to become <mark style="background-color: #FFFF00">kaggle</mark> notebook online</h3>
+</section>
+<div class="cell-output cell-output-display">
+<p><code>fastkaggle</code> also provides a function that pushes a notebook to Kaggle Notebooks. I wrote this notebook on my own machine, and pushed it to Kaggle from there – here’s the command I used:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> iskaggle:</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    push_notebook(<span class="st">'jhoward'</span>, <span class="st">'first-steps-road-to-the-top-part-1'</span>,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                  title<span class="op">=</span><span class="st">'First Steps: Road to the Top, Part 1'</span>,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                  <span class="bu">file</span><span class="op">=</span><span class="st">'first-steps-road-to-the-top-part-1.ipynb'</span>,</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                  competition<span class="op">=</span>comp, private<span class="op">=</span><span class="va">False</span>, gpu<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>nb_name()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>ipy2md()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fastnbs(<span class="st">"push kaggle"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell-output cell-output-display">
+<p><a href="http://localhost:8888/tree/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1.ipynb">Open <code>0008_fastai_first_steps_road_to_top_part_1</code> in Jupyter Notebook locally</a></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><a href="https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1">Open <code>0008_fastai_first_steps_road_to_top_part_1</code> in Jupyter Notebook on Kaggle</a></p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

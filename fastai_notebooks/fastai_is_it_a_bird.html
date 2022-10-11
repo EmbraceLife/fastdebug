@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 0001_fastai_Is it a bird? Creating a model from your own data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 0001_fastai_Is it a bird? Creating a model from your own data">
+<meta property="og:description" content="Official course site: for lesson 1">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 0001_fastai_Is it a bird? Creating a model from your own data">
+<meta name="twitter:description" content="Official course site: for lesson 1">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">0001_fastai_Is it a bird? Creating a model from your own data</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link active">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#useful-course-sites" id="toc-useful-course-sites" class="nav-link active" data-scroll-target="#useful-course-sites">Useful Course sites</a></li>
+  <li><a href="#how-to-use-autoreload" id="toc-how-to-use-autoreload" class="nav-link" data-scroll-target="#how-to-use-autoreload">How to use autoreload</a></li>
+  <li><a href="#how-to-install-and-update-libraries" id="toc-how-to-install-and-update-libraries" class="nav-link" data-scroll-target="#how-to-install-and-update-libraries">How to install and update libraries</a></li>
+  <li><a href="#know-a-little-about-the-libraries" id="toc-know-a-little-about-the-libraries" class="nav-link" data-scroll-target="#know-a-little-about-the-libraries">Know a little about the libraries</a>
+  <ul class="collapse">
+  <li><a href="#what-is-fastai" id="toc-what-is-fastai" class="nav-link" data-scroll-target="#what-is-fastai">what is fastai</a></li>
+  <li><a href="#what-is-duckduckgo" id="toc-what-is-duckduckgo" class="nav-link" data-scroll-target="#what-is-duckduckgo">what is duckduckgo</a></li>
+  </ul></li>
+  <li><a href="#how-to-use-fastdebug-with-fastai-notebooks" id="toc-how-to-use-fastdebug-with-fastai-notebooks" class="nav-link" data-scroll-target="#how-to-use-fastdebug-with-fastai-notebooks">How to use fastdebug with fastai notebooks</a>
+  <ul class="collapse">
+  <li><a href="#how-to-use-fastdebug" id="toc-how-to-use-fastdebug" class="nav-link" data-scroll-target="#how-to-use-fastdebug">how to use fastdebug</a></li>
+  <li><a href="#did-i-document-it-in-a-notebook-before" id="toc-did-i-document-it-in-a-notebook-before" class="nav-link" data-scroll-target="#did-i-document-it-in-a-notebook-before">Did I document it in a notebook before?</a></li>
+  <li><a href="#did-i-document-it-in-a-src-before" id="toc-did-i-document-it-in-a-src-before" class="nav-link" data-scroll-target="#did-i-document-it-in-a-src-before">Did I document it in a src before?</a></li>
+  </ul></li>
+  <li><a href="#how-to-search-and-get-a-url-of-an-image-how-to-download-with-an-url-how-to-view-an-image" id="toc-how-to-search-and-get-a-url-of-an-image-how-to-download-with-an-url-how-to-view-an-image" class="nav-link" data-scroll-target="#how-to-search-and-get-a-url-of-an-image-how-to-download-with-an-url-how-to-view-an-image">how to search and get a url of an image; how to download with an url; how to view an image;</a>
+  <ul class="collapse">
+  <li><a href="#how-to-create-folders-using-path-how-to-search-and-download-images-in-folders-how-to-resize-images" id="toc-how-to-create-folders-using-path-how-to-search-and-download-images-in-folders-how-to-resize-images" class="nav-link" data-scroll-target="#how-to-create-folders-using-path-how-to-search-and-download-images-in-folders-how-to-resize-images">how to create folders using path; how to search and download images in folders; how to resize images</a></li>
+  </ul></li>
+  <li><a href="#train-my-model" id="toc-train-my-model" class="nav-link" data-scroll-target="#train-my-model">Train my model</a>
+  <ul class="collapse">
+  <li><a href="#how-to-find-and-unlink-images-not-properly-downloaded" id="toc-how-to-find-and-unlink-images-not-properly-downloaded" class="nav-link" data-scroll-target="#how-to-find-and-unlink-images-not-properly-downloaded">How to find and unlink images not properly downloaded</a></li>
+  <li><a href="#how-to-create-a-dataloaders-with-datablock-how-to-view-data-with-it" id="toc-how-to-create-a-dataloaders-with-datablock-how-to-view-data-with-it" class="nav-link" data-scroll-target="#how-to-create-a-dataloaders-with-datablock-how-to-view-data-with-it">How to create a DataLoaders with DataBlock; how to view data with it</a></li>
+  <li><a href="#how-to-build-my-model-with-dataloaders-and-pretrained-model-how-to-train-my-model" id="toc-how-to-build-my-model-with-dataloaders-and-pretrained-model-how-to-train-my-model" class="nav-link" data-scroll-target="#how-to-build-my-model-with-dataloaders-and-pretrained-model-how-to-train-my-model">How to build my model with dataloaders and pretrained model; how to train my model</a></li>
+  <li><a href="#how-to-predict-with-my-model-how-to-avoid-running-cells-in-nbdev_prepare" id="toc-how-to-predict-with-my-model-how-to-avoid-running-cells-in-nbdev_prepare" class="nav-link" data-scroll-target="#how-to-predict-with-my-model-how-to-avoid-running-cells-in-nbdev_prepare">How to predict with my model; how to avoid running cells in nbdev_prepare</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">0001_fastai_Is it a bird? Creating a model from your own data</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="useful-course-sites" class="level2">
+<h2 class="anchored" data-anchor-id="useful-course-sites">Useful Course sites</h2>
+<p><strong>Official course site</strong>: for lesson <a href="https://course.fast.ai/Lessons/lesson1.html">1</a></p>
+<p><strong>Official notebooks</strong> <a href="https://github.com/fastai/course22">repo</a>, on <a href="https://nbviewer.org/github/fastai/course22/tree/master/">nbviewer</a></p>
+<p>Official <strong>Is it a bird</strong> <a href="https://www.kaggle.com/code/jhoward/is-it-a-bird-creating-a-model-from-your-own-data">notebook</a> on kaggle</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The autoreload extension is already loaded. To reload it, use:
+  %reload_ext autoreload</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-use-autoreload" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-use-autoreload">How to use autoreload</h2>
+<p>This <a href="https://ipython.org/ipython-doc/3/config/extensions/autoreload.html">documentation</a> has a helpful example.</p>
+<p>put these two lines in the top of this notebook</p>
+<pre><code>%load_ext autoreload
+%autoreload 2</code></pre>
+<p>so that, when I updated <code>fastdebug</code> library, I don’t need to rerun <code>import fastdebug.utils ....</code> and it should reload the library for me automatically.</p>
+</section>
+<section id="how-to-install-and-update-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-install-and-update-libraries">How to install and update libraries</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mamba update <span class="op">-</span>q <span class="op">-</span>y fastai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>Uqq duckduckgo_search</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="know-a-little-about-the-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="know-a-little-about-the-libraries">Know a little about the libraries</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.core <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>.container { width:100% !important; }</style>
+</div>
+</div>
+<section id="what-is-fastai" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-fastai">what is fastai</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>whichversion(<span class="st">"fastai"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>fastai: 2.7.9 
+fastai simplifies training fast and accurate neural nets using modern best practices    
+Jeremy Howard, Sylvain Gugger, and contributors 
+https://github.com/fastai/fastai/tree/master/     
+python_version: &gt;=3.7     
+/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastai</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>whatinside(fastai, lib<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The library has 24 modules
+['_modidx',
+ '_nbdev',
+ '_pytorch_doc',
+ 'basics',
+ 'callback',
+ 'collab',
+ 'data',
+ 'distributed',
+ 'fp16_utils',
+ 'imports',
+ 'interpret',
+ 'layers',
+ 'learner',
+ 'losses',
+ 'medical',
+ 'metrics',
+ 'optimizer',
+ 'tabular',
+ 'test_utils',
+ 'text',
+ 'torch_basics',
+ 'torch_core',
+ 'torch_imports',
+ 'vision']</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastai.losses <span class="im">as</span> fl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>whatinside(fl, dun<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>fastai.losses has: 
+11 items in its __all__, and 
+334 user defined functions, 
+178 classes or class objects, 
+4 builtin funcs and methods, and
+535 callables.
+
+BaseLoss:                           class, type    Same as `loss_cls`, but flattens input and target.
+CrossEntropyLossFlat:               class, type    Same as `nn.CrossEntropyLoss`, but flattens input and target.
+FocalLoss:                          class, PrePostInitMeta    Same as `nn.Module`, but no need for subclasses to call `super().__init__`
+FocalLossFlat:                      class, type    Same as CrossEntropyLossFlat but with focal paramter, `gamma`. Focal loss is introduced by Lin et al. 
+https://arxiv.org/pdf/1708.02002.pdf. Note the class weighting factor in the paper, alpha, can be 
+implemented through pytorch `weight` argument passed through to F.cross_entropy.
+BCEWithLogitsLossFlat:              class, type    Same as `nn.BCEWithLogitsLoss`, but flattens input and target.
+BCELossFlat:                        function    Same as `nn.BCELoss`, but flattens input and target.
+MSELossFlat:                        function    Same as `nn.MSELoss`, but flattens input and target.
+L1LossFlat:                         function    Same as `nn.L1Loss`, but flattens input and target.
+LabelSmoothingCrossEntropy:         class, PrePostInitMeta    Same as `nn.Module`, but no need for subclasses to call `super().__init__`
+LabelSmoothingCrossEntropyFlat:     class, type    Same as `LabelSmoothingCrossEntropy`, but flattens input and target.
+DiceLoss:                           class, type    Dice loss for segmentation</code></pre>
+</div>
+</div>
+</section>
+<section id="what-is-duckduckgo" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-duckduckgo">what is duckduckgo</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckduckgo_search</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>whichversion(<span class="st">"duckduckgo_search"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>duckduckgo-search: 2.1.3 
+Search for words, documents, images, news, maps and text translation using the DuckDuckGo.com search engine.    
+deedy5 
+https://github.com/deedy5/duckduckgo_search     
+python_version: &gt;=3.7     
+/Users/Natsume/mambaforge/lib/python3.9/site-packages/duckduckgo_search</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>whatinside(duckduckgo_search)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>duckduckgo_search has: 
+0 items in its __all__, and 
+6 user defined functions, 
+0 classes or class objects, 
+0 builtin funcs and methods, and
+6 callables.
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>whatinside(duckduckgo_search, func<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>duckduckgo_search has: 
+0 items in its __all__, and 
+6 user defined functions, 
+0 classes or class objects, 
+0 builtin funcs and methods, and
+6 callables.
+
+The user defined functions are:
+ddg:               function    (keywords, region='wt-wt', safesearch='Moderate', time=None, max_results=25, output=None)
+ddg_images:        function    (keywords, region='wt-wt', safesearch='Moderate', time=None, size=None, color=None, type_image=None, layout=None, license_image=None, max_results=100, output=None, download=False)
+ddg_maps:          function    (keywords, place=None, street=None, city=None, county=None, state=None, country=None, postalcode=None, latitude=None, longitude=None, radius=0, max_results=None, output=None)
+ddg_news:          function    (keywords, region='wt-wt', safesearch='Moderate', time=None, max_results=25, output=None)
+ddg_translate:     function    (keywords, from_=None, to='en', output=None)
+ddg_videos:        function    (keywords, region='wt-wt', safesearch='Moderate', time=None, resolution=None, duration=None, license_videos=None, max_results=50, output=None)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="how-to-use-fastdebug-with-fastai-notebooks" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-use-fastdebug-with-fastai-notebooks">How to use fastdebug with fastai notebooks</h2>
+<section id="how-to-use-fastdebug" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-use-fastdebug">how to use fastdebug</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.core <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastdebug.utils <span class="im">as</span> fu</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastdebug.core <span class="im">as</span> core</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>whatinside(fu,dun<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>fastdebug.utils has: 
+29 items in its __all__, and 
+42 user defined functions, 
+3 classes or class objects, 
+0 builtin funcs and methods, and
+45 callables.
+
+expand:NoneType
+test_eq:           function    `test` that `a==b`
+test_is:           function    `test` that `a is b`
+FunctionType:      class, type    Create a function object.
+
+code
+  a code object
+globals
+  the globals dictionary
+name
+  a string that overrides the name from the code object
+argdefs
+  a tuple that specifies the default argument values
+closure
+  a tuple that supplies the bindings for free variables
+MethodType:        class, type    method(function, instance)
+
+Create a bound instance method object.
+nb_url:            function    run this func to get nb_url of this current notebook
+nb_path:           function    run this func to get nb_path of this current notebook
+nb_name:           function    run this func to get nb_path of this current notebook
+ipy2md:            function    convert the current notebook to md
+expandcell:        function    expand cells of the current notebook to its full width
+inspect_class:     function    examine the details of a class
+ismetaclass:       function    check whether a class is a metaclass or not
+isdecorator:       decorator, function    check whether a function is a decorator
+whatinside:        function    Check what inside a module: `__all__`, functions, classes, builtins, and callables
+whichversion:      function    Give you library version and other basic info.
+fastview:          function    to view the commented src code in color print and with examples
+fastsrcs:          function    to list all commented src files
+getrootport:       function    get the local port and notebook dir
+jn_link:           function    Get a link to the notebook at `path` on Jupyter Notebook
+get_all_nbs:       function    return paths for all nbs both in md and ipynb format into lists
+openNB:            function    Get a link to the notebook at by searching keyword or notebook name
+highlight:         function    highlight a string with yellow background
+display_md:        function    Get a link to the notebook at `path` on Jupyter Notebook
+display_block:     function    `line` is a section title, find all subsequent lines which belongs to the same section and display them together
+fastnbs:           function    check with fastlistnbs() to find interesting things to search fastnbs() can use keywords to search learning points (a section title and a section itself) from my documented fastai notebooks
+fastcodes:         function    using keywords to search learning points from commented sources files
+fastnotes:         function    using key words to search notes and display the found line and lines surround it
+fastlistnbs:       function    display all my commented notebooks subheadings in a long list. Best to work with fastnbs together.
+fastlistsrcs:      function    display all my commented src codes learning comments in a long list</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>whatinside(core, dun<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>fastdebug.core has: 
+14 items in its __all__, and 
+117 user defined functions, 
+18 classes or class objects, 
+1 builtin funcs and methods, and
+138 callables.
+
+defaults:SimpleNamespace
+pprint:                       function    Pretty-print a Python object to a stream [default is sys.stdout].
+inspect:module
+dbcolors:                     class, type    None
+randomColor:                  function    create a random color by return a random dbcolor from dbcolors
+colorize:                     function    return the string with dbcolors
+strip_ansi:                   function    to make printright work using regex
+printright:                   function    print a block of text to the right of the cell
+printsrclinewithidx:          function    add idx number to a srcline
+printsrc:                     function    print the seleted srcline with comment, idx and specified num of expanding srclines
+dbprintinsert:                function    insert arbitary code expressions into source code for evaluation
+Fastdb:                       class, type    None
+randomize_cmtparts_color:     function    give each comment a different color for easy viewing
+reliveonce:                   function    Replace current version of srcode with older version, and back to normal</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>inspect_class(Fastdb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+is Fastdb a metaclass: False
+is Fastdb created by a metaclass: False
+Fastdb is created by &lt;class 'type'&gt;
+Fastdb.__new__ is object.__new__: True
+Fastdb.__new__ is type.__new__: False
+Fastdb.__new__: &lt;built-in method __new__ of type object&gt;
+Fastdb.__init__ is object.__init__: False
+Fastdb.__init__ is type.__init__: False
+Fastdb.__init__: &lt;function Fastdb.__init__&gt;
+Fastdb.__call__ is object.__call__: False
+Fastdb.__call__ is type.__call__: False
+Fastdb.__call__: &lt;method-wrapper '__call__' of type object&gt;
+Fastdb.__class__: &lt;class 'type'&gt;
+Fastdb.__bases__: (&lt;class 'object'&gt;,)
+Fastdb.__mro__: (&lt;class 'fastdebug.core.Fastdb'&gt;, &lt;class 'object'&gt;)
+
+Fastdb's function members are:
+__init__: Create a Fastdebug class which has two functionalities: dbprint and print.
+autoprint: print srcode with appropriate number of lines automatically
+create_dbsrc_from_string: create dbsrc from a string
+create_dbsrc_string: create the dbsrc string
+create_explore_from_string: evaluate the explore dbsrc from string
+create_explore_str: create the explore dbsrc string
+create_snoop_from_string: evaluate the snoop dbsrc from string
+create_snoop_str: creat the snoop dbsrc string
+debug: to quickly check for clues of errors
+docsrc: create dbsrc the string and turn the string into actual dbsrc function, we have self.dbsrcstr and self.dbsrc available from now on.
+explore: insert 'import ipdb; ipdb.set_trace()' above srcline of idx to create dbsrc, and exec on dbsrc
+goback: Return src back to original state.
+print: Print the source code in whole or parts with idx and comments you added with dbprint along the way.
+printcmts1: print the entire srcode and save it to a file if save=True
+printcmts2: print the srcodes in parts
+printtitle: print title which includes src name, line number under investigation, example.
+replaceWithDbsrc: to replace self.orisrc.__name__ with 'self.dbsrc' and assign this new self.eg to self.eg
+run_example: run self.eg with self.dbsrc
+snoop: run snoop on the func or class under investigation only when example is available
+takeoutExample: get the line of example code with srcode name in it
+
+Fastdb's method members are:
+{}
+
+Fastdb's class members are:
+{'__class__': &lt;class 'type'&gt;}
+
+Fastdb's namespace are:
+mappingproxy({'__dict__': &lt;attribute '__dict__' of 'Fastdb' objects&gt;,
+              '__doc__': None,
+              '__init__': &lt;function Fastdb.__init__&gt;,
+              '__module__': 'fastdebug.core',
+              '__weakref__': &lt;attribute '__weakref__' of 'Fastdb' objects&gt;,
+              'autoprint': &lt;function Fastdb.autoprint&gt;,
+              'create_dbsrc_from_string': &lt;function Fastdb.create_dbsrc_from_string&gt;,
+              'create_dbsrc_string': &lt;function Fastdb.create_dbsrc_string&gt;,
+              'create_explore_from_string': &lt;function Fastdb.create_explore_from_string&gt;,
+              'create_explore_str': &lt;function Fastdb.create_explore_str&gt;,
+              'create_snoop_from_string': &lt;function Fastdb.create_snoop_from_string&gt;,
+              'create_snoop_str': &lt;function Fastdb.create_snoop_str&gt;,
+              'debug': &lt;function Fastdb.debug&gt;,
+              'docsrc': &lt;function Fastdb.docsrc&gt;,
+              'explore': &lt;function Fastdb.explore&gt;,
+              'goback': &lt;function Fastdb.goback&gt;,
+              'print': &lt;function Fastdb.print&gt;,
+              'printcmts1': &lt;function Fastdb.printcmts1&gt;,
+              'printcmts2': &lt;function Fastdb.printcmts2&gt;,
+              'printtitle': &lt;function Fastdb.printtitle&gt;,
+              'replaceWithDbsrc': &lt;function Fastdb.replaceWithDbsrc&gt;,
+              'run_example': &lt;function Fastdb.run_example&gt;,
+              'snoop': &lt;function Fastdb.snoop&gt;,
+              'takeoutExample': &lt;function Fastdb.takeoutExample&gt;})</code></pre>
+</div>
+</div>
+</section>
+<section id="did-i-document-it-in-a-notebook-before" class="level3">
+<h3 class="anchored" data-anchor-id="did-i-document-it-in-a-notebook-before">Did I document it in a notebook before?</h3>
+<p>run <code>push-code-new</code> in teminal to convert all current notebooks into mds</p>
+<p>so that the followign search will get me the latest result if I did document similar things</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fastnbs(<span class="st">"what is fastdebug"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I can also extract all the notebook subheadings with the function below<br>
+and to check whether I have documented something similar by <code>cmd + f</code> and search keywords there</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>fastlistnbs()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+/Users/Natsume/Documents/fastdebug/mds/2022part1/0002_Saving_Model_fastai.md
+## what to import to handle vision problems in fastai
+## how to download and decompress datasets prepared by fastai
+## how to tell it is a cat by reading filename
+## how to create dataloaders with `from_name_func`
+## how to create a pretrained model with resnet18 and error_rate; how to fine tune it 3 epochs
+## how to export model to a pickle file and download it from Kaggle
+## how to convert ipynb to md
+
+/Users/Natsume/Documents/fastdebug/mds/2022part1/0002_fastai_Saving_Model_fastai.md
+## what to import to handle vision problems in fastai
+## how to download and decompress datasets prepared by fastai
+## how to tell it is a cat by reading filename
+## how to create dataloaders with `from_name_func`
+## how to create a pretrained model with resnet18 and error_rate; how to fine tune it 3 epochs
+## how to export model to a pickle file and download it from Kaggle
+## how to convert ipynb to md
+
+/Users/Natsume/Documents/fastdebug/mds/2022part1/0001_is_it_a_bird.md
+## Useful Course sites
+## How to use autoreload
+## How to install and update libraries
+## Know a little about the libraries
+### what is fastai
+### what is duckduckgo
+## How to use fastdebug with fastai notebooks
+### how to use fastdebug
+### Did I document it in a notebook before?
+### Did I document it in a src before?
+## how to search and get a url of an image; how to download with an url; how to view an image;
+### how to create folders using path; how to search and download images in folders; how to resize images 
+## Train my model
+### How to find and unlink images not properly downloaded
+### How to create a DataLoaders with DataBlock; how to view data with it
+### How to build my model with dataloaders and pretrained model; how to train my model
+### How to predict with my model; how to avoid running cells in nbdev_prepare
+
+/Users/Natsume/Documents/fastdebug/mds/2022part1/0003_fastai_which_image_model_best.md
+## timm
+## how to git clone TIMM analysis data; how to enter a directory with %cd
+## how to read a csv file with pandas
+## how to merge data with pandas; how to create new column with pandas; how to string extract with regex expression; how to select columns up to a particular column with pandas; how to do loc in pandas; how to select a group of columns using str.contains and regex
+## Inference results
+### how to scatterplot with plotly.express; how to set the plot's width, height, size, title, x, y, log_x, color, hover_name, hover_data; 
+### how to scatterplot on a subgroup of data using regex and plotly
+## Training results
+### convert ipynb to md
+
+/Users/Natsume/Documents/fastdebug/mds/lib/utils.md
+## setup for exporting to a module
+## how to get current notebook's name, path and url
+## how to convert ipynb to md automatically; how to run commands in python
+## Autoreload for every notebook
+## Expand cells
+## Import fastcore env
+## to inspect a class
+### get the docs for each function of a class
+## is it a metaclass?
+## is it a decorator
+### handle all kinds of exceptions for evaluating retn 
+## whatinside a module of a library
+### show the type of objects inside `__all__`
+### working for fastdebug.core
+### to show Fastdb methods
+## whichversion of a library
+## fastview
+## fastscrs
+## getrootport
+## jn_link
+## get_all_nbs
+### get all nbs path for both md and ipynb
+### add index.ipynb
+## openNB
+## highlight
+## display_md
+## display_block
+### handle both file path and file content at the same time
+## fastnbs
+## fastcodes
+## fastnotes
+### multiple folders
+## fastlistnbs
+## fastlistsrcs
+## Best practice of fastdebug.core
+## Best practice of fastdebug.utils
+## Export
+
+/Users/Natsume/Documents/fastdebug/mds/lib/00_core.md
+## make life easier with defaults  
+## globals() and locals()
+## Execute strings
+### new variable or updated variable by exec will only be accessible from locals()
+### eval can override its own globals() and locals()
+### when exec update existing functions
+### when the func to be udpated involve other libraries
+### inside a function, exec() allow won't give you necessary env from function namespace
+### magic of `exec(b, globals().update(locals()))`
+### Bring variables from a func namespace to the sideout world
+### globals() in a cell vs globals() in a func
+## make a colorful string
+## align text to the most right
+## printsrcwithidx
+### print the entire source code with idx from 0
+### print the whole src with idx or print them in parts
+### use cmts from dbprint to print out src with comments
+### no more update for printsrcwithidx, for the latest see Fastdb.print
+## print out src code
+### basic version
+### print src with specific number of lines
+### make the naming more sensible
+### Allow a dbline occur more than once
+### adding idx to the selected srclines
+#### printsrclinewithidx
+### dblines can be string of code or idx number
+### avoid multi-occurrance of the same srcline
+## dbprint on expression
+### basic version
+### insert dbcode and make a new dbfunc
+### Bring outside namespace variables into exec()
+### Bring what inside the func namespace variables to the outside world
+### Adding g = locals() to dbprintinsert to avoid adding env individually
+### enable srclines to be either string or int 
+### enable = to be used as assignment in codes
+### avoid adding "env=g" for dbprintinsert
+### collect cmt for later printsrcwithidx to print comments together
+### make sure only one line with correct idx is debugged
+### avoid typing "" when there is no codes
+### no more update for dbprint, for the latest see Fastdb.dbprint
+### use dbprint to override the original official code without changing its own pyfile
+## dbprintinsert
+### Run and display the inserted dbcodes 
+### use locals() inside the dbsrc code to avoid adding env individually
+### enable dbprintinsert to do exec on a block of code
+## printrunsrclines() 
+### Examples
+#### simple example
+#### complex example
+### insert a line after each srcline to add idx
+### add correct indentation to each inserted line
+#### count the indentation for each srcline
+### indentation special case: if, else, for, def
+### remove pure comments or docs from dbsrc
+### print out the srclines which get run
+### Make sure all if, else, for get printed
+### Put all together into the function printrunsrclines()
+#### no more renaming of foo
+#### add example as a param into the function
+#### improve on search for `if`, else, for, def to avoid errors for more examples
+#### remove an empty line with indentation
+### make it work
+### more difficult examples to test printrunsrc()
+## Make fastdebug a class
+### improve on the line idx readability
+### collect cmt from dbprint and print
+### make sure only the line with correct idx is debugged
+### having "" or "   " inside codes without causing error
+### replace Fastdb.printsrcwithdix with Fastdb.print
+### add idx to dbsrc when showdbsrc=True
+### not load the inner locals() to outenv can prevent mysterious printing of previous db messages
+### using @patch to enable docs for instance methods like `dbprint` and `print`
+### move param env into `__init__`
+### Add example to the obj
+### Take not only function but also class
+### To remove the necessity of self.takExample()
+### Try to remove g = locals()
+### Make sure `showdbsrc=True` give us the line starting with 'dbprintinsert'
+### Make sure `showdbsrc=True` give us info on changes in g or outenv
+### exit and print a warning message: idx has to be int
+### handle errors by codes with trailing spaces 
+### showdbsrc=True, check whether Fastdb.dbprint and fdb.dbprint are same object using `is`
+### remove unnecessary db printout when showdbsrc=True and add printout to display sections
+### raise TypeError when decode are not integer and showdbsrc=true working on both method and function
+### when debugging dbprint, make sure dbsrc is printed with the same idx as original
+### update dbsrc to the global env
+### go back to normal before running dbprint again
+### auto print src with cmt and idx as the ending part of dbprint
+### to mark my explorations (expressions to evaluate) to stand out
+### Add the print of src with idx and comments at the end of dbsrc
+### embed example and autoprint to shorten the code to type
+### Make title for dbprint
+### Adding self.eg info and color group into dbprint and print
+#### todo: make the comments with same self.eg have the same color
+### make dbsrc print idx right
+### add self.eg to a dict with keys are idxsrc
+### handle both function and class as src
+### documenting on Fastdb.dbprint itself
+## mk_dbsrc
+## Turn mk_dbsrc into docsrc 
+### handle when no codes are given
+## create_dbsrc_from_string
+## replaceWithDbsrc
+### handle class and metaclass
+### improve on handling function as decorator
+### Handling `inspect._signature_from_callable` to become `self.dbsrc`
+### handling usage of `@delegates`
+### handling `@delegates` with indentation before it
+### handling classes by inspect.isclass() rather than == type and add more class situations
+### handling `class _T(_TestA, metaclass=BypassNewMeta): `
+## run_example
+### `exec(self.eg, globals().update(self.egEnv), locals())` works better than `...update(locals()), self.egEnv)
+### no more env cells run before `fdb.eg` to make `fdb.run_example` work
+## Autoprint
+## Take an example and its env into Fastdb obj
+## print src with idx and cmt in whole or parts
+### print self.eg after each comment and colorize comments
+### color examples and cmts separately and make the func simpler
+### split each cmt and colorize parts randomly
+### printcmts1 while saving into a file
+## goback
+## Fastdb.explore
+### adding one breakpoint with comment
+### Adding multiple breakpoints by multiple set_trace()
+### Go back to normal before running explore again
+### enable fdb.takExample("whatinside(fu), ...) without using `fu.whatinside`
+### refactory explore
+## snoop
+### snoop on both function and class
+### snoop on class and method and all???
+### snoop
+### simplify adding @snoop for both normal function and decorator
+### handling classes
+### add watch
+## Snoop
+### add watch
+### use guide on Fastdb.dbprint
+## reliveonce
+## Fastdb.debug
+## Export
+## Send to Obsidian
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0001_fastcore_meta_delegates.md
+## Import
+## Initiate Fastdb and example in str
+## Example
+## docsrc
+## Snoop
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0003_Explore_document_FixSigMeta_PrePostInitMeta_AutoInit.md
+## Initialize fastdebug objects
+## class FixSigMeta(type) vs class Foo(type)
+## class Foo()
+## class PrePostInitMeta(FixSigMeta)
+## class Foo(metaclass=FixSigMeta)
+## class AutoInit(metaclass=PrePostInitMeta)
+## Prepare examples for FixSigMeta, PrePostInitMeta, AutoInit 
+## Snoop them together in one go
+### embed the dbsrc of FixSigMeta into PrePostInitMeta
+### embed dbsrc of PrePostInitMeta into AutoInit
+## Explore and Document on them together 
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0004_fastcore.meta._rm_self.md
+## imports
+## set up
+## document
+## snoop
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0005_fastcore.meta.test_sig.md
+## imports
+## setups
+## documents
+## snoop
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0007_fastcore.meta.BypassNewMeta.md
+## Reading official docs
+## Inspecting class
+## Initiating with examples
+## Snoop
+## Document
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0002_signature_from_callable.md
+## Expand cell
+## Imports and initiate
+## Examples
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0008_use_kwargs_dict.md
+## Imports
+## Reading official docs
+## empty2none
+## `_mk_param`
+## use_kwargs_dict
+### Reading docs
+## use_kwargs
+### Reading docs
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0006_fastcore.meta.NewChkMeta.md
+## Import and Initalization
+## Official docs
+## Prepare Example
+## Inspect classes
+## Snoop
+## Document
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0000_tour.md
+### Documentation
+### Testing
+### Foundations
+### L
+### Transforms
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0012_fastcore_foundation_L.md
+## Document `L` with fastdebug
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0011_Fastdb.md
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0009_funcs_kwargs.md
+## fastcore.meta.method
+### Reading Docs
+### Running codes
+### Document
+### snoop
+## funcs_kwargs
+### Official docs
+### snoop: from _funcs_kwargs to funcs_kwargs
+### snoop only '_funcs_kwargs' by breaking up 'funcs_kwargs'
+
+/Users/Natsume/Documents/fastdebug/mds/demos/0010_fastcore_meta_summary.md
+## import
+## fastcore and fastcore.meta
+### What's inside fastcore.meta
+## Review individual funcs and classes
+### What is fastcore.meta all about? 
+### What can these metaclasses do for me?
+#### FixSigMeta
+#### PrePostInitMeta
+#### AutoInit
+#### NewChkMeta
+#### BypassNewMeta
+### What can those decorators do for me?
+#### use_kwargs_dict
+#### use_kwargs
+#### delegates
+#### funcs_kwargs
+### The remaining functions
+## What is fastcore.meta all about
+
+/Users/Natsume/Documents/fastdebug/mds/questions/00_question_anno_dict.md
+## `anno_dict` docs
+## Dive in
+## `anno_dict` seems not add anything new to `__annotations__`
+## use fastdebug to double check
+## Does fastcore want anno_dict to include params with no annos?
+## Jeremy's response</code></pre>
+</div>
+</div>
+</section>
+<section id="did-i-document-it-in-a-src-before" class="level3">
+<h3 class="anchored" data-anchor-id="did-i-document-it-in-a-src-before">Did I document it in a src before?</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>fastcodes(<span class="st">"how to access parameters"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p>keyword match is <mark style="background-color: #ffff00">1.0</mark> , found a line: in <mark style="background-color: #FFFF00">_rm_self.py</mark></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    sigd = dict(sig.parameters)===========================================================(1) # how to access parameters from a signature; how is parameters stored in sig; how to turn parameters into a dict;; 
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>the entire source code in <mark style="background-color: #FFFF00">_rm_self.py</mark></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+class Foo:
+    def __init__(self, a, b:int=1): pass
+pprint(inspect.signature(Foo.__init__))
+pprint(_rm_self(inspect.signature(Foo.__init__)))
+
+def _rm_self(sig):========================================================================(0) # remove parameter self from a signature which has self;; 
+    sigd = dict(sig.parameters)===========================================================(1) # how to access parameters from a signature; how is parameters stored in sig; how to turn parameters into a dict;; 
+    sigd.pop('self')======================================================================(2) # how to remove the self parameter from the dict of sig;; 
+    return sig.replace(parameters=sigd.values())==========================================(3) # how to update a sig using a updated dict of sig's parameters; 
+                                                                                                                                                        (4)
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>keyword match is <mark style="background-color: #ffff00">1.0</mark> , found a line: in <mark style="background-color: #FFFF00">delegates.py</mark></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        sigd = dict(sig.parameters)=======================================================(12) # How to access parameters of a signature?; How to turn parameters into a dict?; 
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>the entire source code in <mark style="background-color: #FFFF00">delegates.py</mark></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+
+def delegates(to:FunctionType=None, # Delegatee===========================================(0) # how to make delegates(to) to have to as FunctionType and default as None; 
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2) # how to make delegates(to, but) to have 'but' as list and default as None; 
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6) # how to write 2 ifs and elses in 2 lines; 
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7) # how to assign a,b together with if and else; 
+        from_f = getattr(from_f,'__func__',from_f)========================================(8) # Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); how to use getattr(obj, attr, default); 
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10) # if B has __delwrap__, can we do delegates(A)(B) again?; hasattr(obj, '__delwrap__'); 
+        sig = inspect.signature(from_f)===================================================(11) # how to get signature obj of B; what does a signature look like; what is the type; 
+        sigd = dict(sig.parameters)=======================================================(12) # How to access parameters of a signature?; How to turn parameters into a dict?; 
+        k = sigd.pop('kwargs')============================================================(13) # How to remove an item from a dict?; How to get the removed item from a dict?; How to add the removed item back to the dict?; when writing expressions, as they share environment, so they may affect the following code; 
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but} # How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line;  (16)
+        sigd.update(s2)===================================================================(17) # How to add the selected params from A's signature to B's signature; How to add items into a dict;; 
+        if keep: sigd['kwargs'] = k=======================================================(18) # How to add a new item into a dict;; 
+        else: from_f.__delwrap__ = to_f===================================================(19) # How to create a new attr for a function or obj;; 
+        from_f.__signature__ = sig.replace(parameters=sigd.values())======================(20) # How to update a signature with a new set of parameters;; 
+        if hasattr(from_f, '__annotations__'): from_f.__annotations__.update(anno)========(21) # How to check whether a func has __annotations__; How add selected params' annotations from A to B's annotations;; 
+        return f==========================================================================(22)      
+    return _f=============================================================================(23)      
+                                                                                                                                                        (24)
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>keyword match is <mark style="background-color: #ffff00">1.0</mark> , found a line: in <mark style="background-color: #FFFF00">delegates.py</mark></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>the entire source code in <mark style="background-color: #FFFF00">delegates.py</mark></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+
+def delegates(to:FunctionType=None, # Delegatee===========================================(0) # how to make delegates(to) to have to as FunctionType and default as None; 
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2) # how to make delegates(to, but) to have 'but' as list and default as None; 
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6) # how to write 2 ifs and elses in 2 lines; 
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7) # how to assign a,b together with if and else; 
+        from_f = getattr(from_f,'__func__',from_f)========================================(8) # Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); how to use getattr(obj, attr, default); 
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10) # if B has __delwrap__, can we do delegates(A)(B) again?; hasattr(obj, '__delwrap__'); 
+        sig = inspect.signature(from_f)===================================================(11) # how to get signature obj of B; what does a signature look like; what is the type; 
+        sigd = dict(sig.parameters)=======================================================(12) # How to access parameters of a signature?; How to turn parameters into a dict?; 
+        k = sigd.pop('kwargs')============================================================(13) # How to remove an item from a dict?; How to get the removed item from a dict?; How to add the removed item back to the dict?; when writing expressions, as they share environment, so they may affect the following code; 
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but} # How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line;  (16)
+        sigd.update(s2)===================================================================(17) # How to add the selected params from A's signature to B's signature; How to add items into a dict;; 
+        if keep: sigd['kwargs'] = k=======================================================(18) # How to add a new item into a dict;; 
+        else: from_f.__delwrap__ = to_f===================================================(19) # How to create a new attr for a function or obj;; 
+        from_f.__signature__ = sig.replace(parameters=sigd.values())======================(20) # How to update a signature with a new set of parameters;; 
+        if hasattr(from_f, '__annotations__'): from_f.__annotations__.update(anno)========(21) # How to check whether a func has __annotations__; How add selected params' annotations from A to B's annotations;; 
+        return f==========================================================================(22)      
+    return _f=============================================================================(23)      
+                                                                                                                                                        (24)
+</code></pre>
+</div>
+</div>
+<p>I can check all the commented src files.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>fastsrcs()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>test_sig.py
+BypassNewMeta.py
+snoop.py
+FixSigMeta.py
+fastnbs.py
+funcs_kwargs.py
+NewChkMeta.py
+printtitle.py
+AutoInit.py
+method.py
+_rm_self.py
+delegates.py
+create_explore_str.py
+PrePostInitMeta.py
+_funcs_kwargs.py
+whatinside.py</code></pre>
+</div>
+</div>
+<p>I can print out all the learning points as comments inside each src file</p>
+<p>However, I need to figure out a way to extract them nicely from the files</p>
+<p>Todos: how to comment src for list extraction</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>fastlistsrcs()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> test_sig(f:FunctionType or ClassType, b:str); test_sig will get f's signature as a string; b is a signature in string provided by the user; in fact, test_sig is to compare two strings; 
+ test_sig is to test two strings with test_eq; how to turn a signature into a string;; 
+ since t2 just references t these will be the same
+ likewise, chaning an attribute on t will also affect t2 because they both point to the same object.
+ both t and t2's __class__ is _T
+ BypassNewMeta allows its instance class e.g., _T to choose a specific class e.g., _TestB and change `__class__` of an object e.g., t of _TestB to _T without creating a new object; 
+ If the instance class like _T has attr '_new_meta', then run it with param x;; 
+ when x is not an instance of _T's _bypass_type; or when a positional param is given; or when a keyword arg is given; let's run _T's super's __call__ function with x as param; and assign the result to x;  (4)
+ If x.__class__ is not cls or _T, then make it so; 
+ learn about /tmp folder https://www.fosslinux.com/41739/linux-tmp-directory-everything-you-need-to-know.htm                                       (1)
+             exec(dbsrc, locals(), self.egEnv)                ===========================(6)       
+     exec(code, globals().update(self.outenv), locals())  when dbsrc is a method, it will update as part of a class                                               (8)
+ store dbsrc func inside Fastdb obj==================================================(9)       
+ using __new__ of  FixSigMeta instead of type
+ Base
+ Any class having FixSigMeta as metaclass will have its own __init__ func stored in its attr __signature__;FixSigMeta uses its __new__ to create a class instance; then check whether its class instance has its own __init__;if so, remove self from the sig of __init__; then assign this new sig to __signature__ for the class instance;; 
+ how does a metaclass create a class instance; what does super().__new__() do here;; 
+ how to remove self from a signature; how to check whether a class' __init__ is inherited from object or not;;  (4)
+ allows you to add method b upon instantiation
+ don't forget to include **kwargs in __init__
+ the attempt to add a is ignored and uses the original method instead.
+ access the num attribute from the instance
+ adds method b
+ self.num + 5 = 10
+multiply instead of add 
+ add method b from the super class
+ 3 * 5 = 15
+ how funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;; 
+ how to check whether an object is callable; how to return a result of running a func; ; 
+ how to custom the params of `_funcs_kwargs` for a particular use with partial; 
+ if `o` is not an object without an attribute `foo`, set foo = 1
+ 1 was not of type _T, so foo = 1
+ t2 will now reference t
+ t and t2 are the same object
+ this will also change t.foo to 5 because it is the same object
+ without any arguments the constructor will return a reference to the same object
+ NewChkMeta is a metaclass inherited from FixSigMea; it makes its own __call__; when its class instance, e.g., _T, create object instances (e.g, t) without args nor kwargs but only x, and x is an object of the instance class, then return x; otherwise, create and return a new object created by the instance class's super class' __call__ method with x as param; In other words, t = _T(3) will create a new obj; _T(t) will return t; _T(t, 1) or _T(t, b=1) will also return a new obj; 
+ how to create a __call__ method with param cls, x, *args, **kwargs;; 
+ how to express no args and no kwargs and x is an instance of cls?; 
+ how to call __call__ of super class with x and consider all possible situations of args and kwargs; 
+ make sure self.orieg has no self inside===================(4)       
+ how to use :=&lt;, :=&gt;, :=^ with format to align text to left, right, and middle;  (5)
+ h=10 is initialized in the parent class
+ AutoInit inherit __new__ and __init__ from object to create and initialize object instances; AutoInit uses PrePostInitMeta.__new__ or in fact FixSigMeta.__new__ to create its own class instance, which can have __signature__; AutoInit uses PrePostInitMeta.__call__ to specify how its object instance to be created and initialized (with pre_init, init, post_init)); AutoInit as a normal or non-metaclass, it writes its own __pre_init__ method; 
+ how to run superclass' __init__ function; 
+ how to test on the type of function or method
+ `1` is a dummy instance since Py3 doesn't allow `None` any more=====================(2)       
+ remove parameter self from a signature which has self;; 
+ how to access parameters from a signature; how is parameters stored in sig; how to turn parameters into a dict;; 
+ how to remove the self parameter from the dict of sig;; 
+ how to update a sig using a updated dict of sig's parameters; 
+ pprint and inspect is loaded from fastdebug
+ Delegatee===========================================(0)  Keep `kwargs` in decorated function?==========================(1)       
+ Exclude these parameters from signature===================(2)  how to write 2 ifs and elses in 2 lines; 
+ how to assign a,b together with if and else; 
+ Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); how to use getattr(obj, attr, default); 
+ if B has __delwrap__, can we do delegates(A)(B) again?; hasattr(obj, '__delwrap__'); 
+ how to get signature obj of B; what does a signature look like; what is the type; 
+ How to access parameters of a signature?; How to turn parameters into a dict?; 
+ How to remove an item from a dict?; How to get the removed item from a dict?; How to add the removed item back to the dict?; when writing expressions, as they share environment, so they may affect the following code; 
+ How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+ How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line;  (16)
+ How to add the selected params from A's signature to B's signature; How to add items into a dict;; 
+ How to add a new item into a dict;; 
+ How to create a new attr for a function or obj;; 
+ How to update a signature with a new set of parameters;; 
+ How to check whether a func has __annotations__; How add selected params' annotations from A to B's annotations;; 
+ set with __pre_init__
+ set with __init__
+ set with __post_init__
+ PrePostInitMeta inherit __new__ and __init__ from FixSigMeta as a metaclass (a different type); not from type, nor from object; PrePostInitMeta is itself a metaclass, which is used to create class instance not object instance; PrePostInitMeta writes its own __call__ which regulates how its class instance create and initialize object instance; 
+ how to create an object instance with a cls; how to check the type of an object is cls; how to run a function without knowing its params;; 
+ how to run __init__ without knowing its params; 
+ allows you to add method b upon instantiation
+ don't forget to include **kwargs in __init__
+ the attempt to add a is ignored and uses the original method instead.
+ how does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; I need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True); 
+ how to define a method which can use self and accept any parameters; 
+ how to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; ; 
+ how to turn a func into a method; 
+ how to give a method a different instance, like self; 
+ how to add a method to a class as an attribute; 
+ how to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself; 
+ how to add a list of names with None as default value to function `_init` to repalce its kwargs param; 
+ how to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`;  (12)
+ module, e.g., `import fastcore.all as fa`, use `fa` here=============(0)       
+ print all items in __all__===============================(1)       
+ print all user defined functions========================(2)       
+ print all class objects=================================(3)       
+ print all builtin funcs or methods=====================(4)       
+ print all the modules of the library it belongs to=======(5)       
+ print all callables=======================================(6)       
+ how many items inside mo.__all__?; 
+ get all funcs of a module; 
+ get all classes from the module; 
+ get the file path of the module; 
+ get names of all modules of a lib; 
+             print(f"{i[0]}: {kind}")  ==================================================(44)      
+             print(f"{i[0]}: {kind}")  ==================================================(56)      </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="how-to-search-and-get-a-url-of-an-image-how-to-download-with-an-url-how-to-view-an-image" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-search-and-get-a-url-of-an-image-how-to-download-with-an-url-how-to-view-an-image">how to search and get a url of an image; how to download with an url; how to view an image;</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> duckduckgo_search <span class="im">import</span> ddg_images</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> search_images(term, max_images<span class="op">=</span><span class="dv">30</span>):</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Searching for '</span><span class="sc">{</span>term<span class="sc">}</span><span class="ss">'"</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> L(ddg_images(term, max_results<span class="op">=</span>max_images)).itemgot(<span class="st">'image'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">#NB: `search_images` depends on duckduckgo.com, which doesn't always return correct responses.</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    If you get a JSON error, just try running it again (it may take a couple of tries).</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>urls <span class="op">=</span> search_images(<span class="st">'bird photos'</span>, max_images<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>urls[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'bird photos'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>'https://amazinganimalphotos.com/wp-content/uploads/2016/11/beautiful-birds.jpeg'</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdownload <span class="im">import</span> download_url</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>dest <span class="op">=</span> <span class="st">'bird.jpg'</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>download_url(urls[<span class="dv">0</span>], dest, show_progress<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.vision.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> Image.<span class="bu">open</span>(dest)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>im.to_thumb(<span class="dv">256</span>,<span class="dv">256</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="0001_fastai_is_it_a_bird_files/figure-html/cell-31-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>download_url(search_images(<span class="st">'forest photos'</span>, max_images<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>], <span class="st">'forest.jpg'</span>, show_progress<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>Image.<span class="bu">open</span>(<span class="st">'forest.jpg'</span>).to_thumb(<span class="dv">256</span>,<span class="dv">256</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Searching for 'forest photos'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="0001_fastai_is_it_a_bird_files/figure-html/cell-32-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<section id="how-to-create-folders-using-path-how-to-search-and-download-images-in-folders-how-to-resize-images" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-folders-using-path-how-to-search-and-download-images-in-folders-how-to-resize-images">how to create folders using path; how to search and download images in folders; how to resize images</h3>
+<p>Our searches seem to be giving reasonable results, so let’s grab 200 examples of each of “bird” and “forest” photos, and save each group of photos to a different folder:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>searches <span class="op">=</span> <span class="st">'forest'</span>,<span class="st">'bird'</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> Path(<span class="st">'bird_or_not'</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> time <span class="im">import</span> sleep</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> o <span class="kw">in</span> searches:</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    dest <span class="op">=</span> (path<span class="op">/</span>o)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>    dest.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>, parents<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    download_images(dest, urls<span class="op">=</span>search_images(<span class="ss">f'</span><span class="sc">{</span>o<span class="sc">}</span><span class="ss"> photo'</span>))</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    sleep(<span class="dv">10</span>)  <span class="co"># Pause between searches to avoid over-loading server</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    download_images(dest, urls<span class="op">=</span>search_images(<span class="ss">f'</span><span class="sc">{</span>o<span class="sc">}</span><span class="ss"> sun photo'</span>))</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>    sleep(<span class="dv">10</span>)</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>    download_images(dest, urls<span class="op">=</span>search_images(<span class="ss">f'</span><span class="sc">{</span>o<span class="sc">}</span><span class="ss"> shade photo'</span>))</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>    sleep(<span class="dv">10</span>)</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>    resize_images(path<span class="op">/</span>o, max_size<span class="op">=</span><span class="dv">400</span>, dest<span class="op">=</span>path<span class="op">/</span>o)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="train-my-model" class="level2">
+<h2 class="anchored" data-anchor-id="train-my-model">Train my model</h2>
+<section id="how-to-find-and-unlink-images-not-properly-downloaded" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-find-and-unlink-images-not-properly-downloaded">How to find and unlink images not properly downloaded</h3>
+<p>Some photos might not download correctly which could cause our model training to fail, so we’ll remove them:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>failed <span class="op">=</span> verify_images(get_image_files(path))</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>failed.<span class="bu">map</span>(Path.unlink)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(failed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-create-a-dataloaders-with-datablock-how-to-view-data-with-it" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-a-dataloaders-with-datablock-how-to-view-data-with-it">How to create a DataLoaders with DataBlock; how to view data with it</h3>
+<p>To train a model, we’ll need DataLoaders:</p>
+<ol type="1">
+<li><p>a training set (the images used to create a model) and</p></li>
+<li><p>a validation set (the images used to check the accuracy of a model – not used during training).</p></li>
+</ol>
+<p>We can view sample images from it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>dls <span class="op">=</span> DataBlock(</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    blocks<span class="op">=</span>(ImageBlock, CategoryBlock), </span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    get_items<span class="op">=</span>get_image_files, </span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    splitter<span class="op">=</span>RandomSplitter(valid_pct<span class="op">=</span><span class="fl">0.2</span>, seed<span class="op">=</span><span class="dv">42</span>),</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    get_y<span class="op">=</span>parent_label,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    item_tfms<span class="op">=</span>[Resize(<span class="dv">192</span>, method<span class="op">=</span><span class="st">'squish'</span>)]</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>).dataloaders(path)</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>dls.show_batch(max_n<span class="op">=</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-build-my-model-with-dataloaders-and-pretrained-model-how-to-train-my-model" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-build-my-model-with-dataloaders-and-pretrained-model-how-to-train-my-model">How to build my model with dataloaders and pretrained model; how to train my model</h3>
+<p>Now we’re ready to train our model. The fastest widely used computer vision model is resnet18. You can train this in a few minutes, even on a CPU! (On a GPU, it generally takes under 10 seconds…)</p>
+<p>fastai comes with a helpful <code>fine_tune()</code> method which automatically uses best practices for fine tuning a pre-trained model, so we’ll use that.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>learn <span class="op">=</span> vision_learner(dls, resnet18, metrics<span class="op">=</span>error_rate)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>learn.fine_tune(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-predict-with-my-model-how-to-avoid-running-cells-in-nbdev_prepare" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-predict-with-my-model-how-to-avoid-running-cells-in-nbdev_prepare">How to predict with my model; how to avoid running cells in nbdev_prepare</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>is_bird,_,probs <span class="op">=</span> learn.predict(PILImage.create(<span class="st">'bird.jpg'</span>))</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"This is a: </span><span class="sc">{</span>is_bird<span class="sc">}</span><span class="ss">."</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Probability it's a bird: </span><span class="sc">{</span>probs[<span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>ipy2md()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[jupytext] Reading /Users/Natsume/Documents/fastdebug/nbs/2022part1/0001_fastai_is_it_a_bird.ipynb in format ipynb
+[jupytext] Writing /Users/Natsume/Documents/fastdebug/nbs/2022part1/0001_fastai_is_it_a_bird.md
+cp to : /Users/Natsume/Documents/divefastai/Debuggable/jupytext
+move to : /Users/Natsume/Documents/fastdebug/mds/2022part1/</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[NbConvertApp] Converting notebook /Users/Natsume/Documents/fastdebug/nbs/2022part1/0001_fastai_is_it_a_bird.ipynb to markdown</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>move to : /Users/Natsume/Documents/fastdebug/mds_output</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[NbConvertApp] Support files will be in 0001_fastai_is_it_a_bird_files/
+[NbConvertApp] Making directory /Users/Natsume/Documents/fastdebug/nbs/2022part1/0001_fastai_is_it_a_bird_files
+[NbConvertApp] Making directory /Users/Natsume/Documents/fastdebug/nbs/2022part1/0001_fastai_is_it_a_bird_files
+[NbConvertApp] Writing 57758 bytes to /Users/Natsume/Documents/fastdebug/nbs/2022part1/0001_fastai_is_it_a_bird.md</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

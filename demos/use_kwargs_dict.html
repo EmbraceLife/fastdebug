@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 08_use_kwargs_dict</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 08_use_kwargs_dict">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 08_use_kwargs_dict">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">08_use_kwargs_dict</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link active">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#imports" id="toc-imports" class="nav-link active" data-scroll-target="#imports">Imports</a></li>
+  <li><a href="#reading-official-docs" id="toc-reading-official-docs" class="nav-link" data-scroll-target="#reading-official-docs">Reading official docs</a></li>
+  <li><a href="#empty2none" id="toc-empty2none" class="nav-link" data-scroll-target="#empty2none">empty2none</a></li>
+  <li><a href="#mk_param" id="toc-mk_param" class="nav-link" data-scroll-target="#mk_param"><code>_mk_param</code></a></li>
+  <li><a href="#use_kwargs_dict" id="toc-use_kwargs_dict" class="nav-link" data-scroll-target="#use_kwargs_dict">use_kwargs_dict</a>
+  <ul class="collapse">
+  <li><a href="#reading-docs" id="toc-reading-docs" class="nav-link" data-scroll-target="#reading-docs">Reading docs</a></li>
+  </ul></li>
+  <li><a href="#use_kwargs" id="toc-use_kwargs" class="nav-link" data-scroll-target="#use_kwargs">use_kwargs</a>
+  <ul class="collapse">
+  <li><a href="#reading-docs-1" id="toc-reading-docs-1" class="nav-link" data-scroll-target="#reading-docs-1">Reading docs</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">08_use_kwargs_dict</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="imports" class="level2">
+<h2 class="anchored" data-anchor-id="imports">Imports</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.core <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.meta <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>.container { width:100% !important; }</style>
+</div>
+</div>
+</section>
+<section id="reading-official-docs" class="level2">
+<h2 class="anchored" data-anchor-id="reading-official-docs">Reading official docs</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.meta <span class="im">import</span> _mk_param <span class="co"># not included in __all__</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="empty2none" class="level2">
+<h2 class="anchored" data-anchor-id="empty2none">empty2none</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fdbe <span class="op">=</span> Fastdb(empty2none)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fdbe.docsrc(<span class="dv">0</span>, <span class="st">"p is the Parameter.default value"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fdbe.docsrc(<span class="dv">1</span>, <span class="st">"to use empty2none, I need to make sure p is not a parameter, but parameter.default"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fdbe.docsrc(<span class="dv">2</span>, <span class="st">"how to check whether a parameter default value is empty"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating empty2none     ========================================================
+===============================================================     on line 0     ================================================================
+=============================================================     with example      ==============================================================
+
+print selected srcline with expands below--------
+def empty2none(p):======================================================================================================================================(0)
+                                                                                                                             p is the Parameter.default value
+    "Replace `Parameter.empty` with `None`"                                                                                                             (1)
+    return None if p==inspect.Parameter.empty else p                                                                                                    (2)
+========================================================     Investigating empty2none     ========================================================
+===============================================================     on line 1     ================================================================
+=============================================================     with example 
+     =============================================================
+
+print selected srcline with expands below--------
+def empty2none(p):                                                                                                                                      (0)
+    "Replace `Parameter.empty` with `None`"=============================================================================================================(1)
+                                                                           to use empty2none, I need to make sure p is not a parameter, but parameter.default
+    return None if p==inspect.Parameter.empty else p                                                                                                    (2)
+                                                                                                                                                        (3)
+
+Review srcode with all comments added so far======================================================================================================
+def empty2none(p):========================================================================(0) # p is the Parameter.default value; 
+    "Replace `Parameter.empty` with `None`"===============================================(1) # to use empty2none, I need to make sure p is not a parameter, but parameter.default; 
+    return None if p==inspect.Parameter.empty else p======================================(2)       
+                                                                                                                                                        (3)
+                                                                                                                                     part No.1 out of 1 parts
+
+========================================================     Investigating empty2none     ========================================================
+===============================================================     on line 2     ================================================================
+============================================================     with example 
+
+     =============================================================
+
+print selected srcline with expands below--------
+def empty2none(p):                                                                                                                                      (0)
+    "Replace `Parameter.empty` with `None`"                                                                                                             (1)
+    return None if p==inspect.Parameter.empty else p====================================================================================================(2)
+                                                                                                      how to check whether a parameter default value is empty
+                                                                                                                                                        (3)
+
+Review srcode with all comments added so far======================================================================================================
+def empty2none(p):========================================================================(0) # p is the Parameter.default value; 
+    "Replace `Parameter.empty` with `None`"===============================================(1) # to use empty2none, I need to make sure p is not a parameter, but parameter.default; 
+    return None if p==inspect.Parameter.empty else p======================================(2) # how to check whether a parameter default value is empty; 
+                                                                                                                                                        (3)
+                                                                                                                                     part No.1 out of 1 parts
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># def foo(a, b=1): pass</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sig = inspect.signature(foo)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># print(sig.parameters.items())</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for k,v in sig.parameters.items():</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     print(f'{k} : {v.default} =&gt; empty2none =&gt; {empty2none(v.default)}')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fdbe.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">def foo(a, b=1): pass</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">sig = inspect.signature(foo)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">print(sig.parameters.items())</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">for k,v in sig.parameters.items():</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">    print(f'</span><span class="sc">{k}</span><span class="st"> : </span><span class="sc">{v.default}</span><span class="st"> =&gt; empty2none =&gt; {empty2none(v.default)}')</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fdbe.snoop()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>22:14:40.57 &gt;&gt;&gt; Call to empty2none in File "/tmp/empty2none.py", line 3
+22:14:40.57 ...... p = &lt;class 'inspect._empty'&gt;
+22:14:40.57    3 | def empty2none(p):
+22:14:40.57    5 |     return None if p==inspect.Parameter.empty else p
+22:14:40.57 &lt;&lt;&lt; Return value from empty2none: None
+22:14:40.57 &gt;&gt;&gt; Call to empty2none in File "/tmp/empty2none.py", line 3
+22:14:40.57 ...... p = 1
+22:14:40.57    3 | def empty2none(p):
+22:14:40.57    5 |     return None if p==inspect.Parameter.empty else p
+22:14:40.57 &lt;&lt;&lt; Return value from empty2none: 1</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating empty2none     ========================================================
+==============================================================     on line None     ==============================================================
+     with example 
+def foo(a, b=1): pass
+sig = inspect.signature(foo)
+print(sig.parameters.items())
+for k,v in sig.parameters.items():
+    print(f'{k} : {v.default} =&gt; empty2none =&gt; {empty2none(v.default)}')
+     
+
+odict_items([('a', &lt;Parameter "a"&gt;), ('b', &lt;Parameter "b=1"&gt;)])
+a : &lt;class 'inspect._empty'&gt; =&gt; empty2none =&gt; None
+b : 1 =&gt; empty2none =&gt; 1</code></pre>
+</div>
+</div>
+</section>
+<section id="mk_param" class="level2">
+<h2 class="anchored" data-anchor-id="mk_param"><code>_mk_param</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(_mk_param)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating _mk_param     =========================================================
+==============================================================     on line None     ==============================================================
+=============================================================     with example      ==============================================================
+
+def _mk_param(n,d=None): return inspect.Parameter(n, inspect.Parameter.KEYWORD_ONLY, default=d)                                                         (0)
+                                                                                                                                                        (1)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="st">print(_mk_param("a", 1))</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fdb.snoop()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>22:14:40.58 &gt;&gt;&gt; Call to _mk_param in File "/tmp/_mk_param.py", line 3
+22:14:40.58 ...... n = 'a'
+22:14:40.58 ...... d = 1
+22:14:40.58    3 | def _mk_param(n,d=None): return inspect.Parameter(n, inspect.Parameter.KEYWORD_ONLY, default=d)
+22:14:40.58    3 | def _mk_param(n,d=None): return inspect.Parameter(n, inspect.Parameter.KEYWORD_ONLY, default=d)
+22:14:40.58 &lt;&lt;&lt; Return value from _mk_param: &lt;Parameter "a=1"&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating _mk_param     =========================================================
+==============================================================     on line None     ==============================================================
+================================================     with example 
+print(_mk_param("a", 1))
+     =================================================
+
+a=1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">0</span>, <span class="st">"_mk_param is to create a new parameter as KEYWORD_ONLY kind; n is its name in string; d is its default value"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating _mk_param     =========================================================
+===============================================================     on line 0     ================================================================
+================================================     with example 
+print(_mk_param("a", 1))
+     =================================================
+
+print selected srcline with expands below--------
+def _mk_param(n,d=None): return inspect.Parameter(n, inspect.Parameter.KEYWORD_ONLY, default=d)=========================================================(0)
+                                                 _mk_param is to create a new parameter as KEYWORD_ONLY kind; n is its name in string; d is its default value
+                                                                                                                                                        (1)
+a=1</code></pre>
+</div>
+</div>
+</section>
+<section id="use_kwargs_dict" class="level2">
+<h2 class="anchored" data-anchor-id="use_kwargs_dict">use_kwargs_dict</h2>
+<section id="reading-docs" class="level3">
+<h3 class="anchored" data-anchor-id="reading-docs">Reading docs</h3>
+<p>Replace all **kwargs with named arguments like so:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="at">@use_kwargs_dict</span>(y<span class="op">=</span><span class="dv">1</span>,z<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> foo(a, b<span class="op">=</span><span class="dv">1</span>, <span class="op">**</span>kwargs): <span class="cf">pass</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>test_sig(foo, <span class="st">'(a, b=1, *, y=1, z=None)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Add named arguments, but optionally keep **kwargs by setting keep=True:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="at">@use_kwargs_dict</span>(y<span class="op">=</span><span class="dv">1</span>,z<span class="op">=</span><span class="va">None</span>, keep<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> foo(a, b<span class="op">=</span><span class="dv">1</span>, <span class="op">**</span>kwargs): <span class="cf">pass</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>test_sig(foo, <span class="st">'(a, b=1, *, y=1, z=None, **kwargs)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(inspect.getsource(use_kwargs_dict))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>def use_kwargs_dict(keep=False, **kwargs):
+    "Decorator: replace `**kwargs` in signature with `names` params"
+    def _f(f):
+        sig = inspect.signature(f)
+        sigd = dict(sig.parameters)
+        k = sigd.pop('kwargs')
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}
+        sigd.update(s2)
+        if keep: sigd['kwargs'] = k
+        f.__signature__ = sig.replace(parameters=sigd.values())
+        return f
+    return _f
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(use_kwargs_dict)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="st">@use_kwargs_dict(y=1,z=None)</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="st">def foo(a, b=1, **kwargs): pass</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="st">test_sig(foo, '(a, b=1, *, y=1, z=None)')</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="st">@use_kwargs_dict(y=1,z=None, keep=True)</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="st">def foo(a, b=1, **kwargs): pass</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="st">test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=====================================================     Investigating use_kwargs_dict     ======================================================
+==============================================================     on line None     ==============================================================
+     with example 
+@use_kwargs_dict(y=1,z=None, keep=True)
+def foo(a, b=1, **kwargs): pass
+
+test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')
+     
+
+def use_kwargs_dict(keep=False, **kwargs):================================================(0)       
+    "Decorator: replace `**kwargs` in signature with `names` params"======================(1)       
+    def _f(f):============================================================================(2)       
+        sig = inspect.signature(f)========================================================(3)       
+        sigd = dict(sig.parameters)=======================================================(4)       
+        k = sigd.pop('kwargs')============================================================(5)       
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}================(6)       
+        sigd.update(s2)===================================================================(7)       
+        if keep: sigd['kwargs'] = k=======================================================(8)       
+        f.__signature__ = sig.replace(parameters=sigd.values())===========================(9)       
+        return f==========================================================================(10)      
+    return _f=============================================================================(11)      
+                                                                                                                                                        (12)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">1</span>, <span class="st">"how to use use_kwargs_dict; use_kwargs_dict is to replace **kwargs with newly created KEYWORD_ONLY params based on a dict; </span><span class="ch">\</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="st">f's signature is saved inside f.__signature__"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">3</span>, <span class="st">"how to get the signature from an object"</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">4</span>, <span class="st">"how to get all parameters of a signature; how to make it into a dict; "</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">5</span>, <span class="st">"how to pop out an item from a dict"</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">6</span>, <span class="st">"how to create a dict of params based on a dict"</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">7</span>, <span class="st">"how to udpate one dict into another dict"</span>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">8</span>, <span class="st">"how to create a new item in a dict"</span>)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">9</span>, <span class="st">"how to update a signature with a new set of parameters in the form of a dict values"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=====================================================     Investigating use_kwargs_dict     ======================================================
+===============================================================     on line 1     ================================================================
+     with example 
+@use_kwargs_dict(y=1,z=None, keep=True)
+def foo(a, b=1, **kwargs): pass
+
+test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')
+     
+
+print selected srcline with expands below--------
+def use_kwargs_dict(keep=False, **kwargs):                                                                                                              (0)
+    "Decorator: replace `**kwargs` in signature with `names` params"====================================================================================(1)
+how to use use_kwargs_dict; use_kwargs_dict is to replace **kwargs with newly created KEYWORD_ONLY params based on a dict; f's signature is saved inside f.__signature__
+    def _f(f):                                                                                                                                          (2)
+        sig = inspect.signature(f)                                                                                                                      (3)
+
+Review srcode with all comments added so far======================================================================================================
+def use_kwargs_dict(keep=False, **kwargs):================================================(0)       
+    "Decorator: replace `**kwargs` in signature with `names` params"======================(1) # how to use use_kwargs_dict; use_kwargs_dict is to replace **kwargs with newly created KEYWORD_ONLY params based on a dict; f's signature is saved inside f.__signature__; 
+    def _f(f):============================================================================(2)       
+        sig = inspect.signature(f)========================================================(3)       
+        sigd = dict(sig.parameters)=======================================================(4)       
+        k = sigd.pop('kwargs')============================================================(5)       
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}================(6)       
+        sigd.update(s2)===================================================================(7)       
+        if keep: sigd['kwargs'] = k=======================================================(8)       
+        f.__signature__ = sig.replace(parameters=sigd.values())===========================(9)       
+        return f==========================================================================(10)      
+    return _f=============================================================================(11)      
+                                                                                                                                                        (12)
+                                                                                                                                     part No.1 out of 1 parts
+
+=====================================================     Investigating use_kwargs_dict     ======================================================
+===============================================================     on line 3     ================================================================
+     with example 
+@use_kwargs_dict(y=1,z=None, keep=True)
+def foo(a, b=1, **kwargs): pass
+
+test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')
+     
+
+print selected srcline with expands below--------
+    "Decorator: replace `**kwargs` in signature with `names` params"                                                                                    (1)
+    def _f(f):                                                                                                                                          (2)
+        sig = inspect.signature(f)======================================================================================================================(3)
+                                                                                                                      how to get the signature from an object
+        sigd = dict(sig.parameters)                                                                                                                     (4)
+        k = sigd.pop('kwargs')                                                                                                                          (5)
+
+Review srcode with all comments added so far======================================================================================================
+def use_kwargs_dict(keep=False, **kwargs):================================================(0)       
+    "Decorator: replace `**kwargs` in signature with `names` params"======================(1) # how to use use_kwargs_dict; use_kwargs_dict is to replace **kwargs with newly created KEYWORD_ONLY params based on a dict; f's signature is saved inside f.__signature__; 
+    def _f(f):============================================================================(2)       
+        sig = inspect.signature(f)========================================================(3) # how to get the signature from an object; 
+        sigd = dict(sig.parameters)=======================================================(4)       
+        k = sigd.pop('kwargs')============================================================(5)       
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}================(6)       
+        sigd.update(s2)===================================================================(7)       
+        if keep: sigd['kwargs'] = k=======================================================(8)       
+        f.__signature__ = sig.replace(parameters=sigd.values())===========================(9)       
+        return f==========================================================================(10)      
+    return _f=============================================================================(11)      
+                                                                                                                                                        (12)
+                                                                                                                                     part No.1 out of 1 parts
+
+=====================================================     Investigating use_kwargs_dict     ======================================================
+===============================================================     on line 4     ================================================================
+     with example 
+@use_kwargs_dict(y=1,z=None, keep=True)
+def foo(a, b=1, **kwargs): pass
+
+test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')
+     
+
+print selected srcline with expands below--------
+    def _f(f):                                                                                                                                          (2)
+        sig = inspect.signature(f)                                                                                                                      (3)
+        sigd = dict(sig.parameters)=====================================================================================================================(4)
+                                                                                       how to get all parameters of a signature; how to make it into a dict; 
+        k = sigd.pop('kwargs')                                                                                                                          (5)
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}                                                                              (6)
+
+Review srcode with all comments added so far======================================================================================================
+def use_kwargs_dict(keep=False, **kwargs):================================================(0)       
+    "Decorator: replace `**kwargs` in signature with `names` params"======================(1) # how to use use_kwargs_dict; use_kwargs_dict is to replace **kwargs with newly created KEYWORD_ONLY params based on a dict; f's signature is saved inside f.__signature__; 
+    def _f(f):============================================================================(2)       
+        sig = inspect.signature(f)========================================================(3) # how to get the signature from an object; 
+        sigd = dict(sig.parameters)=======================================================(4) # how to get all parameters of a signature; how to make it into a dict; ; 
+        k = sigd.pop('kwargs')============================================================(5)       
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}================(6)       
+        sigd.update(s2)===================================================================(7)       
+        if keep: sigd['kwargs'] = k=======================================================(8)       
+        f.__signature__ = sig.replace(parameters=sigd.values())===========================(9)       
+        return f==========================================================================(10)      
+    return _f=============================================================================(11)      
+                                                                                                                                                        (12)
+                                                                                                                                     part No.1 out of 1 parts
+
+=====================================================     Investigating use_kwargs_dict     ======================================================
+===============================================================     on line 5     ================================================================
+     with example 
+@use_kwargs_dict(y=1,z=None, keep=True)
+def foo(a, b=1, **kwargs): pass
+
+test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')
+     
+
+print selected srcline with expands below--------
+        sig = inspect.signature(f)                                                                                                                      (3)
+        sigd = dict(sig.parameters)                                                                                                                     (4)
+        k = sigd.pop('kwargs')==========================================================================================================================(5)
+                                                                                                                           how to pop out an item from a dict
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}                                                                              (6)
+        sigd.update(s2)                                                                                                                                 (7)
+
+Review srcode with all comments added so far======================================================================================================
+def use_kwargs_dict(keep=False, **kwargs):================================================(0)       
+    "Decorator: replace `**kwargs` in signature with `names` params"======================(1) # how to use use_kwargs_dict; use_kwargs_dict is to replace **kwargs with newly created KEYWORD_ONLY params based on a dict; f's signature is saved inside f.__signature__; 
+    def _f(f):============================================================================(2)       
+        sig = inspect.signature(f)========================================================(3) # how to get the signature from an object; 
+        sigd = dict(sig.parameters)=======================================================(4) # how to get all parameters of a signature; how to make it into a dict; ; 
+        k = sigd.pop('kwargs')============================================================(5) # how to pop out an item from a dict; 
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}================(6)       
+        sigd.update(s2)===================================================================(7)       
+        if keep: sigd['kwargs'] = k=======================================================(8)       
+        f.__signature__ = sig.replace(parameters=sigd.values())===========================(9)       
+        return f==========================================================================(10)      
+    return _f=============================================================================(11)      
+                                                                                                                                                        (12)
+                                                                                                                                     part No.1 out of 1 parts
+
+=====================================================     Investigating use_kwargs_dict     ======================================================
+===============================================================     on line 6     ================================================================
+     with example 
+@use_kwargs_dict(y=1,z=None, keep=True)
+def foo(a, b=1, **kwargs): pass
+
+test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')
+     
+
+print selected srcline with expands below--------
+        sigd = dict(sig.parameters)                                                                                                                     (4)
+        k = sigd.pop('kwargs')                                                                                                                          (5)
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}==============================================================================(6)
+                                                                                                               how to create a dict of params based on a dict
+        sigd.update(s2)                                                                                                                                 (7)
+        if keep: sigd['kwargs'] = k                                                                                                                     (8)
+
+Review srcode with all comments added so far======================================================================================================
+def use_kwargs_dict(keep=False, **kwargs):================================================(0)       
+    "Decorator: replace `**kwargs` in signature with `names` params"======================(1) # how to use use_kwargs_dict; use_kwargs_dict is to replace **kwargs with newly created KEYWORD_ONLY params based on a dict; f's signature is saved inside f.__signature__; 
+    def _f(f):============================================================================(2)       
+        sig = inspect.signature(f)========================================================(3) # how to get the signature from an object; 
+        sigd = dict(sig.parameters)=======================================================(4) # how to get all parameters of a signature; how to make it into a dict; ; 
+        k = sigd.pop('kwargs')============================================================(5) # how to pop out an item from a dict; 
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}================(6) # how to create a dict of params based on a dict; 
+        sigd.update(s2)===================================================================(7)       
+        if keep: sigd['kwargs'] = k=======================================================(8)       
+        f.__signature__ = sig.replace(parameters=sigd.values())===========================(9)       
+        return f==========================================================================(10)      
+    return _f=============================================================================(11)      
+                                                                                                                                                        (12)
+                                                                                                                                     part No.1 out of 1 parts
+
+=====================================================     Investigating use_kwargs_dict     ======================================================
+===============================================================     on line 7     ================================================================
+     with example 
+@use_kwargs_dict(y=1,z=None, keep=True)
+def foo(a, b=1, **kwargs): pass
+
+test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')
+     
+
+print selected srcline with expands below--------
+        k = sigd.pop('kwargs')                                                                                                                          (5)
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}                                                                              (6)
+        sigd.update(s2)=================================================================================================================================(7)
+                                                                                                                     how to udpate one dict into another dict
+        if keep: sigd['kwargs'] = k                                                                                                                     (8)
+        f.__signature__ = sig.replace(parameters=sigd.values())                                                                                         (9)
+
+Review srcode with all comments added so far======================================================================================================
+def use_kwargs_dict(keep=False, **kwargs):================================================(0)       
+    "Decorator: replace `**kwargs` in signature with `names` params"======================(1) # how to use use_kwargs_dict; use_kwargs_dict is to replace **kwargs with newly created KEYWORD_ONLY params based on a dict; f's signature is saved inside f.__signature__; 
+    def _f(f):============================================================================(2)       
+        sig = inspect.signature(f)========================================================(3) # how to get the signature from an object; 
+        sigd = dict(sig.parameters)=======================================================(4) # how to get all parameters of a signature; how to make it into a dict; ; 
+        k = sigd.pop('kwargs')============================================================(5) # how to pop out an item from a dict; 
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}================(6) # how to create a dict of params based on a dict; 
+        sigd.update(s2)===================================================================(7) # how to udpate one dict into another dict; 
+        if keep: sigd['kwargs'] = k=======================================================(8)       
+        f.__signature__ = sig.replace(parameters=sigd.values())===========================(9)       
+        return f==========================================================================(10)      
+    return _f=============================================================================(11)      
+                                                                                                                                                        (12)
+                                                                                                                                     part No.1 out of 1 parts
+
+=====================================================     Investigating use_kwargs_dict     ======================================================
+===============================================================     on line 8     ================================================================
+     with example 
+@use_kwargs_dict(y=1,z=None, keep=True)
+def foo(a, b=1, **kwargs): pass
+
+test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')
+     
+
+print selected srcline with expands below--------
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}                                                                              (6)
+        sigd.update(s2)                                                                                                                                 (7)
+        if keep: sigd['kwargs'] = k=====================================================================================================================(8)
+                                                                                                                           how to create a new item in a dict
+        f.__signature__ = sig.replace(parameters=sigd.values())                                                                                         (9)
+        return f                                                                                                                                        (10)
+
+Review srcode with all comments added so far======================================================================================================
+def use_kwargs_dict(keep=False, **kwargs):================================================(0)       
+    "Decorator: replace `**kwargs` in signature with `names` params"======================(1) # how to use use_kwargs_dict; use_kwargs_dict is to replace **kwargs with newly created KEYWORD_ONLY params based on a dict; f's signature is saved inside f.__signature__; 
+    def _f(f):============================================================================(2)       
+        sig = inspect.signature(f)========================================================(3) # how to get the signature from an object; 
+        sigd = dict(sig.parameters)=======================================================(4) # how to get all parameters of a signature; how to make it into a dict; ; 
+        k = sigd.pop('kwargs')============================================================(5) # how to pop out an item from a dict; 
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}================(6) # how to create a dict of params based on a dict; 
+        sigd.update(s2)===================================================================(7) # how to udpate one dict into another dict; 
+        if keep: sigd['kwargs'] = k=======================================================(8) # how to create a new item in a dict; 
+        f.__signature__ = sig.replace(parameters=sigd.values())===========================(9)       
+        return f==========================================================================(10)      
+    return _f=============================================================================(11)      
+                                                                                                                                                        (12)
+                                                                                                                                     part No.1 out of 1 parts
+
+=====================================================     Investigating use_kwargs_dict     ======================================================
+===============================================================     on line 9     ================================================================
+     with example 
+@use_kwargs_dict(y=1,z=None, keep=True)
+def foo(a, b=1, **kwargs): pass
+
+test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')
+     
+
+print selected srcline with expands below--------
+        sigd.update(s2)                                                                                                                                 (7)
+        if keep: sigd['kwargs'] = k                                                                                                                     (8)
+        f.__signature__ = sig.replace(parameters=sigd.values())=========================================================================================(9)
+                                                                          how to update a signature with a new set of parameters in the form of a dict values
+        return f                                                                                                                                        (10)
+    return _f                                                                                                                                           (11)
+
+Review srcode with all comments added so far======================================================================================================
+def use_kwargs_dict(keep=False, **kwargs):================================================(0)       
+    "Decorator: replace `**kwargs` in signature with `names` params"======================(1) # how to use use_kwargs_dict; use_kwargs_dict is to replace **kwargs with newly created KEYWORD_ONLY params based on a dict; f's signature is saved inside f.__signature__; 
+    def _f(f):============================================================================(2)       
+        sig = inspect.signature(f)========================================================(3) # how to get the signature from an object; 
+        sigd = dict(sig.parameters)=======================================================(4) # how to get all parameters of a signature; how to make it into a dict; ; 
+        k = sigd.pop('kwargs')============================================================(5) # how to pop out an item from a dict; 
+        s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}================(6) # how to create a dict of params based on a dict; 
+        sigd.update(s2)===================================================================(7) # how to udpate one dict into another dict; 
+        if keep: sigd['kwargs'] = k=======================================================(8) # how to create a new item in a dict; 
+        f.__signature__ = sig.replace(parameters=sigd.values())===========================(9) # how to update a signature with a new set of parameters in the form of a dict values; 
+        return f==========================================================================(10)      
+    return _f=============================================================================(11)      
+                                                                                                                                                        (12)
+                                                                                                                                     part No.1 out of 1 parts
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fdb.snoop(deco<span class="op">=</span><span class="va">True</span>) <span class="co"># how to use snoop on decorator</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>22:14:40.62 &gt;&gt;&gt; Call to use_kwargs_dict in File "/tmp/use_kwargs_dict.py", line 3
+22:14:40.62 ...... keep = True
+22:14:40.62 ...... kwargs = {'y': 1, 'z': None}
+22:14:40.62 ...... len(kwargs) = 2
+22:14:40.62    3 | def use_kwargs_dict(keep=False, **kwargs):
+22:14:40.62    5 |     import snoop
+22:14:40.62 .......... snoop = &lt;class 'snoop.configuration.Config.__init__.&lt;locals&gt;.ConfiguredTracer'&gt;
+22:14:40.62    6 |     @snoop
+22:14:40.62    7 |     def _f(f):
+22:14:40.62 .......... _f = &lt;function use_kwargs_dict.&lt;locals&gt;._f&gt;
+22:14:40.62   16 |     return _f
+22:14:40.62 &lt;&lt;&lt; Return value from use_kwargs_dict: &lt;function use_kwargs_dict.&lt;locals&gt;._f&gt;
+22:14:40.62 &gt;&gt;&gt; Call to use_kwargs_dict.&lt;locals&gt;._f in File "/tmp/use_kwargs_dict.py", line 7
+22:14:40.62 .......... f = &lt;function foo&gt;
+22:14:40.62 .......... keep = True
+22:14:40.62 .......... kwargs = {'y': 1, 'z': None}
+22:14:40.62 .......... len(kwargs) = 2
+22:14:40.62    7 |     def _f(f):
+22:14:40.62    8 |         sig = inspect.signature(f)
+22:14:40.62 .............. sig = &lt;Signature (a, b=1, **kwargs)&gt;
+22:14:40.62    9 |         sigd = dict(sig.parameters)
+22:14:40.62 .............. sigd = {'a': &lt;Parameter "a"&gt;, 'b': &lt;Parameter "b=1"&gt;, 'kwargs': &lt;Parameter "**kwargs"&gt;}
+22:14:40.62 .............. len(sigd) = 3
+22:14:40.62   10 |         k = sigd.pop('kwargs')
+22:14:40.62 .............. k = &lt;Parameter "**kwargs"&gt;
+22:14:40.62 .............. sigd = {'a': &lt;Parameter "a"&gt;, 'b': &lt;Parameter "b=1"&gt;}
+22:14:40.62 .............. len(sigd) = 2
+22:14:40.62   11 |         s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}
+    22:14:40.62 Dict comprehension:
+    22:14:40.62   11 |         s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}
+    22:14:40.62 .............. Iterating over &lt;dict_itemiterator object&gt;
+    22:14:40.62 .............. Values of sigd: {'a': &lt;Parameter "a"&gt;, 'b': &lt;Parameter "b=1"&gt;}
+    22:14:40.62 .............. Values of len(sigd): 2
+    22:14:40.62 .............. Values of n: 'y', 'z'
+    22:14:40.62 .............. Values of d: 1, None
+    22:14:40.62 Result: {'y': &lt;Parameter "y=1"&gt;, 'z': &lt;Parameter "z=None"&gt;}
+22:14:40.62   11 |         s2 = {n:_mk_param(n,d) for n,d in kwargs.items() if n not in sigd}
+22:14:40.62 .............. s2 = {'y': &lt;Parameter "y=1"&gt;, 'z': &lt;Parameter "z=None"&gt;}
+22:14:40.62 .............. len(s2) = 2
+22:14:40.62   12 |         sigd.update(s2)
+22:14:40.62 .............. sigd = {'a': &lt;Parameter "a"&gt;, 'b': &lt;Parameter "b=1"&gt;, 'y': &lt;Parameter "y=1"&gt;, 'z': &lt;Parameter "z=None"&gt;}
+22:14:40.62 .............. len(sigd) = 4
+22:14:40.62   13 |         if keep: sigd['kwargs'] = k
+22:14:40.62 ...... sigd = {'a': &lt;Parameter "a"&gt;, 'b': &lt;Parameter "b=1"&gt;, 'y': &lt;Parameter "y=1"&gt;, 'z': &lt;Parameter "z=None"&gt;, ...}
+22:14:40.62 ...... len(sigd) = 5
+22:14:40.62   14 |         f.__signature__ = sig.replace(parameters=sigd.values())
+22:14:40.63   15 |         return f
+22:14:40.63 &lt;&lt;&lt; Return value from use_kwargs_dict.&lt;locals&gt;._f: &lt;function foo&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=====================================================     Investigating use_kwargs_dict     ======================================================
+==============================================================     on line None     ==============================================================
+     with example 
+@use_kwargs_dict(y=1,z=None, keep=True)
+def foo(a, b=1, **kwargs): pass
+
+test_sig(foo, '(a, b=1, *, y=1, z=None, **kwargs)')
+     
+</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="use_kwargs" class="level2">
+<h2 class="anchored" data-anchor-id="use_kwargs">use_kwargs</h2>
+<section id="reading-docs-1" class="level3">
+<h3 class="anchored" data-anchor-id="reading-docs-1">Reading docs</h3>
+<p>use_kwargs is different than use_kwargs_dict as it only replaces **kwargs with named parameters without any default values:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="at">@use_kwargs</span>([<span class="st">'y'</span>, <span class="st">'z'</span>])</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> foo(a, b<span class="op">=</span><span class="dv">1</span>, <span class="op">**</span>kwargs): <span class="cf">pass</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>test_sig(foo, <span class="st">'(a, b=1, *, y=None, z=None)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You may optionally keep the **kwargs argument in your signature by setting keep=True:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="at">@use_kwargs</span>([<span class="st">'y'</span>, <span class="st">'z'</span>], keep<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> foo(a, <span class="op">*</span>args, b<span class="op">=</span><span class="dv">1</span>, <span class="op">**</span>kwargs): <span class="cf">pass</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>test_sig(foo, <span class="st">'(a, *args, b=1, y=None, z=None, **kwargs)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(inspect.getsource(use_kwargs))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>def use_kwargs(names, keep=False):
+    "Decorator: replace `**kwargs` in signature with `names` params"
+    def _f(f):
+        sig = inspect.signature(f)
+        sigd = dict(sig.parameters)
+        k = sigd.pop('kwargs')
+        s2 = {n:_mk_param(n) for n in names if n not in sigd}
+        sigd.update(s2)
+        if keep: sigd['kwargs'] = k
+        f.__signature__ = sig.replace(parameters=sigd.values())
+        return f
+    return _f
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(use_kwargs)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="st">@use_kwargs(['y', 'z'])</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="st">def foo(a, b=1, **kwargs): pass</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="st">test_sig(foo, '(a, b=1, *, y=None, z=None)')</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="st">@use_kwargs(['y', 'z'], keep=True)</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="st">def foo(a, *args, b=1, **kwargs): pass</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="st">test_sig(foo, '(a, *args, b=1, y=None, z=None, **kwargs)')</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating use_kwargs     ========================================================
+==============================================================     on line None     ==============================================================
+     with example 
+@use_kwargs(['y', 'z'], keep=True)
+def foo(a, *args, b=1, **kwargs): pass
+test_sig(foo, '(a, *args, b=1, y=None, z=None, **kwargs)')
+     
+
+def use_kwargs(names, keep=False):========================================================(0)       
+    "Decorator: replace `**kwargs` in signature with `names` params"======================(1)       
+    def _f(f):============================================================================(2)       
+        sig = inspect.signature(f)========================================================(3)       
+        sigd = dict(sig.parameters)=======================================================(4)       
+        k = sigd.pop('kwargs')============================================================(5)       
+        s2 = {n:_mk_param(n) for n in names if n not in sigd}=============================(6)       
+        sigd.update(s2)===================================================================(7)       
+        if keep: sigd['kwargs'] = k=======================================================(8)       
+        f.__signature__ = sig.replace(parameters=sigd.values())===========================(9)       
+        return f==========================================================================(10)      
+    return _f=============================================================================(11)      
+                                                                                                                                                        (12)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">0</span>, <span class="st">"How to use use_kwargs; use_kwargs has names as a list of strings; all the newly created params have None as default value; f's signature </span><span class="ch">\</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="st">is saved inside f.__signature__"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating use_kwargs     ========================================================
+===============================================================     on line 0     ================================================================
+     with example 
+@use_kwargs(['y', 'z'], keep=True)
+def foo(a, *args, b=1, **kwargs): pass
+test_sig(foo, '(a, *args, b=1, y=None, z=None, **kwargs)')
+     
+
+print selected srcline with expands below--------
+def use_kwargs(names, keep=False):======================================================================================================================(0)
+How to use use_kwargs; use_kwargs has names as a list of strings; all the newly created params have None as default value; f's signature is saved inside f.__signature__
+    "Decorator: replace `**kwargs` in signature with `names` params"                                                                                    (1)
+    def _f(f):                                                                                                                                          (2)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>fdb.snoop(deco<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>22:14:40.65 &gt;&gt;&gt; Call to use_kwargs in File "/tmp/use_kwargs.py", line 3
+22:14:40.65 ...... names = ['y', 'z']
+22:14:40.65 ...... len(names) = 2
+22:14:40.65 ...... keep = True
+22:14:40.65    3 | def use_kwargs(names, keep=False):
+22:14:40.65    5 |     import snoop
+22:14:40.65 .......... snoop = &lt;class 'snoop.configuration.Config.__init__.&lt;locals&gt;.ConfiguredTracer'&gt;
+22:14:40.65    6 |     @snoop
+22:14:40.65    7 |     def _f(f):
+22:14:40.65 .......... _f = &lt;function use_kwargs.&lt;locals&gt;._f&gt;
+22:14:40.65   16 |     return _f
+22:14:40.65 &lt;&lt;&lt; Return value from use_kwargs: &lt;function use_kwargs.&lt;locals&gt;._f&gt;
+22:14:40.65 &gt;&gt;&gt; Call to use_kwargs.&lt;locals&gt;._f in File "/tmp/use_kwargs.py", line 7
+22:14:40.65 .......... f = &lt;function foo&gt;
+22:14:40.65 .......... keep = True
+22:14:40.65 .......... names = ['y', 'z']
+22:14:40.65 .......... len(names) = 2
+22:14:40.65    7 |     def _f(f):
+22:14:40.65    8 |         sig = inspect.signature(f)
+22:14:40.65 .............. sig = &lt;Signature (a, *args, b=1, **kwargs)&gt;
+22:14:40.65    9 |         sigd = dict(sig.parameters)
+22:14:40.65 .............. sigd = {'a': &lt;Parameter "a"&gt;, 'args': &lt;Parameter "*args"&gt;, 'b': &lt;Parameter "b=1"&gt;, 'kwargs': &lt;Parameter "**kwargs"&gt;}
+22:14:40.65 .............. len(sigd) = 4
+22:14:40.65   10 |         k = sigd.pop('kwargs')
+22:14:40.65 .............. k = &lt;Parameter "**kwargs"&gt;
+22:14:40.65 .............. sigd = {'a': &lt;Parameter "a"&gt;, 'args': &lt;Parameter "*args"&gt;, 'b': &lt;Parameter "b=1"&gt;}
+22:14:40.65 .............. len(sigd) = 3
+22:14:40.65   11 |         s2 = {n:_mk_param(n) for n in names if n not in sigd}
+    22:14:40.65 Dict comprehension:
+    22:14:40.65   11 |         s2 = {n:_mk_param(n) for n in names if n not in sigd}
+    22:14:40.65 .............. Iterating over &lt;list_iterator object&gt;
+    22:14:40.65 .............. Values of sigd: {'a': &lt;Parameter "a"&gt;, 'args': &lt;Parameter "*args"&gt;, 'b': &lt;Parameter "b=1"&gt;}
+    22:14:40.65 .............. Values of len(sigd): 3
+    22:14:40.65 .............. Values of n: 'y', 'z'
+    22:14:40.65 Result: {'y': &lt;Parameter "y=None"&gt;, 'z': &lt;Parameter "z=None"&gt;}
+22:14:40.65   11 |         s2 = {n:_mk_param(n) for n in names if n not in sigd}
+22:14:40.65 .............. s2 = {'y': &lt;Parameter "y=None"&gt;, 'z': &lt;Parameter "z=None"&gt;}
+22:14:40.65 .............. len(s2) = 2
+22:14:40.65   12 |         sigd.update(s2)
+22:14:40.65 .............. sigd = {'a': &lt;Parameter "a"&gt;, 'args': &lt;Parameter "*args"&gt;, 'b': &lt;Parameter "b=1"&gt;, 'y': &lt;Parameter "y=None"&gt;, ...}
+22:14:40.65 .............. len(sigd) = 5
+22:14:40.65   13 |         if keep: sigd['kwargs'] = k
+22:14:40.65 ...... len(sigd) = 6
+22:14:40.65   14 |         f.__signature__ = sig.replace(parameters=sigd.values())
+22:14:40.65   15 |         return f
+22:14:40.65 &lt;&lt;&lt; Return value from use_kwargs.&lt;locals&gt;._f: &lt;function foo&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating use_kwargs     ========================================================
+==============================================================     on line None     ==============================================================
+     with example 
+@use_kwargs(['y', 'z'], keep=True)
+def foo(a, *args, b=1, **kwargs): pass
+test_sig(foo, '(a, *args, b=1, y=None, z=None, **kwargs)')
+     
+</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

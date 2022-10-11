@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 0001_Fastcore.meta.delegates</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 0001_Fastcore.meta.delegates">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 0001_Fastcore.meta.delegates">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">0001_Fastcore.meta.delegates</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link active">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#import" id="toc-import" class="nav-link active" data-scroll-target="#import">Import</a></li>
+  <li><a href="#initiate-fastdb-and-example-in-str" id="toc-initiate-fastdb-and-example-in-str" class="nav-link" data-scroll-target="#initiate-fastdb-and-example-in-str">Initiate Fastdb and example in str</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
+  <li><a href="#docsrc" id="toc-docsrc" class="nav-link" data-scroll-target="#docsrc">docsrc</a></li>
+  <li><a href="#snoop" id="toc-snoop" class="nav-link" data-scroll-target="#snoop">Snoop</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">0001_Fastcore.meta.delegates</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># from IPython.core.display import display, HTML # a depreciated import</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, HTML </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>display(HTML(<span class="st">"&lt;style&gt;.container { width:100% !important; }&lt;/style&gt;"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>.container { width:100% !important; }</style>
+</div>
+</div>
+<section id="import" class="level2">
+<h2 class="anchored" data-anchor-id="import">Import</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.core <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.meta <span class="im">import</span> delegates</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="initiate-fastdb-and-example-in-str" class="level2">
+<h2 class="anchored" data-anchor-id="initiate-fastdb-and-example-in-str">Initiate Fastdb and example in str</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> <span class="bu">locals</span>() <span class="co"># this is a must</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(delegates, outloc<span class="op">=</span>g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example" class="level2">
+<h2 class="anchored" data-anchor-id="example">Example</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> low(a, b<span class="op">=</span><span class="dv">1</span>): <span class="cf">pass</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">@delegates</span>(low) <span class="co"># this format is fine too</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mid(c, d<span class="op">=</span><span class="dv">1</span>, <span class="op">**</span>kwargs): <span class="cf">pass</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>pprint(inspect.signature(mid)) <span class="co"># pprint and inspect is loaded from fastdebug</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;Signature (c, d=1, *, b=1)&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> low(a, b<span class="op">=</span><span class="dv">1</span>): <span class="cf">pass</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mid(c, d<span class="op">=</span><span class="dv">1</span>, <span class="op">**</span>kwargs): <span class="cf">pass</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>pprint(inspect.signature(delegates(low)(mid)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;Signature (c, d=1, *, b=1)&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="st">def low(a, b=1): pass</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">def mid(c, d=1, **kwargs): pass</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">pprint(inspect.signature(delegates(low)(mid)))</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="st">def low(a, b=1): pass</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="st">@delegates(low)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="st">def mid(c, d=1, **kwargs): pass</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="st">pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="st">class Foo:</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="st">    @classmethod</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="st">    def clsm(a, b=1): pass</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="st">    @delegates(clsm)</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="st">    def instm(c, d=1, **kwargs): pass</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="st">f = Foo()</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="st">pprint(inspect.signature(f.instm)) # pprint and inspect is loaded from fastdebug</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="st">def low(a, b:int=1): pass</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="st">@delegates(low)</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="st">def mid(c, d:list=None, **kwargs): pass</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="st">pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="docsrc" class="level2">
+<h2 class="anchored" data-anchor-id="docsrc">docsrc</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fdb.eg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'\ndef low(a, b:int=1): pass\n@delegates(low)\ndef mid(c, d:list=None, **kwargs): pass\npprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug\n'</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating delegates     =========================================================
+==============================================================     on line None     ==============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+def delegates(to:FunctionType=None, # Delegatee===========================================(0)       
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2)       
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6)       
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7)       
+        from_f = getattr(from_f,'__func__',from_f)========================================(8)       
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10)      
+        sig = inspect.signature(from_f)===================================================(11)      
+        sigd = dict(sig.parameters)=======================================================(12)      
+        k = sigd.pop('kwargs')============================================================(13)      
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items()                                    (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but}                                          (16)
+        sigd.update(s2)===================================================================(17)      
+        if keep: sigd['kwargs'] = k=======================================================(18)      
+        else: from_f.__delwrap__ = to_f===================================================(19)      
+        from_f.__signature__ = sig.replace(parameters=sigd.values())======================(20)      
+        if hasattr(from_f, '__annotations__'): from_f.__annotations__.update(anno)========(21)      
+        return f==========================================================================(22)      
+    return _f=============================================================================(23)      
+                                                                                                                                                        (24)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">21</span>, <span class="st">"How to check whether a func has __annotations__; How add selected params' annotations from A to B's annotations;"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">14</span>, <span class="st">"How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; </span><span class="ch">\</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="st">how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; </span><span class="ch">\</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="st">how dict.items() and dict.values() differ"</span>, <span class="op">\</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="st">"inspect.signature(to_f).parameters.items()"</span>, <span class="st">"inspect.signature(to_f).parameters.values()"</span>, <span class="st">"inspect.Parameter.empty"</span>, <span class="op">\</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="st">"for k,v in inspect.signature(to_f).parameters.items():</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="st">    printright(f'v.kind: </span><span class="sc">{v.kind}</span><span class="st">')</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="st">    printright(f'v.default: </span><span class="sc">{v.default}</span><span class="st">')</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="st">    v1 = v.replace(kind=inspect.Parameter.KEYWORD_ONLY)</span><span class="ch">\\</span><span class="st">n</span><span class="ch">\</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="st">    printright(f'v1.kind: </span><span class="sc">{v1.kind}</span><span class="st">')"</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">16</span>, <span class="st">"How to get A's __annotations__?; How to access it as a dict?; </span><span class="ch">\</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="st">How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line"</span>, <span class="op">\</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>          <span class="st">"getattr(to_f, '__annotations__', </span><span class="sc">{}</span><span class="st">)"</span>, <span class="st">"getattr(from_f, '__annotations__', </span><span class="sc">{}</span><span class="st">)"</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">17</span>, <span class="st">"How to add the selected params from A's signature to B's signature; How to add items into a dict;"</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">18</span>, <span class="st">"How to add a new item into a dict;"</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">19</span>, <span class="st">"How to create a new attr for a function or obj;"</span>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">20</span>, <span class="st">"How to update a signature with a new set of parameters;"</span>, <span class="st">"sigd"</span>, <span class="st">"sigd.values()"</span>, <span class="st">"sig"</span>, <span class="op">\</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>           <span class="st">"sig.replace(parameters=sigd.values())"</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">2</span>, <span class="st">"how to make delegates(to, but) to have 'but' as list and default as None"</span>)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">0</span>, <span class="st">"how to make delegates(to) to have to as FunctionType and default as None"</span>)</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">6</span>, <span class="st">"how to write 2 ifs and elses in 2 lines"</span>)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">7</span>, <span class="st">"how to assign a,b together with if and else"</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">8</span>, <span class="st">"Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); </span><span class="ch">\</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="st">how to use getattr(obj, attr, default)"</span>, <span class="op">\</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>           <span class="st">"from_f"</span>, <span class="st">"to_f"</span>, <span class="op">\</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>           <span class="st">"hasattr(from_f, '__func__')"</span>, <span class="st">"from_f = getattr(from_f,'__func__',from_f)"</span>, <span class="op">\</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>           <span class="st">"hasattr(to_f, '__func__')"</span>, <span class="st">"from_f = getattr(to_f,'__func__',to_f)"</span>, <span class="st">"callable(to_f)"</span>)</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">10</span>, <span class="st">"if B has __delwrap__, can we do delegates(A)(B) again?; hasattr(obj, '__delwrap__')"</span>)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">11</span>, <span class="st">"how to get signature obj of B; what does a signature look like; what is the type"</span>, <span class="st">"inspect.signature(from_f)"</span>, <span class="st">"type(inspect.signature(from_f))"</span>)</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">12</span>, <span class="st">"How to access parameters of a signature?; How to turn parameters into a dict?"</span>, <span class="st">"sig.parameters"</span>, <span class="st">"dict(sig.parameters)"</span>)</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">13</span>, <span class="st">"How to remove an item from a dict?; How to get the removed item from a dict?; How to add the removed item back to the dict?; </span><span class="ch">\</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="st">when writing expressions, as they share environment, so they may affect the following code"</span>, <span class="st">"sigd"</span>, <span class="st">"k = sigd.pop('kwargs')"</span>, <span class="st">"sigd"</span>, <span class="st">"sigd['kwargs'] = k"</span>)</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="co"># fdb.docsrc(3,"Personal Docs: delegates(A)(B), given B has kwargs in sig; delegating params of A to B; A and B can be funcs, methods, classes; \</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a><span class="co"># when A or B are classmethod or if they have __func__, then __func__ shall be used to get sig/params; \</span></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a><span class="co"># when A and B are classes, A.__init__ is actually used to get sig/params, B offers sig/params as a class; \</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a><span class="co"># B only take wanted and missing params with default values; B can keep its kwargs, if not, B will store A in __delwrap__ to prevent delegates(A)(B) again;\</span></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a><span class="co"># B will get __signature__ and store its new sig; if B has __annotations__, then add what B want from A's __annotations__")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating delegates     =========================================================
+===============================================================     on line 21     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        else: from_f.__delwrap__ = to_f                                                                                                                 (19)
+        from_f.__signature__ = sig.replace(parameters=sigd.values())                                                                                    (20)
+        if hasattr(from_f, '__annotations__'): from_f.__annotations__.update(anno)======================================================================(21)
+                                             How to check whether a func has __annotations__; How add selected params' annotations from A to B's annotations;
+        return f                                                                                                                                        (22)
+    return _f                                                                                                                                           (23)
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 14     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        sigd = dict(sig.parameters)                                                                                                                     (12)
+        k = sigd.pop('kwargs')                                                                                                                          (13)
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items()====================================(14)
+How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}                                                               (15)
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but}                                          (16)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+inspect.signature(to_f).parameters.items() =&gt; inspect.signature(to_f).parameters.items() : odict_items([('a', &lt;Parameter "a"&gt;), ('b', &lt;Parameter "b: int = 1"&gt;)])
+
+
+       inspect.signature(to_f).parameters.values() =&gt; inspect.signature(to_f).parameters.values() : odict_values([&lt;Parameter "a"&gt;, &lt;Parameter "b: int = 1"&gt;])
+
+
+                                                                                inspect.Parameter.empty =&gt; inspect.Parameter.empty : &lt;class 'inspect._empty'&gt;
+
+
+for k,v in inspect.signature(to_f).parameters.items():
+    printright(f'v.kind: {v.kind}')
+    printright(f'v.default: {v.default}')
+    v1 = v.replace(kind=inspect.Parameter.KEYWORD_ONLY)
+    printright(f'v1.kind: {v1.kind}')
+
+Running the code block above =&gt; ====================================================================
+
+                                                                                                                                v.kind: POSITIONAL_OR_KEYWORD
+                                                                                                                          v.default: &lt;class 'inspect._empty'&gt;
+                                                                                                                                        v1.kind: KEYWORD_ONLY
+                                                                                                                                v.kind: POSITIONAL_OR_KEYWORD
+                                                                                                                                                 v.default: 1
+                                                                                                                                        v1.kind: KEYWORD_ONLY
+====================================================================================================================End of my srcline exploration:
+
+&lt;Signature (c, d: list = None, *, b: int = 1)&gt;
+
+Review srcode with all comments added so far======================================================================================================
+def delegates(to:FunctionType=None, # Delegatee===========================================(0)       
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2)       
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6)       
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7)       
+        from_f = getattr(from_f,'__func__',from_f)========================================(8)       
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10)      
+        sig = inspect.signature(from_f)===================================================(11)      
+        sigd = dict(sig.parameters)=======================================================(12)      
+        k = sigd.pop('kwargs')============================================================(13)      
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but}                                          (16)
+        sigd.update(s2)===================================================================(17)      
+        if keep: sigd['kwargs'] = k=======================================================(18)      
+        else: from_f.__delwrap__ = to_f===================================================(19)      
+                                                                                                                                     part No.1 out of 2 parts
+
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 16     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items()                                    (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}                                                               (15)
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but}==========================================(16)
+How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line
+        sigd.update(s2)                                                                                                                                 (17)
+        if keep: sigd['kwargs'] = k                                                                                                                     (18)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                          getattr(to_f, '__annotations__', {}) =&gt; getattr(to_f, '__annotations__', {}) : {'b': &lt;class 'int'&gt;}
+
+
+                                                     getattr(from_f, '__annotations__', {}) =&gt; getattr(from_f, '__annotations__', {}) : {'d': &lt;class 'list'&gt;}
+====================================================================================================================End of my srcline exploration:
+
+&lt;Signature (c, d: list = None, *, b: int = 1)&gt;
+
+Review srcode with all comments added so far======================================================================================================
+def delegates(to:FunctionType=None, # Delegatee===========================================(0)       
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2)       
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6)       
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7)       
+        from_f = getattr(from_f,'__func__',from_f)========================================(8)       
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10)      
+        sig = inspect.signature(from_f)===================================================(11)      
+        sigd = dict(sig.parameters)=======================================================(12)      
+        k = sigd.pop('kwargs')============================================================(13)      
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but} # How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line;  (16)
+        sigd.update(s2)===================================================================(17)      
+        if keep: sigd['kwargs'] = k=======================================================(18)      
+        else: from_f.__delwrap__ = to_f===================================================(19)      
+                                                                                                                                     part No.1 out of 2 parts
+
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 17     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}                                                               (15)
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but}                                          (16)
+        sigd.update(s2)=================================================================================================================================(17)
+                                                            How to add the selected params from A's signature to B's signature; How to add items into a dict;
+        if keep: sigd['kwargs'] = k                                                                                                                     (18)
+        else: from_f.__delwrap__ = to_f                                                                                                                 (19)
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 18     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but}                                          (16)
+        sigd.update(s2)                                                                                                                                 (17)
+        if keep: sigd['kwargs'] = k=====================================================================================================================(18)
+                                                                                                                           How to add a new item into a dict;
+        else: from_f.__delwrap__ = to_f                                                                                                                 (19)
+        from_f.__signature__ = sig.replace(parameters=sigd.values())                                                                                    (20)
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 19     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        sigd.update(s2)                                                                                                                                 (17)
+        if keep: sigd['kwargs'] = k                                                                                                                     (18)
+        else: from_f.__delwrap__ = to_f=================================================================================================================(19)
+                                                                                                              How to create a new attr for a function or obj;
+        from_f.__signature__ = sig.replace(parameters=sigd.values())                                                                                    (20)
+        if hasattr(from_f, '__annotations__'): from_f.__annotations__.update(anno)                                                                      (21)
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 20     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        if keep: sigd['kwargs'] = k                                                                                                                     (18)
+        else: from_f.__delwrap__ = to_f                                                                                                                 (19)
+        from_f.__signature__ = sig.replace(parameters=sigd.values())====================================================================================(20)
+                                                                                                      How to update a signature with a new set of parameters;
+        if hasattr(from_f, '__annotations__'): from_f.__annotations__.update(anno)                                                                      (21)
+        return f                                                                                                                                        (22)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                      sigd =&gt; sigd : {'c': &lt;Parameter "c"&gt;, 'd': &lt;Parameter "d: list = None"&gt;, 'b': &lt;Parameter "b: int = 1"&gt;}
+
+
+                                      sigd.values() =&gt; sigd.values() : dict_values([&lt;Parameter "c"&gt;, &lt;Parameter "d: list = None"&gt;, &lt;Parameter "b: int = 1"&gt;])
+
+
+                                                                                                                   sig =&gt; sig : (c, d: list = None, **kwargs)
+
+
+                                           sig.replace(parameters=sigd.values()) =&gt; sig.replace(parameters=sigd.values()): (c, d: list = None, *, b: int = 1)
+====================================================================================================================End of my srcline exploration:
+
+&lt;Signature (c, d: list = None, *, b: int = 1)&gt;
+
+Review srcode with all comments added so far======================================================================================================
+        from_f.__signature__ = sig.replace(parameters=sigd.values())======================(20) # How to update a signature with a new set of parameters;; 
+        if hasattr(from_f, '__annotations__'): from_f.__annotations__.update(anno)========(21) # How to check whether a func has __annotations__; How add selected params' annotations from A to B's annotations;; 
+        return f==========================================================================(22)      
+    return _f=============================================================================(23)      
+                                                                                                                                                        (24)
+                                                                                                                                     part No.2 out of 2 parts
+
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 2     ================================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+def delegates(to:FunctionType=None, # Delegatee                                                                                                         (0)
+              keep=False, # Keep `kwargs` in decorated function?                                                                                        (1)
+              but:list=None): # Exclude these parameters from signature=================================================================================(2)
+                                                                                     how to make delegates(to, but) to have 'but' as list and default as None
+    "Decorator: replace `**kwargs` in signature with params from `to`"                                                                                  (3)
+    if but is None: but = []                                                                                                                            (4)
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 0     ================================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+def delegates(to:FunctionType=None, # Delegatee=========================================================================================================(0)
+                                                                                     how to make delegates(to) to have to as FunctionType and default as None
+              keep=False, # Keep `kwargs` in decorated function?                                                                                        (1)
+              but:list=None): # Exclude these parameters from signature                                                                                 (2)
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 6     ================================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+    if but is None: but = []                                                                                                                            (4)
+    def _f(f):                                                                                                                                          (5)
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=====================================================================================(6)
+                                                                                                                      how to write 2 ifs and elses in 2 lines
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f                                                                       (7)
+        from_f = getattr(from_f,'__func__',from_f)                                                                                                      (8)
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 7     ================================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+    def _f(f):                                                                                                                                          (5)
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__                                                                                     (6)
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=======================================================================(7)
+                                                                                                                  how to assign a,b together with if and else
+        from_f = getattr(from_f,'__func__',from_f)                                                                                                      (8)
+        to_f = getattr(to_f,'__func__',to_f)                                                                                                            (9)
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 8     ================================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__                                                                                     (6)
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f                                                                       (7)
+        from_f = getattr(from_f,'__func__',from_f)======================================================================================================(8)
+                       Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); how to use getattr(obj, attr, default)
+        to_f = getattr(to_f,'__func__',to_f)                                                                                                            (9)
+        if hasattr(from_f,'__delwrap__'): return f                                                                                                      (10)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                                                                             from_f =&gt; from_f : &lt;function mid&gt;
+
+
+                                                                                                                 to_f =&gt; to_f : &lt;function low&gt;
+
+
+                                                                                           hasattr(from_f, '__func__') =&gt; hasattr(from_f, '__func__') : False
+
+
+                                                                          from_f = getattr(from_f,'__func__',from_f) =&gt; from_f: &lt;function mid&gt;
+
+
+                                                                                               hasattr(to_f, '__func__') =&gt; hasattr(to_f, '__func__') : False
+
+
+                                                                              from_f = getattr(to_f,'__func__',to_f) =&gt; from_f: &lt;function low&gt;
+
+
+                                                                                                                      callable(to_f) =&gt; callable(to_f) : True
+====================================================================================================================End of my srcline exploration:
+
+&lt;Signature (c, d: list = None, *, b: int = 1)&gt;
+
+Review srcode with all comments added so far======================================================================================================
+def delegates(to:FunctionType=None, # Delegatee===========================================(0) # how to make delegates(to) to have to as FunctionType and default as None; 
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2) # how to make delegates(to, but) to have 'but' as list and default as None; 
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6) # how to write 2 ifs and elses in 2 lines; 
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7) # how to assign a,b together with if and else; 
+        from_f = getattr(from_f,'__func__',from_f)========================================(8) # Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); how to use getattr(obj, attr, default); 
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10)      
+        sig = inspect.signature(from_f)===================================================(11)      
+        sigd = dict(sig.parameters)=======================================================(12)      
+        k = sigd.pop('kwargs')============================================================(13)      
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but} # How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line;  (16)
+        sigd.update(s2)===================================================================(17) # How to add the selected params from A's signature to B's signature; How to add items into a dict;; 
+        if keep: sigd['kwargs'] = k=======================================================(18) # How to add a new item into a dict;; 
+        else: from_f.__delwrap__ = to_f===================================================(19) # How to create a new attr for a function or obj;; 
+                                                                                                                                     part No.1 out of 2 parts
+
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 10     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        from_f = getattr(from_f,'__func__',from_f)                                                                                                      (8)
+        to_f = getattr(to_f,'__func__',to_f)                                                                                                            (9)
+        if hasattr(from_f,'__delwrap__'): return f======================================================================================================(10)
+                                                                          if B has __delwrap__, can we do delegates(A)(B) again?; hasattr(obj, '__delwrap__')
+        sig = inspect.signature(from_f)                                                                                                                 (11)
+        sigd = dict(sig.parameters)                                                                                                                     (12)
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 11     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        to_f = getattr(to_f,'__func__',to_f)                                                                                                            (9)
+        if hasattr(from_f,'__delwrap__'): return f                                                                                                      (10)
+        sig = inspect.signature(from_f)=================================================================================================================(11)
+                                                                             how to get signature obj of B; what does a signature look like; what is the type
+        sigd = dict(sig.parameters)                                                                                                                     (12)
+        k = sigd.pop('kwargs')                                                                                                                          (13)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                                       inspect.signature(from_f) =&gt; inspect.signature(from_f) : (c, d: list = None, **kwargs)
+
+
+                                                             type(inspect.signature(from_f)) =&gt; type(inspect.signature(from_f)) : &lt;class 'inspect.Signature'&gt;
+====================================================================================================================End of my srcline exploration:
+
+&lt;Signature (c, d: list = None, *, b: int = 1)&gt;
+
+Review srcode with all comments added so far======================================================================================================
+def delegates(to:FunctionType=None, # Delegatee===========================================(0) # how to make delegates(to) to have to as FunctionType and default as None; 
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2) # how to make delegates(to, but) to have 'but' as list and default as None; 
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6) # how to write 2 ifs and elses in 2 lines; 
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7) # how to assign a,b together with if and else; 
+        from_f = getattr(from_f,'__func__',from_f)========================================(8) # Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); how to use getattr(obj, attr, default); 
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10) # if B has __delwrap__, can we do delegates(A)(B) again?; hasattr(obj, '__delwrap__'); 
+        sig = inspect.signature(from_f)===================================================(11) # how to get signature obj of B; what does a signature look like; what is the type; 
+        sigd = dict(sig.parameters)=======================================================(12)      
+        k = sigd.pop('kwargs')============================================================(13)      
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but} # How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line;  (16)
+        sigd.update(s2)===================================================================(17) # How to add the selected params from A's signature to B's signature; How to add items into a dict;; 
+        if keep: sigd['kwargs'] = k=======================================================(18) # How to add a new item into a dict;; 
+        else: from_f.__delwrap__ = to_f===================================================(19) # How to create a new attr for a function or obj;; 
+                                                                                                                                     part No.1 out of 2 parts
+
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 12     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        if hasattr(from_f,'__delwrap__'): return f                                                                                                      (10)
+        sig = inspect.signature(from_f)                                                                                                                 (11)
+        sigd = dict(sig.parameters)=====================================================================================================================(12)
+                                                                                How to access parameters of a signature?; How to turn parameters into a dict?
+        k = sigd.pop('kwargs')                                                                                                                          (13)
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items()                                    (14)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+            sig.parameters =&gt; sig.parameters : OrderedDict([('c', &lt;Parameter "c"&gt;), ('d', &lt;Parameter "d: list = None"&gt;), ('kwargs', &lt;Parameter "**kwargs"&gt;)])
+
+
+                   dict(sig.parameters) =&gt; dict(sig.parameters) : {'c': &lt;Parameter "c"&gt;, 'd': &lt;Parameter "d: list = None"&gt;, 'kwargs': &lt;Parameter "**kwargs"&gt;}
+====================================================================================================================End of my srcline exploration:
+
+&lt;Signature (c, d: list = None, *, b: int = 1)&gt;
+
+Review srcode with all comments added so far======================================================================================================
+def delegates(to:FunctionType=None, # Delegatee===========================================(0) # how to make delegates(to) to have to as FunctionType and default as None; 
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2) # how to make delegates(to, but) to have 'but' as list and default as None; 
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6) # how to write 2 ifs and elses in 2 lines; 
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7) # how to assign a,b together with if and else; 
+        from_f = getattr(from_f,'__func__',from_f)========================================(8) # Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); how to use getattr(obj, attr, default); 
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10) # if B has __delwrap__, can we do delegates(A)(B) again?; hasattr(obj, '__delwrap__'); 
+        sig = inspect.signature(from_f)===================================================(11) # how to get signature obj of B; what does a signature look like; what is the type; 
+        sigd = dict(sig.parameters)=======================================================(12) # How to access parameters of a signature?; How to turn parameters into a dict?; 
+        k = sigd.pop('kwargs')============================================================(13)      
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but} # How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line;  (16)
+        sigd.update(s2)===================================================================(17) # How to add the selected params from A's signature to B's signature; How to add items into a dict;; 
+        if keep: sigd['kwargs'] = k=======================================================(18) # How to add a new item into a dict;; 
+        else: from_f.__delwrap__ = to_f===================================================(19) # How to create a new attr for a function or obj;; 
+                                                                                                                                     part No.1 out of 2 parts
+
+========================================================     Investigating delegates     =========================================================
+===============================================================     on line 13     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+print selected srcline with expands below--------
+        sig = inspect.signature(from_f)                                                                                                                 (11)
+        sigd = dict(sig.parameters)                                                                                                                     (12)
+        k = sigd.pop('kwargs')==========================================================================================================================(13)
+How to remove an item from a dict?; How to get the removed item from a dict?; How to add the removed item back to the dict?; when writing expressions, as they share environment, so they may affect the following code
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items()                                    (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}                                                               (15)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                   sigd =&gt; sigd : {'c': &lt;Parameter "c"&gt;, 'd': &lt;Parameter "d: list = None"&gt;, 'kwargs': &lt;Parameter "**kwargs"&gt;}
+
+
+                                                                                                                        k = sigd.pop('kwargs') =&gt; k: **kwargs
+
+
+                                                                                     sigd =&gt; sigd : {'c': &lt;Parameter "c"&gt;, 'd': &lt;Parameter "d: list = None"&gt;}
+
+
+                                                                                                               sigd['kwargs'] = k =&gt; sigd['kwargs']: **kwargs
+====================================================================================================================End of my srcline exploration:
+
+&lt;Signature (c, d: list = None, *, b: int = 1)&gt;
+
+Review srcode with all comments added so far======================================================================================================
+def delegates(to:FunctionType=None, # Delegatee===========================================(0) # how to make delegates(to) to have to as FunctionType and default as None; 
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2) # how to make delegates(to, but) to have 'but' as list and default as None; 
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6) # how to write 2 ifs and elses in 2 lines; 
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7) # how to assign a,b together with if and else; 
+        from_f = getattr(from_f,'__func__',from_f)========================================(8) # Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); how to use getattr(obj, attr, default); 
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10) # if B has __delwrap__, can we do delegates(A)(B) again?; hasattr(obj, '__delwrap__'); 
+        sig = inspect.signature(from_f)===================================================(11) # how to get signature obj of B; what does a signature look like; what is the type; 
+        sigd = dict(sig.parameters)=======================================================(12) # How to access parameters of a signature?; How to turn parameters into a dict?; 
+        k = sigd.pop('kwargs')============================================================(13) # How to remove an item from a dict?; How to get the removed item from a dict?; How to add the removed item back to the dict?; when writing expressions, as they share environment, so they may affect the following code; 
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but} # How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line;  (16)
+        sigd.update(s2)===================================================================(17) # How to add the selected params from A's signature to B's signature; How to add items into a dict;; 
+        if keep: sigd['kwargs'] = k=======================================================(18) # How to add a new item into a dict;; 
+        else: from_f.__delwrap__ = to_f===================================================(19) # How to create a new attr for a function or obj;; 
+                                                                                                                                     part No.1 out of 2 parts
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating delegates     =========================================================
+===============================================================     on line 13     ===============================================================
+     with example 
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+     
+
+def delegates(to:FunctionType=None, # Delegatee===========================================(0) # how to make delegates(to) to have to as FunctionType and default as None; 
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2) # how to make delegates(to, but) to have 'but' as list and default as None; 
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6) # how to write 2 ifs and elses in 2 lines; 
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7) # how to assign a,b together with if and else; 
+        from_f = getattr(from_f,'__func__',from_f)========================================(8) # Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); how to use getattr(obj, attr, default); 
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10) # if B has __delwrap__, can we do delegates(A)(B) again?; hasattr(obj, '__delwrap__'); 
+        sig = inspect.signature(from_f)===================================================(11) # how to get signature obj of B; what does a signature look like; what is the type; 
+        sigd = dict(sig.parameters)=======================================================(12) # How to access parameters of a signature?; How to turn parameters into a dict?; 
+        k = sigd.pop('kwargs')============================================================(13) # How to remove an item from a dict?; How to get the removed item from a dict?; How to add the removed item back to the dict?; when writing expressions, as they share environment, so they may affect the following code; 
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but} # How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line;  (16)
+        sigd.update(s2)===================================================================(17) # How to add the selected params from A's signature to B's signature; How to add items into a dict;; 
+        if keep: sigd['kwargs'] = k=======================================================(18) # How to add a new item into a dict;; 
+        else: from_f.__delwrap__ = to_f===================================================(19) # How to create a new attr for a function or obj;; 
+        from_f.__signature__ = sig.replace(parameters=sigd.values())======================(20) # How to update a signature with a new set of parameters;; 
+        if hasattr(from_f, '__annotations__'): from_f.__annotations__.update(anno)========(21) # How to check whether a func has __annotations__; How add selected params' annotations from A to B's annotations;; 
+        return f==========================================================================(22)      
+    return _f=============================================================================(23)      
+                                                                                                                                                        (24)</code></pre>
+</div>
+</div>
+</section>
+<section id="snoop" class="level2">
+<h2 class="anchored" data-anchor-id="snoop">Snoop</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fdb.snoop(deco=True) # both examples above works for Fastdb</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

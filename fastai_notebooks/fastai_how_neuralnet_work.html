@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 0004_fastai_how_neuralnet_work</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 0004_fastai_how_neuralnet_work">
+<meta property="og:description" content="Official course site: for lesson 3">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 0004_fastai_how_neuralnet_work">
+<meta name="twitter:description" content="Official course site: for lesson 3">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">0004_fastai_how_neuralnet_work</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link active">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#fitting-a-function-with-gradient-descent" id="toc-fitting-a-function-with-gradient-descent" class="nav-link active" data-scroll-target="#fitting-a-function-with-gradient-descent">Fitting a function with <em>gradient descent</em></a>
+  <ul class="collapse">
+  <li><a href="#is-neuralnet-just-a-math-function-what-does-the-function-look-like" id="toc-is-neuralnet-just-a-math-function-what-does-the-function-look-like" class="nav-link" data-scroll-target="#is-neuralnet-just-a-math-function-what-does-the-function-look-like">Is neuralnet just a math function? what does the function look like?</a></li>
+  <li><a href="#why-neuralnet-is-random-at-first-and-how-to-make-neuralnet-useful" id="toc-why-neuralnet-is-random-at-first-and-how-to-make-neuralnet-useful" class="nav-link" data-scroll-target="#why-neuralnet-is-random-at-first-and-how-to-make-neuralnet-useful">why neuralnet is random at first and how to make neuralnet useful</a></li>
+  <li><a href="#plot_function-how-to-plot-a-function-with-plt-how-to-create-x-input-with-torch.linspace-how-to-plot-x-y-color-and-title-with-plt" id="toc-plot_function-how-to-plot-a-function-with-plt-how-to-create-x-input-with-torch.linspace-how-to-plot-x-y-color-and-title-with-plt" class="nav-link" data-scroll-target="#plot_function-how-to-plot-a-function-with-plt-how-to-create-x-input-with-torch.linspace-how-to-plot-x-y-color-and-title-with-plt"><code>plot_function</code>: how to plot a function with plt; how to create x input with torch.linspace; how to plot x, y, color and title with plt;</a></li>
+  <li><a href="#how-to-create-a-particular-quadratic-function" id="toc-how-to-create-a-particular-quadratic-function" class="nav-link" data-scroll-target="#how-to-create-a-particular-quadratic-function">how to create a particular quadratic function</a></li>
+  <li><a href="#how-to-write-a-function-quad-to-create-any-quadratic-function" id="toc-how-to-write-a-function-quad-to-create-any-quadratic-function" class="nav-link" data-scroll-target="#how-to-write-a-function-quad-to-create-any-quadratic-function">how to write a function <code>quad</code> to create any quadratic function</a></li>
+  <li><a href="#how-does-partial-and-quad-work-to-modify-quad-to-a-slightly-different-func" id="toc-how-does-partial-and-quad-work-to-modify-quad-to-a-slightly-different-func" class="nav-link" data-scroll-target="#how-does-partial-and-quad-work-to-modify-quad-to-a-slightly-different-func">how does <code>partial</code> and <code>quad</code> work to modify <code>quad</code> to a slightly different func?</a></li>
+  <li><a href="#how-to-add-noise-to-both-mult-and-add-of-the-neuralnetfunction-how-to-create-noise-using-np.random.normal" id="toc-how-to-add-noise-to-both-mult-and-add-of-the-neuralnetfunction-how-to-create-noise-using-np.random.normal" class="nav-link" data-scroll-target="#how-to-add-noise-to-both-mult-and-add-of-the-neuralnetfunction-how-to-create-noise-using-np.random.normal">how to add noise to both mult and add of the neuralnet/function; how to create noise using <code>np.random.normal</code></a></li>
+  <li><a href="#how-to-create-a-random-seed-to-ensure-x-and-y-are-the-same-each-run" id="toc-how-to-create-a-random-seed-to-ensure-x-and-y-are-the-same-each-run" class="nav-link" data-scroll-target="#how-to-create-a-random-seed-to-ensure-x-and-y-are-the-same-each-run">how to create a random seed to ensure x and y are the same each run</a></li>
+  </ul></li>
+  <li><a href="#a-numpy-book-recommended-by-jeremy-what-is-a-tensor" id="toc-a-numpy-book-recommended-by-jeremy-what-is-a-tensor" class="nav-link" data-scroll-target="#a-numpy-book-recommended-by-jeremy-what-is-a-tensor">A numpy book recommended by Jeremy; what is a tensor</a>
+  <ul class="collapse">
+  <li><a href="#how-to-scatterplot-with-plt" id="toc-how-to-scatterplot-with-plt" class="nav-link" data-scroll-target="#how-to-scatterplot-with-plt">how to scatterplot with plt</a></li>
+  <li><a href="#how-to-plot-a-scatterplot-and-a-line-and-slides-for-3-params-of-the-line-func" id="toc-how-to-plot-a-scatterplot-and-a-line-and-slides-for-3-params-of-the-line-func" class="nav-link" data-scroll-target="#how-to-plot-a-scatterplot-and-a-line-and-slides-for-3-params-of-the-line-func">how to plot a scatterplot and a line and slides for 3 params of the line func</a></li>
+  <li><a href="#why-need-a-loss-function-how-to-write-a-mean-absolute-error-function-with-torch.abs-and-mean" id="toc-why-need-a-loss-function-how-to-write-a-mean-absolute-error-function-with-torch.abs-and-mean" class="nav-link" data-scroll-target="#why-need-a-loss-function-how-to-write-a-mean-absolute-error-function-with-torch.abs-and-mean">why need a loss function? how to write a mean absolute error function with torch.abs and mean</a></li>
+  <li><a href="#how-display-and-change-loss-by-changing-values-of-params-with-sliders-of-interactive-plot" id="toc-how-display-and-change-loss-by-changing-values-of-params-with-sliders-of-interactive-plot" class="nav-link" data-scroll-target="#how-display-and-change-loss-by-changing-values-of-params-with-sliders-of-interactive-plot">how display and change loss by changing values of params with sliders of interactive plot</a></li>
+  <li><a href="#a-15-min-calculus-video-series-recommended-by-jeremy-to-watch-first" id="toc-a-15-min-calculus-video-series-recommended-by-jeremy-to-watch-first" class="nav-link" data-scroll-target="#a-15-min-calculus-video-series-recommended-by-jeremy-to-watch-first">A 15-min calculus video series recommended by Jeremy to watch first</a></li>
+  </ul></li>
+  <li><a href="#automating-gradient-descent" id="toc-automating-gradient-descent" class="nav-link" data-scroll-target="#automating-gradient-descent">Automating gradient descent</a>
+  <ul class="collapse">
+  <li><a href="#how-derivatives-automatically-guide-params-to-change-for-a-lower-loss" id="toc-how-derivatives-automatically-guide-params-to-change-for-a-lower-loss" class="nav-link" data-scroll-target="#how-derivatives-automatically-guide-params-to-change-for-a-lower-loss">how derivatives automatically guide params to change for a lower loss</a></li>
+  <li><a href="#how-to-create-a-mean-absolute-error-function-on-any-quadratic-model" id="toc-how-to-create-a-mean-absolute-error-function-on-any-quadratic-model" class="nav-link" data-scroll-target="#how-to-create-a-mean-absolute-error-function-on-any-quadratic-model">how to create a mean absolute error function on any quadratic model</a></li>
+  <li><a href="#how-to-create-an-random-tensor-with-3-values-as-initialized-params" id="toc-how-to-create-an-random-tensor-with-3-values-as-initialized-params" class="nav-link" data-scroll-target="#how-to-create-an-random-tensor-with-3-values-as-initialized-params">how to create an random tensor with 3 values as initialized params</a></li>
+  <li><a href="#how-to-calc-gradients-of-params-1.-tell-pytorch-to-get-ready-for-calculating-gradients-for-these-params-2.-calc-loss-3.-calc-the-gradients-with-loss.backward-4.-how-to-access-params-gradients" id="toc-how-to-calc-gradients-of-params-1.-tell-pytorch-to-get-ready-for-calculating-gradients-for-these-params-2.-calc-loss-3.-calc-the-gradients-with-loss.backward-4.-how-to-access-params-gradients" class="nav-link" data-scroll-target="#how-to-calc-gradients-of-params-1.-tell-pytorch-to-get-ready-for-calculating-gradients-for-these-params-2.-calc-loss-3.-calc-the-gradients-with-loss.backward-4.-how-to-access-params-gradients">how to calc gradients of params? 1. tell PyTorch to get ready for calculating gradients for these params; 2. calc loss; 3. calc the gradients with <code>loss.backward()</code>; 4. how to access params’ gradients;</a></li>
+  <li><a href="#how-to-change-params-with-gradients-properly-to-lower-loss" id="toc-how-to-change-params-with-gradients-properly-to-lower-loss" class="nav-link" data-scroll-target="#how-to-change-params-with-gradients-properly-to-lower-loss">how to change params with gradients properly to lower loss¶</a></li>
+  <li><a href="#why-with-torch.no_grad-when-updating-params-with-gradients" id="toc-why-with-torch.no_grad-when-updating-params-with-gradients" class="nav-link" data-scroll-target="#why-with-torch.no_grad-when-updating-params-with-gradients">why <code>with torch.no_grad():</code> when updating params with gradients</a></li>
+  <li><a href="#how-to-do-10-iterations-of-updating-params-with-gradients" id="toc-how-to-do-10-iterations-of-updating-params-with-gradients" class="nav-link" data-scroll-target="#how-to-do-10-iterations-of-updating-params-with-gradients">how to do 10 iterations of updating params with gradients</a></li>
+  </ul></li>
+  <li><a href="#how-a-neural-network-approximates-any-given-function" id="toc-how-a-neural-network-approximates-any-given-function" class="nav-link" data-scroll-target="#how-a-neural-network-approximates-any-given-function">How a neural network approximates any given function</a></li>
+  <li><a href="#how-to-combine-a-linear-func-with-maxx-0-into-a-rectified-linear-function-how-to-use-torch.clipy-0.-to-perform-maxy-0." id="toc-how-to-combine-a-linear-func-with-maxx-0-into-a-rectified-linear-function-how-to-use-torch.clipy-0.-to-perform-maxy-0." class="nav-link" data-scroll-target="#how-to-combine-a-linear-func-with-maxx-0-into-a-rectified-linear-function-how-to-use-torch.clipy-0.-to-perform-maxy-0.">how to combine a linear func with max(x, 0) into a rectified linear function; how to use torch.clip(y, 0.) to perform max(y, 0.)</a></li>
+  <li><a href="#how-to-use-partial-to-wrap-rectified_linear-to-create-a-specific-rectified_linear-func" id="toc-how-to-use-partial-to-wrap-rectified_linear-to-create-a-specific-rectified_linear-func" class="nav-link" data-scroll-target="#how-to-use-partial-to-wrap-rectified_linear-to-create-a-specific-rectified_linear-func">how to use partial to wrap rectified_linear to create a specific rectified_linear func</a></li>
+  <li><a href="#how-to-use-f.relu-to-replace-torch.clip-to-create-a-rectified-linear-func" id="toc-how-to-use-f.relu-to-replace-torch.clip-to-create-a-rectified-linear-func" class="nav-link" data-scroll-target="#how-to-use-f.relu-to-replace-torch.clip-to-create-a-rectified-linear-func">how to use <code>F.relu</code> to replace <code>torch.clip</code> to create a rectified linear func;</a>
+  <ul class="collapse">
+  <li><a href="#create-double-and-quaduple-relu-funcneuralnet" id="toc-create-double-and-quaduple-relu-funcneuralnet" class="nav-link" data-scroll-target="#create-double-and-quaduple-relu-funcneuralnet">create double and quaduple relu func/neuralnet</a></li>
+  </ul></li>
+  <li><a href="#how-to-recognise-an-owl" id="toc-how-to-recognise-an-owl" class="nav-link" data-scroll-target="#how-to-recognise-an-owl">How to recognise an owl</a>
+  <ul class="collapse">
+  <li><a href="#deep-learning-basically-is-drawing-squiggly-lines-infinitely-given-computation-and-time" id="toc-deep-learning-basically-is-drawing-squiggly-lines-infinitely-given-computation-and-time" class="nav-link" data-scroll-target="#deep-learning-basically-is-drawing-squiggly-lines-infinitely-given-computation-and-time">deep learning basically is drawing squiggly lines infinitely given computation and time</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">0004_fastai_how_neuralnet_work</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p><strong>Official course site</strong>: for lesson <a href="https://course.fast.ai/Lessons/lesson3.html">3</a></p>
+<p><strong>Official notebooks</strong> <a href="https://github.com/fastai/course22">repo</a>, on <a href="https://nbviewer.org/github/fastai/course22/tree/master/">nbviewer</a></p>
+<p>Official <strong>how neuralnet work</strong> <a href="https://www.kaggle.com/code/jhoward/how-does-a-neural-net-really-work">notebook</a> on kaggle</p>
+<p><strong>Important</strong>: The interactive features of this notebook don’t work in Kaggle’s <em>Reader</em> mode. They only work in <em>Edit</em> mode. Therefore, before starting reading this, please click “<strong>Copy &amp; Edit</strong>” in the top right of this window, then in the menu click <em>Run</em> and then <em>Run all</em>. Then you’ll be able to use all the interactive sliders in this notebook.</p>
+<section id="fitting-a-function-with-gradient-descent" class="level2">
+<h2 class="anchored" data-anchor-id="fitting-a-function-with-gradient-descent">Fitting a function with <em>gradient descent</em></h2>
+<section id="is-neuralnet-just-a-math-function-what-does-the-function-look-like" class="level3">
+<h3 class="anchored" data-anchor-id="is-neuralnet-just-a-math-function-what-does-the-function-look-like">Is neuralnet just a math function? what does the function look like?</h3>
+<p>A neural network is just a mathematical function. In the most standard kind of neural network, the function:</p>
+<ol type="1">
+<li>Multiplies each input by a number of values. These values are known as <em>parameters</em></li>
+<li>Adds them up for each group of values</li>
+<li>Replaces the negative numbers with zeros</li>
+</ol>
+</section>
+<section id="why-neuralnet-is-random-at-first-and-how-to-make-neuralnet-useful" class="level3">
+<h3 class="anchored" data-anchor-id="why-neuralnet-is-random-at-first-and-how-to-make-neuralnet-useful">why neuralnet is random at first and how to make neuralnet useful</h3>
+<p>This represents one “layer”. Then these three steps are repeated, using the outputs of the previous layer as the inputs to the next layer. Initially, the parameters in this function are selected randomly. Therefore a newly created neural network doesn’t do anything useful at all – it’s just random!</p>
+<p>To get the function to “learn” to do something useful, we have to change the parameters to make them “better” in some way. We do this using <em>gradient descent</em>. Let’s see how this works…</p>
+</section>
+<section id="plot_function-how-to-plot-a-function-with-plt-how-to-create-x-input-with-torch.linspace-how-to-plot-x-y-color-and-title-with-plt" class="level3">
+<h3 class="anchored" data-anchor-id="plot_function-how-to-plot-a-function-with-plt-how-to-create-x-input-with-torch.linspace-how-to-plot-x-y-color-and-title-with-plt"><code>plot_function</code>: how to plot a function with plt; how to create x input with torch.linspace; how to plot x, y, color and title with plt;</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ipywidgets <span class="im">import</span> interact</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.basics <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">'figure'</span>, dpi<span class="op">=</span><span class="dv">90</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_function(f, title<span class="op">=</span><span class="va">None</span>, <span class="bu">min</span><span class="op">=-</span><span class="fl">2.1</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">2.1</span>, color<span class="op">=</span><span class="st">'r'</span>, ylim<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> torch.linspace(<span class="bu">min</span>,<span class="bu">max</span>, <span class="dv">100</span>)[:,<span class="va">None</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ylim: plt.ylim(ylim)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    plt.plot(x, f(x), color)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> title <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>: plt.title(title)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-create-a-particular-quadratic-function" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-a-particular-quadratic-function">how to create a particular quadratic function</h3>
+<p>To learn how gradient descent works, we’re going to start by fitting a quadratic, since that’s a function most of us are probably more familiar with than a neural network. Here’s the quadratic we’re going to try to fit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x): <span class="cf">return</span> <span class="dv">3</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>x <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>plot_function(f, <span class="st">"$3x^2 + 2x + 1$"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="0004_fastai_how_neuralnet_work_files/figure-html/cell-3-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="how-to-write-a-function-quad-to-create-any-quadratic-function" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-write-a-function-quad-to-create-any-quadratic-function">how to write a function <code>quad</code> to create any quadratic function</h3>
+<p>This quadratic is of the form <span class="math inline">\(ax^2+bx+c\)</span>, with parameters <span class="math inline">\(a=3\)</span>, <span class="math inline">\(b=2\)</span>, <span class="math inline">\(c=1\)</span>. To make it easier to try out different quadratics for fitting a model to the data we’ll create, let’s create a function that calculates the value of a point on any quadratic:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> quad(a, b, c, x): <span class="cf">return</span> a<span class="op">*</span>x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> b<span class="op">*</span>x <span class="op">+</span> c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-does-partial-and-quad-work-to-modify-quad-to-a-slightly-different-func" class="level3">
+<h3 class="anchored" data-anchor-id="how-does-partial-and-quad-work-to-modify-quad-to-a-slightly-different-func">how does <code>partial</code> and <code>quad</code> work to modify <code>quad</code> to a slightly different func?</h3>
+<p>If we fix some particular values of a, b, and c, then we’ll have made a quadratic. To fix values passed to a function in python, we use the <code>partial</code> function, like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mk_quad(a,b,c): <span class="cf">return</span> partial(quad, a,b,c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So for instance, we can recreate our previous quadratic:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>f2 <span class="op">=</span> mk_quad(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plot_function(f2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="0004_fastai_how_neuralnet_work_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="how-to-add-noise-to-both-mult-and-add-of-the-neuralnetfunction-how-to-create-noise-using-np.random.normal" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-add-noise-to-both-mult-and-add-of-the-neuralnetfunction-how-to-create-noise-using-np.random.normal">how to add noise to both mult and add of the neuralnet/function; how to create noise using <code>np.random.normal</code></h3>
+<p>Now let’s simulate making some noisy measurements of our quadratic <code>f</code>. We’ll then use gradient descent to see if we can recreate the original function from the data.</p>
+<p>Here’s a couple of functions to add some random noise to data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> noise(x, scale): <span class="cf">return</span> np.random.normal(scale<span class="op">=</span>scale, size<span class="op">=</span>x.shape)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_noise(x, mult, add): <span class="cf">return</span> x <span class="op">*</span> (<span class="dv">1</span><span class="op">+</span>noise(x,mult)) <span class="op">+</span> noise(x,add)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-create-a-random-seed-to-ensure-x-and-y-are-the-same-each-run" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-a-random-seed-to-ensure-x-and-y-are-the-same-each-run">how to create a random seed to ensure x and y are the same each run</h3>
+<p>Let’s use the now to create our noisy measurements based on the quadratic above:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, steps<span class="op">=</span><span class="dv">20</span>)[:,<span class="va">None</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> add_noise(f(x), <span class="fl">0.15</span>, <span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here’s the first few values of each of <code>x</code> and <code>y</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x[:<span class="dv">5</span>],y[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(tensor([[-2.0000],
+         [-1.7895],
+         [-1.5789],
+         [-1.3684],
+         [-1.1579]]),
+ tensor([[11.8690],
+         [ 6.5433],
+         [ 5.9396],
+         [ 2.6304],
+         [ 1.7947]], dtype=torch.float64))</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="a-numpy-book-recommended-by-jeremy-what-is-a-tensor" class="level2">
+<h2 class="anchored" data-anchor-id="a-numpy-book-recommended-by-jeremy-what-is-a-tensor">A numpy book recommended by Jeremy; what is a tensor</h2>
+<p>As you can see, they’re <em>tensors</em>. A tensor is just like an <code>array</code> in numpy (if you’re not familiar with numpy, I strongly recommend reading <a href="https://wesmckinney.com/book/">this great book</a>, because it’s a critical foundation for nearly all numeric programming in Python. Furthermore, PyTorch, which most researchers use for deep learning, is modeled closely on numpy.) A tensor can be a single number (a <em>scalar</em> or <em>rank-0 tensor</em>), a list of numbers (a <em>vector</em> or <em>rank-1 tensor</em>), a table of numbers (a <em>matrix</em> or <em>rank-0 tensor</em>), a table of tables of numbers (a <em>rank-3 tensor</em>), and so forth.</p>
+<p>We’re not going to learn much about our data by just looking at the raw numbers, so let’s draw a picture:</p>
+<section id="how-to-scatterplot-with-plt" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-scatterplot-with-plt">how to scatterplot with plt</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plt.scatter(x,y)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="0004_fastai_how_neuralnet_work_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="how-to-plot-a-scatterplot-and-a-line-and-slides-for-3-params-of-the-line-func" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-plot-a-scatterplot-and-a-line-and-slides-for-3-params-of-the-line-func">how to plot a scatterplot and a line and slides for 3 params of the line func</h3>
+<p>How do we find values of a, b, and c which fit this data? One approach is to try a few values and see what fits. Here’s a function which overlays a quadratic on top of our data, along with some sliders to change a, b, and c, and see how it looks:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="at">@interact</span>(a<span class="op">=</span><span class="fl">1.1</span>, b<span class="op">=</span><span class="fl">1.1</span>, c<span class="op">=</span><span class="fl">1.1</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_quad(a, b, c):</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    plt.scatter(x,y)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    plot_function(mk_quad(a,b,c), ylim<span class="op">=</span>(<span class="op">-</span><span class="dv">3</span>,<span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"ea92397b799340baa49fb64a4c331828","version_major":2,"version_minor":0}
+</script>
+</div>
+</div>
+<p><strong>Reminder</strong>: If the sliders above aren’t working for you, that’s because the interactive features of this notebook don’t work in Kaggle’s <em>Reader</em> mode. They only work in <em>Edit</em> mode. Please click “<strong>Copy &amp; Edit</strong>” in the top right of this window, then in the menu click <em>Run</em> and then <em>Run all</em>. Then you’ll be able to use all the interactive sliders in this notebook.</p>
+</section>
+<section id="why-need-a-loss-function-how-to-write-a-mean-absolute-error-function-with-torch.abs-and-mean" class="level3">
+<h3 class="anchored" data-anchor-id="why-need-a-loss-function-how-to-write-a-mean-absolute-error-function-with-torch.abs-and-mean">why need a loss function? how to write a mean absolute error function with torch.abs and mean</h3>
+<p>Try moving slider <code>a</code> a bit to the left. Does that look better or worse? How about if you move it a bit to the right? Find out which direction seems to improve the fit of the quadratic to the data, and move the slider a bit in that direction. Next, do the same for slider <code>b</code>: first figure out which direction improves the fit, then move it a bit in that direction. Then do the same for <code>c</code>.</p>
+<p>OK, now go back to slider <code>a</code> and repeat the process. Do it again for <code>b</code> and <code>c</code> as well.</p>
+<p>Did you notice that by going back and doing the sliders a second time that you were able to improve things a bit further? That’s an important insight – it’s only after changing <code>b</code> and <code>c</code>, for instance, that you realise that <code>a</code> actually needs some adjustment based on those new values.</p>
+<p>One thing that’s making this tricky is that we don’t really have a great sense of whether our fit is really better or worse. It would be easier if we had a numeric measure of that. On easy metric we could use is <em>mean absolute error</em> – which is the distance from each data point to the curve:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mae(preds, acts): <span class="cf">return</span> (torch.<span class="bu">abs</span>(preds<span class="op">-</span>acts)).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We’ll update our interactive function to print this at the top for us.</p>
+<p>Use this to repeat the approach we took before to try to find the best fit, but this time just use the value of the metric to decide which direction to move each slider, and how far to move it.</p>
+<p>This time around, try doing it in the opposite order: <code>c</code>, then <code>b</code>, then <code>a</code>.</p>
+<p>You’ll probably find that you have to go through the set of sliders a couple of times to get the best fit.</p>
+</section>
+<section id="how-display-and-change-loss-by-changing-values-of-params-with-sliders-of-interactive-plot" class="level3">
+<h3 class="anchored" data-anchor-id="how-display-and-change-loss-by-changing-values-of-params-with-sliders-of-interactive-plot">how display and change loss by changing values of params with sliders of interactive plot</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="at">@interact</span>(a<span class="op">=</span><span class="fl">1.1</span>, b<span class="op">=</span><span class="fl">1.1</span>, c<span class="op">=</span><span class="fl">1.1</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_quad(a, b, c):</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    f <span class="op">=</span> mk_quad(a,b,c)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    plt.scatter(x,y)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> mae(f(x), y)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    plot_function(f, ylim<span class="op">=</span>(<span class="op">-</span><span class="dv">3</span>,<span class="dv">12</span>), title<span class="op">=</span><span class="ss">f"MAE: </span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"7897ae7aab364bb18748eeb998aeb2e0","version_major":2,"version_minor":0}
+</script>
+</div>
+</div>
+</section>
+<section id="a-15-min-calculus-video-series-recommended-by-jeremy-to-watch-first" class="level3">
+<h3 class="anchored" data-anchor-id="a-15-min-calculus-video-series-recommended-by-jeremy-to-watch-first">A 15-min calculus video series recommended by Jeremy to watch first</h3>
+<p>In a modern neural network we’ll often have tens of millions of parameters to fit, or more, and thousands or millions of data points to fit them to. We’re not going to be able to do that by moving sliders around! We’ll need to automate this process.</p>
+<p>Thankfully, that turns out to be pretty straightforward. We can use calculus to figure out, for each parameter, whether we should increase or decrease it.</p>
+<p>Uh oh, calculus! If you haven’t touched calculus since school, you might be getting ready to run away at this point. But don’t worry, we don’t actually need much calculus at all. Just derivatives, which measure the rate of change of a function. We don’t even need to calculate them ourselves, because the computer will do it for us! If you’ve forgotten what a derivitive is, then watch the first three of these fantastic <a href="https://www.youtube.com/playlist?list=PLybg94GvOJ9ELZEe9s2NXTKr41Yedbw7M">videos by Professor Dave</a>. It’s only 15 minutes in total, so give it a go! Then come back here and we’ll continue on our journey…</p>
+</section>
+</section>
+<section id="automating-gradient-descent" class="level2">
+<h2 class="anchored" data-anchor-id="automating-gradient-descent">Automating gradient descent</h2>
+<section id="how-derivatives-automatically-guide-params-to-change-for-a-lower-loss" class="level3">
+<h3 class="anchored" data-anchor-id="how-derivatives-automatically-guide-params-to-change-for-a-lower-loss">how derivatives automatically guide params to change for a lower loss</h3>
+<p>The basic idea is this: if we know the <em>gradient</em> of our <code>mae()</code> function <em>with respect to</em> our parameters, <code>a</code>, <code>b</code>, and <code>c</code>, then that means we know how adjusting (for instance) <code>a</code> will change the value of <code>mae()</code>. If, say, <code>a</code> has a <em>negative</em> gradient, then we know that increasing <code>a</code> will decrease <code>mae()</code>. Then we know that’s what we need to do, since we trying to make <code>mae()</code> as low as possible.</p>
+<p>So, we find the gradient of <code>mae()</code> for each of our parameters, and then adjust our parameters a bit in the <em>opposite</em> direction to the sign of the gradient.</p>
+<p>To do this, first we need a function that takes all the parameters <code>a</code>, <code>b</code>, and <code>c</code> as a single vector input, and returns the value <code>mae()</code> based on those parameters:</p>
+</section>
+<section id="how-to-create-a-mean-absolute-error-function-on-any-quadratic-model" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-a-mean-absolute-error-function-on-any-quadratic-model">how to create a mean absolute error function on any quadratic model</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> quad_mae(params):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    f <span class="op">=</span> mk_quad(<span class="op">*</span>params)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mae(f(x), y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s try it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>quad_mae([<span class="fl">1.1</span>, <span class="fl">1.1</span>, <span class="fl">1.1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>tensor(2.4219, dtype=torch.float64)</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-create-an-random-tensor-with-3-values-as-initialized-params" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-an-random-tensor-with-3-values-as-initialized-params">how to create an random tensor with 3 values as initialized params</h3>
+<p>Yup, that’s the same as the starting <code>mae()</code> we had in our plot before.</p>
+<p>We’re first going to do exactly the same thing as we did manually – pick some arbritrary starting point for our parameters. We’ll put them all into a single tensor:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>abc <span class="op">=</span> torch.tensor([<span class="fl">1.1</span>,<span class="fl">1.1</span>,<span class="fl">1.1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-calc-gradients-of-params-1.-tell-pytorch-to-get-ready-for-calculating-gradients-for-these-params-2.-calc-loss-3.-calc-the-gradients-with-loss.backward-4.-how-to-access-params-gradients" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-calc-gradients-of-params-1.-tell-pytorch-to-get-ready-for-calculating-gradients-for-these-params-2.-calc-loss-3.-calc-the-gradients-with-loss.backward-4.-how-to-access-params-gradients">how to calc gradients of params? 1. tell PyTorch to get ready for calculating gradients for these params; 2. calc loss; 3. calc the gradients with <code>loss.backward()</code>; 4. how to access params’ gradients;</h3>
+<p>To tell PyTorch that we want it to calculate gradients for these parameters, we need to call <code>requires_grad_()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>abc.requires_grad_()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>tensor([1.1000, 1.1000, 1.1000], requires_grad=True)</code></pre>
+</div>
+</div>
+<p>We can now calculate <code>mae()</code>. Generally, when doing gradient descent, the thing we’re trying to minimise is called the <em>loss</em>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> quad_mae(abc)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>tensor(2.4219, dtype=torch.float64, grad_fn=&lt;MeanBackward0&gt;)</code></pre>
+</div>
+</div>
+<p>To get PyTorch to now calculate the gradients, we need to call <code>backward()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>loss.backward()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The gradients will be stored for us in an attribute called <code>grad</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>abc.grad</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>tensor([-1.3529, -0.0316, -0.5000])</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-change-params-with-gradients-properly-to-lower-loss" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-change-params-with-gradients-properly-to-lower-loss">how to change params with gradients properly to lower loss¶</h3>
+<p>According to these gradients, all our parameters are a little low. So let’s increase them a bit. If we subtract the gradient, multiplied by a small number, that should improve them a bit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    abc <span class="op">-=</span> abc.grad<span class="op">*</span><span class="fl">0.01</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> quad_mae(abc)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'loss=</span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>loss=2.40</code></pre>
+</div>
+</div>
+</section>
+<section id="why-with-torch.no_grad-when-updating-params-with-gradients" class="level3">
+<h3 class="anchored" data-anchor-id="why-with-torch.no_grad-when-updating-params-with-gradients">why <code>with torch.no_grad():</code> when updating params with gradients</h3>
+<p>Yes, our loss has gone down!</p>
+<p>The “small number” we multiply is called the <em>learning rate</em>, and is the most important <em>hyper-parameter</em> to set when training a neural network.</p>
+<p>BTW, you’ll see we had to wrap our calculation of the new parameters in <code>with torch.no_grad()</code>. That disables the calculation of gradients for any operations inside that context manager. We have to do that, because <code>abc -= abc.grad*0.01</code> isn’t actually part of our quadratic model, so we don’t want derivitives to include that calculation.</p>
+<p>We can use a loop to do a few more iterations of this:</p>
+</section>
+<section id="how-to-do-10-iterations-of-updating-params-with-gradients" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-do-10-iterations-of-updating-params-with-gradients">how to do 10 iterations of updating params with gradients</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> quad_mae(abc)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad(): abc <span class="op">-=</span> abc.grad<span class="op">*</span><span class="fl">0.01</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'step=</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">; loss=</span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>step=0; loss=2.40
+step=1; loss=2.36
+step=2; loss=2.30
+step=3; loss=2.21
+step=4; loss=2.11
+step=5; loss=1.98
+step=6; loss=1.85
+step=7; loss=1.72
+step=8; loss=1.58
+step=9; loss=1.46</code></pre>
+</div>
+</div>
+<p>As you can see, our loss keeps going down!</p>
+<p>If you keep running this loop for long enough however, you’ll see that the loss eventually starts increasing for a while. That’s because once the parameters get close to the correct answer, our parameter updates will jump right over the correct answer! To avoid this, we need to decrease our learning rate as we train. This is done using a <em>learning rate schedule</em>, and can be automated in most deep learning frameworks, such as fastai and PyTorch.</p>
+</section>
+</section>
+<section id="how-a-neural-network-approximates-any-given-function" class="level2">
+<h2 class="anchored" data-anchor-id="how-a-neural-network-approximates-any-given-function">How a neural network approximates any given function</h2>
+<p>But neural nets are much more convenient and powerful than this example showed, because we can learn much more than just a quadratic with them. How does <em>that</em> work?</p>
+<p>The trick is that a neural network is a very expressive function. In fact – it’s <a href="https://en.wikipedia.org/wiki/Universal_approximation_theorem">infinitely expressive</a>. A neural network can approximate any computable function, given enough parameters. A “computable function” can cover just about anything you can imagine: understand and translate human speech; paint a picture; diagnose a disease from medical imaging; write an essay; etc…</p>
+<p>The way a neural network approximates a function actually turns out to be very simple. The key trick is to combine two extremely basic steps:</p>
+<ol type="1">
+<li>Matrix multiplication, which is just multiplying things together and then adding them up</li>
+<li>The function <span class="math inline">\(max(x,0)\)</span>, which simply replaces all negative numbers with zero.</li>
+</ol>
+</section>
+<section id="how-to-combine-a-linear-func-with-maxx-0-into-a-rectified-linear-function-how-to-use-torch.clipy-0.-to-perform-maxy-0." class="level2">
+<h2 class="anchored" data-anchor-id="how-to-combine-a-linear-func-with-maxx-0-into-a-rectified-linear-function-how-to-use-torch.clipy-0.-to-perform-maxy-0.">how to combine a linear func with max(x, 0) into a rectified linear function; how to use torch.clip(y, 0.) to perform max(y, 0.)</h2>
+<p>In PyTorch, the function <span class="math inline">\(max(x,0)\)</span> is written as <code>np.clip(x,0)</code>. The combination of a linear function and this <em>max()</em> is called a <em>rectified linear function</em>, and it can be implemented like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rectified_linear(m,b,x):</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> m<span class="op">*</span>x<span class="op">+</span>b</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.clip(y, <span class="fl">0.</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-use-partial-to-wrap-rectified_linear-to-create-a-specific-rectified_linear-func" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-use-partial-to-wrap-rectified_linear-to-create-a-specific-rectified_linear-func">how to use partial to wrap rectified_linear to create a specific rectified_linear func</h2>
+<p>Here’s what it looks like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>plot_function(partial(rectified_linear, <span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="0004_fastai_how_neuralnet_work_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="how-to-use-f.relu-to-replace-torch.clip-to-create-a-rectified-linear-func" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-use-f.relu-to-replace-torch.clip-to-create-a-rectified-linear-func">how to use <code>F.relu</code> to replace <code>torch.clip</code> to create a rectified linear func;</h2>
+<p>BTW, instead of <code>torch.clip(y, 0.)</code>, we can instead use <code>F.relu(x)</code>, which does exactly the same thing. In PyTorch, <code>F</code> refers to the <code>torch.nn.functional</code> module.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rectified_linear2(m,b,x): <span class="cf">return</span> F.relu(m<span class="op">*</span>x<span class="op">+</span>b)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>plot_function(partial(rectified_linear2, <span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="0004_fastai_how_neuralnet_work_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>To understand how this function works, try using this interactive version to play around with the parameters <code>m</code> and <code>b</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="at">@interact</span>(m<span class="op">=</span><span class="fl">1.5</span>, b<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_relu(m, b):</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    plot_function(partial(rectified_linear, m,b), ylim<span class="op">=</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"10b7f27a4cbc429ca088ce320109fa62","version_major":2,"version_minor":0}
+</script>
+</div>
+</div>
+<section id="create-double-and-quaduple-relu-funcneuralnet" class="level3">
+<h3 class="anchored" data-anchor-id="create-double-and-quaduple-relu-funcneuralnet">create double and quaduple relu func/neuralnet</h3>
+<p>As you see, <code>m</code> changes the slope, and <code>b</code> changes where the “hook” appears. This function doesn’t do much on its own, but look what happens when we add two of them together:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> double_relu(m1,b1,m2,b2,x):</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rectified_linear(m1,b1,x) <span class="op">+</span> rectified_linear(m2,b2,x)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="at">@interact</span>(m1<span class="op">=-</span><span class="fl">1.5</span>, b1<span class="op">=-</span><span class="fl">1.5</span>, m2<span class="op">=</span><span class="fl">1.5</span>, b2<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_double_relu(m1, b1, m2, b2):</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    plot_function(partial(double_relu, m1,b1,m2,b2), ylim<span class="op">=</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"879b32669ff94ee8b75dbd4b73320344","version_major":2,"version_minor":0}
+</script>
+</div>
+</div>
+<p>If you play around with that for a while, you notice something quite profound: with enough of these rectified linear functions added together, you could approximate any function with a single input, to whatever accuracy you like! Any time the function doesn’t quite match, you can just add a few more additions to the mix to make it a bit closer. As an experiment, perhaps you’d like to try creating your own <code>plot_triple_relu</code> interactive function, and maybe even include the scatter plot of our data from before, to see how close you can get?</p>
+<p>This exact same approach can be expanded to functions of 2, 3, or more parameters.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> double_relu(m1,b1,m2,b2,m3,b3,m4,b4,x):</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rectified_linear(m1,b1,x) <span class="op">+</span> rectified_linear(m2,b2,x) <span class="op">+</span> rectified_linear(m3,b3,x) <span class="op">\</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> rectified_linear(m4,b4,x) </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="at">@interact</span>(m1<span class="op">=-</span><span class="fl">1.5</span>, b1<span class="op">=-</span><span class="fl">1.5</span>, m2<span class="op">=</span><span class="fl">1.5</span>, b2<span class="op">=</span><span class="fl">1.5</span>, m3<span class="op">=</span><span class="dv">3</span>, b3<span class="op">=</span><span class="dv">3</span>, m4<span class="op">=-</span><span class="dv">3</span>, b4<span class="op">=-</span><span class="dv">3</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_double_relu(m1, b1, m2, b2, m3, b3, m4, b4):</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    plot_function(partial(double_relu, m1,b1,m2,b2,m3,b3,m4,b4), ylim<span class="op">=</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"5a3ba086f1874bc083f01ffe881cb867","version_major":2,"version_minor":0}
+</script>
+</div>
+</div>
+</section>
+</section>
+<section id="how-to-recognise-an-owl" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-recognise-an-owl">How to recognise an owl</h2>
+<section id="deep-learning-basically-is-drawing-squiggly-lines-infinitely-given-computation-and-time" class="level3">
+<h3 class="anchored" data-anchor-id="deep-learning-basically-is-drawing-squiggly-lines-infinitely-given-computation-and-time">deep learning basically is drawing squiggly lines infinitely given computation and time</h3>
+<p>OK great, we’ve created a nifty little example showing that we can drawing squiggly lines that go through some points. So what?</p>
+<p>Well… the truth is that actually drawing squiggly lines (or planes, or high-dimensional hyperplanes…) through some points is literally <em>all that deep learning does</em>! If your data points are, say, the RGB values of pixels in photos of owls, then you can create an owl-recogniser model by following the exact steps above.</p>
+<p>This may, at first, sound about as useful as the classic “how to draw an owl” guide:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="0004_fastai_how_neuralnet_work_files/figure-html/c66592d3-c997-4c72-aed4-2dea579b96e1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">image.png</figcaption><p></p>
+</figure>
+</div>
+<p>Students often ask me at this point “OK Jeremy, but how do neural nets <em>actually work</em>”. But at a foundational level, there is no “step 2”. We’re done – the above steps will, given enough time and enough data, create (for example) an owl recogniser, if you feed in enough owls (and non-owls).</p>
+<p>The devil, I guess, is in the “given enough time and enough data” part of the above sentence. There’s a <em>lot</em> of tweaks we can make to reduce both of these things. For instance, instead of running our calculations on a normal CPU, as we’ve done above, we could do thousands of them simultaneously by taking advantage of a GPU. We could greatly reduce the amount of computation and data needed by using a convolution instead of a matrix multiplication, which basically means skipping over a bunch of the multiplications and additions for bits that you’d guess won’t be important. We could make things much faster if, instead of starting with random parameters, we start with parameters of someone else’s model that does something similar to what we want (this is called <em>transfer learning</em>).</p>
+<p>And, of course, there’s lots of helpful software out there to do this stuff for you without too much fuss. Like, say, <a href="https://docs.fast.ai">fastai</a>.</p>
+<p>Learning these things is what we teach in our <a href="https://course.fast.ai">course</a>, which, like everything we make, is totally free. So if you’re interested in learning more, do check it out!</p>
+<p>As always, if you enjoyed this notebook, please upvote it to help others find it, and to encourage me to write more. If you upvote it, be careful you don’t accidentally upvote your copy that’s created when you click “Copy &amp; Edit” – you can find my original at <a href="https://www.kaggle.com/code/jhoward/how-does-a-neural-net-really-work">this link</a>.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script type="application/vnd.jupyter.widget-state+json">
+{"state":{},"version_major":2,"version_minor":0}
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

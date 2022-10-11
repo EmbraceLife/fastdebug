@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 0006_fastai_why_should_use_framework</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 0006_fastai_why_should_use_framework">
+<meta property="og:description" content="Official course site: for lesson 3">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 0006_fastai_why_should_use_framework">
+<meta name="twitter:description" content="Official course site: for lesson 3">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">0006_fastai_why_should_use_framework</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link active">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction-and-set-up" id="toc-introduction-and-set-up" class="nav-link active" data-scroll-target="#introduction-and-set-up">Introduction and set up</a>
+  <ul class="collapse">
+  <li><a href="#what-are-the-benefits-of-using-fastai-and-pytorch-frameworks" id="toc-what-are-the-benefits-of-using-fastai-and-pytorch-frameworks" class="nav-link" data-scroll-target="#what-are-the-benefits-of-using-fastai-and-pytorch-frameworks">what are the benefits of using fastai and PyTorch frameworks</a></li>
+  <li><a href="#which-fastai-module-is-for-tabular-data-how-to-set-float-format-display-for-pandas-how-to-set-random-seed" id="toc-which-fastai-module-is-for-tabular-data-how-to-set-float-format-display-for-pandas-how-to-set-random-seed" class="nav-link" data-scroll-target="#which-fastai-module-is-for-tabular-data-how-to-set-float-format-display-for-pandas-how-to-set-random-seed">which fastai module is for tabular data; how to set float format display for pandas; how to set random seed;</a></li>
+  </ul></li>
+  <li><a href="#prep-the-data" id="toc-prep-the-data" class="nav-link" data-scroll-target="#prep-the-data">Prep the data</a>
+  <ul class="collapse">
+  <li><a href="#no-worry-of-dummy-variables-normalization-missing-values-and-so-on-if-using-fastai-interesting-feature-ideas-from-a-nice-titanic-feature-notebook" id="toc-no-worry-of-dummy-variables-normalization-missing-values-and-so-on-if-using-fastai-interesting-feature-ideas-from-a-nice-titanic-feature-notebook" class="nav-link" data-scroll-target="#no-worry-of-dummy-variables-normalization-missing-values-and-so-on-if-using-fastai-interesting-feature-ideas-from-a-nice-titanic-feature-notebook">no worry of dummy variables, normalization, missing values and so on if using fastai; interesting feature ideas from a nice Titanic feature notebook;</a></li>
+  <li><a href="#how-to-create-a-tabular-dataloaders-with-tabularpandas-which-handles-all-messing-processing-how-to-set-the-parameters-of-tabularpandas" id="toc-how-to-create-a-tabular-dataloaders-with-tabularpandas-which-handles-all-messing-processing-how-to-set-the-parameters-of-tabularpandas" class="nav-link" data-scroll-target="#how-to-create-a-tabular-dataloaders-with-tabularpandas-which-handles-all-messing-processing-how-to-set-the-parameters-of-tabularpandas">how to create a tabular dataloaders with <code>TabularPandas</code> which handles all messing processing; how to set the parameters of <code>TabularPandas</code></a></li>
+  </ul></li>
+  <li><a href="#train-the-model" id="toc-train-the-model" class="nav-link" data-scroll-target="#train-the-model">Train the model</a>
+  <ul class="collapse">
+  <li><a href="#how-to-create-a-tabular-learner-using-tabular-dataloader-metrics-and-layers" id="toc-how-to-create-a-tabular-learner-using-tabular-dataloader-metrics-and-layers" class="nav-link" data-scroll-target="#how-to-create-a-tabular-learner-using-tabular-dataloader-metrics-and-layers">how to create a tabular learner using tabular dataloader, metrics and layers</a></li>
+  <li><a href="#how-to-find-the-learning-rate-automatically-in-fastai" id="toc-how-to-find-the-learning-rate-automatically-in-fastai" class="nav-link" data-scroll-target="#how-to-find-the-learning-rate-automatically-in-fastai">how to find the learning rate automatically in fastai</a></li>
+  <li><a href="#how-to-pick-the-best-learning-rate-from-the-learning-rate-curve-how-to-train-model-16-epochs-using-learn.fit" id="toc-how-to-pick-the-best-learning-rate-from-the-learning-rate-curve-how-to-train-model-16-epochs-using-learn.fit" class="nav-link" data-scroll-target="#how-to-pick-the-best-learning-rate-from-the-learning-rate-curve-how-to-train-model-16-epochs-using-learn.fit">how to pick the best learning rate from the learning rate curve; how to train model 16 epochs using <code>learn.fit</code></a></li>
+  </ul></li>
+  <li><a href="#submit-to-kaggle" id="toc-submit-to-kaggle" class="nav-link" data-scroll-target="#submit-to-kaggle">Submit to Kaggle</a>
+  <ul class="collapse">
+  <li><a href="#how-to-prepare-test-data-including-added-new-features" id="toc-how-to-prepare-test-data-including-added-new-features" class="nav-link" data-scroll-target="#how-to-prepare-test-data-including-added-new-features">how to prepare test data including added new features</a></li>
+  <li><a href="#how-to-apply-all-the-processing-steps-of-training-data-to-test-data-with-learn.dls.test_dl" id="toc-how-to-apply-all-the-processing-steps-of-training-data-to-test-data-with-learn.dls.test_dl" class="nav-link" data-scroll-target="#how-to-apply-all-the-processing-steps-of-training-data-to-test-data-with-learn.dls.test_dl">how to apply all the processing steps of training data to test data with <code>learn.dls.test_dl</code></a></li>
+  <li><a href="#how-to-calc-all-predictions-for-test-set-using-learn.get_preds" id="toc-how-to-calc-all-predictions-for-test-set-using-learn.get_preds" class="nav-link" data-scroll-target="#how-to-calc-all-predictions-for-test-set-using-learn.get_preds">how to calc all predictions for test set using <code>learn.get_preds</code></a></li>
+  <li><a href="#how-to-prepare-the-results-of-test-set-into-a-csv-file-for-kaggle-submission-how-to-save-into-csv-file-without-idx-number" id="toc-how-to-prepare-the-results-of-test-set-into-a-csv-file-for-kaggle-submission-how-to-save-into-csv-file-without-idx-number" class="nav-link" data-scroll-target="#how-to-prepare-the-results-of-test-set-into-a-csv-file-for-kaggle-submission-how-to-save-into-csv-file-without-idx-number">how to prepare the results of test set into a csv file for kaggle submission; how to save into csv file without idx number</a></li>
+  </ul></li>
+  <li><a href="#ensembling" id="toc-ensembling" class="nav-link" data-scroll-target="#ensembling">Ensembling</a>
+  <ul class="collapse">
+  <li><a href="#what-is-ensembling-and-why-it-is-more-robust-than-any-single-model" id="toc-what-is-ensembling-and-why-it-is-more-robust-than-any-single-model" class="nav-link" data-scroll-target="#what-is-ensembling-and-why-it-is-more-robust-than-any-single-model">what is ensembling and why it is more robust than any single model</a></li>
+  <li><a href="#how-to-create-an-ensemble-function-to-create-multiple-models-and-generate-predictions-from-each-of-them" id="toc-how-to-create-an-ensemble-function-to-create-multiple-models-and-generate-predictions-from-each-of-them" class="nav-link" data-scroll-target="#how-to-create-an-ensemble-function-to-create-multiple-models-and-generate-predictions-from-each-of-them">how to create an ensemble function to create multiple models and generate predictions from each of them</a></li>
+  <li><a href="#how-to-get-the-average-predictions-from-all-ensembed-models" id="toc-how-to-get-the-average-predictions-from-all-ensembed-models" class="nav-link" data-scroll-target="#how-to-get-the-average-predictions-from-all-ensembed-models">how to get the average predictions from all ensembed models</a></li>
+  <li><a href="#how-to-create-the-csv-file-to-titanic-competition" id="toc-how-to-create-the-csv-file-to-titanic-competition" class="nav-link" data-scroll-target="#how-to-create-the-csv-file-to-titanic-competition">how to create the csv file to Titanic competition</a></li>
+  </ul></li>
+  <li><a href="#final-thoughts" id="toc-final-thoughts" class="nav-link" data-scroll-target="#final-thoughts">Final thoughts</a>
+  <ul class="collapse">
+  <li><a href="#why-you-should-use-a-framework-like-fastai" id="toc-why-you-should-use-a-framework-like-fastai" class="nav-link" data-scroll-target="#why-you-should-use-a-framework-like-fastai">Why you should use a framework like fastai</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">0006_fastai_why_should_use_framework</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p><strong>Official course site</strong>: for lesson <a href="https://course.fast.ai/Lessons/lesson3.html">3</a></p>
+<p><strong>Official notebooks</strong> <a href="https://github.com/fastai/course22">repo</a>, on <a href="https://nbviewer.org/github/fastai/course22/tree/master/">nbviewer</a></p>
+<p>Official <a href="https://www.kaggle.com/jhoward/code">notebooks</a> on kaggle</p>
+<section id="introduction-and-set-up" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-set-up">Introduction and set up</h2>
+<section id="what-are-the-benefits-of-using-fastai-and-pytorch-frameworks" class="level3">
+<h3 class="anchored" data-anchor-id="what-are-the-benefits-of-using-fastai-and-pytorch-frameworks">what are the benefits of using fastai and PyTorch frameworks</h3>
+<p>If you’ve finished going through my <a href="https://www.kaggle.com/code/jhoward/linear-model-and-neural-net-from-scratch">Linear model and neural net from scratch</a> notebook, then now is a good time to look at how to do the same thing using a library, instead of doing it from scratch. We’ll use fastai and PyTorch. The benefits of using these libraries is:</p>
+<ul>
+<li>Best practices are handled for you automatically – fast.ai has done thousands of hours of experiments to figure out what the best settings are for you</li>
+<li>Less time getting set up, which means more time to try out your new ideas</li>
+<li>Each idea you try will be less work, because fastai and PyTorch will do the many of the menial bits for you</li>
+<li>You can always drop down from fastai to PyTorch if you need to customise any part (or drop down from the fastai Application API to the fastai mid or low tier APIs), or even drop down from PyTorch to plain python for deep customisation.</li>
+</ul>
+<p>Let’s see how that looks in practice. We’ll start by doing the same library setup as in the “from scratch” notebook:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>iskaggle <span class="op">=</span> os.environ.get(<span class="st">'KAGGLE_KERNEL_RUN_TYPE'</span>, <span class="st">''</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> iskaggle:</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> Path(<span class="st">'../input/titanic'</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>pip install <span class="op">-</span>Uqq fastai</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> zipfile,kaggle</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> Path(<span class="st">'titanic'</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    kaggle.api.competition_download_cli(<span class="bu">str</span>(path))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    zipfile.ZipFile(<span class="ss">f'</span><span class="sc">{</span>path<span class="sc">}</span><span class="ss">.zip'</span>).extractall(path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="which-fastai-module-is-for-tabular-data-how-to-set-float-format-display-for-pandas-how-to-set-random-seed" class="level3">
+<h3 class="anchored" data-anchor-id="which-fastai-module-is-for-tabular-data-how-to-set-float-format-display-for-pandas-how-to-set-random-seed">which fastai module is for tabular data; how to set float format display for pandas; how to set random seed;</h3>
+<p>We’ll import the fastai tabular library, set a random seed so the notebook is reproducible, and pick a reasonable number of significant figures to display in our tables:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.tabular.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>pd.options.display.float_format <span class="op">=</span> <span class="st">'</span><span class="sc">{:.2f}</span><span class="st">'</span>.<span class="bu">format</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>set_seed(<span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="prep-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="prep-the-data">Prep the data</h2>
+<p>We’ll read the CSV file just like we did before:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(path<span class="op">/</span><span class="st">'train.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="no-worry-of-dummy-variables-normalization-missing-values-and-so-on-if-using-fastai-interesting-feature-ideas-from-a-nice-titanic-feature-notebook" class="level3">
+<h3 class="anchored" data-anchor-id="no-worry-of-dummy-variables-normalization-missing-values-and-so-on-if-using-fastai-interesting-feature-ideas-from-a-nice-titanic-feature-notebook">no worry of dummy variables, normalization, missing values and so on if using fastai; interesting feature ideas from a nice Titanic feature notebook;</h3>
+<p>When you do everything from scratch, every bit of feature engineering requires a whole lot of work, since you have to think about things like dummy variables, normalization, missing values, and so on. But with fastai that’s all done for you. So let’s go wild and create lots of new features! We’ll use a bunch of the most interesting ones from this fantastic <a href="https://www.kaggle.com/code/gunesevitan/titanic-advanced-feature-engineering-tutorial/">Titanic feature engineering notebook</a> (and be sure to click that link and upvote that notebook if you like it to thank the author for their hard work!)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_features(df):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'LogFare'</span>] <span class="op">=</span> np.log1p(df[<span class="st">'Fare'</span>])</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'Deck'</span>] <span class="op">=</span> df.Cabin.<span class="bu">str</span>[<span class="dv">0</span>].<span class="bu">map</span>(<span class="bu">dict</span>(A<span class="op">=</span><span class="st">"ABC"</span>, B<span class="op">=</span><span class="st">"ABC"</span>, C<span class="op">=</span><span class="st">"ABC"</span>, D<span class="op">=</span><span class="st">"DE"</span>, E<span class="op">=</span><span class="st">"DE"</span>, F<span class="op">=</span><span class="st">"FG"</span>, G<span class="op">=</span><span class="st">"FG"</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'Family'</span>] <span class="op">=</span> df.SibSp<span class="op">+</span>df.Parch</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'Alone'</span>] <span class="op">=</span> df.Family<span class="op">==</span><span class="dv">1</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'TicketFreq'</span>] <span class="op">=</span> df.groupby(<span class="st">'Ticket'</span>)[<span class="st">'Ticket'</span>].transform(<span class="st">'count'</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'Title'</span>] <span class="op">=</span> df.Name.<span class="bu">str</span>.split(<span class="st">', '</span>, expand<span class="op">=</span><span class="va">True</span>)[<span class="dv">1</span>].<span class="bu">str</span>.split(<span class="st">'.'</span>, expand<span class="op">=</span><span class="va">True</span>)[<span class="dv">0</span>]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'Title'</span>] <span class="op">=</span> df.Title.<span class="bu">map</span>(<span class="bu">dict</span>(Mr<span class="op">=</span><span class="st">"Mr"</span>,Miss<span class="op">=</span><span class="st">"Miss"</span>,Mrs<span class="op">=</span><span class="st">"Mrs"</span>,Master<span class="op">=</span><span class="st">"Master"</span>)).value_counts(dropna<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>add_features(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-create-a-tabular-dataloaders-with-tabularpandas-which-handles-all-messing-processing-how-to-set-the-parameters-of-tabularpandas" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-a-tabular-dataloaders-with-tabularpandas-which-handles-all-messing-processing-how-to-set-the-parameters-of-tabularpandas">how to create a tabular dataloaders with <code>TabularPandas</code> which handles all messing processing; how to set the parameters of <code>TabularPandas</code></h3>
+<p>As we discussed in the last notebook, we can use <code>RandomSplitter</code> to separate out the training and validation sets:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>splits <span class="op">=</span> RandomSplitter(seed<span class="op">=</span><span class="dv">42</span>)(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now the entire process of getting the data ready for training requires just this one cell!:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dls <span class="op">=</span> TabularPandas(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    df, splits<span class="op">=</span>splits,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    procs <span class="op">=</span> [Categorify, FillMissing, Normalize],</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    cat_names<span class="op">=</span>[<span class="st">"Sex"</span>,<span class="st">"Pclass"</span>,<span class="st">"Embarked"</span>,<span class="st">"Deck"</span>, <span class="st">"Title"</span>],</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    cont_names<span class="op">=</span>[<span class="st">'Age'</span>, <span class="st">'SibSp'</span>, <span class="st">'Parch'</span>, <span class="st">'LogFare'</span>, <span class="st">'Alone'</span>, <span class="st">'TicketFreq'</span>, <span class="st">'Family'</span>],</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    y_names<span class="op">=</span><span class="st">"Survived"</span>, y_block <span class="op">=</span> CategoryBlock(),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>).dataloaders(path<span class="op">=</span><span class="st">"."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here’s what each of the parameters means:</p>
+<ul>
+<li><p>Use <code>splits</code> for indices of training and validation sets:</p>
+<pre><code>splits=splits,</code></pre></li>
+<li><p>Turn strings into categories, fill missing values in numeric columns with the median, normalise all numeric columns:</p>
+<pre><code>procs = [Categorify, FillMissing, Normalize],</code></pre></li>
+<li><p>These are the categorical independent variables:</p>
+<pre><code>cat_names=["Sex","Pclass","Embarked","Deck", "Title"],</code></pre></li>
+<li><p>These are the continuous independent variables:</p>
+<pre><code>cont_names=['Age', 'SibSp', 'Parch', 'LogFare', 'Alone', 'TicketFreq', 'Family'],</code></pre></li>
+<li><p>This is the dependent variable:</p>
+<pre><code>y_names="Survived",</code></pre></li>
+<li><p>The dependent variable is categorical (so build a classification model, not a regression model):</p>
+<pre><code>y_block = CategoryBlock(),</code></pre></li>
+</ul>
+</section>
+</section>
+<section id="train-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="train-the-model">Train the model</h2>
+<section id="how-to-create-a-tabular-learner-using-tabular-dataloader-metrics-and-layers" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-a-tabular-learner-using-tabular-dataloader-metrics-and-layers">how to create a tabular learner using tabular dataloader, metrics and layers</h3>
+<p>The data and model together make up a <code>Learner</code>. To create one, we say what the data is (<code>dls</code>), and the size of each hidden layer (<code>[10,10]</code>), along with any metrics we want to print along the way:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>learn <span class="op">=</span> tabular_learner(dls, metrics<span class="op">=</span>accuracy, layers<span class="op">=</span>[<span class="dv">10</span>,<span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You’ll notice we didn’t have to do any messing around to try to find a set of random coefficients that will train correctly – that’s all handled automatically.</p>
+</section>
+<section id="how-to-find-the-learning-rate-automatically-in-fastai" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-find-the-learning-rate-automatically-in-fastai">how to find the learning rate automatically in fastai</h3>
+<p>One handy feature that fastai can also tell us what learning rate to use:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>learn.lr_find(suggest_funcs<span class="op">=</span>(slide, valley))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-pick-the-best-learning-rate-from-the-learning-rate-curve-how-to-train-model-16-epochs-using-learn.fit" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-pick-the-best-learning-rate-from-the-learning-rate-curve-how-to-train-model-16-epochs-using-learn.fit">how to pick the best learning rate from the learning rate curve; how to train model 16 epochs using <code>learn.fit</code></h3>
+<p>The two colored points are both reasonable choices for a learning rate. I’ll pick somewhere between the two (0.03) and train for a few epochs:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>learn.fit(<span class="dv">16</span>, lr<span class="op">=</span><span class="fl">0.03</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We’ve got a similar accuracy to our previous “from scratch” model – which isn’t too surprising, since as we discussed, this dataset is too small and simple to really see much difference. A simple linear model already does a pretty good job. But that’s OK – the goal here is to show you how to get started with deep learning and understand how it really works, and the best way to do that is on small and easy to understand datasets.</p>
+</section>
+</section>
+<section id="submit-to-kaggle" class="level2">
+<h2 class="anchored" data-anchor-id="submit-to-kaggle">Submit to Kaggle</h2>
+<p>One important feature of fastai is that all the information needed to apply the data transformations and the model to a new dataset are stored in the learner. You can call <code>export</code> to save it to a file to use it later in production, or you can use the trained model right away to get predictions on a test set.</p>
+<p>To submit to Kaggle, we’ll need to read in the test set, and do the same feature engineering we did for the training set:</p>
+<section id="how-to-prepare-test-data-including-added-new-features" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-prepare-test-data-including-added-new-features">how to prepare test data including added new features</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tst_df <span class="op">=</span> pd.read_csv(path<span class="op">/</span><span class="st">'test.csv'</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>tst_df[<span class="st">'Fare'</span>] <span class="op">=</span> tst_df.Fare.fillna(<span class="dv">0</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>add_features(tst_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-apply-all-the-processing-steps-of-training-data-to-test-data-with-learn.dls.test_dl" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-apply-all-the-processing-steps-of-training-data-to-test-data-with-learn.dls.test_dl">how to apply all the processing steps of training data to test data with <code>learn.dls.test_dl</code></h3>
+<p>But we don’t need to manually specify any of the processing steps necessary to get the data ready for modeling, since that’s all saved in the learner. To specify we want to apply the same steps to a new dataset, use the <code>test_dl()</code> method:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tst_dl <span class="op">=</span> learn.dls.test_dl(tst_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-calc-all-predictions-for-test-set-using-learn.get_preds" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-calc-all-predictions-for-test-set-using-learn.get_preds">how to calc all predictions for test set using <code>learn.get_preds</code></h3>
+<p>Now we can use <code>get_preds</code> to get the predictions for the test set:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>preds,_ <span class="op">=</span> learn.get_preds(dl<span class="op">=</span>tst_dl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-prepare-the-results-of-test-set-into-a-csv-file-for-kaggle-submission-how-to-save-into-csv-file-without-idx-number" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-prepare-the-results-of-test-set-into-a-csv-file-for-kaggle-submission-how-to-save-into-csv-file-without-idx-number">how to prepare the results of test set into a csv file for kaggle submission; how to save into csv file without idx number</h3>
+<p>Finally, let’s create a submission CSV just like we did in the previous notebook…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tst_df[<span class="st">'Survived'</span>] <span class="op">=</span> (preds[:,<span class="dv">1</span>]<span class="op">&gt;</span><span class="fl">0.5</span>).<span class="bu">int</span>()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>sub_df <span class="op">=</span> tst_df[[<span class="st">'PassengerId'</span>,<span class="st">'Survived'</span>]]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>sub_df.to_csv(<span class="st">'sub.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>…and check that it looks reasonable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>head sub.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="ensembling" class="level2">
+<h2 class="anchored" data-anchor-id="ensembling">Ensembling</h2>
+<section id="what-is-ensembling-and-why-it-is-more-robust-than-any-single-model" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-ensembling-and-why-it-is-more-robust-than-any-single-model">what is ensembling and why it is more robust than any single model</h3>
+<p>Since it’s so easy to create a model now, it’s easier to play with more advanced modeling approaches. For instance, we can create five separate models, each trained from different random starting points, and average them. This is the simplest approach of <a href="https://machinelearningmastery.com/tour-of-ensemble-learning-algorithms/">ensembling</a> models, which combines multiple models to generate predictions that are better than any of the single models in the ensemble.</p>
+<p>To create our ensemble, first we copy the three steps we used above to create and train a model, and apply it to the test set:</p>
+</section>
+<section id="how-to-create-an-ensemble-function-to-create-multiple-models-and-generate-predictions-from-each-of-them" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-an-ensemble-function-to-create-multiple-models-and-generate-predictions-from-each-of-them">how to create an ensemble function to create multiple models and generate predictions from each of them</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ensemble():</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    learn <span class="op">=</span> tabular_learner(dls, metrics<span class="op">=</span>accuracy, layers<span class="op">=</span>[<span class="dv">10</span>,<span class="dv">10</span>])</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> learn.no_bar(),learn.no_logging(): learn.fit(<span class="dv">16</span>, lr<span class="op">=</span><span class="fl">0.03</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> learn.get_preds(dl<span class="op">=</span>tst_dl)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we run this five times, and collect the results into a list:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>learns <span class="op">=</span> [ensemble() <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-get-the-average-predictions-from-all-ensembed-models" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-get-the-average-predictions-from-all-ensembed-models">how to get the average predictions from all ensembed models</h3>
+<p>We stack this predictions together and take their average predictions:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ens_preds <span class="op">=</span> torch.stack(learns).mean(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, use the same code as before to generate a submission file, which we can submit to Kaggle after the notebook is saved and run:</p>
+</section>
+<section id="how-to-create-the-csv-file-to-titanic-competition" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-the-csv-file-to-titanic-competition">how to create the csv file to Titanic competition</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>tst_df[<span class="st">'Survived'</span>] <span class="op">=</span> (ens_preds[:,<span class="dv">1</span>]<span class="op">&gt;</span><span class="fl">0.5</span>).<span class="bu">int</span>()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>sub_df <span class="op">=</span> tst_df[[<span class="st">'PassengerId'</span>,<span class="st">'Survived'</span>]]</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>sub_df.to_csv(<span class="st">'ens_sub.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>At the time of writing, this submission is well within the top 25% of entries to the competition.</p>
+<p>(A lot of submissions to this competition use additional external data, but we have restricted ourselves to just using the data provided. We’d probably do a lot better if we used external data too. Feel free to give that a try, and see how you go. Note that you’ll never be able to get to the top of the leaderboard, since a lot of folks in this competition have cheated, by downloading the answers from the internet and uploading them as their submission. In a real competition that’s not possible, because the answers aren’t public, but there’s nothing stopping people from cheating in a tutorial/practice competition like this one. So if you’re ready for a real challenge, take a look at the <a href="https://www.kaggle.com/competitions/">competitions page</a> and start working on a real competition!)</p>
+</section>
+</section>
+<section id="final-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="final-thoughts">Final thoughts</h2>
+<section id="why-you-should-use-a-framework-like-fastai" class="level3">
+<h3 class="anchored" data-anchor-id="why-you-should-use-a-framework-like-fastai">Why you should use a framework like fastai</h3>
+<p>As you can see, using fastai and PyTorch made things much easier than doing it from scratch, but it also hid away a lot of the details. So if you only ever use a framework, you’re not going to as fully understand what’s going on under the hood. That understanding can be really helpful when it comes to debugging and improving your models. But do use fastai when you’re creating models on Kaggle or in “real life”, because otherwise you’re not taking advantage of all the research that’s gone into optimising the models for you, and you’ll end up spending more time debugging and implementing menial boiler-plate than actually solving the real problem!</p>
+<p>If you found this notebook useful, please remember to click the little up-arrow at the top to upvote it, since I like to know when people have found my work useful, and it helps others find it too. (BTW, be sure you’re looking at my <a href="https://www.kaggle.com/jhoward/why-you-should-use-a-framework">original notebook</a> here when you do that, and are not on your own copy of it, otherwise your upvote won’t get counted!) And if you have any questions or comments, please pop them below – I read every comment I receive!</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

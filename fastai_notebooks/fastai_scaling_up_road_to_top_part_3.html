@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 0010_fastai_scaling_up_road_to_top_part_3</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 0010_fastai_scaling_up_road_to_top_part_3">
+<meta property="og:description" content="This is part 3 of the Road to the Top series, in which I show the process I used to tackle the Paddy Doctor competition, leading to four 1st place submissions.">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 0010_fastai_scaling_up_road_to_top_part_3">
+<meta name="twitter:description" content="This is part 3 of the Road to the Top series, in which I show the process I used to tackle the Paddy Doctor competition, leading to four 1st place submissions.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">0010_fastai_scaling_up_road_to_top_part_3</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link active">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#memory-and-gradient-accumulation" id="toc-memory-and-gradient-accumulation" class="nav-link active" data-scroll-target="#memory-and-gradient-accumulation">Memory and gradient accumulation</a>
+  <ul class="collapse">
+  <li><a href="#how-to-get-the-train_val-dataset-folderpath-ready-how-to-get-the-test-set-images-files-ready" id="toc-how-to-get-the-train_val-dataset-folderpath-ready-how-to-get-the-test-set-images-files-ready" class="nav-link" data-scroll-target="#how-to-get-the-train_val-dataset-folderpath-ready-how-to-get-the-test-set-images-files-ready">how to get the train_val dataset folder/path ready; how to get the test set images files ready</a></li>
+  <li><a href="#how-to-quickly-train-an-ensemble-of-larger-models-with-larger-inputs-on-kaggle" id="toc-how-to-quickly-train-an-ensemble-of-larger-models-with-larger-inputs-on-kaggle" class="nav-link" data-scroll-target="#how-to-quickly-train-an-ensemble-of-larger-models-with-larger-inputs-on-kaggle">how to quickly train an ensemble of larger models with larger inputs on Kaggle</a></li>
+  <li><a href="#how-to-find-out-the-num-of-files-in-each-disease-class-using-pandas.value_counts" id="toc-how-to-find-out-the-num-of-files-in-each-disease-class-using-pandas.value_counts" class="nav-link" data-scroll-target="#how-to-find-out-the-num-of-files-in-each-disease-class-using-pandas.value_counts">how to find out the num of files in each disease class using <code>pandas.value_counts</code></a></li>
+  <li><a href="#how-to-choose-a-data-folder-which-has-the-least-num-of-image-files-for-training" id="toc-how-to-choose-a-data-folder-which-has-the-least-num-of-image-files-for-training" class="nav-link" data-scroll-target="#how-to-choose-a-data-folder-which-has-the-least-num-of-image-files-for-training">how to choose a data folder which has the least num of image files for training</a></li>
+  <li><a href="#how-fine_tune-differ-from-fit_one_cycle" id="toc-how-fine_tune-differ-from-fit_one_cycle" class="nav-link" data-scroll-target="#how-fine_tune-differ-from-fit_one_cycle">how <code>fine_tune</code> differ from <code>fit_one_cycle</code></a></li>
+  <li><a href="#how-to-create-a-train-function-to-do-either-fine_tune-tta-or-fit_one_cycle-for-all-layers-without-freezing-how-to-add-gradient-accumulation-to-train" id="toc-how-to-create-a-train-function-to-do-either-fine_tune-tta-or-fit_one_cycle-for-all-layers-without-freezing-how-to-add-gradient-accumulation-to-train" class="nav-link" data-scroll-target="#how-to-create-a-train-function-to-do-either-fine_tune-tta-or-fit_one_cycle-for-all-layers-without-freezing-how-to-add-gradient-accumulation-to-train">how to create a <code>train</code> function to do either fine_tune + tta or fit_one_cycle for all layers without freezing; how to add <code>gradient accumulation</code> to <code>train</code></a></li>
+  <li><a href="#what-does-gradient-accumulation-do" id="toc-what-does-gradient-accumulation-do" class="nav-link" data-scroll-target="#what-does-gradient-accumulation-do">what does gradient accumulation do?</a></li>
+  <li><a href="#what-benefits-does-gradient-accumulation-bring" id="toc-what-benefits-does-gradient-accumulation-bring" class="nav-link" data-scroll-target="#what-benefits-does-gradient-accumulation-bring">What benefits does gradient accumulation bring</a></li>
+  <li><a href="#how-does-gradient-accumulation-work-under-the-hood" id="toc-how-does-gradient-accumulation-work-under-the-hood" class="nav-link" data-scroll-target="#how-does-gradient-accumulation-work-under-the-hood">how does gradient accumulation work under the hood</a></li>
+  <li><a href="#how-to-find-out-how-much-gpu-memory-is-used-and-how-to-free-up-the-gpu-memory" id="toc-how-to-find-out-how-much-gpu-memory-is-used-and-how-to-free-up-the-gpu-memory" class="nav-link" data-scroll-target="#how-to-find-out-how-much-gpu-memory-is-used-and-how-to-free-up-the-gpu-memory">how to find out how much gpu memory is used; and how to free up the gpu memory</a></li>
+  </ul></li>
+  <li><a href="#checking-memory-use" id="toc-checking-memory-use" class="nav-link" data-scroll-target="#checking-memory-use">Checking memory use</a>
+  <ul class="collapse">
+  <li><a href="#how-to-check-the-gpu-memory-usage-of-large-models-with-large-image-inputs" id="toc-how-to-check-the-gpu-memory-usage-of-large-models-with-large-image-inputs" class="nav-link" data-scroll-target="#how-to-check-the-gpu-memory-usage-of-large-models-with-large-image-inputs">how to check the gpu memory usage of large models with large image inputs</a></li>
+  </ul></li>
+  <li><a href="#running-the-models" id="toc-running-the-models" class="nav-link" data-scroll-target="#running-the-models">Running the models</a>
+  <ul class="collapse">
+  <li><a href="#how-to-use-a-dictionary-to-organize-all-models-and-their-item-and-batch-transformation-setups" id="toc-how-to-use-a-dictionary-to-organize-all-models-and-their-item-and-batch-transformation-setups" class="nav-link" data-scroll-target="#how-to-use-a-dictionary-to-organize-all-models-and-their-item-and-batch-transformation-setups">how to use a dictionary to organize all models and their item and batch transformation setups</a></li>
+  <li><a href="#how-to-train-all-the-selected-models-with-transformation-setups-and-save-the-tta-results-into-a-list" id="toc-how-to-train-all-the-selected-models-with-transformation-setups-and-save-the-tta-results-into-a-list" class="nav-link" data-scroll-target="#how-to-train-all-the-selected-models-with-transformation-setups-and-save-the-tta-results-into-a-list">how to train all the selected models with transformation setups and save the tta results into a list</a></li>
+  </ul></li>
+  <li><a href="#ensembling" id="toc-ensembling" class="nav-link" data-scroll-target="#ensembling">Ensembling</a>
+  <ul class="collapse">
+  <li><a href="#how-to-save-all-the-tta-results-a-list-into-a-pickle-file" id="toc-how-to-save-all-the-tta-results-a-list-into-a-pickle-file" class="nav-link" data-scroll-target="#how-to-save-all-the-tta-results-a-list-into-a-pickle-file">how to save all the tta results (a list) into a pickle file</a></li>
+  <li><a href="#how-to-get-all-the-predictions-from-a-list-of-results-in-which-each-result-contains-a-prediction-and-a-target-for-each-row-of-test-set" id="toc-how-to-get-all-the-predictions-from-a-list-of-results-in-which-each-result-contains-a-prediction-and-a-target-for-each-row-of-test-set" class="nav-link" data-scroll-target="#how-to-get-all-the-predictions-from-a-list-of-results-in-which-each-result-contains-a-prediction-and-a-target-for-each-row-of-test-set">how to get all the predictions from a list of results in which each result contains a prediction and a target for each row of test set</a></li>
+  <li><a href="#why-and-how-to-double-the-weights-for-vit-models-in-the-ensembles" id="toc-why-and-how-to-double-the-weights-for-vit-models-in-the-ensembles" class="nav-link" data-scroll-target="#why-and-how-to-double-the-weights-for-vit-models-in-the-ensembles">why and how to double the weights for vit models in the ensembles</a></li>
+  <li><a href="#what-is-the-simplest-way-of-doing-ensembling" id="toc-what-is-the-simplest-way-of-doing-ensembling" class="nav-link" data-scroll-target="#what-is-the-simplest-way-of-doing-ensembling">what is the simplest way of doing ensembling</a></li>
+  <li><a href="#how-to-all-the-classes-or-vocab-of-the-dataset-using-dataloaders-how-to-prepare-the-csv-for-kaggle-submission" id="toc-how-to-all-the-classes-or-vocab-of-the-dataset-using-dataloaders-how-to-prepare-the-csv-for-kaggle-submission" class="nav-link" data-scroll-target="#how-to-all-the-classes-or-vocab-of-the-dataset-using-dataloaders-how-to-prepare-the-csv-for-kaggle-submission">how to all the classes or vocab of the dataset using dataloaders; how to prepare the csv for kaggle submission</a></li>
+  <li><a href="#how-to-submit-to-kaggle-using-fastkaggle-api" id="toc-how-to-submit-to-kaggle-using-fastkaggle-api" class="nav-link" data-scroll-target="#how-to-submit-to-kaggle-using-fastkaggle-api">how to submit to kaggle using fastkaggle api</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#how-fastai-can-superbly-simply-the-codes-and-standardize-processes" id="toc-how-fastai-can-superbly-simply-the-codes-and-standardize-processes" class="nav-link" data-scroll-target="#how-fastai-can-superbly-simply-the-codes-and-standardize-processes">how fastai can superbly simply the codes and standardize processes</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">0010_fastai_scaling_up_road_to_top_part_3</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install fastkaggle if not available</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>: <span class="im">import</span> fastkaggle</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> ModuleNotFoundError:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>pip install <span class="op">-</span>Uq fastkaggle</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastkaggle <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is part 3 of the <a href="https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1">Road to the Top</a> series, in which I show the process I used to tackle the <a href="https://www.kaggle.com/competitions/paddy-disease-classification">Paddy Doctor</a> competition, leading to four 1st place submissions. The previous notebook is available here: <a href="https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1">part 2</a>.</p>
+<section id="memory-and-gradient-accumulation" class="level2">
+<h2 class="anchored" data-anchor-id="memory-and-gradient-accumulation">Memory and gradient accumulation</h2>
+<section id="how-to-get-the-train_val-dataset-folderpath-ready-how-to-get-the-test-set-images-files-ready" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-get-the-train_val-dataset-folderpath-ready-how-to-get-the-test-set-images-files-ready">how to get the train_val dataset folder/path ready; how to get the test set images files ready</h3>
+<p>First we’ll repeat the steps we used last time to access the data and ensure all the latest libraries are installed, and we’ll also grab the files we’ll need for the test set:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>comp <span class="op">=</span> <span class="st">'paddy-disease-classification'</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> setup_comp(comp, install<span class="op">=</span><span class="st">'fastai "timm&gt;=0.6.2.dev0"'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.vision.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>set_seed(<span class="dv">42</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>tst_files <span class="op">=</span> get_image_files(path<span class="op">/</span><span class="st">'test_images'</span>).<span class="bu">sorted</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-quickly-train-an-ensemble-of-larger-models-with-larger-inputs-on-kaggle" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-quickly-train-an-ensemble-of-larger-models-with-larger-inputs-on-kaggle">how to quickly train an ensemble of larger models with larger inputs on Kaggle</h3>
+<p>In this analysis our goal will be to train an ensemble of larger models with larger inputs. The challenge when training such models is generally GPU memory. Kaggle GPUs have 16280MiB of memory available, as at the time of writing. I like to try out my notebooks on my home PC, then upload them – but I still need them to run OK on Kaggle (especially if it’s a code competition, where this is required). My home PC has 24GiB cards, so just because it runs OK at home doesn’t mean it’ll run OK on Kaggle.</p>
+<p>It’s really helpful to be able to quickly try a few models and image sizes and find out what will run successfully. To make this quick, we can just grab a small subset of the data for running short epochs – the memory use will still be the same, but it’ll be much faster.</p>
+<p>One easy way to do this is to simply pick a category with few files in it. Here’s our options:</p>
+</section>
+<section id="how-to-find-out-the-num-of-files-in-each-disease-class-using-pandas.value_counts" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-find-out-the-num-of-files-in-each-disease-class-using-pandas.value_counts">how to find out the num of files in each disease class using <code>pandas.value_counts</code></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(path<span class="op">/</span><span class="st">'train.csv'</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df.label.value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>normal                      1764
+blast                       1738
+hispa                       1594
+dead_heart                  1442
+tungro                      1088
+brown_spot                   965
+downy_mildew                 620
+bacterial_leaf_blight        479
+bacterial_leaf_streak        380
+bacterial_panicle_blight     337
+Name: label, dtype: int64</code></pre>
+</div>
+</div>
+</section>
+<section id="how-to-choose-a-data-folder-which-has-the-least-num-of-image-files-for-training" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-choose-a-data-folder-which-has-the-least-num-of-image-files-for-training">how to choose a data folder which has the least num of image files for training</h3>
+<p>Let’s use <em>bacterial_panicle_blight</em> since it’s the smallest:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>trn_path <span class="op">=</span> path<span class="op">/</span><span class="st">'train_images'</span><span class="op">/</span><span class="st">'bacterial_panicle_blight'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-fine_tune-differ-from-fit_one_cycle" class="level3">
+<h3 class="anchored" data-anchor-id="how-fine_tune-differ-from-fit_one_cycle">how <code>fine_tune</code> differ from <code>fit_one_cycle</code></h3>
+<p>Now we’ll set up a <code>train</code> function which is very similar to the steps we used for training in the last notebook. But there’s a few significant differences…</p>
+<p>The first is that I’m using a <code>finetune</code> argument to pick whether we are going to run the <code>fine_tune()</code> method, or the <code>fit_one_cycle()</code> method – the latter is faster since it doesn’t do an initial fine-tuning of the head.</p>
+</section>
+<section id="how-to-create-a-train-function-to-do-either-fine_tune-tta-or-fit_one_cycle-for-all-layers-without-freezing-how-to-add-gradient-accumulation-to-train" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-create-a-train-function-to-do-either-fine_tune-tta-or-fit_one_cycle-for-all-layers-without-freezing-how-to-add-gradient-accumulation-to-train">how to create a <code>train</code> function to do either fine_tune + tta or fit_one_cycle for all layers without freezing; how to add <code>gradient accumulation</code> to <code>train</code></h3>
+<p>When we fine tune in this function I also have it calculate and return the TTA predictions on the test set, since later on we’ll be ensembling the TTA results of a number of models. Note also that we no longer have <code>seed=42</code> in the <code>ImageDataLoaders</code> line – that means we’ll have different training and validation sets each time we call this. That’s what we’ll want for ensembling, since it means that each model will use slightly different data.</p>
+<p>The more important change is that I’ve added an <code>accum</code> argument to implement <em>gradient accumulation</em>. As you’ll see in the code below, this does two things:</p>
+<ol type="1">
+<li>Divide the batch size by <code>accum</code></li>
+<li>Add the <code>GradientAccumulation</code> callback, passing in <code>accum</code>.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(arch, size, item<span class="op">=</span>Resize(<span class="dv">480</span>, method<span class="op">=</span><span class="st">'squish'</span>), accum<span class="op">=</span><span class="dv">1</span>, finetune<span class="op">=</span><span class="va">True</span>, epochs<span class="op">=</span><span class="dv">12</span>):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    dls <span class="op">=</span> ImageDataLoaders.from_folder(trn_path, valid_pct<span class="op">=</span><span class="fl">0.2</span>, item_tfms<span class="op">=</span>item,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        batch_tfms<span class="op">=</span>aug_transforms(size<span class="op">=</span>size, min_scale<span class="op">=</span><span class="fl">0.75</span>), bs<span class="op">=</span><span class="dv">64</span><span class="op">//</span>accum)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    cbs <span class="op">=</span> GradientAccumulation(<span class="dv">64</span>) <span class="cf">if</span> accum <span class="cf">else</span> []</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    learn <span class="op">=</span> vision_learner(dls, arch, metrics<span class="op">=</span>error_rate, cbs<span class="op">=</span>cbs).to_fp16()</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> finetune:</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        learn.fine_tune(epochs, <span class="fl">0.01</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> learn.tta(dl<span class="op">=</span>dls.test_dl(tst_files))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        learn.unfreeze()</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        learn.fit_one_cycle(epochs, <span class="fl">0.01</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="what-does-gradient-accumulation-do" class="level3">
+<h3 class="anchored" data-anchor-id="what-does-gradient-accumulation-do">what does gradient accumulation do?</h3>
+<p><em>Gradient accumulation</em> refers to a very simple trick: rather than updating the model weights after every batch based on that batch’s gradients, instead keep <em>accumulating</em> (adding up) the gradients for a few batches, and them update the model weights with those accumulated gradients. In fastai, the parameter you pass to <code>GradientAccumulation</code> defines how many batches of gradients are accumulated. Since we’re adding up the gradients over <code>accum</code> batches, we therefore need to divide the batch size by that same number.</p>
+</section>
+<section id="what-benefits-does-gradient-accumulation-bring" class="level3">
+<h3 class="anchored" data-anchor-id="what-benefits-does-gradient-accumulation-bring">What benefits does gradient accumulation bring</h3>
+<p>The resulting training loop is nearly mathematically identical to using the original batch size, but the amount of memory used is the same as using a batch size <code>accum</code> times smaller!</p>
+</section>
+<section id="how-does-gradient-accumulation-work-under-the-hood" class="level3">
+<h3 class="anchored" data-anchor-id="how-does-gradient-accumulation-work-under-the-hood">how does gradient accumulation work under the hood</h3>
+<p>For instance, here’s a basic example of a single epoch of a training loop without gradient accumulation:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x,y <span class="kw">in</span> dl:</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    calc_loss(coeffs, x, y).backward()</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    coeffs.data.sub_(coeffs.grad <span class="op">*</span> lr)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    coeffs.grad.zero_()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here’s the same thing, but with gradient accumulation added (assuming a target effective batch size of 64):</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>count <span class="op">=</span> <span class="dv">0</span>            <span class="co"># track count of items seen since last weight update</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x,y <span class="kw">in</span> dl:</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    count <span class="op">+=</span> <span class="bu">len</span>(x)  <span class="co"># update count based on this minibatch size</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    calc_loss(coeffs, x, y).backward()</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> count<span class="op">&gt;</span><span class="dv">64</span>:     <span class="co"># count is greater than accumulation target, so do weight update</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        coeffs.data.sub_(coeffs.grad <span class="op">*</span> lr)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        coeffs.grad.zero_()</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        count<span class="op">=</span><span class="dv">0</span>      <span class="co"># reset count</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The full implementation in fastai is only a few lines of code – here’s the <a href="https://github.com/fastai/fastai/blob/master/fastai/callback/training.py#L26">source code</a>.</p>
+<p>To see the impact of gradient accumulation, consider this small model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>train(<span class="st">'convnext_small_in22k'</span>, <span class="dv">128</span>, epochs<span class="op">=</span><span class="dv">1</span>, accum<span class="op">=</span><span class="dv">1</span>, finetune<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-find-out-how-much-gpu-memory-is-used-and-how-to-free-up-the-gpu-memory" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-find-out-how-much-gpu-memory-is-used-and-how-to-free-up-the-gpu-memory">how to find out how much gpu memory is used; and how to free up the gpu memory</h3>
+<p>Let’s create a function to find out how much memory it used, and also to then clear out the memory for the next run:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gc</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> report_gpu():</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(torch.cuda.list_gpu_processes())</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    gc.collect()</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    torch.cuda.empty_cache()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>report_gpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So with <code>accum=1</code> the GPU used around 5GB RAM. Let’s try <code>accum=2</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>train(<span class="st">'convnext_small_in22k'</span>, <span class="dv">128</span>, epochs<span class="op">=</span><span class="dv">1</span>, accum<span class="op">=</span><span class="dv">2</span>, finetune<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>report_gpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As you see, the RAM usage has now gone down to 4GB. It’s not halved since there’s other overhead involved (for larger models this overhead is likely to be relatively lower).</p>
+<p>Let’s try <code>4</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>train(<span class="st">'convnext_small_in22k'</span>, <span class="dv">128</span>, epochs<span class="op">=</span><span class="dv">1</span>, accum<span class="op">=</span><span class="dv">4</span>, finetune<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>report_gpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The memory use is even lower!</p>
+</section>
+</section>
+<section id="checking-memory-use" class="level2">
+<h2 class="anchored" data-anchor-id="checking-memory-use">Checking memory use</h2>
+<section id="how-to-check-the-gpu-memory-usage-of-large-models-with-large-image-inputs" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-check-the-gpu-memory-usage-of-large-models-with-large-image-inputs">how to check the gpu memory usage of large models with large image inputs</h3>
+<p>We’ll now check the memory use for each of the architectures and sizes we’ll be training later, to ensure they all fit in 16GB RAM. For each of these, I tried <code>accum=1</code> first, and then doubled it any time the resulting memory use was over 16GB. As it turns out, <code>accum=2</code> was what I needed for every case.</p>
+<p>First, <code>convnext_large</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>train(<span class="st">'convnext_large_in22k'</span>, <span class="dv">224</span>, epochs<span class="op">=</span><span class="dv">1</span>, accum<span class="op">=</span><span class="dv">2</span>, finetune<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>report_gpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>train(<span class="st">'convnext_large_in22k'</span>, (<span class="dv">320</span>,<span class="dv">240</span>), epochs<span class="op">=</span><span class="dv">1</span>, accum<span class="op">=</span><span class="dv">2</span>, finetune<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>report_gpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here’s <code>vit_large</code>. This one is very close to going over the 16280MiB we’ve got on Kaggle!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>train(<span class="st">'vit_large_patch16_224'</span>, <span class="dv">224</span>, epochs<span class="op">=</span><span class="dv">1</span>, accum<span class="op">=</span><span class="dv">2</span>, finetune<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>report_gpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then finally our <code>swinv2</code> and <code>swin</code> models:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>train(<span class="st">'swinv2_large_window12_192_22k'</span>, <span class="dv">192</span>, epochs<span class="op">=</span><span class="dv">1</span>, accum<span class="op">=</span><span class="dv">2</span>, finetune<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>report_gpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>train(<span class="st">'swin_large_patch4_window7_224'</span>, <span class="dv">224</span>, epochs<span class="op">=</span><span class="dv">1</span>, accum<span class="op">=</span><span class="dv">2</span>, finetune<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>report_gpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="running-the-models" class="level2">
+<h2 class="anchored" data-anchor-id="running-the-models">Running the models</h2>
+<section id="how-to-use-a-dictionary-to-organize-all-models-and-their-item-and-batch-transformation-setups" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-use-a-dictionary-to-organize-all-models-and-their-item-and-batch-transformation-setups">how to use a dictionary to organize all models and their item and batch transformation setups</h3>
+<p>Using the previous notebook, I tried a bunch of different architectures and preprocessing approaches on small models, and picked a few which looked good. We’ll using a <code>dict</code> to list our the preprocessing approaches we’ll use for each architecture of interest based on that analysis:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> <span class="dv">640</span>,<span class="dv">480</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> {</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'convnext_large_in22k'</span>: {</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>        (Resize(res), <span class="dv">224</span>),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>        (Resize(res), (<span class="dv">320</span>,<span class="dv">224</span>)),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    }, <span class="st">'vit_large_patch16_224'</span>: {</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>        (Resize(<span class="dv">480</span>, method<span class="op">=</span><span class="st">'squish'</span>), <span class="dv">224</span>),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>        (Resize(res), <span class="dv">224</span>),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    }, <span class="st">'swinv2_large_window12_192_22k'</span>: {</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        (Resize(<span class="dv">480</span>, method<span class="op">=</span><span class="st">'squish'</span>), <span class="dv">192</span>),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        (Resize(res), <span class="dv">192</span>),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    }, <span class="st">'swin_large_patch4_window7_224'</span>: {</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        (Resize(<span class="dv">480</span>, method<span class="op">=</span><span class="st">'squish'</span>), <span class="dv">224</span>),</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>        (Resize(res), <span class="dv">224</span>),</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-train-all-the-selected-models-with-transformation-setups-and-save-the-tta-results-into-a-list" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-train-all-the-selected-models-with-transformation-setups-and-save-the-tta-results-into-a-list">how to train all the selected models with transformation setups and save the tta results into a list</h3>
+<p>We’ll need to switch to using the full training set of course!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>trn_path <span class="op">=</span> path<span class="op">/</span><span class="st">'train_images'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we’re ready to train all these models. Remember that each is using a different training and validation set, so the results aren’t directly comparable.</p>
+<p>We’ll append each set of TTA predictions on the test set into a list called <code>tta_res</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tta_res <span class="op">=</span> []</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> arch,details <span class="kw">in</span> models.items():</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> item,size <span class="kw">in</span> details:</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'---'</span>,arch)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(size)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(item.name)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        tta_res.append(train(arch, size, item<span class="op">=</span>item, accum<span class="op">=</span><span class="dv">2</span>)) <span class="co">#, epochs=1))</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        gc.collect()</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        torch.cuda.empty_cache()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="ensembling" class="level2">
+<h2 class="anchored" data-anchor-id="ensembling">Ensembling</h2>
+<section id="how-to-save-all-the-tta-results-a-list-into-a-pickle-file" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-save-all-the-tta-results-a-list-into-a-pickle-file">how to save all the tta results (a list) into a pickle file</h3>
+<p>Since this has taken quite a while to run, let’s save the results, just in case something goes wrong!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>save_pickle(<span class="st">'tta_res.pkl'</span>, tta_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-get-all-the-predictions-from-a-list-of-results-in-which-each-result-contains-a-prediction-and-a-target-for-each-row-of-test-set" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-get-all-the-predictions-from-a-list-of-results-in-which-each-result-contains-a-prediction-and-a-target-for-each-row-of-test-set">how to get all the predictions from a list of results in which each result contains a prediction and a target for each row of test set</h3>
+<p><code>Learner.tta</code> returns predictions and targets for each rows. We just want the predictions:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>tta_prs <span class="op">=</span> first(<span class="bu">zip</span>(<span class="op">*</span>tta_res))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="why-and-how-to-double-the-weights-for-vit-models-in-the-ensembles" class="level3">
+<h3 class="anchored" data-anchor-id="why-and-how-to-double-the-weights-for-vit-models-in-the-ensembles">why and how to double the weights for vit models in the ensembles</h3>
+<p>Originally I just used the above predictions, but later I realised in my experiments on smaller models that <code>vit</code> was a bit better than everything else, so I decided to give those double the weight in my ensemble. I did that by simply adding the to the list a second time (we could also do this by using a weighted average):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>tta_prs <span class="op">+=</span> tta_prs[<span class="dv">2</span>:<span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="what-is-the-simplest-way-of-doing-ensembling" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-the-simplest-way-of-doing-ensembling">what is the simplest way of doing ensembling</h3>
+<p>An <em>ensemble</em> simply refers to a model which is itself the result of combining a number of other models. The simplest way to do ensembling is to take the average of the predictions of each model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>avg_pr <span class="op">=</span> torch.stack(tta_prs).mean(<span class="dv">0</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>avg_pr.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-all-the-classes-or-vocab-of-the-dataset-using-dataloaders-how-to-prepare-the-csv-for-kaggle-submission" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-all-the-classes-or-vocab-of-the-dataset-using-dataloaders-how-to-prepare-the-csv-for-kaggle-submission">how to all the classes or vocab of the dataset using dataloaders; how to prepare the csv for kaggle submission</h3>
+<p>That’s all that’s needed to create an ensemble! Finally, we copy the steps we used in the last notebook to create a submission file:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>dls <span class="op">=</span> ImageDataLoaders.from_folder(trn_path, valid_pct<span class="op">=</span><span class="fl">0.2</span>, item_tfms<span class="op">=</span>Resize(<span class="dv">480</span>, method<span class="op">=</span><span class="st">'squish'</span>),</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    batch_tfms<span class="op">=</span>aug_transforms(size<span class="op">=</span><span class="dv">224</span>, min_scale<span class="op">=</span><span class="fl">0.75</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>idxs <span class="op">=</span> avg_pr.argmax(dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>vocab <span class="op">=</span> np.array(dls.vocab)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>ss <span class="op">=</span> pd.read_csv(path<span class="op">/</span><span class="st">'sample_submission.csv'</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>ss[<span class="st">'label'</span>] <span class="op">=</span> vocab[idxs]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>ss.to_csv(<span class="st">'subm.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-submit-to-kaggle-using-fastkaggle-api" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-submit-to-kaggle-using-fastkaggle-api">how to submit to kaggle using fastkaggle api</h3>
+<p>Now we can submit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> iskaggle:</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> kaggle <span class="im">import</span> api</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    api.competition_submit_cli(<span class="st">'subm.csv'</span>, <span class="st">'part 3 v2'</span>, comp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>That’s it – at the time of creating this analysis, that got easily to the top of the leaderboard! Here are the four submissions I entered, each of which was better than the last, and each of which was ranked #1:</p>
+<p><img src="https://user-images.githubusercontent.com/346999/174503966-65005151-8f28-4f8b-b3c3-212cf74014f1.png" width="400"></p>
+<p><em>Edit: Actually the one that got to the top of the leaderboard timed out when I ran it on Kaggle Notebooks, so I had to remove two of the runs from the ensemble. There’s only a very small difference in accuracy however.</em></p>
+<p>Going from bottom to top, here’s what each one was:</p>
+<ol type="1">
+<li><code>convnext_small</code> trained for 12 epochs, with TTA</li>
+<li><code>convnext_large</code> trained the same way</li>
+<li>The ensemble in this notebook, with <code>vit</code> models not over-weighted</li>
+<li>The ensemble in this notebook, with <code>vit</code> models over-weighted.</li>
+</ol>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<section id="how-fastai-can-superbly-simply-the-codes-and-standardize-processes" class="level3">
+<h3 class="anchored" data-anchor-id="how-fastai-can-superbly-simply-the-codes-and-standardize-processes">how fastai can superbly simply the codes and standardize processes</h3>
+<p>The key takeaway I hope to get across from this series so far is that you can get great results in image recognition using very little code and a very standardised approach, and that with a rigorous process you can improve in significant steps. Our training function, including data processing and TTA, is just half a dozen lines of code, plus another 7 lines of code to ensemble the models and create a submission file!</p>
+<p>If you found this notebook useful, please remember to click the little up-arrow at the top to upvote it, since I like to know when people have found my work useful, and it helps others find it too. If you have any questions or comments, please pop them below – I read every comment I receive!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This is what I use to push my notebook from my home PC to Kaggle</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> iskaggle:</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    push_notebook(<span class="st">'jhoward'</span>, <span class="st">'scaling-up-road-to-the-top-part-3'</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                  title<span class="op">=</span><span class="st">'Scaling Up: Road to the Top, Part 3'</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                  <span class="bu">file</span><span class="op">=</span><span class="st">'10-scaling-up-road-to-the-top-part-3.ipynb'</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                  competition<span class="op">=</span>comp, private<span class="op">=</span><span class="va">False</span>, gpu<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Kernel version 6 successfully pushed.  Please check progress at https://www.kaggle.com/code/jhoward/scaling-up-road-to-the-top-part-3</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

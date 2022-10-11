@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 0017_fastai_pt2_2019_matmul</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 0017_fastai_pt2_2019_matmul">
+<meta property="og:description" content="The foundations we’ll assume throughout this course are:">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 0017_fastai_pt2_2019_matmul">
+<meta name="twitter:description" content="The foundations we’ll assume throughout this course are:">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">0017_fastai_pt2_2019_matmul</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link active">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#matrix-multiplication-from-foundations" id="toc-matrix-multiplication-from-foundations" class="nav-link active" data-scroll-target="#matrix-multiplication-from-foundations">Matrix multiplication from foundations</a></li>
+  <li><a href="#check-imports" id="toc-check-imports" class="nav-link" data-scroll-target="#check-imports">Check imports</a>
+  <ul class="collapse">
+  <li><a href="#how-to-build-a-test-framework-using-the-source-code-of-test-test_eq-and-run-tests-for-all-notebooks-fastforward-to-2022-we-have-the-test-source-code-in-fastcore.test-nbdev_test-to-run-tests-for-all-notebooks-3523---why-it-is-great-to-have-a-unit-testing-with-jupyter" id="toc-how-to-build-a-test-framework-using-the-source-code-of-test-test_eq-and-run-tests-for-all-notebooks-fastforward-to-2022-we-have-the-test-source-code-in-fastcore.test-nbdev_test-to-run-tests-for-all-notebooks-3523---why-it-is-great-to-have-a-unit-testing-with-jupyter" class="nav-link" data-scroll-target="#how-to-build-a-test-framework-using-the-source-code-of-test-test_eq-and-run-tests-for-all-notebooks-fastforward-to-2022-we-have-the-test-source-code-in-fastcore.test-nbdev_test-to-run-tests-for-all-notebooks-3523---why-it-is-great-to-have-a-unit-testing-with-jupyter">31:11 - how to build a test framework using the source code of <code>test</code>, <code>test_eq</code>, and run tests for all notebooks (fastforward to 2022, we have the test source code in fastcore.test <code>nbdev_test</code> to run tests for all notebooks) 35:23 - why it is great to have a unit testing with jupyter</a></li>
+  </ul></li>
+  <li><a href="#get-data" id="toc-get-data" class="nav-link" data-scroll-target="#get-data">Get data</a>
+  <ul class="collapse">
+  <li><a href="#what-are-the-basic-libs-needed-to-create-our-matrix-multiplication-notebookmodule" id="toc-what-are-the-basic-libs-needed-to-create-our-matrix-multiplication-notebookmodule" class="nav-link" data-scroll-target="#what-are-the-basic-libs-needed-to-create-our-matrix-multiplication-notebookmodule">35:59 - what are the basic libs needed to create our matrix multiplication notebook/module</a></li>
+  <li><a href="#how-to-download-and-extract-mnist-dataset-using-the-most-basic-libraries-fastai.datasets-gzip-pickle" id="toc-how-to-download-and-extract-mnist-dataset-using-the-most-basic-libraries-fastai.datasets-gzip-pickle" class="nav-link" data-scroll-target="#how-to-download-and-extract-mnist-dataset-using-the-most-basic-libraries-fastai.datasets-gzip-pickle">36:25 - how to download and extract mnist dataset using the most basic libraries: <code>fastai.datasets</code>, <code>gzip</code>, <code>pickle</code></a></li>
+  <li><a href="#how-to-convert-numpy-array-from-mnist-dataset-into-pytorch-tensor-using-map-and-tensor-why-jeremy-would-like-us-to-use-pytorch-tensor-instead-of-numpy-array-3742---how-to-find-out-about-the-structure-of-the-mnist-dataset-using-tensor.shape-and-min-max" id="toc-how-to-convert-numpy-array-from-mnist-dataset-into-pytorch-tensor-using-map-and-tensor-why-jeremy-would-like-us-to-use-pytorch-tensor-instead-of-numpy-array-3742---how-to-find-out-about-the-structure-of-the-mnist-dataset-using-tensor.shape-and-min-max" class="nav-link" data-scroll-target="#how-to-convert-numpy-array-from-mnist-dataset-into-pytorch-tensor-using-map-and-tensor-why-jeremy-would-like-us-to-use-pytorch-tensor-instead-of-numpy-array-3742---how-to-find-out-about-the-structure-of-the-mnist-dataset-using-tensor.shape-and-min-max">36:57 - how to convert numpy array from mnist dataset into pytorch tensor using <code>map</code> and <code>tensor</code>; why Jeremy would like us to use pytorch tensor instead of numpy array; 37:42 - how to find out about the structure of the mnist dataset using <code>tensor.shape</code> and <code>min</code>, <code>max</code></a></li>
+  <li><a href="#how-to-build-a-test-to-check-the-dataset-has-the-structure-we-expect-using-assert-and-test_eq" id="toc-how-to-build-a-test-to-check-the-dataset-has-the-structure-we-expect-using-assert-and-test_eq" class="nav-link" data-scroll-target="#how-to-build-a-test-to-check-the-dataset-has-the-structure-we-expect-using-assert-and-test_eq">38:15 - how to build a test to check the dataset has the structure we expect using <code>assert</code> and <code>test_eq</code></a></li>
+  <li><a href="#how-to-turn-a-long-vector-tensor-into-a-2d-tensor-using-img.view28-28-how-to-display-image-from-a-torch.floattensor-using-plt.imshowimg.view2828" id="toc-how-to-turn-a-long-vector-tensor-into-a-2d-tensor-using-img.view28-28-how-to-display-image-from-a-torch.floattensor-using-plt.imshowimg.view2828" class="nav-link" data-scroll-target="#how-to-turn-a-long-vector-tensor-into-a-2d-tensor-using-img.view28-28-how-to-display-image-from-a-torch.floattensor-using-plt.imshowimg.view2828">38:39 - how to turn a long vector tensor into a 2d tensor using <code>img.view(28, 28)</code>; how to display image from a <code>torch.FloatTensor</code> using <code>plt.imshow(img.view(28,28))</code></a></li>
+  </ul></li>
+  <li><a href="#initial-python-model" id="toc-initial-python-model" class="nav-link" data-scroll-target="#initial-python-model">Initial python model</a>
+  <ul class="collapse">
+  <li><a href="#if-we-are-to-build-a-simplest-linear-model-for-mnist-dataset-how-to-create-the-weights-and-biases-for-the-model-using-weights-torch.randn78410-and-bias-torch.zeros10.-check-the-notebook" id="toc-if-we-are-to-build-a-simplest-linear-model-for-mnist-dataset-how-to-create-the-weights-and-biases-for-the-model-using-weights-torch.randn78410-and-bias-torch.zeros10.-check-the-notebook" class="nav-link" data-scroll-target="#if-we-are-to-build-a-simplest-linear-model-for-mnist-dataset-how-to-create-the-weights-and-biases-for-the-model-using-weights-torch.randn78410-and-bias-torch.zeros10.-check-the-notebook">39:04 - If we are to build a simplest linear model for mnist dataset, how to create the weights and biases for the model using <code>weights = torch.randn(784,10)</code> and <code>bias = torch.zeros(10)</code>. check the notebook</a></li>
+  </ul></li>
+  <li><a href="#matrix-multiplication" id="toc-matrix-multiplication" class="nav-link" data-scroll-target="#matrix-multiplication">Matrix multiplication</a>
+  <ul class="collapse">
+  <li><a href="#how-to-understand-the-matrix-multiplication-calculation-process-see-animation-how-to-implement-the-matrix-multiplication-with-3-loops-see-src-code-below-imagine-an-input-matrix-rows5-cols2828-and-output-matrix-rows5-cols10-what-would-the-weights-matrix-be-rows2828-cols10-in-the-src-below-a-would-be-the-input-matrix-and-b-be-the-weights-we-want-to-find-out-about-the-output-matrix-c.-how-to-use-assert-i-found-a-useful-link-here" id="toc-how-to-understand-the-matrix-multiplication-calculation-process-see-animation-how-to-implement-the-matrix-multiplication-with-3-loops-see-src-code-below-imagine-an-input-matrix-rows5-cols2828-and-output-matrix-rows5-cols10-what-would-the-weights-matrix-be-rows2828-cols10-in-the-src-below-a-would-be-the-input-matrix-and-b-be-the-weights-we-want-to-find-out-about-the-output-matrix-c.-how-to-use-assert-i-found-a-useful-link-here" class="nav-link" data-scroll-target="#how-to-understand-the-matrix-multiplication-calculation-process-see-animation-how-to-implement-the-matrix-multiplication-with-3-loops-see-src-code-below-imagine-an-input-matrix-rows5-cols2828-and-output-matrix-rows5-cols10-what-would-the-weights-matrix-be-rows2828-cols10-in-the-src-below-a-would-be-the-input-matrix-and-b-be-the-weights-we-want-to-find-out-about-the-output-matrix-c.-how-to-use-assert-i-found-a-useful-link-here">39:49 - how to understand the matrix multiplication calculation process (see animation); how to implement the matrix multiplication with 3 loops (see src code below); imagine an input matrix <code>rows=5, cols=28*28</code> and output matrix <code>rows=5, cols=10</code>, what would the weights matrix be? <code>(rows=28*28, cols=10)</code> In the src below, <code>a</code> would be the input matrix and <code>b</code> be the weights, we want to find out about the output matrix <code>c</code>. how to use <code>assert</code> (I found a useful link here)</a></li>
+  <li><a href="#run-an-example-on-matmul-and-test-it-and-check-how-long-does-it-take-to-calc-a-matrix-of-5-rows-python-is-1000-times-slower-than-pytorch" id="toc-run-an-example-on-matmul-and-test-it-and-check-how-long-does-it-take-to-calc-a-matrix-of-5-rows-python-is-1000-times-slower-than-pytorch" class="nav-link" data-scroll-target="#run-an-example-on-matmul-and-test-it-and-check-how-long-does-it-take-to-calc-a-matrix-of-5-rows-python-is-1000-times-slower-than-pytorch">42:57 - run an example on <code>matmul</code> and test it and check how long does it take to calc a matrix of 5 rows; python is 1000 times slower than pytorch</a></li>
+  </ul></li>
+  <li><a href="#elementwise-ops" id="toc-elementwise-ops" class="nav-link" data-scroll-target="#elementwise-ops">Elementwise ops</a>
+  <ul class="collapse">
+  <li><a href="#how-to-speed-up-the-matrix-multiplication-by-50000-times-by-using-pytorch-which-uses-a-different-lib-called-aten-the-difference-between-aten-and-c10-to-replace-each-loop-at-a-time-4511---what-is-elementwise-operation-notebook-from-aten-or-c10-of-pytorch-what-does-elementwise-operation-do-between-vectors-and-between-matricies" id="toc-how-to-speed-up-the-matrix-multiplication-by-50000-times-by-using-pytorch-which-uses-a-different-lib-called-aten-the-difference-between-aten-and-c10-to-replace-each-loop-at-a-time-4511---what-is-elementwise-operation-notebook-from-aten-or-c10-of-pytorch-what-does-elementwise-operation-do-between-vectors-and-between-matricies" class="nav-link" data-scroll-target="#how-to-speed-up-the-matrix-multiplication-by-50000-times-by-using-pytorch-which-uses-a-different-lib-called-aten-the-difference-between-aten-and-c10-to-replace-each-loop-at-a-time-4511---what-is-elementwise-operation-notebook-from-aten-or-c10-of-pytorch-what-does-elementwise-operation-do-between-vectors-and-between-matricies">44:27 - how to speed up the matrix multiplication by 50000 times by using pytorch (which uses a different lib called aten (the difference between aten and c10) to replace each loop at a time 45:11 - what is elementwise operation notebook from aten or c10 of pytorch; what does elementwise operation do between vectors and between matricies;</a></li>
+  <li><a href="#how-to-translate-equations-into-codes-how-to-read-frobenius-norm-equation-how-often-it-appears-in-deep-learning-papers-4738---how-to-get-latex-for-math-equations-without-actually-writing-them" id="toc-how-to-translate-equations-into-codes-how-to-read-frobenius-norm-equation-how-often-it-appears-in-deep-learning-papers-4738---how-to-get-latex-for-math-equations-without-actually-writing-them" class="nav-link" data-scroll-target="#how-to-translate-equations-into-codes-how-to-read-frobenius-norm-equation-how-often-it-appears-in-deep-learning-papers-4738---how-to-get-latex-for-math-equations-without-actually-writing-them">46:24 - how to translate equations into codes; how to read Frobenius norm equation; how often it appears in deep learning papers; 47:38 - how to get latex for math equations without actually writing them</a></li>
+  </ul></li>
+  <li><a href="#elementwise-matmul" id="toc-elementwise-matmul" class="nav-link" data-scroll-target="#elementwise-matmul">Elementwise matmul</a>
+  <ul class="collapse">
+  <li><a href="#how-to-use-elementwise-vector-vector-multiplication-to-replace-the-last-loop-of-scalar-scalar-multiplication-below-and-how-much-faster-do-we-get-178-times-question-what-does-timeit--n-10-mean-doing-matmulm1m2-10-times" id="toc-how-to-use-elementwise-vector-vector-multiplication-to-replace-the-last-loop-of-scalar-scalar-multiplication-below-and-how-much-faster-do-we-get-178-times-question-what-does-timeit--n-10-mean-doing-matmulm1m2-10-times" class="nav-link" data-scroll-target="#how-to-use-elementwise-vector-vector-multiplication-to-replace-the-last-loop-of-scalar-scalar-multiplication-below-and-how-much-faster-do-we-get-178-times-question-what-does-timeit--n-10-mean-doing-matmulm1m2-10-times">48:52 - how to use elementwise vector-vector multiplication to replace the last loop of scalar-scalar multiplication below, and how much faster do we get (178 times); question: what does <code>%timeit -n 10</code> mean (doing <code>matmul(m1,m2</code> 10 times?);</a></li>
+  <li><a href="#which-language-is-this-elementwise-operation-written-in-c-language-how-does-test_near-and-torch.allclose-check-whether-two-numbers-are-real-close-to-each-other-is-not-exact-the-same" id="toc-which-language-is-this-elementwise-operation-written-in-c-language-how-does-test_near-and-torch.allclose-check-whether-two-numbers-are-real-close-to-each-other-is-not-exact-the-same" class="nav-link" data-scroll-target="#which-language-is-this-elementwise-operation-written-in-c-language-how-does-test_near-and-torch.allclose-check-whether-two-numbers-are-real-close-to-each-other-is-not-exact-the-same">50:59 - which language is this elementwise operation written in (c language); how does <code>test_near</code> and <code>torch.allclose</code> check whether two numbers are real close to each other is not exact the same;</a></li>
+  </ul></li>
+  <li><a href="#broadcasting" id="toc-broadcasting" class="nav-link" data-scroll-target="#broadcasting">Broadcasting</a>
+  <ul class="collapse">
+  <li><a href="#how-to-get-rid-of-the-inner-most-loop-now-with-broadcasting-what-broadcasting-does-is-to-getting-rid-of-all-loops-at-the-speed-of-cuda-written-in-c-language-where-and-when-is-broadcasting-originated-apl-in-1960s-what-is-this-apl-broadcasting-remove-all-the-for-loop-and-use-implicit-broadcasted-loops" id="toc-how-to-get-rid-of-the-inner-most-loop-now-with-broadcasting-what-broadcasting-does-is-to-getting-rid-of-all-loops-at-the-speed-of-cuda-written-in-c-language-where-and-when-is-broadcasting-originated-apl-in-1960s-what-is-this-apl-broadcasting-remove-all-the-for-loop-and-use-implicit-broadcasted-loops" class="nav-link" data-scroll-target="#how-to-get-rid-of-the-inner-most-loop-now-with-broadcasting-what-broadcasting-does-is-to-getting-rid-of-all-loops-at-the-speed-of-cuda-written-in-c-language-where-and-when-is-broadcasting-originated-apl-in-1960s-what-is-this-apl-broadcasting-remove-all-the-for-loop-and-use-implicit-broadcasted-loops">51:49 - how to get rid of the inner most loop now with broadcasting; what broadcasting does is to getting rid of all loops at the speed of Cuda written in C language; Where and when is broadcasting originated (APL in 1960s); What is this APL broadcasting (remove all the for loop and use implicit broadcasted loops)</a></li>
+  </ul></li>
+  <li><a href="#broadcasting-with-a-scalar" id="toc-broadcasting-with-a-scalar" class="nav-link" data-scroll-target="#broadcasting-with-a-scalar">Broadcasting with a scalar</a>
+  <ul class="collapse">
+  <li><a href="#how-to-do-broadcasting-on-a-vector-with-a-scalar-or-broadcasting-a-scalar-to-a-tensor-a-which-can-be-a-vector-or-matrix-or-more-and-broadcasting-is-at-speed-of-c-or-cuda" id="toc-how-to-do-broadcasting-on-a-vector-with-a-scalar-or-broadcasting-a-scalar-to-a-tensor-a-which-can-be-a-vector-or-matrix-or-more-and-broadcasting-is-at-speed-of-c-or-cuda" class="nav-link" data-scroll-target="#how-to-do-broadcasting-on-a-vector-with-a-scalar-or-broadcasting-a-scalar-to-a-tensor-a-which-can-be-a-vector-or-matrix-or-more-and-broadcasting-is-at-speed-of-c-or-cuda">52:58 - how to do broadcasting on a vector with a scalar or broadcasting a scalar to a tensor <code>a</code> which can be a vector or matrix or more; and broadcasting is at speed of C or cuda;</a></li>
+  </ul></li>
+  <li><a href="#broadcasting-a-vector-to-a-matrix" id="toc-broadcasting-a-vector-to-a-matrix" class="nav-link" data-scroll-target="#broadcasting-a-vector-to-a-matrix">Broadcasting a vector to a matrix</a>
+  <ul class="collapse">
+  <li><a href="#how-to-broadcast-a-vector-to-matrix-jeremy-explains-how-to-broadcast-a-vector-to-matrix-without-doing-for-loop-how-to-visualize-a-vector-being-broadcasted-into-a-matrix-using-t-c.expand_asm-c-as-a-data-of-column-or-row-m-as-matrix" id="toc-how-to-broadcast-a-vector-to-matrix-jeremy-explains-how-to-broadcast-a-vector-to-matrix-without-doing-for-loop-how-to-visualize-a-vector-being-broadcasted-into-a-matrix-using-t-c.expand_asm-c-as-a-data-of-column-or-row-m-as-matrix" class="nav-link" data-scroll-target="#how-to-broadcast-a-vector-to-matrix-jeremy-explains-how-to-broadcast-a-vector-to-matrix-without-doing-for-loop-how-to-visualize-a-vector-being-broadcasted-into-a-matrix-using-t-c.expand_asm-c-as-a-data-of-column-or-row-m-as-matrix">54:10 - how to broadcast a vector to matrix; Jeremy explains how to broadcast a vector to matrix without doing for loop; how to visualize a vector being broadcasted into a matrix using <code>t = c.expand_as(m)</code> (<code>c</code> as a data of column or row, <code>m</code> as matrix)</a></li>
+  <li><a href="#when-broadcasting-a-vector-to-matrix-the-vector-is-acting-as-a-matrix-but-stored-as-a-vector-how-do-we-see-this-or-interpret-this-using-t.storage-and-t.stride-and-t.shape" id="toc-when-broadcasting-a-vector-to-matrix-the-vector-is-acting-as-a-matrix-but-stored-as-a-vector-how-do-we-see-this-or-interpret-this-using-t.storage-and-t.stride-and-t.shape" class="nav-link" data-scroll-target="#when-broadcasting-a-vector-to-matrix-the-vector-is-acting-as-a-matrix-but-stored-as-a-vector-how-do-we-see-this-or-interpret-this-using-t.storage-and-t.stride-and-t.shape">55:51 - When broadcasting a vector to matrix, the vector is acting as a matrix but stored as a vector; how do we see this or interpret this using <code>t.storage()</code> and <code>t.stride()</code> and <code>t.shape</code>;</a></li>
+  <li><a href="#how-to-turn-a-vector-or-1d-array-into-a-2d-array-or-matrix-using-c.unsqueeze0.shape-1-3-or-cnone.shape-13-or-c.unsqueeze1.shape-31-or-cnone.shape-31-and-turn-a-1d-array-into-a-3d-array-using-cnonenone113-or-cnonenone131-we-use-none-over-unsqueeze" id="toc-how-to-turn-a-vector-or-1d-array-into-a-2d-array-or-matrix-using-c.unsqueeze0.shape-1-3-or-cnone.shape-13-or-c.unsqueeze1.shape-31-or-cnone.shape-31-and-turn-a-1d-array-into-a-3d-array-using-cnonenone113-or-cnonenone131-we-use-none-over-unsqueeze" class="nav-link" data-scroll-target="#how-to-turn-a-vector-or-1d-array-into-a-2d-array-or-matrix-using-c.unsqueeze0.shape-1-3-or-cnone.shape-13-or-c.unsqueeze1.shape-31-or-cnone.shape-31-and-turn-a-1d-array-into-a-3d-array-using-cnonenone113-or-cnonenone131-we-use-none-over-unsqueeze">57:05 - how to turn a vector or 1d array into a 2d array or matrix using <code>c.unsqueeze(0).shape</code> (1, 3) or <code>c[None,:].shape</code> (1,3) or <code>c.unsqueeze(1).shape</code> (3,1) or <code>c[:,None].shape</code> (3,1), and turn a 1d array into a 3d array using <code>c[None,None,:]</code>(1,1,3) or <code>c[None,:,None]</code>(1,3,1); we use <code>None</code> over <code>unsqueeze</code></a></li>
+  <li><a href="#using-none-or-unsqueeze-c-m-is-the-same-to-cnone-m-but-very-different-to-cnone-m-10025---how-to-make-sensevisualize-of-the-broadcasting-of-cnone-and-c...none-using-excel" id="toc-using-none-or-unsqueeze-c-m-is-the-same-to-cnone-m-but-very-different-to-cnone-m-10025---how-to-make-sensevisualize-of-the-broadcasting-of-cnone-and-c...none-using-excel" class="nav-link" data-scroll-target="#using-none-or-unsqueeze-c-m-is-the-same-to-cnone-m-but-very-different-to-cnone-m-10025---how-to-make-sensevisualize-of-the-broadcasting-of-cnone-and-c...none-using-excel">59:26 - using <code>None</code> or <code>unsqueeze</code>, <code>c + m</code> is the same to <code>c[None,:] + m</code> but very different to <code>c[:,None] + m</code> 1:00:25 - how to make sense/visualize of the broadcasting of <code>c[None]</code> and <code>c[...,None]</code> using excel</a></li>
+  </ul></li>
+  <li><a href="#matmul-with-broadcasting" id="toc-matmul-with-broadcasting" class="nav-link" data-scroll-target="#matmul-with-broadcasting">Matmul with broadcasting</a>
+  <ul class="collapse">
+  <li><a href="#how-to-simplify-the-type-of-cnone-as-cnone-and-simplify-cnone-as-c...none" id="toc-how-to-simplify-the-type-of-cnone-as-cnone-and-simplify-cnone-as-c...none" class="nav-link" data-scroll-target="#how-to-simplify-the-type-of-cnone-as-cnone-and-simplify-cnone-as-c...none">1:02:05 - how to simplify the type of <code>c[None,:,:]</code> as <code>c[None]</code> and simplify <code>c[:,:,None]</code> as <code>c[...,None]</code></a></li>
+  <li><a href="#how-to-write-the-broadcasting-code-to-replace-the-for-loop-and-how-to-thoroughly-understand-the-code-what-are-the-benefits-of-using-broadcasting-over-many-for-loops-3700-times-faster-less-code-less-loops-less-error" id="toc-how-to-write-the-broadcasting-code-to-replace-the-for-loop-and-how-to-thoroughly-understand-the-code-what-are-the-benefits-of-using-broadcasting-over-many-for-loops-3700-times-faster-less-code-less-loops-less-error" class="nav-link" data-scroll-target="#how-to-write-the-broadcasting-code-to-replace-the-for-loop-and-how-to-thoroughly-understand-the-code-what-are-the-benefits-of-using-broadcasting-over-many-for-loops-3700-times-faster-less-code-less-loops-less-error">1:03:37 - how to write the broadcasting code to replace the for loop and how to thoroughly understand the code; what are the benefits of using broadcasting over many for loops (3700 times faster, less code less loops less error)</a></li>
+  <li><a href="#how-to-understand-the-second-inner-most-loop-is-replaced-by-broadcasting-homework-assigned-by-jeremy-i-have-written-the-following-code-blocks-to-understand-it." id="toc-how-to-understand-the-second-inner-most-loop-is-replaced-by-broadcasting-homework-assigned-by-jeremy-i-have-written-the-following-code-blocks-to-understand-it." class="nav-link" data-scroll-target="#how-to-understand-the-second-inner-most-loop-is-replaced-by-broadcasting-homework-assigned-by-jeremy-i-have-written-the-following-code-blocks-to-understand-it.">how to understand the second inner most loop is replaced by broadcasting (homework assigned by Jeremy) I have written the following code blocks to understand it.</a></li>
+  </ul></li>
+  <li><a href="#broadcasting-rules" id="toc-broadcasting-rules" class="nav-link" data-scroll-target="#broadcasting-rules">Broadcasting Rules</a>
+  <ul class="collapse">
+  <li><a href="#how-to-understand-broadcasting-rules-two-vector-or-matrix-do-some-operations-we-check-their-shapes-side-by-side-e.g.-a.shape145-vs-b.shape315-according-to-the-2-rules-a-will-broadcast-to-3-rows-b-will-grow-to-3-columns-and-a-and-b-change-nothing-on-the-3rd-dimention.-and-ab.shape-345" id="toc-how-to-understand-broadcasting-rules-two-vector-or-matrix-do-some-operations-we-check-their-shapes-side-by-side-e.g.-a.shape145-vs-b.shape315-according-to-the-2-rules-a-will-broadcast-to-3-rows-b-will-grow-to-3-columns-and-a-and-b-change-nothing-on-the-3rd-dimention.-and-ab.shape-345" class="nav-link" data-scroll-target="#how-to-understand-broadcasting-rules-two-vector-or-matrix-do-some-operations-we-check-their-shapes-side-by-side-e.g.-a.shape145-vs-b.shape315-according-to-the-2-rules-a-will-broadcast-to-3-rows-b-will-grow-to-3-columns-and-a-and-b-change-nothing-on-the-3rd-dimention.-and-ab.shape-345">1:06:21 - How to understand broadcasting rules; two vector or matrix do some operations, we check their shapes side by side, e.g., <code>a.shape==[1,4,5] vs b.shape==[3,1,5]</code>, according to the 2 rules, a will broadcast to 3 rows, b will grow to 3 columns, and a and b change nothing on the 3rd dimention. and <code>(a*b).shape == [3,4,5]</code></a></li>
+  <li><a href="#here-is-my-own-code-for-understanding-the-2-rules-of-broadcasting" id="toc-here-is-my-own-code-for-understanding-the-2-rules-of-broadcasting" class="nav-link" data-scroll-target="#here-is-my-own-code-for-understanding-the-2-rules-of-broadcasting">Here is my own code for understanding the 2 rules of broadcasting</a></li>
+  <li><a href="#why-the-broadcasting-trick-is-the-most-important-technique-in-creating-fastai-from-scratch" id="toc-why-the-broadcasting-trick-is-the-most-important-technique-in-creating-fastai-from-scratch" class="nav-link" data-scroll-target="#why-the-broadcasting-trick-is-the-most-important-technique-in-creating-fastai-from-scratch">1:10:02 - why the broadcasting trick is the most important technique in creating fastai from scratch</a></li>
+  </ul></li>
+  <li><a href="#einstein-summation" id="toc-einstein-summation" class="nav-link" data-scroll-target="#einstein-summation">Einstein summation</a>
+  <ul class="collapse">
+  <li><a href="#how-to-understand-einstein-summation-and-how-to-use-torch.einsum-to-do-matrix-multiplication-with-no-loop-at-all-and-speed-up-16000-times-faster-than-pure-python-3-for-loop-version-how-to-trick-torch.einsum-to-do-batch-matrix-multiplication-and-even-more-transforms-and-tweaks" id="toc-how-to-understand-einstein-summation-and-how-to-use-torch.einsum-to-do-matrix-multiplication-with-no-loop-at-all-and-speed-up-16000-times-faster-than-pure-python-3-for-loop-version-how-to-trick-torch.einsum-to-do-batch-matrix-multiplication-and-even-more-transforms-and-tweaks" class="nav-link" data-scroll-target="#how-to-understand-einstein-summation-and-how-to-use-torch.einsum-to-do-matrix-multiplication-with-no-loop-at-all-and-speed-up-16000-times-faster-than-pure-python-3-for-loop-version-how-to-trick-torch.einsum-to-do-batch-matrix-multiplication-and-even-more-transforms-and-tweaks">1:10:43 - how to understand Einstein summation and how to use <code>torch.einsum</code> to do matrix multiplication with no loop at all and speed up 16000 times faster than pure python 3-for loop version; how to trick <code>torch.einsum</code> to do batch matrix multiplication and even more transforms and tweaks</a></li>
+  <li><a href="#what-jeremy-does-not-like-about-torch.einsum-and-why-apl-j-and-k-are-so-great-and-what-to-expect-from-swift-compiler-julia" id="toc-what-jeremy-does-not-like-about-torch.einsum-and-why-apl-j-and-k-are-so-great-and-what-to-expect-from-swift-compiler-julia" class="nav-link" data-scroll-target="#what-jeremy-does-not-like-about-torch.einsum-and-why-apl-j-and-k-are-so-great-and-what-to-expect-from-swift-compiler-julia">1:15:48 - what Jeremy does not like about <code>torch.einsum</code> and why APL, J and K are so great and what to expect from swift compiler, Julia</a></li>
+  </ul></li>
+  <li><a href="#pytorch-op" id="toc-pytorch-op" class="nav-link" data-scroll-target="#pytorch-op">pytorch op</a>
+  <ul class="collapse">
+  <li><a href="#torch.matmul-can-do-matrix-multiplication-without-loops-and-50000-times-faster-than-the-pure-python-3-for-loops-version-but-the-reason-why-torch.matmul-is-so-much-faster-is-because-it-uses-a-lib-like-blas-written-by-nvdia-cublas-or-amd-or-intel-mklwhich-split-the-large-matricies-into-smaller-ones-and-doing-calc-without-using-up-all-the-ram-what-are-the-problems-of-using-these-gpu-libraries-like-mkl-and-cublas" id="toc-torch.matmul-can-do-matrix-multiplication-without-loops-and-50000-times-faster-than-the-pure-python-3-for-loops-version-but-the-reason-why-torch.matmul-is-so-much-faster-is-because-it-uses-a-lib-like-blas-written-by-nvdia-cublas-or-amd-or-intel-mklwhich-split-the-large-matricies-into-smaller-ones-and-doing-calc-without-using-up-all-the-ram-what-are-the-problems-of-using-these-gpu-libraries-like-mkl-and-cublas" class="nav-link" data-scroll-target="#torch.matmul-can-do-matrix-multiplication-without-loops-and-50000-times-faster-than-the-pure-python-3-for-loops-version-but-the-reason-why-torch.matmul-is-so-much-faster-is-because-it-uses-a-lib-like-blas-written-by-nvdia-cublas-or-amd-or-intel-mklwhich-split-the-large-matricies-into-smaller-ones-and-doing-calc-without-using-up-all-the-ram-what-are-the-problems-of-using-these-gpu-libraries-like-mkl-and-cublas">1:18:23 - <code>torch.matmul</code> can do matrix multiplication without loops and 50000 times faster than the pure python 3-for loops version; but the reason why <code>torch.matmul</code> is so much faster is because it uses a lib like BLAS written by Nvdia (cuBLAS) or AMD or Intel (MKL)which split the large matricies into smaller ones and doing calc without using up all the ram; what are the problems of using these gpu libraries like MKL and cuBLAS;</a></li>
+  <li><a href="#torch.matmul-and-are-the-same-thing-but-they-can-handle-a-lot-more-including-batch-matrix-multiplication" id="toc-torch.matmul-and-are-the-same-thing-but-they-can-handle-a-lot-more-including-batch-matrix-multiplication" class="nav-link" data-scroll-target="#torch.matmul-and-are-the-same-thing-but-they-can-handle-a-lot-more-including-batch-matrix-multiplication">1:21:48 - <code>torch.matmul</code> and <code>@</code> are the same thing, but they can handle a lot more including batch matrix multiplication</a></li>
+  <li><a href="#what-to-do-next-after-having-matrix-multiplication-fast-enough-we-need-to-initialize-weights-and-biases-then-create-relu-then-backward" id="toc-what-to-do-next-after-having-matrix-multiplication-fast-enough-we-need-to-initialize-weights-and-biases-then-create-relu-then-backward" class="nav-link" data-scroll-target="#what-to-do-next-after-having-matrix-multiplication-fast-enough-we-need-to-initialize-weights-and-biases-then-create-relu-then-backward">1:22:33 - What to do next; after having matrix multiplication fast enough, we need to initialize weights and biases, then create ReLU, then backward</a></li>
+  </ul></li>
+  <li><a href="#export" id="toc-export" class="nav-link" data-scroll-target="#export">Export</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">0017_fastai_pt2_2019_matmul</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="matrix-multiplication-from-foundations" class="level2">
+<h2 class="anchored" data-anchor-id="matrix-multiplication-from-foundations">Matrix multiplication from foundations</h2>
+<p>The <em>foundations</em> we’ll assume throughout this course are:</p>
+<ul>
+<li>Python</li>
+<li>Python modules (non-DL)</li>
+<li>pytorch indexable tensor, and tensor creation (including RNGs - random number generators)</li>
+<li>fastai.datasets</li>
+</ul>
+</section>
+<section id="check-imports" class="level2">
+<h2 class="anchored" data-anchor-id="check-imports">Check imports</h2>
+<p><a href="https://course19.fast.ai/videos/?lesson=8&amp;t=1850">Jump_to lesson 8 video</a></p>
+<section id="how-to-build-a-test-framework-using-the-source-code-of-test-test_eq-and-run-tests-for-all-notebooks-fastforward-to-2022-we-have-the-test-source-code-in-fastcore.test-nbdev_test-to-run-tests-for-all-notebooks-3523---why-it-is-great-to-have-a-unit-testing-with-jupyter" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-build-a-test-framework-using-the-source-code-of-test-test_eq-and-run-tests-for-all-notebooks-fastforward-to-2022-we-have-the-test-source-code-in-fastcore.test-nbdev_test-to-run-tests-for-all-notebooks-3523---why-it-is-great-to-have-a-unit-testing-with-jupyter"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=1871">31:11</a> - how to build a test framework using the source code of <a href="https://EmbraceLife.github.io/fastdebug/lib/groundup_get_data_ready.html#test"><code>test</code></a>, <a href="https://EmbraceLife.github.io/fastdebug/lib/groundup_get_data_ready.html#test_eq"><code>test_eq</code></a>, and run tests for all notebooks (fastforward to 2022, we have the test source code in <a href="https://nbviewer.org/github/fastai/fastcore/blob/master/nbs/00_test.ipynb">fastcore.test</a> <code>nbdev_test</code> to run tests for all notebooks) <a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2123">35:23</a> - why it is great to have a unit testing with jupyter</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#export</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> exp.nb_00 <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> operator</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test(a,b,<span class="bu">cmp</span>,cname<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> cname <span class="kw">is</span> <span class="va">None</span>: cname<span class="op">=</span><span class="bu">cmp</span>.<span class="va">__name__</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">cmp</span>(a,b),<span class="ss">f"</span><span class="sc">{</span>cname<span class="sc">}</span><span class="ss">:</span><span class="ch">\n</span><span class="sc">{</span>a<span class="sc">}</span><span class="ch">\n</span><span class="sc">{</span>b<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_eq(a,b): test(a,b,operator.eq,<span class="st">'=='</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>test_eq(TEST,<span class="st">'test'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To run tests in console:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ! python run_notebook.py 01_matmul.ipynb</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="get-data" class="level2">
+<h2 class="anchored" data-anchor-id="get-data">Get data</h2>
+<p><a href="https://course19.fast.ai/videos/?lesson=8&amp;t=2159">Jump_to lesson 8 video</a></p>
+<section id="what-are-the-basic-libs-needed-to-create-our-matrix-multiplication-notebookmodule" class="level3">
+<h3 class="anchored" data-anchor-id="what-are-the-basic-libs-needed-to-create-our-matrix-multiplication-notebookmodule"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2159">35:59</a> - what are the basic libs needed to create our matrix multiplication <a href="https://nbviewer.org/github/fastai/course-v3/blob/7fceebfd14d4f3bc7e0ec649834309b8cb786e40/nbs/dl2/01_matmul.ipynb#Get-data">notebook</a>/module</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#export</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.core.debugger <span class="im">import</span> set_trace</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai <span class="im">import</span> datasets</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle, gzip, math, torch, matplotlib <span class="im">as</span> mpl</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> tensor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-download-and-extract-mnist-dataset-using-the-most-basic-libraries-fastai.datasets-gzip-pickle" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-download-and-extract-mnist-dataset-using-the-most-basic-libraries-fastai.datasets-gzip-pickle"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2185">36:25</a> - how to <a href="https://nbviewer.org/github/fastai/course-v3/blob/7fceebfd14d4f3bc7e0ec649834309b8cb786e40/nbs/dl2/01_matmul.ipynb#Get-data">download and extract</a> mnist dataset using the most basic libraries: <code>fastai.datasets</code>, <code>gzip</code>, <code>pickle</code></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>MNIST_URL<span class="op">=</span><span class="st">'http://deeplearning.net/data/mnist/mnist.pkl'</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> datasets.download_data(MNIST_URL, ext<span class="op">=</span><span class="st">'.gz'</span>)<span class="op">;</span> path</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> gzip.<span class="bu">open</span>(path, <span class="st">'rb'</span>) <span class="im">as</span> f:</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ((x_train, y_train), (x_valid, y_valid), _) <span class="op">=</span> pickle.load(f, encoding<span class="op">=</span><span class="st">'latin-1'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-convert-numpy-array-from-mnist-dataset-into-pytorch-tensor-using-map-and-tensor-why-jeremy-would-like-us-to-use-pytorch-tensor-instead-of-numpy-array-3742---how-to-find-out-about-the-structure-of-the-mnist-dataset-using-tensor.shape-and-min-max" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-convert-numpy-array-from-mnist-dataset-into-pytorch-tensor-using-map-and-tensor-why-jeremy-would-like-us-to-use-pytorch-tensor-instead-of-numpy-array-3742---how-to-find-out-about-the-structure-of-the-mnist-dataset-using-tensor.shape-and-min-max"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2217">36:57</a> - how to convert numpy array from mnist dataset into pytorch tensor using <code>map</code> and <code>tensor</code>; why Jeremy would like us to use pytorch tensor instead of numpy array; <a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2262">37:42</a> - how to find out about the structure of the mnist dataset using <code>tensor.shape</code> and <code>min</code>, <code>max</code></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>x_train,y_train,x_valid,y_valid <span class="op">=</span> <span class="bu">map</span>(tensor, (x_train,y_train,x_valid,y_valid))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>n,c <span class="op">=</span> x_train.shape</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x_train, x_train.shape, y_train, y_train.shape, y_train.<span class="bu">min</span>(), y_train.<span class="bu">max</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-build-a-test-to-check-the-dataset-has-the-structure-we-expect-using-assert-and-test_eq" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-build-a-test-to-check-the-dataset-has-the-structure-we-expect-using-assert-and-test_eq"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2295">38:15</a> - how to build a test to check the dataset has the structure we expect using <code>assert</code> and <a href="https://EmbraceLife.github.io/fastdebug/lib/groundup_get_data_ready.html#test_eq"><code>test_eq</code></a></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> n<span class="op">==</span>y_train.shape[<span class="dv">0</span>]<span class="op">==</span><span class="dv">50000</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>test_eq(c,<span class="dv">28</span><span class="op">*</span><span class="dv">28</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>test_eq(y_train.<span class="bu">min</span>(),<span class="dv">0</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>test_eq(y_train.<span class="bu">max</span>(),<span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-turn-a-long-vector-tensor-into-a-2d-tensor-using-img.view28-28-how-to-display-image-from-a-torch.floattensor-using-plt.imshowimg.view2828" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-turn-a-long-vector-tensor-into-a-2d-tensor-using-img.view28-28-how-to-display-image-from-a-torch.floattensor-using-plt.imshowimg.view2828"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2319">38:39</a> - how to turn a long vector tensor into a 2d tensor using <code>img.view(28, 28)</code>; how to display image from a <code>torch.FloatTensor</code> using <code>plt.imshow(img.view(28,28))</code></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mpl.rcParams[<span class="st">'image.cmap'</span>] <span class="op">=</span> <span class="st">'gray'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> x_train[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>img.view(<span class="dv">28</span>,<span class="dv">28</span>).<span class="bu">type</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(img.view((<span class="dv">28</span>,<span class="dv">28</span>)))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="initial-python-model" class="level2">
+<h2 class="anchored" data-anchor-id="initial-python-model">Initial python model</h2>
+<p><a href="https://course19.fast.ai/videos/?lesson=8&amp;t=2342">Jump_to lesson 8 video</a></p>
+<p><a href="https://course19.fast.ai/videos/?lesson=8&amp;t=2342">Jump_to lesson 8 video</a></p>
+<section id="if-we-are-to-build-a-simplest-linear-model-for-mnist-dataset-how-to-create-the-weights-and-biases-for-the-model-using-weights-torch.randn78410-and-bias-torch.zeros10.-check-the-notebook" class="level3">
+<h3 class="anchored" data-anchor-id="if-we-are-to-build-a-simplest-linear-model-for-mnist-dataset-how-to-create-the-weights-and-biases-for-the-model-using-weights-torch.randn78410-and-bias-torch.zeros10.-check-the-notebook"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2344">39:04</a> - If we are to build a simplest linear model for mnist dataset, how to create the weights and biases for the model using <code>weights = torch.randn(784,10)</code> and <code>bias = torch.zeros(10)</code>. check the <a href="https://nbviewer.org/github/fastai/course-v3/blob/7fceebfd14d4f3bc7e0ec649834309b8cb786e40/nbs/dl2/01_matmul.ipynb#Initial-python-model">notebook</a></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> torch.randn(<span class="dv">784</span>,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>bias <span class="op">=</span> torch.zeros(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="matrix-multiplication" class="level2">
+<h2 class="anchored" data-anchor-id="matrix-multiplication">Matrix multiplication</h2>
+<section id="how-to-understand-the-matrix-multiplication-calculation-process-see-animation-how-to-implement-the-matrix-multiplication-with-3-loops-see-src-code-below-imagine-an-input-matrix-rows5-cols2828-and-output-matrix-rows5-cols10-what-would-the-weights-matrix-be-rows2828-cols10-in-the-src-below-a-would-be-the-input-matrix-and-b-be-the-weights-we-want-to-find-out-about-the-output-matrix-c.-how-to-use-assert-i-found-a-useful-link-here" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-understand-the-matrix-multiplication-calculation-process-see-animation-how-to-implement-the-matrix-multiplication-with-3-loops-see-src-code-below-imagine-an-input-matrix-rows5-cols2828-and-output-matrix-rows5-cols10-what-would-the-weights-matrix-be-rows2828-cols10-in-the-src-below-a-would-be-the-input-matrix-and-b-be-the-weights-we-want-to-find-out-about-the-output-matrix-c.-how-to-use-assert-i-found-a-useful-link-here"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2389">39:49</a> - how to understand the matrix multiplication calculation process (see <a href="http://matrixmultiplication.xyz/">animation</a>); how to implement the matrix multiplication with 3 loops (see src code below); imagine an input matrix <code>rows=5, cols=28*28</code> and output matrix <code>rows=5, cols=10</code>, what would the weights matrix be? <code>(rows=28*28, cols=10)</code> In the src below, <code>a</code> would be the input matrix and <code>b</code> be the weights, we want to find out about the output matrix <code>c</code>. how to use <code>assert</code> (I found a useful link <a href="https://www.programiz.com/python-programming/assert-statement">here</a>)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matmul(a,b):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    ar,ac <span class="op">=</span> a.shape <span class="co"># n_rows * n_cols</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    br,bc <span class="op">=</span> b.shape</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> ac<span class="op">==</span>br</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> torch.zeros(ar, bc)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ar):</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(bc):</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(ac): <span class="co"># or br</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                c[i,j] <span class="op">+=</span> a[i,k] <span class="op">*</span> b[k,j]</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="run-an-example-on-matmul-and-test-it-and-check-how-long-does-it-take-to-calc-a-matrix-of-5-rows-python-is-1000-times-slower-than-pytorch" class="level3">
+<h3 class="anchored" data-anchor-id="run-an-example-on-matmul-and-test-it-and-check-how-long-does-it-take-to-calc-a-matrix-of-5-rows-python-is-1000-times-slower-than-pytorch"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2577">42:57</a> - run an example on <code>matmul</code> and test it and check how long does it take to calc a matrix of 5 rows; python is 1000 times slower than pytorch</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="op">=</span> x_valid[:<span class="dv">5</span>]</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="op">=</span> weights</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>m1.shape,m2.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>t1.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is kinda slow - what if we could speed it up by 50,000 times? Let’s try!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(x_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="elementwise-ops" class="level2">
+<h2 class="anchored" data-anchor-id="elementwise-ops">Elementwise ops</h2>
+<section id="how-to-speed-up-the-matrix-multiplication-by-50000-times-by-using-pytorch-which-uses-a-different-lib-called-aten-the-difference-between-aten-and-c10-to-replace-each-loop-at-a-time-4511---what-is-elementwise-operation-notebook-from-aten-or-c10-of-pytorch-what-does-elementwise-operation-do-between-vectors-and-between-matricies" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-speed-up-the-matrix-multiplication-by-50000-times-by-using-pytorch-which-uses-a-different-lib-called-aten-the-difference-between-aten-and-c10-to-replace-each-loop-at-a-time-4511---what-is-elementwise-operation-notebook-from-aten-or-c10-of-pytorch-what-does-elementwise-operation-do-between-vectors-and-between-matricies"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2667">44:27</a> - how to speed up the matrix multiplication by 50000 times by using pytorch (which uses a different lib called aten (the <a href="https://discuss.pytorch.org/t/whats-the-difference-between-aten-and-c10/114034">difference</a> between aten and c10) to replace each loop at a time <a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2711">45:11</a> - what is elementwise operation <a href="https://nbviewer.org/github/fastai/course-v3/blob/7fceebfd14d4f3bc7e0ec649834309b8cb786e40/nbs/dl2/01_matmul.ipynb#Elementwise-ops">notebook</a> from aten or c10 of pytorch; what does elementwise operation do between vectors and between matricies;</h3>
+<p>Operators (+,-,*,/,&gt;,&lt;,==) are usually element-wise.</p>
+<p>Examples of element-wise operations:</p>
+<p><a href="https://course19.fast.ai/videos/?lesson=8&amp;t=2682">Jump_to lesson 8 video</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> tensor([<span class="fl">10.</span>, <span class="dv">6</span>, <span class="op">-</span><span class="dv">4</span>])</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> tensor([<span class="fl">2.</span>, <span class="dv">8</span>, <span class="dv">7</span>])</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>a,b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>(a <span class="op">&lt;</span> b).<span class="bu">float</span>().mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> tensor([[<span class="fl">1.</span>, <span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>], [<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>]])<span class="op">;</span> m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-translate-equations-into-codes-how-to-read-frobenius-norm-equation-how-often-it-appears-in-deep-learning-papers-4738---how-to-get-latex-for-math-equations-without-actually-writing-them" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-translate-equations-into-codes-how-to-read-frobenius-norm-equation-how-often-it-appears-in-deep-learning-papers-4738---how-to-get-latex-for-math-equations-without-actually-writing-them"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2784">46:24</a> - how to translate equations into codes; how to read Frobenius norm equation; how often it appears in deep learning papers; <a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2858">47:38</a> - how to get latex for math equations without actually writing them</h3>
+<p>Frobenius norm:</p>
+<p><span class="math display">\[\| A \|_F = \left( \sum_{i,j=1}^n | a_{ij} |^2 \right)^{1/2}\]</span></p>
+<p><em>Hint</em>: you don’t normally need to write equations in LaTeX yourself, instead, you can click ‘edit’ in Wikipedia and copy the LaTeX from there (which is what I did for the above equation). Or on arxiv.org, click “Download: Other formats” in the top right, then “Download source”; rename the downloaded file to end in <code>.tgz</code> if it doesn’t already, and you should find the source there, including the equations to copy and paste.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(m<span class="op">*</span>m).<span class="bu">sum</span>().sqrt()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="elementwise-matmul" class="level2">
+<h2 class="anchored" data-anchor-id="elementwise-matmul">Elementwise matmul</h2>
+<section id="how-to-use-elementwise-vector-vector-multiplication-to-replace-the-last-loop-of-scalar-scalar-multiplication-below-and-how-much-faster-do-we-get-178-times-question-what-does-timeit--n-10-mean-doing-matmulm1m2-10-times" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-use-elementwise-vector-vector-multiplication-to-replace-the-last-loop-of-scalar-scalar-multiplication-below-and-how-much-faster-do-we-get-178-times-question-what-does-timeit--n-10-mean-doing-matmulm1m2-10-times"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=2932">48:52</a> - how to use elementwise vector-vector multiplication to replace the last loop of scalar-scalar multiplication below, and how much faster do we get (178 times); question: what does <code>%timeit -n 10</code> mean (doing <code>matmul(m1,m2</code> 10 times?);</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matmul(a,b):</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    ar,ac <span class="op">=</span> a.shape</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    br,bc <span class="op">=</span> b.shape</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> ac<span class="op">==</span>br</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> torch.zeros(ar, bc)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ar):</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(bc):</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Any trailing ",:" can be removed</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>            c[i,j] <span class="op">=</span> (a[i,:] <span class="op">*</span> b[:,j]).<span class="bu">sum</span>()</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fl">890.1</span><span class="op">/</span><span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="which-language-is-this-elementwise-operation-written-in-c-language-how-does-test_near-and-torch.allclose-check-whether-two-numbers-are-real-close-to-each-other-is-not-exact-the-same" class="level3">
+<h3 class="anchored" data-anchor-id="which-language-is-this-elementwise-operation-written-in-c-language-how-does-test_near-and-torch.allclose-check-whether-two-numbers-are-real-close-to-each-other-is-not-exact-the-same"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3059">50:59</a> - which language is this elementwise operation written in (c language); how does <code>test_near</code> and <code>torch.allclose</code> <a href="https://pytorch.org/docs/stable/generated/torch.allclose.html">check whether two numbers are real close to each other</a> is not exact the same;</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#export</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> near(a,b): <span class="cf">return</span> torch.allclose(a, b, rtol<span class="op">=</span><span class="fl">1e-3</span>, atol<span class="op">=</span><span class="fl">1e-5</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_near(a,b): test(a,b,near)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>test_near(t1,matmul(m1, m2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="broadcasting" class="level2">
+<h2 class="anchored" data-anchor-id="broadcasting">Broadcasting</h2>
+<section id="how-to-get-rid-of-the-inner-most-loop-now-with-broadcasting-what-broadcasting-does-is-to-getting-rid-of-all-loops-at-the-speed-of-cuda-written-in-c-language-where-and-when-is-broadcasting-originated-apl-in-1960s-what-is-this-apl-broadcasting-remove-all-the-for-loop-and-use-implicit-broadcasted-loops" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-get-rid-of-the-inner-most-loop-now-with-broadcasting-what-broadcasting-does-is-to-getting-rid-of-all-loops-at-the-speed-of-cuda-written-in-c-language-where-and-when-is-broadcasting-originated-apl-in-1960s-what-is-this-apl-broadcasting-remove-all-the-for-loop-and-use-implicit-broadcasted-loops"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3109">51:49</a> - how to get rid of the inner most loop now with broadcasting; what broadcasting does is to getting rid of all loops at the speed of Cuda written in C language; Where and when is broadcasting originated (APL in 1960s); What is this APL broadcasting (remove all the for loop and use implicit broadcasted loops)</h3>
+<p>The term <strong>broadcasting</strong> describes how arrays with different shapes are treated during arithmetic operations. The term broadcasting was first used by Numpy.</p>
+<p>From the <a href="https://docs.scipy.org/doc/numpy-1.10.0/user/basics.broadcasting.html">Numpy Documentation</a>:</p>
+<pre><code>The term broadcasting describes how numpy treats arrays with 
+different shapes during arithmetic operations. Subject to certain 
+constraints, the smaller array is “broadcast” across the larger 
+array so that they have compatible shapes. Broadcasting provides a 
+means of vectorizing array operations so that looping occurs in C
+instead of Python. It does this without making needless copies of 
+data and usually leads to efficient algorithm implementations.</code></pre>
+<p>In addition to the efficiency of broadcasting, it allows developers to write less code, which typically leads to fewer errors.</p>
+<p><em>This section was adapted from <a href="http://nbviewer.jupyter.org/github/fastai/numerical-linear-algebra/blob/master/nbs/4.%20Compressed%20Sensing%20of%20CT%20Scans%20with%20Robust%20Regression.ipynb#4.-Compressed-Sensing-of-CT-Scans-with-Robust-Regression">Chapter 4</a> of the fast.ai <a href="https://github.com/fastai/numerical-linear-algebra">Computational Linear Algebra</a> course.</em></p>
+<p><a href="https://course19.fast.ai/videos/?lesson=8&amp;t=3110">Jump_to lesson 8 video</a></p>
+</section>
+</section>
+<section id="broadcasting-with-a-scalar" class="level2">
+<h2 class="anchored" data-anchor-id="broadcasting-with-a-scalar">Broadcasting with a scalar</h2>
+<section id="how-to-do-broadcasting-on-a-vector-with-a-scalar-or-broadcasting-a-scalar-to-a-tensor-a-which-can-be-a-vector-or-matrix-or-more-and-broadcasting-is-at-speed-of-c-or-cuda" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-do-broadcasting-on-a-vector-with-a-scalar-or-broadcasting-a-scalar-to-a-tensor-a-which-can-be-a-vector-or-matrix-or-more-and-broadcasting-is-at-speed-of-c-or-cuda"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3178">52:58</a> - how to do broadcasting on a vector with a scalar or broadcasting a scalar to a tensor <code>a</code> which can be a vector or matrix or more; and broadcasting is at speed of C or cuda;</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">&gt;</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>How are we able to do a &gt; 0? 0 is being <strong>broadcast</strong> to have the same dimensions as a.</p>
+<p>For instance you can normalize our dataset by subtracting the mean (a scalar) from the entire data set (a matrix) and dividing by the standard deviation (another scalar), using broadcasting.</p>
+<p>Other examples of broadcasting with a scalar:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="op">*</span>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="broadcasting-a-vector-to-a-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="broadcasting-a-vector-to-a-matrix">Broadcasting a vector to a matrix</h2>
+<section id="how-to-broadcast-a-vector-to-matrix-jeremy-explains-how-to-broadcast-a-vector-to-matrix-without-doing-for-loop-how-to-visualize-a-vector-being-broadcasted-into-a-matrix-using-t-c.expand_asm-c-as-a-data-of-column-or-row-m-as-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-broadcast-a-vector-to-matrix-jeremy-explains-how-to-broadcast-a-vector-to-matrix-without-doing-for-loop-how-to-visualize-a-vector-being-broadcasted-into-a-matrix-using-t-c.expand_asm-c-as-a-data-of-column-or-row-m-as-matrix"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3250">54:10</a> - how to broadcast a vector to matrix; Jeremy explains how to broadcast a vector to matrix without doing for loop; how to visualize a vector being broadcasted into a matrix using <code>t = c.expand_as(m)</code> (<code>c</code> as a data of column or row, <code>m</code> as matrix)</h3>
+<p>We can also broadcast a vector to a matrix:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> tensor([<span class="fl">10.</span>,<span class="dv">20</span>,<span class="dv">30</span>])<span class="op">;</span> c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>m.shape,c.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">+</span> c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">+</span> m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We don’t really copy the rows, but it looks as if we did. In fact, the rows are given a <em>stride</em> of 0.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> c.expand_as(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>t</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">+</span> t</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="when-broadcasting-a-vector-to-matrix-the-vector-is-acting-as-a-matrix-but-stored-as-a-vector-how-do-we-see-this-or-interpret-this-using-t.storage-and-t.stride-and-t.shape" class="level3">
+<h3 class="anchored" data-anchor-id="when-broadcasting-a-vector-to-matrix-the-vector-is-acting-as-a-matrix-but-stored-as-a-vector-how-do-we-see-this-or-interpret-this-using-t.storage-and-t.stride-and-t.shape"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3351">55:51</a> - When broadcasting a vector to matrix, the vector is acting as a matrix but stored as a vector; how do we see this or interpret this using <code>t.storage()</code> and <code>t.stride()</code> and <code>t.shape</code>;</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>t.storage()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>t.stride(), t.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-turn-a-vector-or-1d-array-into-a-2d-array-or-matrix-using-c.unsqueeze0.shape-1-3-or-cnone.shape-13-or-c.unsqueeze1.shape-31-or-cnone.shape-31-and-turn-a-1d-array-into-a-3d-array-using-cnonenone113-or-cnonenone131-we-use-none-over-unsqueeze" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-turn-a-vector-or-1d-array-into-a-2d-array-or-matrix-using-c.unsqueeze0.shape-1-3-or-cnone.shape-13-or-c.unsqueeze1.shape-31-or-cnone.shape-31-and-turn-a-1d-array-into-a-3d-array-using-cnonenone113-or-cnonenone131-we-use-none-over-unsqueeze"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3425">57:05</a> - how to turn a vector or 1d array into a 2d array or matrix using <code>c.unsqueeze(0).shape</code> (1, 3) or <code>c[None,:].shape</code> (1,3) or <code>c.unsqueeze(1).shape</code> (3,1) or <code>c[:,None].shape</code> (3,1), and turn a 1d array into a 3d array using <code>c[None,None,:]</code>(1,1,3) or <code>c[None,:,None]</code>(1,3,1); we use <code>None</code> over <code>unsqueeze</code></h3>
+<p>You can index with the special value [None] or use <code>unsqueeze()</code> to convert a 1-dimensional array into a 2-dimensional array (although one of those dimensions has value 1).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>c.unsqueeze(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>c.unsqueeze(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>c.shape, c.unsqueeze(<span class="dv">0</span>).shape,c.unsqueeze(<span class="dv">1</span>).shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>c.shape, c[<span class="va">None</span>].shape,c[:,<span class="va">None</span>].shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="using-none-or-unsqueeze-c-m-is-the-same-to-cnone-m-but-very-different-to-cnone-m-10025---how-to-make-sensevisualize-of-the-broadcasting-of-cnone-and-c...none-using-excel" class="level3">
+<h3 class="anchored" data-anchor-id="using-none-or-unsqueeze-c-m-is-the-same-to-cnone-m-but-very-different-to-cnone-m-10025---how-to-make-sensevisualize-of-the-broadcasting-of-cnone-and-c...none-using-excel"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3566">59:26</a> - using <code>None</code> or <code>unsqueeze</code>, <code>c + m</code> is the same to <code>c[None,:] + m</code> but very different to <code>c[:,None] + m</code> <a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3625">1:00:25</a> - how to make sense/visualize of the broadcasting of <code>c[None]</code> and <code>c[...,None]</code> using excel</h3>
+<p>You can always skip trailling ‘:’s. And’…’ means ‘<em>all preceding dimensions</em>’</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>].shape,c[...,<span class="va">None</span>].shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>c[:,<span class="va">None</span>].expand_as(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">+</span> c[:,<span class="va">None</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>c[:,<span class="va">None</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="matmul-with-broadcasting" class="level2">
+<h2 class="anchored" data-anchor-id="matmul-with-broadcasting">Matmul with broadcasting</h2>
+<section id="how-to-simplify-the-type-of-cnone-as-cnone-and-simplify-cnone-as-c...none" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-simplify-the-type-of-cnone-as-cnone-and-simplify-cnone-as-c...none"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3725">1:02:05</a> - how to simplify the type of <code>c[None,:,:]</code> as <code>c[None]</code> and simplify <code>c[:,:,None]</code> as <code>c[...,None]</code></h3>
+</section>
+<section id="how-to-write-the-broadcasting-code-to-replace-the-for-loop-and-how-to-thoroughly-understand-the-code-what-are-the-benefits-of-using-broadcasting-over-many-for-loops-3700-times-faster-less-code-less-loops-less-error" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-write-the-broadcasting-code-to-replace-the-for-loop-and-how-to-thoroughly-understand-the-code-what-are-the-benefits-of-using-broadcasting-over-many-for-loops-3700-times-faster-less-code-less-loops-less-error"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3817">1:03:37</a> - how to write the broadcasting code to replace the for loop and how to thoroughly understand the code; what are the benefits of using broadcasting over many for loops (3700 times faster, less code less loops less error)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matmul(a,b):</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>    ar,ac <span class="op">=</span> a.shape</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    br,bc <span class="op">=</span> b.shape</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> ac<span class="op">==</span>br</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> torch.zeros(ar, bc)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ar):</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(bc): <span class="co"># previously we have these two lines</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Any trailing ",:" can be removed</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>            c[i,j] <span class="op">=</span> (a[i,:] <span class="op">*</span> b[:,j]).<span class="bu">sum</span>() <span class="co"># elementwise operation: row x column (both have same length)</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matmul(a,b):</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>    ar,ac <span class="op">=</span> a.shape</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>    br,bc <span class="op">=</span> b.shape</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> ac<span class="op">==</span>br</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> torch.zeros(ar, bc)</span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ar):</span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a><span class="co">#       c[i,j] = (a[i,:]          * b[:,j]).sum() # previous</span></span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>        c[i]   <span class="op">=</span> (a[i  ].unsqueeze(<span class="op">-</span><span class="dv">1</span>) <span class="op">*</span> b).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">0</span>) <span class="co"># the right side gives a row of summed values by smashing the tensor into one row</span></span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-understand-the-second-inner-most-loop-is-replaced-by-broadcasting-homework-assigned-by-jeremy-i-have-written-the-following-code-blocks-to-understand-it." class="level3">
+<h3 class="anchored" data-anchor-id="how-to-understand-the-second-inner-most-loop-is-replaced-by-broadcasting-homework-assigned-by-jeremy-i-have-written-the-following-code-blocks-to-understand-it.">how to understand the second inner most loop is replaced by broadcasting (homework assigned by Jeremy) I have written the following code blocks to understand it.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> tensor</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> tensor([[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>], [<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>], [<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>]])</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>a</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>a.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>]</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>].shape</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>,:].shape</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>,...].shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>][<span class="va">None</span>,:] <span class="co"># 2 dimensions, row dimension set as None, meaning 1 row</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>][<span class="va">None</span>,:].shape</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>][<span class="va">None</span>].shape <span class="co"># it can be 1 row, with unknown more dimensions carrying on e.g., [1,3,,,]</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>, <span class="va">None</span>].shape <span class="co"># even more simplified</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>].unsqueeze(<span class="dv">0</span>).shape <span class="co"># make one row, but more columns</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>,<span class="va">None</span>].expand_as(a) <span class="co"># expand more rows </span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>a</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>][<span class="va">None</span>] <span class="op">*</span> a</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>(a[<span class="dv">0</span>][<span class="va">None</span>] <span class="op">*</span> a).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">0</span>) <span class="co"># sum up so that (3,3) tensor is smashed into a (3) tensor row</span></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>(a[<span class="dv">0</span>][<span class="va">None</span>] <span class="op">*</span> a).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">0</span>).shape</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>(a[<span class="dv">0</span>][<span class="va">None</span>] <span class="op">*</span> a).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>) <span class="co"># sum up so that (3,3) tensor is smashed into a (3) tensor column</span></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>(a[<span class="dv">0</span>][<span class="va">None</span>] <span class="op">*</span> a).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>).shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>][:,<span class="va">None</span>] <span class="co"># two dimensions, col dimension set None meaning 1 column</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>][:,<span class="va">None</span>].shape</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>][...,<span class="va">None</span>].shape</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>].unsqueeze(<span class="dv">1</span>).shape</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>].unsqueeze(<span class="op">-</span><span class="dv">1</span>).shape</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>][:,<span class="va">None</span>].expand_as(a)</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>a</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>][:,<span class="va">None</span>] <span class="op">*</span> a</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>(a[<span class="dv">0</span>][:,<span class="va">None</span>] <span class="op">*</span> a).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">0</span>) <span class="co"># sum up so that (3,3) tensor is smashed into a (3) tensor row</span></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>(a[<span class="dv">0</span>][:,<span class="va">None</span>] <span class="op">*</span> a).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">0</span>).shape</span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>(a[<span class="dv">0</span>][:,<span class="va">None</span>] <span class="op">*</span> a).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>) <span class="co"># sum up so that (3,3) tensor is smashed into a (3) tensor column</span></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>(a[<span class="dv">0</span>][:,<span class="va">None</span>] <span class="op">*</span> a).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>).shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="dv">885000</span><span class="op">/</span><span class="dv">277</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>test_near(t1, matmul(m1, m2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="broadcasting-rules" class="level2">
+<h2 class="anchored" data-anchor-id="broadcasting-rules">Broadcasting Rules</h2>
+<section id="how-to-understand-broadcasting-rules-two-vector-or-matrix-do-some-operations-we-check-their-shapes-side-by-side-e.g.-a.shape145-vs-b.shape315-according-to-the-2-rules-a-will-broadcast-to-3-rows-b-will-grow-to-3-columns-and-a-and-b-change-nothing-on-the-3rd-dimention.-and-ab.shape-345" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-understand-broadcasting-rules-two-vector-or-matrix-do-some-operations-we-check-their-shapes-side-by-side-e.g.-a.shape145-vs-b.shape315-according-to-the-2-rules-a-will-broadcast-to-3-rows-b-will-grow-to-3-columns-and-a-and-b-change-nothing-on-the-3rd-dimention.-and-ab.shape-345"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=3981">1:06:21</a> - How to understand broadcasting rules; two vector or matrix do some operations, we check their shapes side by side, e.g., <code>a.shape==[1,4,5] vs b.shape==[3,1,5]</code>, according to the 2 rules, a will broadcast to 3 rows, b will grow to 3 columns, and a and b change nothing on the 3rd dimention. and <code>(a*b).shape == [3,4,5]</code></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>,:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>,:].shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>c[:,<span class="va">None</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>c[:,<span class="va">None</span>].shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>,:] <span class="op">*</span> c[:,<span class="va">None</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>] <span class="op">&gt;</span> c[:,<span class="va">None</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="here-is-my-own-code-for-understanding-the-2-rules-of-broadcasting" class="level3">
+<h3 class="anchored" data-anchor-id="here-is-my-own-code-for-understanding-the-2-rules-of-broadcasting">Here is my own code for understanding the 2 rules of broadcasting</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> tensor([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>])</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>c</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>c.shape</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>c[:].shape</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>c[...].shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>,:]</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>,:].shape</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>,:,].shape</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>].shape</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>,<span class="va">None</span>,:].shape</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>,<span class="va">None</span>].shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>c[:,<span class="va">None</span>]</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>c[:,<span class="va">None</span>].shape</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>c[:,<span class="va">None</span>].shape</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>c[:,<span class="va">None</span>,<span class="va">None</span>].shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>,:].shape</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>c[:,<span class="va">None</span>].shape</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>(c[<span class="va">None</span>,:] <span class="op">*</span> c[:,<span class="va">None</span>]).shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>c[<span class="va">None</span>,:,<span class="va">None</span>].shape</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>c[:,<span class="va">None</span>,<span class="va">None</span>].shape</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>(c[<span class="va">None</span>,:,<span class="va">None</span>] <span class="op">*</span> c[:,<span class="va">None</span>,<span class="va">None</span>]).shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> tensor([[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>],[<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>],[<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>],[<span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">7</span>]])</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>a.shape</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>a[<span class="va">None</span>].shape</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>a[:,<span class="va">None</span>].shape</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>(a[<span class="va">None</span>] <span class="op">*</span> a[:,<span class="va">None</span>]).shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>When operating on two arrays/tensors, Numpy/PyTorch compares their shapes element-wise. It starts with the <strong>trailing dimensions</strong>, and works its way forward. Two dimensions are <strong>compatible</strong> when</p>
+<ul>
+<li>they are equal, or</li>
+<li>one of them is 1, in which case that dimension is broadcasted to make it the same size</li>
+</ul>
+<p>Arrays do not need to have the same number of dimensions. For example, if you have a <code>256*256*3</code> array of RGB values, and you want to scale each color in the image by a different value, you can multiply the image by a one-dimensional array with 3 values. Lining up the sizes of the trailing axes of these arrays according to the broadcast rules, shows that they are compatible:</p>
+<pre><code>Image  (3d array): 256 x 256 x 3
+Scale  (1d array):             3
+Result (3d array): 256 x 256 x 3</code></pre>
+<p>The <a href="https://docs.scipy.org/doc/numpy-1.13.0/user/basics.broadcasting.html#general-broadcasting-rules">numpy documentation</a> includes several examples of what dimensions can and can not be broadcast together.</p>
+</section>
+<section id="why-the-broadcasting-trick-is-the-most-important-technique-in-creating-fastai-from-scratch" class="level3">
+<h3 class="anchored" data-anchor-id="why-the-broadcasting-trick-is-the-most-important-technique-in-creating-fastai-from-scratch"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=4202">1:10:02</a> - why the broadcasting trick is the most important technique in creating fastai from scratch</h3>
+</section>
+</section>
+<section id="einstein-summation" class="level2">
+<h2 class="anchored" data-anchor-id="einstein-summation">Einstein summation</h2>
+<section id="how-to-understand-einstein-summation-and-how-to-use-torch.einsum-to-do-matrix-multiplication-with-no-loop-at-all-and-speed-up-16000-times-faster-than-pure-python-3-for-loop-version-how-to-trick-torch.einsum-to-do-batch-matrix-multiplication-and-even-more-transforms-and-tweaks" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-understand-einstein-summation-and-how-to-use-torch.einsum-to-do-matrix-multiplication-with-no-loop-at-all-and-speed-up-16000-times-faster-than-pure-python-3-for-loop-version-how-to-trick-torch.einsum-to-do-batch-matrix-multiplication-and-even-more-transforms-and-tweaks"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=4243">1:10:43</a> - how to understand Einstein summation and how to use <code>torch.einsum</code> to do matrix multiplication with no loop at all and speed up 16000 times faster than pure python 3-for loop version; how to trick <code>torch.einsum</code> to do batch matrix multiplication and even more transforms and tweaks</h3>
+<p>Einstein summation (<code>einsum</code>) is a compact representation for combining products and sums in a general way. From the numpy docs:</p>
+<p>“The subscripts string is a comma-separated list of subscript labels, where each label refers to a dimension of the corresponding operand. Whenever a label is repeated it is summed, so <code>np.einsum('i,i', a, b)</code> is equivalent to <code>np.inner(a,b)</code>. If a label appears only once, it is not summed, so <code>np.einsum('i', a)</code> produces a view of a with no changes.”</p>
+<p><a href="https://course19.fast.ai/videos/?lesson=8&amp;t=4280">Jump_to lesson 8 video</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># c[i,j] += a[i,k] * b[k,j]</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="co"># c[i,j] = (a[i,:] * b[:,j]).sum()</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matmul(a,b): <span class="cf">return</span> torch.einsum(<span class="st">'ik,kj-&gt;ij'</span>, a, b)</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> batch_matmul(a,b): <span class="cf">return</span> torch.einsum(<span class="st">'bik,bkj-&gt;bij'</span>, a, b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="dv">885000</span><span class="op">/</span><span class="dv">55</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>test_near(t1, matmul(m1, m2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="what-jeremy-does-not-like-about-torch.einsum-and-why-apl-j-and-k-are-so-great-and-what-to-expect-from-swift-compiler-julia" class="level3">
+<h3 class="anchored" data-anchor-id="what-jeremy-does-not-like-about-torch.einsum-and-why-apl-j-and-k-are-so-great-and-what-to-expect-from-swift-compiler-julia"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=4548">1:15:48</a> - what Jeremy does not like about <code>torch.einsum</code> and why APL, J and K are so great and what to expect from swift compiler, Julia</h3>
+</section>
+</section>
+<section id="pytorch-op" class="level2">
+<h2 class="anchored" data-anchor-id="pytorch-op">pytorch op</h2>
+<section id="torch.matmul-can-do-matrix-multiplication-without-loops-and-50000-times-faster-than-the-pure-python-3-for-loops-version-but-the-reason-why-torch.matmul-is-so-much-faster-is-because-it-uses-a-lib-like-blas-written-by-nvdia-cublas-or-amd-or-intel-mklwhich-split-the-large-matricies-into-smaller-ones-and-doing-calc-without-using-up-all-the-ram-what-are-the-problems-of-using-these-gpu-libraries-like-mkl-and-cublas" class="level3">
+<h3 class="anchored" data-anchor-id="torch.matmul-can-do-matrix-multiplication-without-loops-and-50000-times-faster-than-the-pure-python-3-for-loops-version-but-the-reason-why-torch.matmul-is-so-much-faster-is-because-it-uses-a-lib-like-blas-written-by-nvdia-cublas-or-amd-or-intel-mklwhich-split-the-large-matricies-into-smaller-ones-and-doing-calc-without-using-up-all-the-ram-what-are-the-problems-of-using-these-gpu-libraries-like-mkl-and-cublas"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=4703">1:18:23</a> - <code>torch.matmul</code> can do matrix multiplication without loops and 50000 times faster than the pure python 3-for loops version; but the reason why <code>torch.matmul</code> is so much faster is because it uses a lib like BLAS written by Nvdia (cuBLAS) or AMD or Intel (MKL)which split the large matricies into smaller ones and doing calc without using up all the ram; what are the problems of using these gpu libraries like MKL and cuBLAS;</h3>
+</section>
+<section id="torch.matmul-and-are-the-same-thing-but-they-can-handle-a-lot-more-including-batch-matrix-multiplication" class="level3">
+<h3 class="anchored" data-anchor-id="torch.matmul-and-are-the-same-thing-but-they-can-handle-a-lot-more-including-batch-matrix-multiplication"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=4908">1:21:48</a> - <code>torch.matmul</code> and <code>@</code> are the same thing, but they can handle <a href="https://pytorch.org/docs/stable/generated/torch.matmul.html">a lot more</a> including batch matrix multiplication</h3>
+<p>We can use pytorch’s function or operator directly for matrix multiplication.</p>
+<p><a href="https://course19.fast.ai/videos/?lesson=8&amp;t=4702">Jump_to lesson 8 video</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># time comparison vs pure python:</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="dv">885000</span><span class="op">/</span><span class="dv">18</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>t2 <span class="op">=</span> m1<span class="op">@</span>m2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>test_near(t1, t2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>m1.shape,m2.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="what-to-do-next-after-having-matrix-multiplication-fast-enough-we-need-to-initialize-weights-and-biases-then-create-relu-then-backward" class="level3">
+<h3 class="anchored" data-anchor-id="what-to-do-next-after-having-matrix-multiplication-fast-enough-we-need-to-initialize-weights-and-biases-then-create-relu-then-backward"><a href="https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&amp;t=4953">1:22:33</a> - What to do next; after having matrix multiplication fast enough, we need to initialize weights and biases, then create ReLU, then backward</h3>
+</section>
+</section>
+<section id="export" class="level2">
+<h2 class="anchored" data-anchor-id="export">Export</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python notebook2script.py <span class="dv">0</span><span class="er">1_matmul</span>.ipynb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

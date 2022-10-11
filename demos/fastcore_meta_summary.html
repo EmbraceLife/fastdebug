@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 0010_fastcore_meta_summary</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 0010_fastcore_meta_summary">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 0010_fastcore_meta_summary">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">0010_fastcore_meta_summary</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link active">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#import" id="toc-import" class="nav-link active" data-scroll-target="#import">import</a></li>
+  <li><a href="#fastcore-and-fastcore.meta" id="toc-fastcore-and-fastcore.meta" class="nav-link" data-scroll-target="#fastcore-and-fastcore.meta">fastcore and fastcore.meta</a>
+  <ul class="collapse">
+  <li><a href="#whats-inside-fastcore.meta" id="toc-whats-inside-fastcore.meta" class="nav-link" data-scroll-target="#whats-inside-fastcore.meta">What’s inside fastcore.meta</a></li>
+  </ul></li>
+  <li><a href="#review-individual-funcs-and-classes" id="toc-review-individual-funcs-and-classes" class="nav-link" data-scroll-target="#review-individual-funcs-and-classes">Review individual funcs and classes</a>
+  <ul class="collapse">
+  <li><a href="#what-is-fastcore.meta-all-about" id="toc-what-is-fastcore.meta-all-about" class="nav-link" data-scroll-target="#what-is-fastcore.meta-all-about">What is fastcore.meta all about?</a></li>
+  <li><a href="#what-can-these-metaclasses-do-for-me" id="toc-what-can-these-metaclasses-do-for-me" class="nav-link" data-scroll-target="#what-can-these-metaclasses-do-for-me">What can these metaclasses do for me?</a></li>
+  <li><a href="#what-can-those-decorators-do-for-me" id="toc-what-can-those-decorators-do-for-me" class="nav-link" data-scroll-target="#what-can-those-decorators-do-for-me">What can those decorators do for me?</a></li>
+  <li><a href="#the-remaining-functions" id="toc-the-remaining-functions" class="nav-link" data-scroll-target="#the-remaining-functions">The remaining functions</a></li>
+  </ul></li>
+  <li><a href="#what-is-fastcore.meta-all-about-1" id="toc-what-is-fastcore.meta-all-about-1" class="nav-link" data-scroll-target="#what-is-fastcore.meta-all-about-1">What is fastcore.meta all about</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">0010_fastcore_meta_summary</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="import" class="level2">
+<h2 class="anchored" data-anchor-id="import">import</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.core <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>.container { width:100% !important; }</style>
+</div>
+</div>
+</section>
+<section id="fastcore-and-fastcore.meta" class="level2">
+<h2 class="anchored" data-anchor-id="fastcore-and-fastcore.meta">fastcore and fastcore.meta</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastcore</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>whichversion(<span class="st">"fastcore"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>fastcore: 1.5.27 
+Python supercharged for fastai development    
+Jeremy Howard and Sylvain Gugger 
+https://github.com/fastai/fastcore/     
+python_version: &gt;=3.7     
+/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastcore</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>whatinside(fastcore, lib<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The library has 21 modules
+['_modidx',
+ '_nbdev',
+ 'all',
+ 'basics',
+ 'dispatch',
+ 'docments',
+ 'docscrape',
+ 'foundation',
+ 'imports',
+ 'meta',
+ 'nb_imports',
+ 'net',
+ 'parallel',
+ 'script',
+ 'shutil',
+ 'style',
+ 'test',
+ 'transform',
+ 'utils',
+ 'xdg',
+ 'xtras']</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.meta <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastcore.meta <span class="im">as</span> fm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="whats-inside-fastcore.meta" class="level3">
+<h3 class="anchored" data-anchor-id="whats-inside-fastcore.meta">What’s inside fastcore.meta</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>whatinside(fm, dun<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>fastcore.meta has: 
+13 items in its __all__, and 
+43 user defined functions, 
+19 classes or class objects, 
+2 builtin funcs and methods, and
+74 callables.
+
+test_sig:            function    Test the signature of an object
+FixSigMeta:          metaclass, type    A metaclass that fixes the signature on classes that override `__new__`
+PrePostInitMeta:     metaclass, type    A metaclass that calls optional `__pre_init__` and `__post_init__` methods
+AutoInit:            class, PrePostInitMeta    Same as `object`, but no need for subclasses to call `super().__init__`
+NewChkMeta:          metaclass, type    Metaclass to avoid recreating object passed to constructor
+BypassNewMeta:       metaclass, type    Metaclass: casts `x` to this class if it's of type `cls._bypass_type`
+empty2none:          function    Replace `Parameter.empty` with `None`
+anno_dict:           function    `__annotation__ dictionary with `empty` cast to `None`, returning empty if doesn't exist
+use_kwargs_dict:     decorator, function    Decorator: replace `**kwargs` in signature with `names` params
+use_kwargs:          decorator, function    Decorator: replace `**kwargs` in signature with `names` params
+delegates:           decorator, function    Decorator: replace `**kwargs` in signature with params from `to`
+method:              function    Mark `f` as a method
+funcs_kwargs:        decorator, function    Replace methods in `cls._methods` with those from `kwargs`</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="review-individual-funcs-and-classes" class="level2">
+<h2 class="anchored" data-anchor-id="review-individual-funcs-and-classes">Review individual funcs and classes</h2>
+<section id="what-is-fastcore.meta-all-about" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-fastcore.meta-all-about">What is fastcore.meta all about?</h3>
+<p>It is a submodule contains 4 metaclasses, 1 class built by a metaclass, 4 decorators and a few functions.</p>
+<p>Metaclasses give us the power to create new breeds of classes with new features.</p>
+<p>Decorators give us the power to add new features to existing funcions.</p>
+<p>We can find their basic info <a href="#What's-inside-fastcore.meta">above</a></p>
+</section>
+<section id="what-can-these-metaclasses-do-for-me" class="level3">
+<h3 class="anchored" data-anchor-id="what-can-these-metaclasses-do-for-me">What can these metaclasses do for me?</h3>
+<p>We design/create classes to breed objects as we like.</p>
+<p>We design/create metaclasses to breed classes as we like.</p>
+<p>Before metaclasses, all classes are created by type and are born the same.</p>
+<p>With metaclasses, e.g., FixSigMeta first uses type to its instance classes exactly like above, but then FixSigMeta immediately adds new features to them right before they are born.</p>
+<section id="fixsigmeta" class="level4">
+<h4 class="anchored" data-anchor-id="fixsigmeta">FixSigMeta</h4>
+<p>can breed classes which are free of signature problems (or they can automatically fix signature problems).</p>
+</section>
+<section id="prepostinitmeta" class="level4">
+<h4 class="anchored" data-anchor-id="prepostinitmeta">PrePostInitMeta</h4>
+<p>inherited/evolved from <code>FixSigMeta</code> to breed classes which can initialize their objects using <code>__pre_init__</code>, <code>__init__</code>, <code>__post_init__</code> whichever is available (allow me to abbreviate it as triple_init).</p>
+</section>
+<section id="autoinit" class="level4">
+<h4 class="anchored" data-anchor-id="autoinit">AutoInit</h4>
+<p>is an instance class created by <code>PrePostInitMeta</code>, and together with its own defined <code>__pre_init__</code>, subclasses of <code>AutoInit</code> has to worry about running <code>super().__init__(...)</code> no more.</p>
+<ul>
+<li>As <code>AutoInit</code> is an instance class created by <code>PrePostInitMeta</code>, it can pass on both features (free of signature problem and triple_init) to its subclasses.</li>
+<li>As it also defines its own <code>__pre_init__</code> function which calls its superclass <code>__init__</code> function, its subclasses will inherit this <code>__pre_init__</code> function too.</li>
+<li>When subclasses of <code>AutoInit</code> create and initialize object intances through <code>__call__</code> from <code>PrePostInitMeta</code>, <code>AutoInit</code>’s <code>__pre_init__</code> runs <code>super().__init__(...)</code>, so when we write <code>__init__</code> function of subclasses which inherits from <code>AutoInit</code>, we don’t need to write <code>super().__init__(...)</code> any more.</li>
+</ul>
+</section>
+<section id="newchkmeta" class="level4">
+<h4 class="anchored" data-anchor-id="newchkmeta">NewChkMeta</h4>
+<p>is inherited from <code>FixSigMeta</code>, so any instance classes created by <code>NewChkMeta</code> can also pass on the no_signature_problem feature.</p>
+<p>It defines its own <code>__call__</code> to enable all the instance objects e.g., <code>t</code> created by all the instance classes e.g., <code>T</code> created by <code>NewChkMeta</code> to do the following:</p>
+<ul>
+<li><code>T(t) is t if isinstance(t, T)</code> returns true</li>
+<li>when <code>T(t) is t if not isinstance(t, T)</code>, or when <code>T(t, 1) is t if isinstance(t, T)</code> or when <code>T(t, b=1) is t if isinstance(t, T)</code>, all return False</li>
+</ul>
+<p>In other words, <code>NewChkMeta</code> creates a new breed of classes <code>T</code> as an example which won’t recreate the same instance object <code>t</code> twice. But if <code>t</code> is not <code>T</code>’s instance object, or we choose to add more flavor to <code>t</code>, then <code>T(t)</code> or <code>T(t, 1)</code> will create a new instance object of <code>T</code>.</p>
+</section>
+<section id="bypassnewmeta" class="level4">
+<h4 class="anchored" data-anchor-id="bypassnewmeta">BypassNewMeta</h4>
+<p>is inherited from <code>FixSigMeta</code>, so it has the feature of free from signature problems.</p>
+<p>It defines its own <code>__call__</code>, so that when its instance classes <code>_T</code> create and initialize objects with a param <code>t</code> which is an instance object of another class <code>_TestB</code>, they can do the following:</p>
+<ul>
+<li>If <code>_T</code> likes <code>_TestB</code> and prefers <code>t</code> as it is, then when we run <code>t2 = _T(t)</code>, and <code>t2 is t</code> will be True, and both are instances of <code>_T</code>.<br>
+</li>
+<li>If <code>_T</code> is not please with <code>t</code>, it could be that <code>_T</code> does not like <code>_TestB</code> any more, then <code>_T(t) is t</code> will be False</li>
+<li>or maybe <code>_T</code> still likes <code>_TestB</code>, but want to add some flavors to <code>t</code> by <code>_T(t, 1)</code> or <code>_T(t, b=1)</code> for example, in this case <code>_T(t) is t</code> will also be False.</li>
+</ul>
+<p>In other words, <code>BypassNewMeta</code> creates a new breed of instance classes <code>_T</code> which don’t need to create but make an object <code>t</code> of its own object instance, if <code>t</code> is an instance object of <code>_TestB</code> which is liked by <code>_T</code> and if <code>_T</code> likes <code>t</code> as it is.</p>
+</section>
+</section>
+<section id="what-can-those-decorators-do-for-me" class="level3">
+<h3 class="anchored" data-anchor-id="what-can-those-decorators-do-for-me">What can those decorators do for me?</h3>
+<p>A decorator is a function that takes in a function and returns a modified function.</p>
+<p>A decorator allows us to modify the behavior of a function.</p>
+<section id="use_kwargs_dict" class="level4">
+<h4 class="anchored" data-anchor-id="use_kwargs_dict">use_kwargs_dict</h4>
+<p>allows us to replace an existing function’s param <code>kwargs</code> with a number of params with default values.</p>
+<p>The params with their default values are provided in a dictionary.</p>
+</section>
+<section id="use_kwargs" class="level4">
+<h4 class="anchored" data-anchor-id="use_kwargs">use_kwargs</h4>
+<p>allows us to replace an existing function’s param <code>kwargs</code> with a number of params with None as their default values.</p>
+<p>The params are provided as names in a list.</p>
+</section>
+<section id="delegates" class="level4">
+<h4 class="anchored" data-anchor-id="delegates">delegates</h4>
+<p>allows us to replace an existing function’s param <code>kwargs</code> with a number of params with their default values from another existing function.</p>
+<p>In fact, <code>delegates</code> can work on function, classes, and methods.</p>
+</section>
+<section id="funcs_kwargs" class="level4">
+<h4 class="anchored" data-anchor-id="funcs_kwargs">funcs_kwargs</h4>
+<p>is a decorator to classes. It can help classes to bring in existing functions as their methods.</p>
+<p>It can set the methods to use or not use <code>self</code> in the class.</p>
+</section>
+</section>
+<section id="the-remaining-functions" class="level3">
+<h3 class="anchored" data-anchor-id="the-remaining-functions">The remaining functions</h3>
+<p><code>test_sig</code> and <code>method</code> are straightforward, their docs tell it all clearly.</p>
+<p><code>empty2none</code> and <code>anno_dict</code> are no in use much at all. see the thread <a href="">here</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fastview(<span class="st">"FixSigMeta"</span>, nb<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+class BaseMeta(FixSigMeta): 
+    # using __new__ of  FixSigMeta instead of type
+    def __call__(cls, *args, **kwargs): pass
+
+class Foo_call_fix(metaclass=BaseMeta): # Base
+    def __init__(self, d, e, f): pass
+
+pprint(inspect._signature_from_callable(Foo_call_fix, sigcls=inspect.Signature))    
+
+class FixSigMeta(type):===================================================================(0)       
+    "A metaclass that fixes the signature on classes that override `__new__`"=============(1) # Any class having FixSigMeta as metaclass will have its own __init__ func stored in its attr __signature__;FixSigMeta uses its __new__ to create a class instance; then check whether its class instance has its own __init__;if so, remove self from the sig of __init__; then assign this new sig to __signature__ for the class instance;; 
+    def __new__(cls, name, bases, dict):==================================================(2) # how does a metaclass create a class instance; what does super().__new__() do here;; 
+        res = super().__new__(cls, name, bases, dict)=====================================(3)       
+        if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__)) # how to remove self from a signature; how to check whether a class' __init__ is inherited from object or not;;  (4)
+        return res========================================================================(5)       
+                                                                                                                                                        (6)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><a href="http://localhost:8888/tree/nbs/demos/0003_Explore_document_FixSigMeta_PrePostInitMeta_AutoInit.ipynb">Open <code>0003_Explore_document_FixSigMeta_PrePostInitMeta_AutoInit</code> in Jupyter Notebook</a></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ERROR:root:No traceback has been produced, nothing to debug.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fastsrcs()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>test_sig.py
+BypassNewMeta.py
+snoop.py
+FixSigMeta.py
+fastnbs.py
+funcs_kwargs.py
+NewChkMeta.py
+printtitle.py
+AutoInit.py
+method.py
+_rm_self.py
+delegates.py
+create_explore_str.py
+PrePostInitMeta.py
+_funcs_kwargs.py
+whatinside.py</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fastview(FixSigMeta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+class BaseMeta(FixSigMeta): 
+    # using __new__ of  FixSigMeta instead of type
+    def __call__(cls, *args, **kwargs): pass
+
+class Foo_call_fix(metaclass=BaseMeta): # Base
+    def __init__(self, d, e, f): pass
+
+pprint(inspect._signature_from_callable(Foo_call_fix, sigcls=inspect.Signature))    
+
+class FixSigMeta(type):===================================================================(0)       
+    "A metaclass that fixes the signature on classes that override `__new__`"=============(1) # Any class having FixSigMeta as metaclass will have its own __init__ func stored in its attr __signature__;FixSigMeta uses its __new__ to create a class instance; then check whether its class instance has its own __init__;if so, remove self from the sig of __init__; then assign this new sig to __signature__ for the class instance;; 
+    def __new__(cls, name, bases, dict):==================================================(2) # how does a metaclass create a class instance; what does super().__new__() do here;; 
+        res = super().__new__(cls, name, bases, dict)=====================================(3)       
+        if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__)) # how to remove self from a signature; how to check whether a class' __init__ is inherited from object or not;;  (4)
+        return res========================================================================(5)       
+                                                                                                                                                        (6)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fastcodes(<span class="st">"how to get signature's parameters"</span>, accu<span class="op">=</span><span class="fl">0.8</span>, nb<span class="op">=</span><span class="va">True</span>, db<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p>keyword match is <mark style="background-color: #ffff00">0.8</mark> , found a line: in <mark style="background-color: #FFFF00">delegates.py</mark></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>the entire source code in <mark style="background-color: #FFFF00">delegates.py</mark></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+def low(a, b:int=1): pass
+@delegates(low)
+def mid(c, d:list=None, **kwargs): pass
+pprint(inspect.signature(mid)) # pprint and inspect is loaded from fastdebug
+
+def delegates(to:FunctionType=None, # Delegatee===========================================(0) # how to make delegates(to) to have to as FunctionType and default as None; 
+              keep=False, # Keep `kwargs` in decorated function?==========================(1)       
+              but:list=None): # Exclude these parameters from signature===================(2) # how to make delegates(to, but) to have 'but' as list and default as None; 
+    "Decorator: replace `**kwargs` in signature with params from `to`"====================(3)       
+    if but is None: but = []==============================================================(4)       
+    def _f(f):============================================================================(5)       
+        if to is None: to_f,from_f = f.__base__.__init__,f.__init__=======================(6) # how to write 2 ifs and elses in 2 lines; 
+        else:          to_f,from_f = to.__init__ if isinstance(to,type) else to,f=========(7) # how to assign a,b together with if and else; 
+        from_f = getattr(from_f,'__func__',from_f)========================================(8) # Is classmethod callable; does classmethod has __func__; can we do inspect.signature(clsmethod); how to use getattr(obj, attr, default); 
+        to_f = getattr(to_f,'__func__',to_f)==============================================(9)       
+        if hasattr(from_f,'__delwrap__'): return f========================================(10) # if B has __delwrap__, can we do delegates(A)(B) again?; hasattr(obj, '__delwrap__'); 
+        sig = inspect.signature(from_f)===================================================(11) # how to get signature obj of B; what does a signature look like; what is the type; 
+        sigd = dict(sig.parameters)=======================================================(12) # How to access parameters of a signature?; How to turn parameters into a dict?; 
+        k = sigd.pop('kwargs')============================================================(13) # How to remove an item from a dict?; How to get the removed item from a dict?; How to add the removed item back to the dict?; when writing expressions, as they share environment, so they may affect the following code; 
+        s2 = {k:v.replace(kind=inspect.Parameter.KEYWORD_ONLY) for k,v in inspect.signature(to_f).parameters.items() # How to access a signature's parameters as a dict?; How to replace the kind of a parameter with a different kind?; how to check whether a parameter has a default value?; How to check whether a string is in a dict and a list?; how dict.items() and dict.values() differ;  (14)
+              if v.default != inspect.Parameter.empty and k not in sigd and k not in but}=(15)      
+        anno = {k:v for k,v in getattr(to_f, "__annotations__", {}).items() if k not in sigd and k not in but} # How to get A's __annotations__?; How to access it as a dict?; How to select annotations of the right params with names?; How to put them into a dict?; How to do it all in a single line;  (16)
+        sigd.update(s2)===================================================================(17) # How to add the selected params from A's signature to B's signature; How to add items into a dict;; 
+        if keep: sigd['kwargs'] = k=======================================================(18) # How to add a new item into a dict;; 
+        else: from_f.__delwrap__ = to_f===================================================(19) # How to create a new attr for a function or obj;; 
+        from_f.__signature__ = sig.replace(parameters=sigd.values())======================(20) # How to update a signature with a new set of parameters;; 
+        if hasattr(from_f, '__annotations__'): from_f.__annotations__.update(anno)========(21) # How to check whether a func has __annotations__; How add selected params' annotations from A to B's annotations;; 
+        return f==========================================================================(22)      
+    return _f=============================================================================(23)      
+                                                                                                                                                        (24)
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><a href="http://localhost:8888/tree/nbs/demos/0001_fastcore_meta_delegates.ipynb">Open <code>0001_fastcore_meta_delegates</code> in Jupyter Notebook</a></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fastnotes(<span class="st">"how make the most"</span>, folder<span class="op">=</span><span class="st">"all"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>keyword match is <mark style="background-color: #ffff00">1.0</mark> , found a line: in <mark style="background-color: #FFFF00">2022_part1/fastai-lecture-1.md</mark></p>
+</div>
+<div class="cell-output cell-output-display">
+<p>do you want to know <mark style="background-color: #ffff00">how</mark> to <mark style="background-color: #ffff00">make</mark> <mark style="background-color: #ffff00">the</mark> <mark style="background-color: #FFFF00">most</mark> out of fastai? - do you know lesson 0 and <mark style="background-color: #ffff00">the</mark> book <em>meta learning</em> by an alumni?</p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>show <mark style="background-color: #FFFF00">2</mark> lines above and after in <mark style="background-color: #ffff00"> <mark style="background-color: #FFFF00">2</mark> 0 <mark style="background-color: #FFFF00">2</mark> <mark style="background-color: #FFFF00">2</mark> _part1/fastai-lecture-1.md</mark> :</p>
+</div>
+<div class="cell-output cell-output-display">
+<p>Do Jeremy and fastai community take it very seriously in help beginners along the way?</p>
+</div>
+<div class="cell-output cell-output-display">
+<p><a href="https://www.youtube.com/watch?v=RLvUfyLcT48&amp;t=80s&amp;loop=10&amp;start=16:33&amp;end=17:41">16:33</a> Make the most out of <a href="http://fast.ai/">fast.ai</a></p>
+</div>
+<div class="cell-output cell-output-display">
+<p>do you want to know <mark style="background-color: #ffff00">how</mark> to <mark style="background-color: #ffff00">make</mark> <mark style="background-color: #ffff00">the</mark> <mark style="background-color: #FFFF00">most</mark> out of fastai? - do you know lesson 0 and <mark style="background-color: #ffff00">the</mark> book <em>meta learning</em> by an alumni?</p>
+</div>
+<div class="cell-output cell-output-display">
+<p><a href="https://www.youtube.com/watch?v=RLvUfyLcT48&amp;t=80s&amp;loop=10&amp;start=17:41&amp;end=20:01">17:41</a> Learn in context</p>
+</div>
+<div class="cell-output cell-output-display">
+<p>Do you know people learn naturally (better) with context rather than by theoretical curriculum? - Do you want this course to make you a competent deep learning practitioner by context and practical knowledge? - If you want theory from ground up, should you go to part 2 fastai 2019?</p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>keyword match is <mark style="background-color: #ffff00">1.0</mark> , found a line: in <mark style="background-color: #FFFF00">2022_part1/fastai-lecture-2.md</mark></p>
+</div>
+<div class="cell-output cell-output-display">
+<ul>
+<li><mark style="background-color: #ffff00">how</mark> to <mark style="background-color: #ffff00">make</mark> <mark style="background-color: #ffff00">the</mark> <mark style="background-color: #FFFF00">most</mark> out of fastai forum?</li>
+</ul>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>show <mark style="background-color: #FFFF00">2</mark> lines above and after in <mark style="background-color: #ffff00"> <mark style="background-color: #FFFF00">2</mark> 0 <mark style="background-color: #FFFF00">2</mark> <mark style="background-color: #FFFF00">2</mark> _part1/fastai-lecture- <mark style="background-color: #FFFF00">2</mark> .md</mark> :</p>
+</div>
+<div class="cell-output cell-output-display">
+<ul>
+<li>Where can you get more quizzes of fastai and memorize them forever?</li>
+</ul>
+</div>
+<section id="introducing-the-forum" class="level4 cell-output cell-output-display">
+<h4 class="anchored" data-anchor-id="introducing-the-forum"><a href="https://www.youtube.com/watch?v=F4tvM4Vb3A0&amp;loop=10&amp;start=02:38&amp;end=04:12">02:38</a> Introducing the forum</h4>
+</section>
+<div class="cell-output cell-output-display">
+<ul>
+<li><mark style="background-color: #ffff00">how</mark> to <mark style="background-color: #ffff00">make</mark> <mark style="background-color: #ffff00">the</mark> <mark style="background-color: #FFFF00">most</mark> out of fastai forum?</li>
+</ul>
+</div>
+<section id="students-works-after-week-1" class="level4 cell-output cell-output-display">
+<h4 class="anchored" data-anchor-id="students-works-after-week-1"><a href="https://www.youtube.com/watch?v=F4tvM4Vb3A0&amp;loop=10&amp;start=04:12&amp;end=05:58">04:12</a> Students’ works after week 1</h4>
+</section>
+<section id="a-wow-moment" class="level4 cell-output cell-output-display">
+<h4 class="anchored" data-anchor-id="a-wow-moment"><a href="https://www.youtube.com/watch?v=F4tvM4Vb3A0&amp;loop=10&amp;start=06:08&amp;end=06:46">06:08</a> A Wow moment</h4>
+</section>
+<div class="cell-output cell-output-stdout">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>keyword match is <mark style="background-color: #ffff00">1.0</mark> , found a line: in <mark style="background-color: #FFFF00">2022_livecoding/live-coding-1.md</mark></p>
+</div>
+<div class="cell-output cell-output-display">
+<ul>
+<li><ul>
+<li><mark style="background-color: #ffff00">how</mark> to <mark style="background-color: #ffff00">make</mark> <mark style="background-color: #ffff00">the</mark> <mark style="background-color: #FFFF00">most</mark> out of <code>.bash_history</code> file?</li>
+</ul></li>
+</ul>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p>show <mark style="background-color: #FFFF00">2</mark> lines above and after in <mark style="background-color: #ffff00"> <mark style="background-color: #FFFF00">2</mark> 0 <mark style="background-color: #FFFF00">2</mark> <mark style="background-color: #FFFF00">2</mark> _livecoding/live-coding-1.md</mark> :</p>
+</div>
+<div class="cell-output cell-output-display">
+<ul>
+<li><ul>
+<li>How to run jupyter lab without browser? <code>jupyter lab --no-browser</code></li>
+</ul></li>
+</ul>
+</div>
+<div class="cell-output cell-output-display">
+<ul>
+<li><ul>
+<li>How to find and check the content of <code>.bash_history</code>? <code>cat .bash_history</code> <a href="https://youtu.be/56sIyFjihEc?list=PLfYUBJiXbdtSLBPJ1GMx-sQWf6iNhb8mM&amp;t=4373">1:12:53</a></li>
+</ul></li>
+</ul>
+</div>
+<div class="cell-output cell-output-display">
+<ul>
+<li><ul>
+<li><mark style="background-color: #ffff00">how</mark> to <mark style="background-color: #ffff00">make</mark> <mark style="background-color: #ffff00">the</mark> <mark style="background-color: #FFFF00">most</mark> out of <code>.bash_history</code> file?</li>
+</ul></li>
+</ul>
+</div>
+<div class="cell-output cell-output-display">
+<ul>
+<li><ul>
+<li>How to search the .bash_history commands? <code>ctrl + r</code> and use <code>delete</code> tab to clear the search, use <code>esc</code> tab to exit search</li>
+</ul></li>
+</ul>
+</div>
+<div class="cell-output cell-output-display">
+<ul>
+<li><ul>
+<li>How to run a command starting with <code>ju</code>? <code>!ju</code></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="what-is-fastcore.meta-all-about-1" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-fastcore.meta-all-about-1">What is fastcore.meta all about</h2>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

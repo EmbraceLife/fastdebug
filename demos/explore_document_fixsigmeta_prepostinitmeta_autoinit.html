@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 03_FixSigMeta_PrePostInitMeta_AutoInit</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 03_FixSigMeta_PrePostInitMeta_AutoInit">
+<meta property="og:description" content="FixSigMeta inherits __init__, and __call__ from type, but writes its own __new__
+Foo inherits all three from type
+FixSigMeta is used to create class instance not object instance">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 03_FixSigMeta_PrePostInitMeta_AutoInit">
+<meta name="twitter:description" content="FixSigMeta inherits __init__, and __call__ from type, but writes its own __new__
+Foo inherits all three from type
+FixSigMeta is used to create class instance not object instance">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">03_FixSigMeta_PrePostInitMeta_AutoInit</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link active">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#initialize-fastdebug-objects" id="toc-initialize-fastdebug-objects" class="nav-link active" data-scroll-target="#initialize-fastdebug-objects">Initialize fastdebug objects</a></li>
+  <li><a href="#class-fixsigmetatype-vs-class-footype" id="toc-class-fixsigmetatype-vs-class-footype" class="nav-link" data-scroll-target="#class-fixsigmetatype-vs-class-footype">class FixSigMeta(type) vs class Foo(type)</a></li>
+  <li><a href="#class-foo" id="toc-class-foo" class="nav-link" data-scroll-target="#class-foo">class Foo()</a></li>
+  <li><a href="#class-prepostinitmetafixsigmeta" id="toc-class-prepostinitmetafixsigmeta" class="nav-link" data-scroll-target="#class-prepostinitmetafixsigmeta">class PrePostInitMeta(FixSigMeta)</a></li>
+  <li><a href="#class-foometaclassfixsigmeta" id="toc-class-foometaclassfixsigmeta" class="nav-link" data-scroll-target="#class-foometaclassfixsigmeta">class Foo(metaclass=FixSigMeta)</a></li>
+  <li><a href="#class-autoinitmetaclassprepostinitmeta" id="toc-class-autoinitmetaclassprepostinitmeta" class="nav-link" data-scroll-target="#class-autoinitmetaclassprepostinitmeta">class AutoInit(metaclass=PrePostInitMeta)</a></li>
+  <li><a href="#prepare-examples-for-fixsigmeta-prepostinitmeta-autoinit" id="toc-prepare-examples-for-fixsigmeta-prepostinitmeta-autoinit" class="nav-link" data-scroll-target="#prepare-examples-for-fixsigmeta-prepostinitmeta-autoinit">Prepare examples for FixSigMeta, PrePostInitMeta, AutoInit</a></li>
+  <li><a href="#snoop-them-together-in-one-go" id="toc-snoop-them-together-in-one-go" class="nav-link" data-scroll-target="#snoop-them-together-in-one-go">Snoop them together in one go</a>
+  <ul class="collapse">
+  <li><a href="#embed-the-dbsrc-of-fixsigmeta-into-prepostinitmeta" id="toc-embed-the-dbsrc-of-fixsigmeta-into-prepostinitmeta" class="nav-link" data-scroll-target="#embed-the-dbsrc-of-fixsigmeta-into-prepostinitmeta">embed the dbsrc of FixSigMeta into PrePostInitMeta</a></li>
+  <li><a href="#embed-dbsrc-of-prepostinitmeta-into-autoinit" id="toc-embed-dbsrc-of-prepostinitmeta-into-autoinit" class="nav-link" data-scroll-target="#embed-dbsrc-of-prepostinitmeta-into-autoinit">embed dbsrc of PrePostInitMeta into AutoInit</a></li>
+  </ul></li>
+  <li><a href="#explore-and-document-on-them-together" id="toc-explore-and-document-on-them-together" class="nav-link" data-scroll-target="#explore-and-document-on-them-together">Explore and Document on them together</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">03_FixSigMeta_PrePostInitMeta_AutoInit</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.core <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> inspect</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>.container { width:100% !important; }</style>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.meta <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.test <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="initialize-fastdebug-objects" class="level2">
+<h2 class="anchored" data-anchor-id="initialize-fastdebug-objects">Initialize fastdebug objects</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> <span class="bu">locals</span>() <span class="co"># g can update itself as more cells get run, like globals() in the __main__</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fdbF <span class="op">=</span> Fastdb(FixSigMeta, outloc<span class="op">=</span>g)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fdbP <span class="op">=</span> Fastdb(PrePostInitMeta, outloc<span class="op">=</span>g)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fdbA <span class="op">=</span> Fastdb(AutoInit, outloc<span class="op">=</span>g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="class-fixsigmetatype-vs-class-footype" class="level2">
+<h2 class="anchored" data-anchor-id="class-fixsigmetatype-vs-class-footype">class FixSigMeta(type) vs class Foo(type)</h2>
+<p>FixSigMeta inherits <code>__init__</code>, and <code>__call__</code> from <code>type</code>, but writes its own <code>__new__</code><br>
+Foo inherits all three from <code>type</code><br>
+FixSigMeta is used to create class instance not object instance</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fdbF.docsrc(<span class="dv">1</span>, <span class="st">"FixSigMeta inherits __init__, and __call__ from type; but writes its own __new__; Foo inherits all three from type; </span><span class="ch">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">FixSigMeta is used to create class instance not object instance."</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fdbF.print()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating FixSigMeta     ========================================================
+===============================================================     on line 1     ================================================================
+=============================================================     with example      ==============================================================
+
+print selected srcline with expands below--------
+class FixSigMeta(type):                                                                                                                                 (0)
+    "A metaclass that fixes the signature on classes that override `__new__`"===========================================================================(1)
+FixSigMeta inherits __init__, and __call__ from type; but writes its own __new__; Foo inherits all three from type; FixSigMeta is used to create class instance not object instance.
+    def __new__(cls, name, bases, dict):                                                                                                                (2)
+        res = super().__new__(cls, name, bases, dict)                                                                                                   (3)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(inspect.getsource(FixSigMeta))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class FixSigMeta(type):
+    "A metaclass that fixes the signature on classes that override `__new__`"
+    def __new__(cls, name, bases, dict):
+        res = super().__new__(cls, name, bases, dict)
+        if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__))
+        return res
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>inspect_class(FixSigMeta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class FixSigMeta(type):
+    "A metaclass that fixes the signature on classes that override `__new__`"
+    def __new__(cls, name, bases, dict):
+        res = super().__new__(cls, name, bases, dict)
+        if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__))
+        return res
+
+
+is FixSigMeta a metaclass: True
+is FixSigMeta created by a metaclass: False
+FixSigMeta is created by &lt;class 'type'&gt;
+FixSigMeta.__new__ is object.__new__: False
+FixSigMeta.__new__ is type.__new__: False
+FixSigMeta.__new__: &lt;function FixSigMeta.__new__&gt;
+FixSigMeta.__init__ is object.__init__: False
+FixSigMeta.__init__ is type.__init__: True
+FixSigMeta.__init__: &lt;slot wrapper '__init__' of 'type' objects&gt;
+FixSigMeta.__call__ is object.__call__: False
+FixSigMeta.__call__ is type.__call__: True
+FixSigMeta.__call__: &lt;slot wrapper '__call__' of 'type' objects&gt;
+FixSigMeta.__class__: &lt;class 'type'&gt;
+FixSigMeta.__bases__: (&lt;class 'type'&gt;,)
+FixSigMeta.__mro__: (&lt;class 'fastcore.meta.FixSigMeta'&gt;, &lt;class 'type'&gt;, &lt;class 'object'&gt;)
+
+FixSigMeta's function members are:
+{'__new__': &lt;function FixSigMeta.__new__&gt;}
+
+FixSigMeta's method members are:
+{}
+
+FixSigMeta's class members are:
+{'__base__': &lt;class 'type'&gt;, '__class__': &lt;class 'type'&gt;}
+
+FixSigMeta's namespace are:
+mappingproxy({'__doc__': 'A metaclass that fixes the signature on classes that '
+                         'override `__new__`',
+              '__module__': 'fastcore.meta',
+              '__new__': &lt;staticmethod object&gt;})</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Foo(<span class="bu">type</span>): <span class="cf">pass</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>inspect_class(Foo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+is Foo a metaclass: True
+is Foo created by a metaclass: False
+Foo is created by &lt;class 'type'&gt;
+Foo.__new__ is object.__new__: False
+Foo.__new__ is type.__new__: True
+Foo.__new__: &lt;built-in method __new__ of type object&gt;
+Foo.__init__ is object.__init__: False
+Foo.__init__ is type.__init__: True
+Foo.__init__: &lt;slot wrapper '__init__' of 'type' objects&gt;
+Foo.__call__ is object.__call__: False
+Foo.__call__ is type.__call__: True
+Foo.__call__: &lt;slot wrapper '__call__' of 'type' objects&gt;
+Foo.__class__: &lt;class 'type'&gt;
+Foo.__bases__: (&lt;class 'type'&gt;,)
+Foo.__mro__: (&lt;class '__main__.Foo'&gt;, &lt;class 'type'&gt;, &lt;class 'object'&gt;)
+
+Foo's function members are:
+{}
+
+Foo's method members are:
+{}
+
+Foo's class members are:
+{'__base__': &lt;class 'type'&gt;, '__class__': &lt;class 'type'&gt;}
+
+Foo's namespace are:
+mappingproxy({'__module__': '__main__', '__doc__': None})</code></pre>
+</div>
+</div>
+</section>
+<section id="class-foo" class="level2">
+<h2 class="anchored" data-anchor-id="class-foo">class Foo()</h2>
+<p>When Foo inherit <code>__new__</code> and <code>__new__</code> from <code>object</code><br>
+but <code>__call__</code> of Foo and <code>__call__</code> of <code>object</code> maybe the same but different objects<br>
+Foo is to create object instance not class instance</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Foo(): <span class="cf">pass</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>inspect_class(Foo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+is Foo a metaclass: False
+is Foo created by a metaclass: False
+Foo is created by &lt;class 'type'&gt;
+Foo.__new__ is object.__new__: True
+Foo.__new__ is type.__new__: False
+Foo.__new__: &lt;built-in method __new__ of type object&gt;
+Foo.__init__ is object.__init__: True
+Foo.__init__ is type.__init__: False
+Foo.__init__: &lt;slot wrapper '__init__' of 'object' objects&gt;
+Foo.__call__ is object.__call__: False
+Foo.__call__ is type.__call__: False
+Foo.__call__: &lt;method-wrapper '__call__' of type object&gt;
+Foo.__class__: &lt;class 'type'&gt;
+Foo.__bases__: (&lt;class 'object'&gt;,)
+Foo.__mro__: (&lt;class '__main__.Foo'&gt;, &lt;class 'object'&gt;)
+
+Foo's function members are:
+{}
+
+Foo's method members are:
+{}
+
+Foo's class members are:
+{'__class__': &lt;class 'type'&gt;}
+
+Foo's namespace are:
+mappingproxy({'__dict__': &lt;attribute '__dict__' of 'Foo' objects&gt;,
+              '__doc__': None,
+              '__module__': '__main__',
+              '__weakref__': &lt;attribute '__weakref__' of 'Foo' objects&gt;})</code></pre>
+</div>
+</div>
+</section>
+<section id="class-prepostinitmetafixsigmeta" class="level2">
+<h2 class="anchored" data-anchor-id="class-prepostinitmetafixsigmeta">class PrePostInitMeta(FixSigMeta)</h2>
+<p><code>PrePostInitMeta</code> inherit <code>__new__</code> and <code>__init__</code> from <code>FixSigMeta</code> as a metaclass (a different type), not from <code>type</code>, nor from <code>object</code><br>
+<code>PrePostInitMeta</code> is itself a metaclass, which is used to create class instance not object instance<br>
+<code>PrePostInitMeta</code> writes its own <code>__call__</code> which regulates how its class instance create and initialize object instance</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fdbP.docsrc(<span class="dv">1</span>, <span class="st">"PrePostInitMeta inherit __new__ and __init__ from FixSigMeta as a metaclass (a different type); </span><span class="ch">\</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="st">not from type, nor from object; PrePostInitMeta is itself a metaclass, which is used to create class instance not object instance; </span><span class="ch">\</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="st">PrePostInitMeta writes its own __call__ which regulates how its class instance create and initialize object instance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=====================================================     Investigating PrePostInitMeta     ======================================================
+===============================================================     on line 1     ================================================================
+=============================================================     with example      ==============================================================
+
+print selected srcline with expands below--------
+class PrePostInitMeta(FixSigMeta):                                                                                                                      (0)
+    "A metaclass that calls optional `__pre_init__` and `__post_init__` methods"========================================================================(1)
+PrePostInitMeta inherit __new__ and __init__ from FixSigMeta as a metaclass (a different type); not from type, nor from object; PrePostInitMeta is itself a metaclass, which is used to create class instance not object instance; PrePostInitMeta writes its own __call__ which regulates how its class instance create and initialize object instance
+    def __call__(cls, *args, **kwargs):                                                                                                                 (2)
+        res = cls.__new__(cls)                                                                                                                          (3)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>inspect_class(PrePostInitMeta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class PrePostInitMeta(FixSigMeta):
+    "A metaclass that calls optional `__pre_init__` and `__post_init__` methods"
+    def __call__(cls, *args, **kwargs):
+        res = cls.__new__(cls)
+        if type(res)==cls:
+            if hasattr(res,'__pre_init__'): res.__pre_init__(*args,**kwargs)
+            res.__init__(*args,**kwargs)
+            if hasattr(res,'__post_init__'): res.__post_init__(*args,**kwargs)
+        return res
+
+
+is PrePostInitMeta a metaclass: True
+is PrePostInitMeta created by a metaclass: False
+PrePostInitMeta is created by &lt;class 'type'&gt;
+PrePostInitMeta.__new__ is object.__new__: False
+PrePostInitMeta.__new__ is type.__new__: False
+PrePostInitMeta.__new__: &lt;function FixSigMeta.__new__&gt;
+PrePostInitMeta.__init__ is object.__init__: False
+PrePostInitMeta.__init__ is type.__init__: True
+PrePostInitMeta.__init__: &lt;slot wrapper '__init__' of 'type' objects&gt;
+PrePostInitMeta.__call__ is object.__call__: False
+PrePostInitMeta.__call__ is type.__call__: False
+PrePostInitMeta.__call__: &lt;function PrePostInitMeta.__call__&gt;
+PrePostInitMeta.__class__: &lt;class 'type'&gt;
+PrePostInitMeta.__bases__: (&lt;class 'fastcore.meta.FixSigMeta'&gt;,)
+PrePostInitMeta.__mro__: (&lt;class 'fastcore.meta.PrePostInitMeta'&gt;, &lt;class 'fastcore.meta.FixSigMeta'&gt;, &lt;class 'type'&gt;, &lt;class 'object'&gt;)
+
+PrePostInitMeta's function members are:
+{'__call__': &lt;function PrePostInitMeta.__call__&gt;,
+ '__new__': &lt;function FixSigMeta.__new__&gt;}
+
+PrePostInitMeta's method members are:
+{}
+
+PrePostInitMeta's class members are:
+{'__base__': &lt;class 'fastcore.meta.FixSigMeta'&gt;, '__class__': &lt;class 'type'&gt;}
+
+PrePostInitMeta's namespace are:
+mappingproxy({'__call__': &lt;function PrePostInitMeta.__call__&gt;,
+              '__doc__': 'A metaclass that calls optional `__pre_init__` and '
+                         '`__post_init__` methods',
+              '__module__': 'fastcore.meta'})</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Foo(FixSigMeta): <span class="cf">pass</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>inspect_class(Foo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+is Foo a metaclass: True
+is Foo created by a metaclass: False
+Foo is created by &lt;class 'type'&gt;
+Foo.__new__ is object.__new__: False
+Foo.__new__ is type.__new__: False
+Foo.__new__: &lt;function FixSigMeta.__new__&gt;
+Foo.__init__ is object.__init__: False
+Foo.__init__ is type.__init__: True
+Foo.__init__: &lt;slot wrapper '__init__' of 'type' objects&gt;
+Foo.__call__ is object.__call__: False
+Foo.__call__ is type.__call__: True
+Foo.__call__: &lt;slot wrapper '__call__' of 'type' objects&gt;
+Foo.__class__: &lt;class 'type'&gt;
+Foo.__bases__: (&lt;class 'fastcore.meta.FixSigMeta'&gt;,)
+Foo.__mro__: (&lt;class '__main__.Foo'&gt;, &lt;class 'fastcore.meta.FixSigMeta'&gt;, &lt;class 'type'&gt;, &lt;class 'object'&gt;)
+
+Foo's function members are:
+{'__new__': &lt;function FixSigMeta.__new__&gt;}
+
+Foo's method members are:
+{}
+
+Foo's class members are:
+{'__base__': &lt;class 'fastcore.meta.FixSigMeta'&gt;, '__class__': &lt;class 'type'&gt;}
+
+Foo's namespace are:
+mappingproxy({'__module__': '__main__', '__doc__': None})</code></pre>
+</div>
+</div>
+</section>
+<section id="class-foometaclassfixsigmeta" class="level2">
+<h2 class="anchored" data-anchor-id="class-foometaclassfixsigmeta">class Foo(metaclass=FixSigMeta)</h2>
+<p>Foo inherit <code>__new__</code>, <code>__init__</code> from object to create object instance<br>
+Foo uses FixSigMeta not type to create class instance FixSigMeta.<code>__new__</code> determine what kind of a class is Foo<br>
+In this case, FixSigMeta.<code>__new__</code> create Foo class and an attr <code>__signature__</code> if Foo has its own <code>__init__</code><br>
+FixSigMeta.<code>__new__</code> create Foo the class, has nothing to do with the instance method Foo.<code>__init__</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Foo(metaclass<span class="op">=</span>FixSigMeta): <span class="cf">pass</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>inspect_class(Foo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+is Foo a metaclass: False
+is Foo created by a metaclass: True
+Foo is created by metaclass &lt;class 'fastcore.meta.FixSigMeta'&gt;
+Foo.__new__ is object.__new__: True
+Foo.__new__ is type.__new__: False
+Foo.__new__: &lt;built-in method __new__ of type object&gt;
+Foo.__init__ is object.__init__: True
+Foo.__init__ is type.__init__: False
+Foo.__init__: &lt;slot wrapper '__init__' of 'object' objects&gt;
+Foo.__call__ is object.__call__: False
+Foo.__call__ is type.__call__: False
+Foo.__call__: &lt;method-wrapper '__call__' of FixSigMeta object&gt;
+Foo.__class__: &lt;class 'fastcore.meta.FixSigMeta'&gt;
+Foo.__bases__: (&lt;class 'object'&gt;,)
+Foo.__mro__: (&lt;class '__main__.Foo'&gt;, &lt;class 'object'&gt;)
+
+Foo's metaclass &lt;class 'fastcore.meta.FixSigMeta'&gt;'s function members are:
+{'__new__': &lt;function FixSigMeta.__new__&gt;}
+
+Foo's function members are:
+{}
+
+Foo's method members are:
+{}
+
+Foo's class members are:
+{'__class__': &lt;class 'fastcore.meta.FixSigMeta'&gt;}
+
+Foo's namespace are:
+mappingproxy({'__dict__': &lt;attribute '__dict__' of 'Foo' objects&gt;,
+              '__doc__': None,
+              '__module__': '__main__',
+              '__weakref__': &lt;attribute '__weakref__' of 'Foo' objects&gt;})</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Foo(metaclass<span class="op">=</span>FixSigMeta): </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, a, b): <span class="cf">pass</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>inspect_class(Foo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+is Foo a metaclass: False
+is Foo created by a metaclass: True
+Foo is created by metaclass &lt;class 'fastcore.meta.FixSigMeta'&gt;
+Foo.__new__ is object.__new__: True
+Foo.__new__ is type.__new__: False
+Foo.__new__: &lt;built-in method __new__ of type object&gt;
+Foo.__init__ is object.__init__: False
+Foo.__init__ is type.__init__: False
+Foo.__init__: &lt;function Foo.__init__&gt;
+Foo.__call__ is object.__call__: False
+Foo.__call__ is type.__call__: False
+Foo.__call__: &lt;method-wrapper '__call__' of FixSigMeta object&gt;
+Foo.__class__: &lt;class 'fastcore.meta.FixSigMeta'&gt;
+Foo.__bases__: (&lt;class 'object'&gt;,)
+Foo.__mro__: (&lt;class '__main__.Foo'&gt;, &lt;class 'object'&gt;)
+
+Foo's metaclass &lt;class 'fastcore.meta.FixSigMeta'&gt;'s function members are:
+{'__new__': &lt;function FixSigMeta.__new__&gt;}
+
+Foo's function members are:
+{'__init__': &lt;function Foo.__init__&gt;}
+
+Foo's method members are:
+{}
+
+Foo's class members are:
+{'__class__': &lt;class 'fastcore.meta.FixSigMeta'&gt;}
+
+Foo's namespace are:
+mappingproxy({'__dict__': &lt;attribute '__dict__' of 'Foo' objects&gt;,
+              '__doc__': None,
+              '__init__': &lt;function Foo.__init__&gt;,
+              '__module__': '__main__',
+              '__signature__': &lt;Signature (a, b)&gt;,
+              '__weakref__': &lt;attribute '__weakref__' of 'Foo' objects&gt;})</code></pre>
+</div>
+</div>
+</section>
+<section id="class-autoinitmetaclassprepostinitmeta" class="level2">
+<h2 class="anchored" data-anchor-id="class-autoinitmetaclassprepostinitmeta">class AutoInit(metaclass=PrePostInitMeta)</h2>
+<p>AutoInit inherit <code>__new__</code> and <code>__init__</code> from <code>object</code> to create and initialize object instances<br>
+AutoInit uses PrePostInitMeta.<code>__new__</code> or in fact FixSigMeta.<code>__new__</code> to create its own class instance, which can have <code>__signature__</code><br>
+AutoInit uses PrePostInitMeta.<code>__call__</code> to specify how its object instance to be created and initialized (with pre_init, init, post_init)<br>
+AutoInit as a normal or non-metaclass, it writes its own <code>__pre_init__</code> instance method</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fdbA.docsrc(<span class="dv">1</span>, <span class="st">"AutoInit inherit __new__ and __init__ from object to create and initialize object instances; </span><span class="ch">\</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="st">AutoInit uses PrePostInitMeta.__new__ or in fact FixSigMeta.__new__ to create its own class instance, which can have __signature__; </span><span class="ch">\</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="st">AutoInit uses PrePostInitMeta.__call__ to specify how its object instance to be created and initialized (with pre_init, init, post_init)); </span><span class="ch">\</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="st">AutoInit as a normal or non-metaclass, it writes its own __pre_init__ method"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=========================================================     Investigating AutoInit     =========================================================
+===============================================================     on line 1     ================================================================
+=============================================================     with example      ==============================================================
+
+print selected srcline with expands below--------
+class AutoInit(metaclass=PrePostInitMeta):                                                                                                              (0)
+    "Same as `object`, but no need for subclasses to call `super().__init__`"===========================================================================(1)
+AutoInit inherit __new__ and __init__ from object to create and initialize object instances; AutoInit uses PrePostInitMeta.__new__ or in fact FixSigMeta.__new__ to create its own class instance, which can have __signature__; AutoInit uses PrePostInitMeta.__call__ to specify how its object instance to be created and initialized (with pre_init, init, post_init)); AutoInit as a normal or non-metaclass, it writes its own __pre_init__ method
+    def __pre_init__(self, *args, **kwargs): super().__init__(*args, **kwargs)                                                                          (2)
+                                                                                                                                                        (3)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>inspect_class(AutoInit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class AutoInit(metaclass=PrePostInitMeta):
+    "Same as `object`, but no need for subclasses to call `super().__init__`"
+    def __pre_init__(self, *args, **kwargs): super().__init__(*args, **kwargs)
+
+
+is AutoInit a metaclass: False
+is AutoInit created by a metaclass: True
+AutoInit is created by metaclass &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+AutoInit.__new__ is object.__new__: True
+AutoInit.__new__ is type.__new__: False
+AutoInit.__new__: &lt;built-in method __new__ of type object&gt;
+AutoInit.__init__ is object.__init__: True
+AutoInit.__init__ is type.__init__: False
+AutoInit.__init__: &lt;slot wrapper '__init__' of 'object' objects&gt;
+AutoInit.__call__ is object.__call__: False
+AutoInit.__call__ is type.__call__: False
+AutoInit.__call__: &lt;bound method PrePostInitMeta.__call__ of &lt;class 'fastcore.meta.AutoInit'&gt;&gt;
+AutoInit.__class__: &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+AutoInit.__bases__: (&lt;class 'object'&gt;,)
+AutoInit.__mro__: (&lt;class 'fastcore.meta.AutoInit'&gt;, &lt;class 'object'&gt;)
+
+AutoInit's metaclass &lt;class 'fastcore.meta.PrePostInitMeta'&gt;'s function members are:
+{'__call__': &lt;function PrePostInitMeta.__call__&gt;,
+ '__new__': &lt;function FixSigMeta.__new__&gt;}
+
+AutoInit's function members are:
+{'__pre_init__': &lt;function AutoInit.__pre_init__&gt;}
+
+AutoInit's method members are:
+{}
+
+AutoInit's class members are:
+{'__class__': &lt;class 'fastcore.meta.PrePostInitMeta'&gt;}
+
+AutoInit's namespace are:
+mappingproxy({'__dict__': &lt;attribute '__dict__' of 'AutoInit' objects&gt;,
+              '__doc__': 'Same as `object`, but no need for subclasses to call '
+                         '`super().__init__`',
+              '__module__': 'fastcore.meta',
+              '__pre_init__': &lt;function AutoInit.__pre_init__&gt;,
+              '__weakref__': &lt;attribute '__weakref__' of 'AutoInit' objects&gt;})</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Foo(AutoInit): <span class="cf">pass</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>inspect_class(Foo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+is Foo a metaclass: False
+is Foo created by a metaclass: True
+Foo is created by metaclass &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+Foo.__new__ is object.__new__: True
+Foo.__new__ is type.__new__: False
+Foo.__new__: &lt;built-in method __new__ of type object&gt;
+Foo.__init__ is object.__init__: True
+Foo.__init__ is type.__init__: False
+Foo.__init__: &lt;slot wrapper '__init__' of 'object' objects&gt;
+Foo.__call__ is object.__call__: False
+Foo.__call__ is type.__call__: False
+Foo.__call__: &lt;bound method PrePostInitMeta.__call__ of &lt;class '__main__.Foo'&gt;&gt;
+Foo.__class__: &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+Foo.__bases__: (&lt;class 'fastcore.meta.AutoInit'&gt;,)
+Foo.__mro__: (&lt;class '__main__.Foo'&gt;, &lt;class 'fastcore.meta.AutoInit'&gt;, &lt;class 'object'&gt;)
+
+Foo's metaclass &lt;class 'fastcore.meta.PrePostInitMeta'&gt;'s function members are:
+{'__call__': &lt;function PrePostInitMeta.__call__&gt;,
+ '__new__': &lt;function FixSigMeta.__new__&gt;}
+
+Foo's function members are:
+{'__pre_init__': &lt;function AutoInit.__pre_init__&gt;}
+
+Foo's method members are:
+{}
+
+Foo's class members are:
+{'__class__': &lt;class 'fastcore.meta.PrePostInitMeta'&gt;}
+
+Foo's namespace are:
+mappingproxy({'__module__': '__main__', '__doc__': None})</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Foo(AutoInit): </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>): <span class="cf">pass</span> <span class="co"># to enable __signature__ by FixSigMeta.__new__</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>inspect_class(Foo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+is Foo a metaclass: False
+is Foo created by a metaclass: True
+Foo is created by metaclass &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+Foo.__new__ is object.__new__: True
+Foo.__new__ is type.__new__: False
+Foo.__new__: &lt;built-in method __new__ of type object&gt;
+Foo.__init__ is object.__init__: False
+Foo.__init__ is type.__init__: False
+Foo.__init__: &lt;function Foo.__init__&gt;
+Foo.__call__ is object.__call__: False
+Foo.__call__ is type.__call__: False
+Foo.__call__: &lt;bound method PrePostInitMeta.__call__ of &lt;class '__main__.Foo'&gt;&gt;
+Foo.__class__: &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+Foo.__bases__: (&lt;class 'fastcore.meta.AutoInit'&gt;,)
+Foo.__mro__: (&lt;class '__main__.Foo'&gt;, &lt;class 'fastcore.meta.AutoInit'&gt;, &lt;class 'object'&gt;)
+
+Foo's metaclass &lt;class 'fastcore.meta.PrePostInitMeta'&gt;'s function members are:
+{'__call__': &lt;function PrePostInitMeta.__call__&gt;,
+ '__new__': &lt;function FixSigMeta.__new__&gt;}
+
+Foo's function members are:
+{'__init__': &lt;function Foo.__init__&gt;,
+ '__pre_init__': &lt;function AutoInit.__pre_init__&gt;}
+
+Foo's method members are:
+{}
+
+Foo's class members are:
+{'__class__': &lt;class 'fastcore.meta.PrePostInitMeta'&gt;}
+
+Foo's namespace are:
+mappingproxy({'__doc__': None,
+              '__init__': &lt;function Foo.__init__&gt;,
+              '__module__': '__main__',
+              '__signature__': &lt;Signature ()&gt;})</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TestParent():</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>): <span class="va">self</span>.h <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TestChild(AutoInit, TestParent):</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>): <span class="va">self</span>.k <span class="op">=</span> <span class="va">self</span>.h <span class="op">+</span> <span class="dv">2</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>inspect_class(TestChild)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+is TestChild a metaclass: False
+is TestChild created by a metaclass: True
+TestChild is created by metaclass &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+TestChild.__new__ is object.__new__: True
+TestChild.__new__ is type.__new__: False
+TestChild.__new__: &lt;built-in method __new__ of type object&gt;
+TestChild.__init__ is object.__init__: False
+TestChild.__init__ is type.__init__: False
+TestChild.__init__: &lt;function TestChild.__init__&gt;
+TestChild.__call__ is object.__call__: False
+TestChild.__call__ is type.__call__: False
+TestChild.__call__: &lt;bound method PrePostInitMeta.__call__ of &lt;class '__main__.TestChild'&gt;&gt;
+TestChild.__class__: &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+TestChild.__bases__: (&lt;class 'fastcore.meta.AutoInit'&gt;, &lt;class '__main__.TestParent'&gt;)
+TestChild.__mro__: (&lt;class '__main__.TestChild'&gt;, &lt;class 'fastcore.meta.AutoInit'&gt;, &lt;class '__main__.TestParent'&gt;, &lt;class 'object'&gt;)
+
+TestChild's metaclass &lt;class 'fastcore.meta.PrePostInitMeta'&gt;'s function members are:
+{'__call__': &lt;function PrePostInitMeta.__call__&gt;,
+ '__new__': &lt;function FixSigMeta.__new__&gt;}
+
+TestChild's function members are:
+{'__init__': &lt;function TestChild.__init__&gt;,
+ '__pre_init__': &lt;function AutoInit.__pre_init__&gt;}
+
+TestChild's method members are:
+{}
+
+TestChild's class members are:
+{'__class__': &lt;class 'fastcore.meta.PrePostInitMeta'&gt;}
+
+TestChild's namespace are:
+mappingproxy({'__doc__': None,
+              '__init__': &lt;function TestChild.__init__&gt;,
+              '__module__': '__main__',
+              '__signature__': &lt;Signature ()&gt;})</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> _T(metaclass<span class="op">=</span>PrePostInitMeta):</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> __pre_init__(<span class="va">self</span>):  <span class="va">self</span>.a  <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>,b<span class="op">=</span><span class="dv">0</span>):  <span class="va">self</span>.b <span class="op">=</span> <span class="va">self</span>.a <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> <span class="cf">assert</span> <span class="va">self</span>.b<span class="op">==</span><span class="dv">1</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> __post_init__(<span class="va">self</span>): <span class="va">self</span>.c <span class="op">=</span> <span class="va">self</span>.b <span class="op">+</span> <span class="dv">2</span><span class="op">;</span> <span class="cf">assert</span> <span class="va">self</span>.c<span class="op">==</span><span class="dv">3</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>inspect_class(_T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+is _T a metaclass: False
+is _T created by a metaclass: True
+_T is created by metaclass &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+_T.__new__ is object.__new__: True
+_T.__new__ is type.__new__: False
+_T.__new__: &lt;built-in method __new__ of type object&gt;
+_T.__init__ is object.__init__: False
+_T.__init__ is type.__init__: False
+_T.__init__: &lt;function _T.__init__&gt;
+_T.__call__ is object.__call__: False
+_T.__call__ is type.__call__: False
+_T.__call__: &lt;bound method PrePostInitMeta.__call__ of &lt;class '__main__._T'&gt;&gt;
+_T.__class__: &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+_T.__bases__: (&lt;class 'object'&gt;,)
+_T.__mro__: (&lt;class '__main__._T'&gt;, &lt;class 'object'&gt;)
+
+_T's metaclass &lt;class 'fastcore.meta.PrePostInitMeta'&gt;'s function members are:
+{'__call__': &lt;function PrePostInitMeta.__call__&gt;,
+ '__new__': &lt;function FixSigMeta.__new__&gt;}
+
+_T's function members are:
+{'__init__': &lt;function _T.__init__&gt;,
+ '__post_init__': &lt;function _T.__post_init__&gt;,
+ '__pre_init__': &lt;function _T.__pre_init__&gt;}
+
+_T's method members are:
+{}
+
+_T's class members are:
+{'__class__': &lt;class 'fastcore.meta.PrePostInitMeta'&gt;}
+
+_T's namespace are:
+mappingproxy({'__dict__': &lt;attribute '__dict__' of '_T' objects&gt;,
+              '__doc__': None,
+              '__init__': &lt;function _T.__init__&gt;,
+              '__module__': '__main__',
+              '__post_init__': &lt;function _T.__post_init__&gt;,
+              '__pre_init__': &lt;function _T.__pre_init__&gt;,
+              '__signature__': &lt;Signature (b=0)&gt;,
+              '__weakref__': &lt;attribute '__weakref__' of '_T' objects&gt;})</code></pre>
+</div>
+</div>
+</section>
+<section id="prepare-examples-for-fixsigmeta-prepostinitmeta-autoinit" class="level2">
+<h2 class="anchored" data-anchor-id="prepare-examples-for-fixsigmeta-prepostinitmeta-autoinit">Prepare examples for FixSigMeta, PrePostInitMeta, AutoInit</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># g = locals() </span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fdbF = Fastdb(FixSigMeta, outloc=g)</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>fdbF.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="st">class Foo(metaclass=FixSigMeta):</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="st">    def __init__(self): pass</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co"># fdbP = Fastdb(PrePostInitMeta, outloc=g)</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>fdbP.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="st">class _T(metaclass=PrePostInitMeta):</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="st">    def __pre_init__(self):  self.a  = 0; </span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="st">    def __init__(self,b=0):  self.b = self.a + 1; assert self.b==1</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="st">    def __post_init__(self): self.c = self.b + 2; assert self.c==3</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="st">t = _T()</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.a, 0) # set with __pre_init__</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.b, 1) # set with __init__</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.c, 3) # set with __post_init__</span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="st">inspect.signature(_T)</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="co"># fdbA = Fastdb(AutoInit, outloc=g)</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>fdbA.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a><span class="st">class TestParent():</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="st">    def __init__(self): self.h = 10</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="st">class TestChild(AutoInit, TestParent):</span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a><span class="st">    def __init__(self): self.k = self.h + 2</span></span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a><span class="st">t = TestChild()</span></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.h, 10) # h=10 is initialized in the parent class</span></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.k, 12)</span></span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="snoop-them-together-in-one-go" class="level2">
+<h2 class="anchored" data-anchor-id="snoop-them-together-in-one-go">Snoop them together in one go</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>fdbF.snoop(watch<span class="op">=</span>[<span class="st">'res'</span>, <span class="st">'type(res)'</span>, <span class="st">'res.__class__'</span>, <span class="st">'res.__dict__'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>23:04:33.14 &gt;&gt;&gt; Call to FixSigMeta.__new__ in File "/tmp/FixSigMeta.py", line 5
+23:04:33.14 .......... cls = &lt;class 'fastcore.meta.FixSigMeta'&gt;
+23:04:33.14 .......... name = 'Foo'
+23:04:33.14 .......... bases = ()
+23:04:33.14 .......... dict = {'__module__': '__main__', '__qualname__': 'Foo', '__init__': &lt;function Foo.__init__&gt;}
+23:04:33.14 .......... len(dict) = 3
+23:04:33.14 .......... __class__ = &lt;class 'fastcore.meta.FixSigMeta'&gt;
+23:04:33.14    5 |     def __new__(cls, name, bases, dict):
+23:04:33.14    6 |         res = super().__new__(cls, name, bases, dict)
+23:04:33.14 .............. res = &lt;class '__main__.Foo'&gt;
+23:04:33.14 .............. type(res) = &lt;class 'fastcore.meta.FixSigMeta'&gt;
+23:04:33.14 .............. res.__class__ = &lt;class 'fastcore.meta.FixSigMeta'&gt;
+23:04:33.14 .............. res.__dict__ = mappingproxy({'__module__': '__main__', '__init_...__weakref__' of 'Foo' objects&gt;, '__doc__': None})
+23:04:33.14 .............. len(res.__dict__) = 5
+23:04:33.14    7 |         if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__))
+23:04:33.14 ...... res.__dict__ = mappingproxy({'__module__': '__main__', '__init_...__doc__': None, '__signature__': &lt;Signature ()&gt;})
+23:04:33.14 ...... len(res.__dict__) = 6
+23:04:33.14    8 |         return res
+23:04:33.14 &lt;&lt;&lt; Return value from FixSigMeta.__new__: &lt;class '__main__.Foo'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating FixSigMeta     ========================================================
+==============================================================     on line None     ==============================================================
+==============================     with example 
+class Foo(metaclass=FixSigMeta):
+    def __init__(self): pass
+     ==============================
+</code></pre>
+</div>
+</div>
+<section id="embed-the-dbsrc-of-fixsigmeta-into-prepostinitmeta" class="level3">
+<h3 class="anchored" data-anchor-id="embed-the-dbsrc-of-fixsigmeta-into-prepostinitmeta">embed the dbsrc of FixSigMeta into PrePostInitMeta</h3>
+<p><strong>Important!</strong><br>
+FixSigMeta is untouched, fdbF.dbsrc.<code>__new__</code> is the actual dbsrc<br>
+To use fdbF.dbsrc in other functions or classes which uses FixSigMeta, we need to assign <code>fdbF.dbsrc</code> to <code>fm.FixSigMeta</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastcore.meta <span class="im">as</span> fm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>fm.FixSigMeta <span class="op">=</span> fdbF.dbsrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>fdbP.snoop([<span class="st">'res.__dict__'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>23:04:33.18 &gt;&gt;&gt; Call to FixSigMeta.__new__ in File "/tmp/FixSigMeta.py", line 5
+23:04:33.18 .......... cls = &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+23:04:33.18 .......... name = '_T'
+23:04:33.18 .......... bases = ()
+23:04:33.18 .......... dict = {'__module__': '__main__', '__qualname__': '_T', '__pre_init__': &lt;function _T.__pre_init__&gt;, '__init__': &lt;function _T.__init__&gt;, ...}
+23:04:33.18 .......... len(dict) = 5
+23:04:33.18 .......... __class__ = &lt;class 'fastcore.meta.FixSigMeta'&gt;
+23:04:33.18    5 |     def __new__(cls, name, bases, dict):
+23:04:33.18    6 |         res = super().__new__(cls, name, bases, dict)
+23:04:33.18 .............. res = &lt;class '__main__._T'&gt;
+23:04:33.18 .............. type(res) = &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+23:04:33.18 .............. res.__class__ = &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+23:04:33.18 .............. res.__dict__ = mappingproxy({'__module__': '__main__', '__pre_i...'__weakref__' of '_T' objects&gt;, '__doc__': None})
+23:04:33.18 .............. len(res.__dict__) = 7
+23:04:33.18    7 |         if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__))
+23:04:33.18 ...... res.__dict__ = mappingproxy({'__module__': '__main__', '__pre_i...oc__': None, '__signature__': &lt;Signature (b=0)&gt;})
+23:04:33.18 ...... len(res.__dict__) = 8
+23:04:33.18    8 |         return res
+23:04:33.18 &lt;&lt;&lt; Return value from FixSigMeta.__new__: &lt;class '__main__._T'&gt;
+23:04:33.19 &gt;&gt;&gt; Call to PrePostInitMeta.__call__ in File "/tmp/PrePostInitMeta.py", line 5
+23:04:33.19 .......... cls = &lt;class '__main__._T'&gt;
+23:04:33.19 .......... args = ()
+23:04:33.19 .......... kwargs = {}
+23:04:33.19    5 |     def __call__(cls, *args, **kwargs):
+23:04:33.19    6 |         res = cls.__new__(cls)
+23:04:33.19 .............. res = &lt;__main__._T object&gt;
+23:04:33.19 .............. res.__dict__ = {}
+23:04:33.19    7 |         if type(res)==cls:
+23:04:33.19    8 |             if hasattr(res,'__pre_init__'): res.__pre_init__(*args,**kwargs)
+23:04:33.19 ...... res.__dict__ = {'a': 0}
+23:04:33.19 ...... len(res.__dict__) = 1
+23:04:33.19    9 |             res.__init__(*args,**kwargs)
+23:04:33.19 .................. res.__dict__ = {'a': 0, 'b': 1}
+23:04:33.19 .................. len(res.__dict__) = 2
+23:04:33.19   10 |             if hasattr(res,'__post_init__'): res.__post_init__(*args,**kwargs)
+23:04:33.19 ...... res.__dict__ = {'a': 0, 'b': 1, 'c': 3}
+23:04:33.19 ...... len(res.__dict__) = 3
+23:04:33.19   11 |         return res
+23:04:33.19 &lt;&lt;&lt; Return value from PrePostInitMeta.__call__: &lt;__main__._T object&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=====================================================     Investigating PrePostInitMeta     ======================================================
+==============================================================     on line None     ==============================================================
+     with example 
+class _T(metaclass=PrePostInitMeta):
+    def __pre_init__(self):  self.a  = 0; 
+    def __init__(self,b=0):  self.b = self.a + 1; assert self.b==1
+    def __post_init__(self): self.c = self.b + 2; assert self.c==3
+
+t = _T()
+test_eq(t.a, 0) # set with __pre_init__
+test_eq(t.b, 1) # set with __init__
+test_eq(t.c, 3) # set with __post_init__
+inspect.signature(_T)
+     
+</code></pre>
+</div>
+</div>
+</section>
+<section id="embed-dbsrc-of-prepostinitmeta-into-autoinit" class="level3">
+<h3 class="anchored" data-anchor-id="embed-dbsrc-of-prepostinitmeta-into-autoinit">embed dbsrc of PrePostInitMeta into AutoInit</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>fm.PrePostInitMeta <span class="op">=</span> fdbP.dbsrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fdbA.snoop()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>23:04:33.20 &gt;&gt;&gt; Call to FixSigMeta.__new__ in File "/tmp/FixSigMeta.py", line 5
+23:04:33.20 .......... cls = &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+23:04:33.20 .......... name = 'AutoInit'
+23:04:33.20 .......... bases = ()
+23:04:33.20 .......... dict = {'__module__': 'fastcore.meta', '__qualname__': 'AutoInit', '__doc__': 'Same as `object`, but no need for subclasses to call `super().__init__`', 'snoop': &lt;class 'snoop.configuration.Config.__init__.&lt;locals&gt;.ConfiguredTracer'&gt;, ...}
+23:04:33.20 .......... len(dict) = 6
+23:04:33.20 .......... __class__ = &lt;class 'fastcore.meta.FixSigMeta'&gt;
+23:04:33.20    5 |     def __new__(cls, name, bases, dict):
+23:04:33.20    6 |         res = super().__new__(cls, name, bases, dict)
+23:04:33.20 .............. res = &lt;class 'fastcore.meta.AutoInit'&gt;
+23:04:33.20 .............. type(res) = &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+23:04:33.20 .............. res.__class__ = &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+23:04:33.20 .............. res.__dict__ = mappingproxy({'__module__': 'fastcore.meta', '__...&lt;attribute '__weakref__' of 'AutoInit' objects&gt;})
+23:04:33.20 .............. len(res.__dict__) = 6
+23:04:33.20    7 |         if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__))
+23:04:33.20    8 |         return res
+23:04:33.20 &lt;&lt;&lt; Return value from FixSigMeta.__new__: &lt;class 'fastcore.meta.AutoInit'&gt;
+23:04:33.20 &gt;&gt;&gt; Call to FixSigMeta.__new__ in File "/tmp/FixSigMeta.py", line 5
+23:04:33.20 .......... cls = &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+23:04:33.20 .......... name = 'TestChild'
+23:04:33.20 .......... bases = (&lt;class 'fastcore.meta.AutoInit'&gt;, &lt;class '__main__.TestParent'&gt;)
+23:04:33.20 .......... len(bases) = 2
+23:04:33.20 .......... dict = {'__module__': '__main__', '__qualname__': 'TestChild', '__init__': &lt;function TestChild.__init__&gt;}
+23:04:33.20 .......... len(dict) = 3
+23:04:33.20 .......... __class__ = &lt;class 'fastcore.meta.FixSigMeta'&gt;
+23:04:33.20    5 |     def __new__(cls, name, bases, dict):
+23:04:33.20    6 |         res = super().__new__(cls, name, bases, dict)
+23:04:33.20 .............. res = &lt;class '__main__.TestChild'&gt;
+23:04:33.20 .............. type(res) = &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+23:04:33.20 .............. res.__class__ = &lt;class 'fastcore.meta.PrePostInitMeta'&gt;
+23:04:33.20 .............. res.__dict__ = mappingproxy({'__module__': '__main__', '__init_...Child.__init__ at 0x11fbf51f0&gt;, '__doc__': None})
+23:04:33.20 .............. len(res.__dict__) = 3
+23:04:33.20    7 |         if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__))
+23:04:33.20 ...... res.__dict__ = mappingproxy({'__module__': '__main__', '__init_...__doc__': None, '__signature__': &lt;Signature ()&gt;})
+23:04:33.20 ...... len(res.__dict__) = 4
+23:04:33.20    8 |         return res
+23:04:33.20 &lt;&lt;&lt; Return value from FixSigMeta.__new__: &lt;class '__main__.TestChild'&gt;
+23:04:33.20 &gt;&gt;&gt; Call to PrePostInitMeta.__call__ in File "/tmp/PrePostInitMeta.py", line 5
+23:04:33.20 .......... cls = &lt;class '__main__.TestChild'&gt;
+23:04:33.20 .......... args = ()
+23:04:33.20 .......... kwargs = {}
+23:04:33.20    5 |     def __call__(cls, *args, **kwargs):
+23:04:33.20    6 |         res = cls.__new__(cls)
+23:04:33.20 .............. res = &lt;__main__.TestChild object&gt;
+23:04:33.20 .............. res.__dict__ = {}
+23:04:33.20    7 |         if type(res)==cls:
+23:04:33.20    8 |             if hasattr(res,'__pre_init__'): res.__pre_init__(*args,**kwargs)
+    23:04:33.20 &gt;&gt;&gt; Call to AutoInit.__pre_init__ in File "/tmp/AutoInit.py", line 5
+    23:04:33.20 .......... self = &lt;__main__.TestChild object&gt;
+    23:04:33.20 .......... args = ()
+    23:04:33.20 .......... kwargs = {}
+    23:04:33.20 .......... __class__ = &lt;class 'fastcore.meta.AutoInit'&gt;
+    23:04:33.20    5 |     def __pre_init__(self, *args, **kwargs): super().__init__(*args, **kwargs)
+    23:04:33.20    5 |     def __pre_init__(self, *args, **kwargs): super().__init__(*args, **kwargs)
+    23:04:33.20 &lt;&lt;&lt; Return value from AutoInit.__pre_init__: None
+23:04:33.20    8 |             if hasattr(res,'__pre_init__'): res.__pre_init__(*args,**kwargs)
+23:04:33.20 ...... res.__dict__ = {'h': 10}
+23:04:33.20 ...... len(res.__dict__) = 1
+23:04:33.20    9 |             res.__init__(*args,**kwargs)
+23:04:33.20 .................. res.__dict__ = {'h': 10, 'k': 12}
+23:04:33.20 .................. len(res.__dict__) = 2
+23:04:33.20   10 |             if hasattr(res,'__post_init__'): res.__post_init__(*args,**kwargs)
+23:04:33.20   11 |         return res
+23:04:33.20 &lt;&lt;&lt; Return value from PrePostInitMeta.__call__: &lt;__main__.TestChild object&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=========================================================     Investigating AutoInit     =========================================================
+==============================================================     on line None     ==============================================================
+     with example 
+class TestParent():
+    def __init__(self): self.h = 10
+        
+class TestChild(AutoInit, TestParent):
+    def __init__(self): self.k = self.h + 2
+    
+t = TestChild()
+test_eq(t.h, 10) # h=10 is initialized in the parent class
+test_eq(t.k, 12)
+     
+</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="explore-and-document-on-them-together" class="level2">
+<h2 class="anchored" data-anchor-id="explore-and-document-on-them-together">Explore and Document on them together</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>fdbF.docsrc(<span class="dv">4</span>, <span class="st">"FixSigMeta: what is res"</span>, <span class="st">"'inside FixSigMeta, line 4'"</span>, <span class="st">"res.__name__"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>fm.FixSigMeta <span class="op">=</span> fdbF.dbsrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating FixSigMeta     ========================================================
+===============================================================     on line 4     ================================================================
+==============================     with example 
+class Foo(metaclass=FixSigMeta):
+    def __init__(self): pass
+     ==============================
+
+print selected srcline with expands below--------
+    def __new__(cls, name, bases, dict):                                                                                                                (2)
+        res = super().__new__(cls, name, bases, dict)                                                                                                   (3)
+        if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__))===========================================(4)
+                                                                                                                                      FixSigMeta: what is res
+        return res                                                                                                                                      (5)
+                                                                                                                                                        (6)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                                       'inside FixSigMeta, line 4' =&gt; 'inside FixSigMeta, line 4' : inside FixSigMeta, line 4
+
+
+                                                                                                                           res.__name__ =&gt; res.__name__ : Foo
+====================================================================================================================End of my srcline exploration:
+
+
+Review srcode with all comments added so far======================================================================================================
+class FixSigMeta(type):===================================================================(0)       
+    "A metaclass that fixes the signature on classes that override `__new__`"=============(1) # FixSigMeta inherits __init__, and __call__ from type; but writes its own __new__; Foo inherits all three from type; FixSigMeta is used to create class instance not object instance.; 
+    def __new__(cls, name, bases, dict):==================================================(2)       
+        res = super().__new__(cls, name, bases, dict)=====================================(3)       
+        if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__)) # FixSigMeta: what is res;                   (4)
+        return res========================================================================(5)       
+                                                                                                                                                        (6)
+                                                                                                                                     part No.1 out of 1 parts
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>fdbP.docsrc(<span class="dv">6</span>, <span class="st">"what inside res.__dict__"</span>, <span class="st">"'inside PrePostInitMeta: '"</span>, <span class="st">"res.__dict__"</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>fm.PrePostInitMeta <span class="op">=</span> fdbP.dbsrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=====================================================     Investigating PrePostInitMeta     ======================================================
+===============================================================     on line 6     ================================================================
+     with example 
+class _T(metaclass=PrePostInitMeta):
+    def __pre_init__(self):  self.a  = 0; 
+    def __init__(self,b=0):  self.b = self.a + 1; assert self.b==1
+    def __post_init__(self): self.c = self.b + 2; assert self.c==3
+
+t = _T()
+test_eq(t.a, 0) # set with __pre_init__
+test_eq(t.b, 1) # set with __init__
+test_eq(t.c, 3) # set with __post_init__
+inspect.signature(_T)
+     
+
+print selected srcline with expands below--------
+        if type(res)==cls:                                                                                                                              (4)
+            if hasattr(res,'__pre_init__'): res.__pre_init__(*args,**kwargs)                                                                            (5)
+            res.__init__(*args,**kwargs)================================================================================================================(6)
+                                                                                                                                     what inside res.__dict__
+            if hasattr(res,'__post_init__'): res.__post_init__(*args,**kwargs)                                                                          (7)
+        return res                                                                                                                                      (8)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                                       'inside FixSigMeta, line 4' =&gt; 'inside FixSigMeta, line 4' : inside FixSigMeta, line 4
+
+
+                                                                                                                            res.__name__ =&gt; res.__name__ : _T
+====================================================================================================================End of my srcline exploration:
+
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                                          'inside PrePostInitMeta: ' =&gt; 'inside PrePostInitMeta: ' : inside PrePostInitMeta: 
+
+
+                                                                                                                      res.__dict__ =&gt; res.__dict__ : {'a': 0}
+====================================================================================================================End of my srcline exploration:
+
+
+Review srcode with all comments added so far======================================================================================================
+class PrePostInitMeta(FixSigMeta):========================================================(0)       
+    "A metaclass that calls optional `__pre_init__` and `__post_init__` methods"==========(1) # PrePostInitMeta inherit __new__ and __init__ from FixSigMeta as a metaclass (a different type); not from type, nor from object; PrePostInitMeta is itself a metaclass, which is used to create class instance not object instance; PrePostInitMeta writes its own __call__ which regulates how its class instance create and initialize object instance; 
+    def __call__(cls, *args, **kwargs):===================================================(2)       
+        res = cls.__new__(cls)============================================================(3)       
+        if type(res)==cls:================================================================(4)       
+            if hasattr(res,'__pre_init__'): res.__pre_init__(*args,**kwargs)==============(5)       
+            res.__init__(*args,**kwargs)==================================================(6) # what inside res.__dict__; 
+            if hasattr(res,'__post_init__'): res.__post_init__(*args,**kwargs)============(7)       
+        return res========================================================================(8)       
+                                                                                                                                                        (9)
+                                                                                                                                     part No.1 out of 1 parts
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>fdbA.docsrc(<span class="dv">2</span>, <span class="st">"what is cls"</span>, <span class="st">"'Inside AutoInit'"</span>, <span class="st">"cls"</span>) <span class="co"># need to run it twice (a little bug here)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=========================================================     Investigating AutoInit     =========================================================
+===============================================================     on line 2     ================================================================
+     with example 
+class TestParent():
+    def __init__(self): self.h = 10
+        
+class TestChild(AutoInit, TestParent):
+    def __init__(self): self.k = self.h + 2
+    
+t = TestChild()
+test_eq(t.h, 10) # h=10 is initialized in the parent class
+test_eq(t.k, 12)
+     
+
+print selected srcline with expands below--------
+class AutoInit(metaclass=PrePostInitMeta):                                                                                                              (0)
+    "Same as `object`, but no need for subclasses to call `super().__init__`"                                                                           (1)
+    def __pre_init__(self, *args, **kwargs): super().__init__(*args, **kwargs)==========================================================================(2)
+                                                                                                                                                  what is cls
+                                                                                                                                                        (3)
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                                                                     'Inside AutoInit' =&gt; 'Inside AutoInit' : Inside AutoInit
+
+
+                                                                                                                           cls =&gt; cls : &lt;class '__main__._T'&gt;
+====================================================================================================================End of my srcline exploration:
+
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                                       'inside FixSigMeta, line 4' =&gt; 'inside FixSigMeta, line 4' : inside FixSigMeta, line 4
+
+
+                                                                                                                      res.__name__ =&gt; res.__name__ : AutoInit
+====================================================================================================================End of my srcline exploration:
+
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                                       'inside FixSigMeta, line 4' =&gt; 'inside FixSigMeta, line 4' : inside FixSigMeta, line 4
+
+
+                                                                                                                     res.__name__ =&gt; res.__name__ : TestChild
+====================================================================================================================End of my srcline exploration:
+
+
+==================================================================================================================Start of my srcline exploration:
+
+
+                                                                          'inside PrePostInitMeta: ' =&gt; 'inside PrePostInitMeta: ' : inside PrePostInitMeta: 
+
+
+                                                                                                                     res.__dict__ =&gt; res.__dict__ : {'h': 10}
+====================================================================================================================End of my srcline exploration:
+
+
+Review srcode with all comments added so far======================================================================================================
+class AutoInit(metaclass=PrePostInitMeta):================================================(0)       
+    "Same as `object`, but no need for subclasses to call `super().__init__`"=============(1) # AutoInit inherit __new__ and __init__ from object to create and initialize object instances; AutoInit uses PrePostInitMeta.__new__ or in fact FixSigMeta.__new__ to create its own class instance, which can have __signature__; AutoInit uses PrePostInitMeta.__call__ to specify how its object instance to be created and initialized (with pre_init, init, post_init)); AutoInit as a normal or non-metaclass, it writes its own __pre_init__ method; 
+    def __pre_init__(self, *args, **kwargs): super().__init__(*args, **kwargs)============(2) # what is cls; 
+                                                                                                                                                        (3)
+                                                                                                                                     part No.1 out of 1 parts
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>fdbF.docsrc(<span class="dv">3</span>, <span class="st">"how to create a new class instance with type dynamically; </span><span class="ch">\</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="st">the rest below is how FixSigMeta as a metaclass create its own instance classes"</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>fdbF.docsrc(<span class="dv">4</span>, <span class="st">"how to check whether a class has its own __init__ function; how to remove self param from a signature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating FixSigMeta     ========================================================
+===============================================================     on line 3     ================================================================
+==============================     with example 
+class Foo(metaclass=FixSigMeta):
+    def __init__(self): pass
+     ==============================
+
+print selected srcline with expands below--------
+    "A metaclass that fixes the signature on classes that override `__new__`"                                                                           (1)
+    def __new__(cls, name, bases, dict):                                                                                                                (2)
+        res = super().__new__(cls, name, bases, dict)===================================================================================================(3)
+                    how to create a new class instance with type dynamically; the rest below is how FixSigMeta as a metaclass create its own instance classes
+        if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__))                                           (4)
+        return res                                                                                                                                      (5)
+========================================================     Investigating FixSigMeta     ========================================================
+===============================================================     on line 4     ================================================================
+==============================     with example 
+class Foo(metaclass=FixSigMeta):
+    def __init__(self): pass
+     ==============================
+
+print selected srcline with expands below--------
+    def __new__(cls, name, bases, dict):                                                                                                                (2)
+        res = super().__new__(cls, name, bases, dict)                                                                                                   (3)
+        if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__))===========================================(4)
+                                                        how to check whether a class has its own __init__ function; how to remove self param from a signature
+        return res                                                                                                                                      (5)
+                                                                                                                                                        (6)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>fdbF.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating FixSigMeta     ========================================================
+===============================================================     on line 4     ================================================================
+==============================     with example 
+class Foo(metaclass=FixSigMeta):
+    def __init__(self): pass
+     ==============================
+
+class FixSigMeta(type):===================================================================(0)       
+    "A metaclass that fixes the signature on classes that override `__new__`"=============(1) # FixSigMeta inherits __init__, and __call__ from type; but writes its own __new__; Foo inherits all three from type; FixSigMeta is used to create class instance not object instance.; 
+    def __new__(cls, name, bases, dict):==================================================(2)       
+        res = super().__new__(cls, name, bases, dict)=====================================(3) # how to create a new class instance with type dynamically; the rest below is how FixSigMeta as a metaclass create its own instance classes; 
+        if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__)) # how to check whether a class has its own __init__ function; how to remove self param from a signature;  (4)
+        return res========================================================================(5)       
+                                                                                                                                                        (6)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>fdbP.docsrc(<span class="dv">3</span>, <span class="st">"how to create an object instance with a cls; how to check the type of an object is cls; </span><span class="ch">\</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="st">how to run a function without knowing its params;"</span>)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>fdbP.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=====================================================     Investigating PrePostInitMeta     ======================================================
+===============================================================     on line 3     ================================================================
+     with example 
+class _T(metaclass=PrePostInitMeta):
+    def __pre_init__(self):  self.a  = 0; 
+    def __init__(self,b=0):  self.b = self.a + 1; assert self.b==1
+    def __post_init__(self): self.c = self.b + 2; assert self.c==3
+
+t = _T()
+test_eq(t.a, 0) # set with __pre_init__
+test_eq(t.b, 1) # set with __init__
+test_eq(t.c, 3) # set with __post_init__
+inspect.signature(_T)
+     
+
+print selected srcline with expands below--------
+    "A metaclass that calls optional `__pre_init__` and `__post_init__` methods"                                                                        (1)
+    def __call__(cls, *args, **kwargs):                                                                                                                 (2)
+        res = cls.__new__(cls)==========================================================================================================================(3)
+                    how to create an object instance with a cls; how to check the type of an object is cls; how to run a function without knowing its params;
+        if type(res)==cls:                                                                                                                              (4)
+            if hasattr(res,'__pre_init__'): res.__pre_init__(*args,**kwargs)                                                                            (5)
+=====================================================     Investigating PrePostInitMeta     ======================================================
+===============================================================     on line 3     ================================================================
+     with example 
+class _T(metaclass=PrePostInitMeta):
+    def __pre_init__(self):  self.a  = 0; 
+    def __init__(self,b=0):  self.b = self.a + 1; assert self.b==1
+    def __post_init__(self): self.c = self.b + 2; assert self.c==3
+
+t = _T()
+test_eq(t.a, 0) # set with __pre_init__
+test_eq(t.b, 1) # set with __init__
+test_eq(t.c, 3) # set with __post_init__
+inspect.signature(_T)
+     
+
+class PrePostInitMeta(FixSigMeta):========================================================(0)       
+    "A metaclass that calls optional `__pre_init__` and `__post_init__` methods"==========(1) # PrePostInitMeta inherit __new__ and __init__ from FixSigMeta as a metaclass (a different type); not from type, nor from object; PrePostInitMeta is itself a metaclass, which is used to create class instance not object instance; PrePostInitMeta writes its own __call__ which regulates how its class instance create and initialize object instance; 
+    def __call__(cls, *args, **kwargs):===================================================(2)       
+        res = cls.__new__(cls)============================================================(3) # how to create an object instance with a cls; how to check the type of an object is cls; how to run a function without knowing its params;; 
+        if type(res)==cls:================================================================(4)       
+            if hasattr(res,'__pre_init__'): res.__pre_init__(*args,**kwargs)==============(5)       
+            res.__init__(*args,**kwargs)==================================================(6) # what inside res.__dict__; 
+            if hasattr(res,'__post_init__'): res.__post_init__(*args,**kwargs)============(7)       
+        return res========================================================================(8)       
+                                                                                                                                                        (9)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>fdbA.docsrc(<span class="dv">2</span>, <span class="st">"how to run superclass' __init__ function"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=========================================================     Investigating AutoInit     =========================================================
+===============================================================     on line 2     ================================================================
+     with example 
+class TestParent():
+    def __init__(self): self.h = 10
+        
+class TestChild(AutoInit, TestParent):
+    def __init__(self): self.k = self.h + 2
+    
+t = TestChild()
+test_eq(t.h, 10) # h=10 is initialized in the parent class
+test_eq(t.k, 12)
+     
+
+print selected srcline with expands below--------
+class AutoInit(metaclass=PrePostInitMeta):                                                                                                              (0)
+    "Same as `object`, but no need for subclasses to call `super().__init__`"                                                                           (1)
+    def __pre_init__(self, *args, **kwargs): super().__init__(*args, **kwargs)==========================================================================(2)
+                                                                                                                     how to run superclass' __init__ function
+                                                                                                                                                        (3)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>fdbA.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=========================================================     Investigating AutoInit     =========================================================
+===============================================================     on line 2     ================================================================
+     with example 
+class TestParent():
+    def __init__(self): self.h = 10
+        
+class TestChild(AutoInit, TestParent):
+    def __init__(self): self.k = self.h + 2
+    
+t = TestChild()
+test_eq(t.h, 10) # h=10 is initialized in the parent class
+test_eq(t.k, 12)
+     
+
+class AutoInit(metaclass=PrePostInitMeta):================================================(0)       
+    "Same as `object`, but no need for subclasses to call `super().__init__`"=============(1) # AutoInit inherit __new__ and __init__ from object to create and initialize object instances; AutoInit uses PrePostInitMeta.__new__ or in fact FixSigMeta.__new__ to create its own class instance, which can have __signature__; AutoInit uses PrePostInitMeta.__call__ to specify how its object instance to be created and initialized (with pre_init, init, post_init)); AutoInit as a normal or non-metaclass, it writes its own __pre_init__ method; 
+    def __pre_init__(self, *args, **kwargs): super().__init__(*args, **kwargs)============(2) # how to run superclass' __init__ function; 
+                                                                                                                                                        (3)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>fdbP.docsrc(<span class="dv">6</span>, <span class="st">"how to run __init__ without knowing its params"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=====================================================     Investigating PrePostInitMeta     ======================================================
+===============================================================     on line 6     ================================================================
+     with example 
+class _T(metaclass=PrePostInitMeta):
+    def __pre_init__(self):  self.a  = 0; 
+    def __init__(self,b=0):  self.b = self.a + 1; assert self.b==1
+    def __post_init__(self): self.c = self.b + 2; assert self.c==3
+
+t = _T()
+test_eq(t.a, 0) # set with __pre_init__
+test_eq(t.b, 1) # set with __init__
+test_eq(t.c, 3) # set with __post_init__
+inspect.signature(_T)
+     
+
+print selected srcline with expands below--------
+        if type(res)==cls:                                                                                                                              (4)
+            if hasattr(res,'__pre_init__'): res.__pre_init__(*args,**kwargs)                                                                            (5)
+            res.__init__(*args,**kwargs)================================================================================================================(6)
+                                                                                                               how to run __init__ without knowing its params
+            if hasattr(res,'__post_init__'): res.__post_init__(*args,**kwargs)                                                                          (7)
+        return res                                                                                                                                      (8)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>fdbP.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=====================================================     Investigating PrePostInitMeta     ======================================================
+===============================================================     on line 6     ================================================================
+     with example 
+class _T(metaclass=PrePostInitMeta):
+    def __pre_init__(self):  self.a  = 0; 
+    def __init__(self,b=0):  self.b = self.a + 1; assert self.b==1
+    def __post_init__(self): self.c = self.b + 2; assert self.c==3
+
+t = _T()
+test_eq(t.a, 0) # set with __pre_init__
+test_eq(t.b, 1) # set with __init__
+test_eq(t.c, 3) # set with __post_init__
+inspect.signature(_T)
+     
+
+class PrePostInitMeta(FixSigMeta):========================================================(0)       
+    "A metaclass that calls optional `__pre_init__` and `__post_init__` methods"==========(1) # PrePostInitMeta inherit __new__ and __init__ from FixSigMeta as a metaclass (a different type); not from type, nor from object; PrePostInitMeta is itself a metaclass, which is used to create class instance not object instance; PrePostInitMeta writes its own __call__ which regulates how its class instance create and initialize object instance; 
+    def __call__(cls, *args, **kwargs):===================================================(2)       
+        res = cls.__new__(cls)============================================================(3) # how to create an object instance with a cls; how to check the type of an object is cls; how to run a function without knowing its params;; 
+        if type(res)==cls:================================================================(4)       
+            if hasattr(res,'__pre_init__'): res.__pre_init__(*args,**kwargs)==============(5)       
+            res.__init__(*args,**kwargs)==================================================(6) # how to run __init__ without knowing its params; 
+            if hasattr(res,'__post_init__'): res.__post_init__(*args,**kwargs)============(7)       
+        return res========================================================================(8)       
+                                                                                                                                                        (9)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>fdbF.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>========================================================     Investigating FixSigMeta     ========================================================
+===============================================================     on line 4     ================================================================
+==============================     with example 
+class Foo(metaclass=FixSigMeta):
+    def __init__(self): pass
+     ==============================
+
+class FixSigMeta(type):===================================================================(0)       
+    "A metaclass that fixes the signature on classes that override `__new__`"=============(1) # FixSigMeta inherits __init__, and __call__ from type; but writes its own __new__; Foo inherits all three from type; FixSigMeta is used to create class instance not object instance.; 
+    def __new__(cls, name, bases, dict):==================================================(2)       
+        res = super().__new__(cls, name, bases, dict)=====================================(3) # how to create a new class instance with type dynamically; the rest below is how FixSigMeta as a metaclass create its own instance classes; 
+        if res.__init__ is not object.__init__: res.__signature__ = _rm_self(inspect.signature(res.__init__)) # how to check whether a class has its own __init__ function; how to remove self param from a signature;  (4)
+        return res========================================================================(5)       
+                                                                                                                                                        (6)</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastdebug - 09_method_funcs_kwargs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="fastdebug - 09_method_funcs_kwargs">
+<meta property="og:site-name" content="fastdebug">
+<meta name="twitter:title" content="fastdebug - 09_method_funcs_kwargs">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">fastdebug</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">09_method_funcs_kwargs</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Learning fastai with joy</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Interesting_fastai</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/the_origin_of_apl .html" class="sidebar-item-text sidebar-link">0001_The_origin_of_APL</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Interesting_fastai/Interesting_things_fastai.html" class="sidebar-item-text sidebar-link">Interesting_things_fastai.html</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">demos</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/intro_fastdebug.html" class="sidebar-item-text sidebar-link">Introducing fastdebug</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/tour.html" class="sidebar-item-text sidebar-link">0000_tour</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_delegates.html" class="sidebar-item-text sidebar-link">0001_Fastcore.meta.delegates</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/signature_from_callable.html" class="sidebar-item-text sidebar-link">0002_signature_from_callable</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/explore_document_fixsigmeta_prepostinitmeta_autoinit.html" class="sidebar-item-text sidebar-link">03_FixSigMeta_PrePostInitMeta_AutoInit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta._rm_self.html" class="sidebar-item-text sidebar-link">04_rm_self</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.test_sig.html" class="sidebar-item-text sidebar-link">05_test_sig</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.newchkmeta.html" class="sidebar-item-text sidebar-link">06_NewChkMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore.meta.bypassnewmeta.html" class="sidebar-item-text sidebar-link">07_BypassNewMeta</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/use_kwargs_dict.html" class="sidebar-item-text sidebar-link">08_use_kwargs_dict</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/funcs_kwargs.html" class="sidebar-item-text sidebar-link active">09_method_funcs_kwargs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_meta_summary.html" class="sidebar-item-text sidebar-link">0010_fastcore_meta_summary</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastdb.html" class="sidebar-item-text sidebar-link">0011_Fastdb</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../demos/fastcore_foundation_l.html" class="sidebar-item-text sidebar-link">0012_fastcore_foundation_L</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">fastai_notebooks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_is_it_a_bird.html" class="sidebar-item-text sidebar-link">0001_fastai_Is it a bird? Creating a model from your own data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_saving_a_basic_fastai_model.html" class="sidebar-item-text sidebar-link">0002_fastai_saving_a_basic_fastai_model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_which_image_model_best.html" class="sidebar-item-text sidebar-link">0003_fastai_which_image_model_best</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_neuralnet_work.html" class="sidebar-item-text sidebar-link">0004_fastai_how_neuralnet_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_linear_neuralnet_scratch.html" class="sidebar-item-text sidebar-link">0005_fastai_linear_neuralnet_scratch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_why_should_use_framework.html" class="sidebar-item-text sidebar-link">0006_fastai_why_should_use_framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_how_random_forests_really_work.html" class="sidebar-item-text sidebar-link">0007_fastai_how_random_forests_really_work</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_first_steps_road_to_top_part_1.html" class="sidebar-item-text sidebar-link">0008_fastai_first_steps_road_to_top_part_1</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_small_models_road_to_the_top_part_2.html" class="sidebar-item-text sidebar-link">0009_fastai_small_models_road_to_the_top_part_2</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_scaling_up_road_to_top_part_3.html" class="sidebar-item-text sidebar-link">0010_fastai_scaling_up_road_to_top_part_3</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_multi_target_road_to_top_part_4.html" class="sidebar-item-text sidebar-link">0011_fastai_multi_target_road_to_top_part_4</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_using_nbdev_export_in_kaggle_notebook.html" class="sidebar-item-text sidebar-link">0012_fastai_using_nbdev_export_in_kaggle_notebook</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/best_vision_models_for_fine_tuning.html" class="sidebar-item-text sidebar-link">0013_best_vision_models_for_fine_tuning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/iterate_like_grandmaster.html" class="sidebar-item-text sidebar-link">0014_iterate_like_grandmaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/getting_started_with_nlp_for_absolute_beginner.html" class="sidebar-item-text sidebar-link">0015_getting_started_with_nlp_for_absolute_beginner</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/collaborative_filtering_deep_dive.html" class="sidebar-item-text sidebar-link">0016_collaborative_filtering_deep_dive</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptmatmul.html" class="sidebar-item-text sidebar-link">0017_fastai_pt2_2019_matmul</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptexports.html" class="sidebar-item-text sidebar-link">0018_fastai_pt2_2019_exports</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptlectureintro.html" class="sidebar-item-text sidebar-link">0019_fastai_pt2_2019_lecture1_intro</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptsource_explained.html" class="sidebar-item-text sidebar-link">0020_fastai_pt2_2019_source_explained</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptfully_connected.html" class="sidebar-item-text sidebar-link">0021_fastai_pt2_2019_fully_connected</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fastai_notebooks/fastai_ptwhy_sqrt5.html" class="sidebar-item-text sidebar-link">0022_fastai_pt2_2019_why_sqrt5</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">questions</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../questions/question_anno_dict.html" class="sidebar-item-text sidebar-link">00_quesolved_anno_dict</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#fastcore.meta.method" id="toc-fastcore.meta.method" class="nav-link active" data-scroll-target="#fastcore.meta.method">fastcore.meta.method</a>
+  <ul class="collapse">
+  <li><a href="#reading-docs" id="toc-reading-docs" class="nav-link" data-scroll-target="#reading-docs">Reading Docs</a></li>
+  <li><a href="#running-codes" id="toc-running-codes" class="nav-link" data-scroll-target="#running-codes">Running codes</a></li>
+  <li><a href="#document" id="toc-document" class="nav-link" data-scroll-target="#document">Document</a></li>
+  <li><a href="#snoop" id="toc-snoop" class="nav-link" data-scroll-target="#snoop">snoop</a></li>
+  </ul></li>
+  <li><a href="#funcs_kwargs" id="toc-funcs_kwargs" class="nav-link" data-scroll-target="#funcs_kwargs">funcs_kwargs</a>
+  <ul class="collapse">
+  <li><a href="#official-docs" id="toc-official-docs" class="nav-link" data-scroll-target="#official-docs">Official docs</a></li>
+  <li><a href="#snoop-from-_funcs_kwargs-to-funcs_kwargs" id="toc-snoop-from-_funcs_kwargs-to-funcs_kwargs" class="nav-link" data-scroll-target="#snoop-from-_funcs_kwargs-to-funcs_kwargs">snoop: from _funcs_kwargs to funcs_kwargs</a></li>
+  <li><a href="#snoop-only-_funcs_kwargs-by-breaking-up-funcs_kwargs" id="toc-snoop-only-_funcs_kwargs-by-breaking-up-funcs_kwargs" class="nav-link" data-scroll-target="#snoop-only-_funcs_kwargs-by-breaking-up-funcs_kwargs">snoop only ’_funcs_kwargs’ by breaking up ‘funcs_kwargs’</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/EmbraceLife/fastdebug/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">09_method_funcs_kwargs</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="fastcore.meta.method" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="fastcore.meta.method">fastcore.meta.method</h2>
+<section id="reading-docs" class="level3">
+<h3 class="anchored" data-anchor-id="reading-docs">Reading Docs</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|export</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> method(f):</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Mark `f` as a method"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `1` is a dummy instance since Py3 doesn't allow `None` any more</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> MethodType(f, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The method function is used to change a function’s type to a method. In the below example we change the type of a from a function to a method:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> a(x<span class="op">=</span><span class="dv">2</span>): <span class="cf">return</span> x <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">type</span>(a).<span class="va">__name__</span> <span class="op">==</span> <span class="st">'function'</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> method(a)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">type</span>(a).<span class="va">__name__</span> <span class="op">==</span> <span class="st">'method'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="running-codes" class="level3">
+<h3 class="anchored" data-anchor-id="running-codes">Running codes</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.meta <span class="im">import</span> method</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> a(x<span class="op">=</span><span class="dv">2</span>): <span class="cf">return</span> x <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">type</span>(a).<span class="va">__name__</span> <span class="op">==</span> <span class="st">'function'</span> <span class="co"># how to test on the type of function or method</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> method(a)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">type</span>(a).<span class="va">__name__</span> <span class="op">==</span> <span class="st">'method'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="document" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="document">Document</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.utils <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastdebug.core <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.meta <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>.container { width:100% !important; }</style>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(method)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">def a(x=2): return x + 1</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">assert type(a).__name__ == 'function' # how to test on the type of function or method</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">a = method(a)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">assert type(a).__name__ == 'method'</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>==========================================================     Investigating method     ==========================================================
+==============================================================     on line None     ==============================================================
+     with example 
+def a(x=2): return x + 1
+assert type(a).__name__ == 'function' # how to test on the type of function or method
+
+a = method(a)
+assert type(a).__name__ == 'method'
+     
+
+def method(f):============================================================================(0)       
+    "Mark `f` as a method"================================================================(1)       
+    # `1` is a dummy instance since Py3 doesn't allow `None` any more=====================(2)       
+    return MethodType(f, 1)===============================================================(3)       
+                                                                                                                                                        (4)</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">2</span>, <span class="st">"How to use fastcore.meta.method; method(function, instance); f needs to be a function; </span><span class="ch">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="st">1 is a dummy instance to which the newly created method belongs; no need to worry about instance here"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>==========================================================     Investigating method     ==========================================================
+===============================================================     on line 2     ================================================================
+     with example 
+def a(x=2): return x + 1
+assert type(a).__name__ == 'function' # how to test on the type of function or method
+
+a = method(a)
+assert type(a).__name__ == 'method'
+     
+
+print selected srcline with expands below--------
+def method(f):                                                                                                                                          (0)
+    "Mark `f` as a method"                                                                                                                              (1)
+    # `1` is a dummy instance since Py3 doesn't allow `None` any more===================================================================================(2)
+How to use fastcore.meta.method; method(function, instance); f needs to be a function; 1 is a dummy instance to which the newly created method belongs; no need to worry about instance here
+    return MethodType(f, 1)                                                                                                                             (3)
+                                                                                                                                                        (4)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fdb.debug()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>method's dbsrc code: ==============
+import snoop
+@snoop
+def method(f):
+    "Mark `f` as a method"
+    # `1` is a dummy instance since Py3 doesn't allow `None` any more
+    return MethodType(f, 1)
+
+
+
+method's example processed with dbsrc: ===============
+
+def a(x=2): return x + 1
+assert type(a).__name__ == 'function' # how to test on the type of function or method
+
+a = method(a)
+assert type(a).__name__ == 'method'
+</code></pre>
+</div>
+</div>
+</section>
+<section id="snoop" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="snoop">snoop</h3>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fdb.snoop()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>22:28:59.92 &gt;&gt;&gt; Call to method in File "/tmp/method.py", line 3
+22:28:59.92 ...... f = &lt;function a&gt;
+22:28:59.92    3 | def method(f):
+22:28:59.92    6 |     return MethodType(f, 1)
+22:28:59.92 &lt;&lt;&lt; Return value from method: &lt;bound method int.a of 1&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>==========================================================     Investigating method     ==========================================================
+==============================================================     on line None     ==============================================================
+     with example 
+def a(x=2): return x + 1
+assert type(a).__name__ == 'function' # how to test on the type of function or method
+
+a = method(a)
+assert type(a).__name__ == 'method'
+     
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fdb.debug()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>method's dbsrc code: ==============
+import snoop
+@snoop
+def method(f):
+    "Mark `f` as a method"
+    # `1` is a dummy instance since Py3 doesn't allow `None` any more
+    return MethodType(f, 1)
+
+
+
+method's example processed with dbsrc: ===============
+
+def a(x=2): return x + 1
+assert type(a).__name__ == 'function' # how to test on the type of function or method
+
+a = self.dbsrc(a)
+assert type(a).__name__ == 'method'
+
+</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="funcs_kwargs" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="funcs_kwargs">funcs_kwargs</h2>
+<section id="official-docs" class="level3">
+<h3 class="anchored" data-anchor-id="official-docs">Official docs</h3>
+<p>The func_kwargs decorator allows you to add a list of functions or methods to an existing class. You must set this list as a class attribute named _methods when defining your class. Additionally, you must incldue the <code>**kwargs</code> argument in the ___init__ method of your class.</p>
+<p>After defining your class this way, you can add functions to your class upon instantation as illusrated below.</p>
+<p>For example, we define class T to allow adding the function b to class T as follows (note that this function is stored as an attribute of T and doesn’t have access to cls or self):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="at">@funcs_kwargs</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> T:</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    _methods<span class="op">=</span>[<span class="st">'b'</span>] <span class="co"># allows you to add method b upon instantiation</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, f<span class="op">=</span><span class="dv">1</span>, <span class="op">**</span>kwargs): <span class="cf">pass</span> <span class="co"># don't forget to include **kwargs in __init__</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> a(<span class="va">self</span>): <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> b(<span class="va">self</span>): <span class="cf">return</span> <span class="dv">2</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> T()</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>test_eq(t.a(), <span class="dv">1</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>test_eq(t.b(), <span class="dv">2</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>test_sig(T, <span class="st">'(f=1, *, b=None)'</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>inspect.signature(T)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _new_func(): <span class="cf">return</span> <span class="dv">5</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> T(b <span class="op">=</span> _new_func)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>test_eq(t.b(), <span class="dv">5</span>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> T(a <span class="op">=</span> <span class="kw">lambda</span>:<span class="dv">3</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>test_eq(t.a(), <span class="dv">1</span>) <span class="co"># the attempt to add a is ignored and uses the original method instead.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="snoop-from-_funcs_kwargs-to-funcs_kwargs" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="snoop-from-_funcs_kwargs-to-funcs_kwargs">snoop: from _funcs_kwargs to funcs_kwargs</h3>
+<p>how to snoop on two functions one wrap around another: <code>funcs_kwargs</code> is a wrapper around <code>_funcs_kwargs</code>, so I can first snoop on <code>_funcs_kwargs</code> and assign its snoop dbsrc to<br>
+<code>fm._funcs_kwargs</code> so that when I snoop on <code>funcs_kwargs</code>, it can use the snoop dbsrc of <code>_funcs_kwargs</code> and no example codes need to change.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastcore.meta <span class="im">import</span> _funcs_kwargs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fdb_ <span class="op">=</span> Fastdb(_funcs_kwargs)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>fdb_.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="st">@funcs_kwargs</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="st">class T:</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="st">    _methods=['b'] # allows you to add method b upon instantiation</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="st">    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="st">    def a(self): return 1</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="st">    def b(self): return 2</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="st">t = T()</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.a(), 1)</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.b(), 2)</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="st">test_sig(T, '(f=1, *, b=None)')</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="st">inspect.signature(T)</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="st">def _new_func(): return 5</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="st">t = T(b = _new_func)</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.b(), 5)</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="st">t = T(a = lambda:3)</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># no snoop result, it is expected, because the example is not calling _funcs_kwargs, but funcs_kwargs</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fdb_.snoop(deco<span class="op">=</span><span class="va">True</span>) <span class="co"># how to snoop decorator: _funcs_kwargs is a decorator, so set deco=True to see running codes in inner f</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>======================================================     Investigating _funcs_kwargs     =======================================================
+==============================================================     on line None     ==============================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+     
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastcore.meta <span class="im">as</span> fm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fm._funcs_kwargs <span class="op">=</span> fdb_.dbsrc <span class="co"># how to snoop on two functions one wrap around another</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(funcs_kwargs)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>fdb.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="st">@funcs_kwargs</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="st">class T:</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="st">    _methods=['b'] # allows you to add method b upon instantiation</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="st">    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="st">    def a(self): return 1</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="st">    def b(self): return 2</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="st">t = T()</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.a(), 1)</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.b(), 2)</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="st">test_sig(T, '(f=1, *, b=None)')</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="st">inspect.signature(T)</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="st">def _new_func(): return 5</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="st">t = T(b = _new_func)</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.b(), 5)</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="st">t = T(a = lambda:3)</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="st">def _f(self,a=1): return self.num + a # access the num attribute from the instance</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="st">@funcs_kwargs(as_method=True)</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="st">class T: </span></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="st">    _methods=['b']</span></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="st">    num = 5</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a><span class="st">t = T(b = _f) # adds method b</span></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.b(5), 10) # self.num + 5 = 10</span></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="st">def _f(self,a=1): return self.num * a #multiply instead of add </span></span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a><span class="st">class T2(T):</span></span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a><span class="st">    def __init__(self,num):</span></span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a><span class="st">        super().__init__(b = _f) # add method b from the super class</span></span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a><span class="st">        self.num=num</span></span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a><span class="st">t = T2(num=3)</span></span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.b(a=5), 15) # 3 * 5 = 15</span></span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a><span class="st">test_sig(T2, '(num)')</span></span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=======================================================     Investigating funcs_kwargs     =======================================================
+==============================================================     on line None     ==============================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+def _f(self,a=1): return self.num + a # access the num attribute from the instance
+
+@funcs_kwargs(as_method=True)
+class T: 
+    _methods=['b']
+    num = 5
+    
+t = T(b = _f) # adds method b
+test_eq(t.b(5), 10) # self.num + 5 = 10
+
+def _f(self,a=1): return self.num * a #multiply instead of add 
+
+class T2(T):
+    def __init__(self,num):
+        super().__init__(b = _f) # add method b from the super class
+        self.num=num
+        
+t = T2(num=3)
+test_eq(t.b(a=5), 15) # 3 * 5 = 15
+test_sig(T2, '(num)')
+     
+
+def funcs_kwargs(as_method=False):========================================================(0)       
+    "Replace methods in `cls._methods` with those from `kwargs`"==========================(1)       
+    if callable(as_method): return _funcs_kwargs(as_method, False)========================(2)       
+    return partial(_funcs_kwargs, as_method=as_method)====================================(3)       
+                                                                                                                                                        (4)</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fdb_.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>======================================================     Investigating _funcs_kwargs     =======================================================
+==============================================================     on line None     ==============================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+def _funcs_kwargs(cls, as_method):========================================================(0)       
+    old_init = cls.__init__===============================================================(1)       
+    def _init(self, *args, **kwargs):=====================================================(2)       
+        for k in cls._methods:============================================================(3)       
+            arg = kwargs.pop(k,None)======================================================(4)       
+            if arg is not None:===========================================================(5)       
+                if as_method: arg = method(arg)===========================================(6)       
+                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7)       
+                setattr(self, k, arg)=====================================================(8)       
+        old_init(self, *args, **kwargs)===================================================(9)       
+    functools.update_wrapper(_init, old_init)=============================================(10)      
+    cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11)      
+    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+    return cls============================================================================(13)      
+                                                                                                                                                        (14)</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">1</span>, <span class="st">"how funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; </span><span class="ch">\</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="st">the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;"</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">2</span>, <span class="st">"how to check whether an object is callable; how to return a result of running a func; "</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>fdb.docsrc(<span class="dv">3</span>, <span class="st">"how to custom the params of `_funcs_kwargs` for a particular use with partial"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=======================================================     Investigating funcs_kwargs     =======================================================
+===============================================================     on line 1     ================================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+def _f(self,a=1): return self.num + a # access the num attribute from the instance
+
+@funcs_kwargs(as_method=True)
+class T: 
+    _methods=['b']
+    num = 5
+    
+t = T(b = _f) # adds method b
+test_eq(t.b(5), 10) # self.num + 5 = 10
+
+def _f(self,a=1): return self.num * a #multiply instead of add 
+
+class T2(T):
+    def __init__(self,num):
+        super().__init__(b = _f) # add method b from the super class
+        self.num=num
+        
+t = T2(num=3)
+test_eq(t.b(a=5), 15) # 3 * 5 = 15
+test_sig(T2, '(num)')
+     
+
+print selected srcline with expands below--------
+def funcs_kwargs(as_method=False):                                                                                                                      (0)
+    "Replace methods in `cls._methods` with those from `kwargs`"========================================================================================(1)
+how funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;
+    if callable(as_method): return _funcs_kwargs(as_method, False)                                                                                      (2)
+    return partial(_funcs_kwargs, as_method=as_method)                                                                                                  (3)
+=======================================================     Investigating funcs_kwargs     =======================================================
+===============================================================     on line 2     ================================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+def _f(self,a=1): return self.num + a # access the num attribute from the instance
+
+@funcs_kwargs(as_method=True)
+class T: 
+    _methods=['b']
+    num = 5
+    
+t = T(b = _f) # adds method b
+test_eq(t.b(5), 10) # self.num + 5 = 10
+
+def _f(self,a=1): return self.num * a #multiply instead of add 
+
+class T2(T):
+    def __init__(self,num):
+        super().__init__(b = _f) # add method b from the super class
+        self.num=num
+        
+t = T2(num=3)
+test_eq(t.b(a=5), 15) # 3 * 5 = 15
+test_sig(T2, '(num)')
+     
+
+print selected srcline with expands below--------
+def funcs_kwargs(as_method=False):                                                                                                                      (0)
+    "Replace methods in `cls._methods` with those from `kwargs`"                                                                                        (1)
+    if callable(as_method): return _funcs_kwargs(as_method, False)======================================================================================(2)
+                                                                       how to check whether an object is callable; how to return a result of running a func; 
+    return partial(_funcs_kwargs, as_method=as_method)                                                                                                  (3)
+                                                                                                                                                        (4)
+=======================================================     Investigating funcs_kwargs     =======================================================
+===============================================================     on line 3     ================================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+def _f(self,a=1): return self.num + a # access the num attribute from the instance
+
+@funcs_kwargs(as_method=True)
+class T: 
+    _methods=['b']
+    num = 5
+    
+t = T(b = _f) # adds method b
+test_eq(t.b(5), 10) # self.num + 5 = 10
+
+def _f(self,a=1): return self.num * a #multiply instead of add 
+
+class T2(T):
+    def __init__(self,num):
+        super().__init__(b = _f) # add method b from the super class
+        self.num=num
+        
+t = T2(num=3)
+test_eq(t.b(a=5), 15) # 3 * 5 = 15
+test_sig(T2, '(num)')
+     
+
+print selected srcline with expands below--------
+    "Replace methods in `cls._methods` with those from `kwargs`"                                                                                        (1)
+    if callable(as_method): return _funcs_kwargs(as_method, False)                                                                                      (2)
+    return partial(_funcs_kwargs, as_method=as_method)==================================================================================================(3)
+                                                                                how to custom the params of `_funcs_kwargs` for a particular use with partial
+                                                                                                                                                        (4)</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fdb_.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>======================================================     Investigating _funcs_kwargs     =======================================================
+==============================================================     on line None     ==============================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+def _funcs_kwargs(cls, as_method):========================================================(0)       
+    old_init = cls.__init__===============================================================(1)       
+    def _init(self, *args, **kwargs):=====================================================(2)       
+        for k in cls._methods:============================================================(3)       
+            arg = kwargs.pop(k,None)======================================================(4)       
+            if arg is not None:===========================================================(5)       
+                if as_method: arg = method(arg)===========================================(6)       
+                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7)       
+                setattr(self, k, arg)=====================================================(8)       
+        old_init(self, *args, **kwargs)===================================================(9)       
+    functools.update_wrapper(_init, old_init)=============================================(10)      
+    cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11)      
+    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+    return cls============================================================================(13)      
+                                                                                                                                                        (14)</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>fdb_.docsrc(<span class="dv">0</span>, <span class="st">"how does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; </span><span class="ch">\</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="st">I need to give the method a name, </span><span class="ch">\</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="st">and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; </span><span class="ch">\</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="st">then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, </span><span class="ch">\</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="st">I shall write @funcs_kwargs(as_method=True)"</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>fdb_.docsrc(<span class="dv">2</span>, <span class="st">"how to define a method which can use self and accept any parameters"</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>fdb_.docsrc(<span class="dv">3</span>, <span class="st">"how to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; "</span>)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>fdb_.docsrc(<span class="dv">6</span>, <span class="st">"how to turn a func into a method"</span>)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>fdb_.docsrc(<span class="dv">7</span>, <span class="st">"how to give a method a different instance, like self"</span>)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>fdb_.docsrc(<span class="dv">8</span>, <span class="st">"how to add a method to a class as an attribute"</span>)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>fdb_.docsrc(<span class="dv">10</span>, <span class="st">"how to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself"</span>)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>fdb_.docsrc(<span class="dv">11</span>, <span class="st">"how to add a list of names with None as default value to function `_init` to repalce its kwargs param"</span>)</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>fdb_.docsrc(<span class="dv">12</span>, <span class="st">"how to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>======================================================     Investigating _funcs_kwargs     =======================================================
+===============================================================     on line 0     ================================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+print selected srcline with expands below--------
+def _funcs_kwargs(cls, as_method):======================================================================================================================(0)
+how does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; I need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True)
+    old_init = cls.__init__                                                                                                                             (1)
+    def _init(self, *args, **kwargs):                                                                                                                   (2)
+======================================================     Investigating _funcs_kwargs     =======================================================
+===============================================================     on line 2     ================================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+print selected srcline with expands below--------
+def _funcs_kwargs(cls, as_method):                                                                                                                      (0)
+    old_init = cls.__init__                                                                                                                             (1)
+    def _init(self, *args, **kwargs):===================================================================================================================(2)
+                                                                                          how to define a method which can use self and accept any parameters
+        for k in cls._methods:                                                                                                                          (3)
+            arg = kwargs.pop(k,None)                                                                                                                    (4)
+======================================================     Investigating _funcs_kwargs     =======================================================
+===============================================================     on line 3     ================================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+print selected srcline with expands below--------
+    old_init = cls.__init__                                                                                                                             (1)
+    def _init(self, *args, **kwargs):                                                                                                                   (2)
+        for k in cls._methods:==========================================================================================================================(3)
+                              how to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; 
+            arg = kwargs.pop(k,None)                                                                                                                    (4)
+            if arg is not None:                                                                                                                         (5)
+======================================================     Investigating _funcs_kwargs     =======================================================
+===============================================================     on line 6     ================================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+print selected srcline with expands below--------
+            arg = kwargs.pop(k,None)                                                                                                                    (4)
+            if arg is not None:                                                                                                                         (5)
+                if as_method: arg = method(arg)=========================================================================================================(6)
+                                                                                                                             how to turn a func into a method
+                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)                                                                     (7)
+                setattr(self, k, arg)                                                                                                                   (8)
+======================================================     Investigating _funcs_kwargs     =======================================================
+===============================================================     on line 7     ================================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+print selected srcline with expands below--------
+            if arg is not None:                                                                                                                         (5)
+                if as_method: arg = method(arg)                                                                                                         (6)
+                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=====================================================================(7)
+                                                                                                         how to give a method a different instance, like self
+                setattr(self, k, arg)                                                                                                                   (8)
+        old_init(self, *args, **kwargs)                                                                                                                 (9)
+======================================================     Investigating _funcs_kwargs     =======================================================
+===============================================================     on line 8     ================================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+print selected srcline with expands below--------
+                if as_method: arg = method(arg)                                                                                                         (6)
+                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)                                                                     (7)
+                setattr(self, k, arg)===================================================================================================================(8)
+                                                                                                               how to add a method to a class as an attribute
+        old_init(self, *args, **kwargs)                                                                                                                 (9)
+    functools.update_wrapper(_init, old_init)                                                                                                           (10)
+======================================================     Investigating _funcs_kwargs     =======================================================
+===============================================================     on line 10     ===============================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+print selected srcline with expands below--------
+                setattr(self, k, arg)                                                                                                                   (8)
+        old_init(self, *args, **kwargs)                                                                                                                 (9)
+    functools.update_wrapper(_init, old_init)===========================================================================================================(10)
+                                                                      how to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself
+    cls.__init__ = use_kwargs(cls._methods)(_init)                                                                                                      (11)
+    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+======================================================     Investigating _funcs_kwargs     =======================================================
+===============================================================     on line 11     ===============================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+print selected srcline with expands below--------
+        old_init(self, *args, **kwargs)                                                                                                                 (9)
+    functools.update_wrapper(_init, old_init)                                                                                                           (10)
+    cls.__init__ = use_kwargs(cls._methods)(_init)======================================================================================================(11)
+                                                        how to add a list of names with None as default value to function `_init` to repalce its kwargs param
+    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+    return cls                                                                                                                                          (13)
+======================================================     Investigating _funcs_kwargs     =======================================================
+===============================================================     on line 12     ===============================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+print selected srcline with expands below--------
+    functools.update_wrapper(_init, old_init)                                                                                                           (10)
+    cls.__init__ = use_kwargs(cls._methods)(_init)                                                                                                      (11)
+    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))=====================================================(12)
+                                               how to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`
+    return cls                                                                                                                                          (13)
+                                                                                                                                                        (14)</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>fdb.snoop() <span class="co"># how to snoop together with docsrc: snoop first and docsrc above it</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>22:28:59.99 &gt;&gt;&gt; Call to funcs_kwargs in File "/tmp/funcs_kwargs.py", line 3
+22:28:59.99 ...... as_method = &lt;class 'fastcore.meta.T'&gt;
+22:28:59.99    3 | def funcs_kwargs(as_method=False):
+22:28:59.99    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
+    22:28:59.99 &gt;&gt;&gt; Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
+    22:28:59.99 ...... cls = &lt;class 'fastcore.meta.T'&gt;
+    22:28:59.99 ...... as_method = False
+    22:28:59.99    3 | def _funcs_kwargs(cls, as_method):
+    22:28:59.99    4 |     old_init = cls.__init__
+    22:28:59.99 .......... old_init = &lt;function T.__init__&gt;
+    22:28:59.99    5 |     import snoop
+    22:28:59.99 .......... snoop = &lt;class 'snoop.configuration.Config.__init__.&lt;locals&gt;.ConfiguredTracer'&gt;
+    22:28:59.99    6 |     @snoop
+    22:28:59.99    7 |     def _init(self, *args, **kwargs):
+    22:28:59.99 .......... _init = &lt;function _funcs_kwargs.&lt;locals&gt;._init&gt;
+    22:28:59.99   15 |     functools.update_wrapper(_init, old_init)
+    22:28:59.99 .......... _init = &lt;function T.__init__&gt;
+    22:28:59.99   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
+    22:28:59.99   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
+    22:28:59.99   18 |     return cls
+    22:28:59.99 &lt;&lt;&lt; Return value from _funcs_kwargs: &lt;class 'fastcore.meta.T'&gt;
+22:28:59.99    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
+22:28:59.99 &lt;&lt;&lt; Return value from funcs_kwargs: &lt;class 'fastcore.meta.T'&gt;
+22:28:59.99 &gt;&gt;&gt; Call to _funcs_kwargs.&lt;locals&gt;._init in File "/tmp/_funcs_kwargs.py", line 7
+22:28:59.99 .......... self = &lt;fastcore.meta.T object&gt;
+22:28:59.99 .......... args = ()
+22:28:59.99 .......... kwargs = {}
+22:28:59.99 .......... as_method = False
+22:28:59.99 .......... cls = &lt;class 'fastcore.meta.T'&gt;
+22:28:59.99 .......... old_init = &lt;function T.__init__&gt;
+22:28:59.99    7 |     def _init(self, *args, **kwargs):
+22:29:00.00    8 |         for k in cls._methods:
+22:29:00.00 .............. k = 'b'
+22:29:00.00    9 |             arg = kwargs.pop(k,None)
+22:29:00.00 .................. arg = None
+22:29:00.00   10 |             if arg is not None:
+22:29:00.00    8 |         for k in cls._methods:
+22:29:00.00   14 |         old_init(self, *args, **kwargs)
+22:29:00.00 &lt;&lt;&lt; Return value from _funcs_kwargs.&lt;locals&gt;._init: None
+22:29:00.00 &gt;&gt;&gt; Call to _funcs_kwargs.&lt;locals&gt;._init in File "/tmp/_funcs_kwargs.py", line 7
+22:29:00.00 .......... self = &lt;fastcore.meta.T object&gt;
+22:29:00.00 .......... args = ()
+22:29:00.00 .......... kwargs = {'b': &lt;function _new_func&gt;}
+22:29:00.00 .......... len(kwargs) = 1
+22:29:00.00 .......... as_method = False
+22:29:00.00 .......... cls = &lt;class 'fastcore.meta.T'&gt;
+22:29:00.00 .......... old_init = &lt;function T.__init__&gt;
+22:29:00.00    7 |     def _init(self, *args, **kwargs):
+22:29:00.00    8 |         for k in cls._methods:
+22:29:00.00 .............. k = 'b'
+22:29:00.00    9 |             arg = kwargs.pop(k,None)
+22:29:00.00 .................. kwargs = {}
+22:29:00.00 .................. arg = &lt;function _new_func&gt;
+22:29:00.00   10 |             if arg is not None:
+22:29:00.00   11 |                 if as_method: arg = method(arg)
+22:29:00.00   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+22:29:00.00   13 |                 setattr(self, k, arg)
+22:29:00.00    8 |         for k in cls._methods:
+22:29:00.00   14 |         old_init(self, *args, **kwargs)
+22:29:00.00 &lt;&lt;&lt; Return value from _funcs_kwargs.&lt;locals&gt;._init: None
+22:29:00.00 &gt;&gt;&gt; Call to _funcs_kwargs.&lt;locals&gt;._init in File "/tmp/_funcs_kwargs.py", line 7
+22:29:00.00 .......... self = &lt;fastcore.meta.T object&gt;
+22:29:00.00 .......... args = ()
+22:29:00.00 .......... kwargs = {'a': &lt;function &lt;lambda&gt;&gt;}
+22:29:00.00 .......... len(kwargs) = 1
+22:29:00.00 .......... as_method = False
+22:29:00.00 .......... cls = &lt;class 'fastcore.meta.T'&gt;
+22:29:00.00 .......... old_init = &lt;function T.__init__&gt;
+22:29:00.00    7 |     def _init(self, *args, **kwargs):
+22:29:00.00    8 |         for k in cls._methods:
+22:29:00.00 .............. k = 'b'
+22:29:00.00    9 |             arg = kwargs.pop(k,None)
+22:29:00.00 .................. arg = None
+22:29:00.00   10 |             if arg is not None:
+22:29:00.00    8 |         for k in cls._methods:
+22:29:00.00   14 |         old_init(self, *args, **kwargs)
+22:29:00.00 &lt;&lt;&lt; Return value from _funcs_kwargs.&lt;locals&gt;._init: None
+22:29:00.00 &gt;&gt;&gt; Call to funcs_kwargs in File "/tmp/funcs_kwargs.py", line 3
+22:29:00.00 ...... as_method = True
+22:29:00.00    3 | def funcs_kwargs(as_method=False):
+22:29:00.00    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
+22:29:00.00    6 |     return partial(_funcs_kwargs, as_method=as_method)
+22:29:00.00 &lt;&lt;&lt; Return value from funcs_kwargs: functools.partial(&lt;function _funcs_kwargs&gt;, as_method=True)
+22:29:00.00 &gt;&gt;&gt; Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
+22:29:00.00 ...... cls = &lt;class 'fastcore.meta.T'&gt;
+22:29:00.00 ...... as_method = True
+22:29:00.00    3 | def _funcs_kwargs(cls, as_method):
+22:29:00.00    4 |     old_init = cls.__init__
+22:29:00.00 .......... old_init = &lt;slot wrapper '__init__' of 'object' objects&gt;
+22:29:00.00    5 |     import snoop
+22:29:00.00 .......... snoop = &lt;class 'snoop.configuration.Config.__init__.&lt;locals&gt;.ConfiguredTracer'&gt;
+22:29:00.00    6 |     @snoop
+22:29:00.00    7 |     def _init(self, *args, **kwargs):
+22:29:00.00 .......... _init = &lt;function _funcs_kwargs.&lt;locals&gt;._init&gt;
+22:29:00.00   15 |     functools.update_wrapper(_init, old_init)
+22:29:00.00 .......... _init = &lt;function object.__init__&gt;
+22:29:00.00   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
+22:29:00.01   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
+22:29:00.01   18 |     return cls
+22:29:00.01 &lt;&lt;&lt; Return value from _funcs_kwargs: &lt;class 'fastcore.meta.T'&gt;
+22:29:00.01 &gt;&gt;&gt; Call to _funcs_kwargs.&lt;locals&gt;._init in File "/tmp/_funcs_kwargs.py", line 7
+22:29:00.01 .......... self = &lt;fastcore.meta.T object&gt;
+22:29:00.01 .......... args = ()
+22:29:00.01 .......... kwargs = {'b': &lt;function _f&gt;}
+22:29:00.01 .......... len(kwargs) = 1
+22:29:00.01 .......... as_method = True
+22:29:00.01 .......... cls = &lt;class 'fastcore.meta.T'&gt;
+22:29:00.01 .......... old_init = &lt;slot wrapper '__init__' of 'object' objects&gt;
+22:29:00.01    7 |     def _init(self, *args, **kwargs):
+22:29:00.01    8 |         for k in cls._methods:
+22:29:00.01 .............. k = 'b'
+22:29:00.01    9 |             arg = kwargs.pop(k,None)
+22:29:00.01 .................. kwargs = {}
+22:29:00.01 .................. arg = &lt;function _f&gt;
+22:29:00.01   10 |             if arg is not None:
+22:29:00.01   11 |                 if as_method: arg = method(arg)
+22:29:00.01 ...... arg = &lt;bound method int._f of 1&gt;
+22:29:00.01   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+22:29:00.01 ...... arg = &lt;bound method T._f of &lt;fastcore.meta.T object&gt;&gt;
+22:29:00.01   13 |                 setattr(self, k, arg)
+22:29:00.01    8 |         for k in cls._methods:
+22:29:00.01   14 |         old_init(self, *args, **kwargs)
+22:29:00.01 &lt;&lt;&lt; Return value from _funcs_kwargs.&lt;locals&gt;._init: None
+22:29:00.01 &gt;&gt;&gt; Call to _funcs_kwargs.&lt;locals&gt;._init in File "/tmp/_funcs_kwargs.py", line 7
+22:29:00.01 .......... self = &lt;fastcore.meta.T2 object&gt;
+22:29:00.01 .......... args = ()
+22:29:00.01 .......... kwargs = {'b': &lt;function _f&gt;}
+22:29:00.01 .......... len(kwargs) = 1
+22:29:00.01 .......... as_method = True
+22:29:00.01 .......... cls = &lt;class 'fastcore.meta.T'&gt;
+22:29:00.01 .......... old_init = &lt;slot wrapper '__init__' of 'object' objects&gt;
+22:29:00.01    7 |     def _init(self, *args, **kwargs):
+22:29:00.01    8 |         for k in cls._methods:
+22:29:00.01 .............. k = 'b'
+22:29:00.01    9 |             arg = kwargs.pop(k,None)
+22:29:00.01 .................. kwargs = {}
+22:29:00.01 .................. arg = &lt;function _f&gt;
+22:29:00.01   10 |             if arg is not None:
+22:29:00.01   11 |                 if as_method: arg = method(arg)
+22:29:00.01 ...... arg = &lt;bound method int._f of 1&gt;
+22:29:00.01   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+22:29:00.01 ...... arg = &lt;bound method T2._f of &lt;fastcore.meta.T2 object&gt;&gt;
+22:29:00.01   13 |                 setattr(self, k, arg)
+22:29:00.01    8 |         for k in cls._methods:
+22:29:00.01   14 |         old_init(self, *args, **kwargs)
+22:29:00.01 &lt;&lt;&lt; Return value from _funcs_kwargs.&lt;locals&gt;._init: None</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=======================================================     Investigating funcs_kwargs     =======================================================
+==============================================================     on line None     ==============================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+def _f(self,a=1): return self.num + a # access the num attribute from the instance
+
+@funcs_kwargs(as_method=True)
+class T: 
+    _methods=['b']
+    num = 5
+    
+t = T(b = _f) # adds method b
+test_eq(t.b(5), 10) # self.num + 5 = 10
+
+def _f(self,a=1): return self.num * a #multiply instead of add 
+
+class T2(T):
+    def __init__(self,num):
+        super().__init__(b = _f) # add method b from the super class
+        self.num=num
+        
+t = T2(num=3)
+test_eq(t.b(a=5), 15) # 3 * 5 = 15
+test_sig(T2, '(num)')
+     
+</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>fdb_.debug()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>_funcs_kwargs's dbsrc code: ==============
+import snoop
+@snoop
+def _funcs_kwargs(cls, as_method):
+    old_init = cls.__init__
+    import snoop
+    @snoop
+    def _init(self, *args, **kwargs):
+        for k in cls._methods:
+            arg = kwargs.pop(k,None)
+            if arg is not None:
+                if as_method: arg = method(arg)
+                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+                setattr(self, k, arg)
+        old_init(self, *args, **kwargs)
+    functools.update_wrapper(_init, old_init)
+    cls.__init__ = use_kwargs(cls._methods)(_init)
+    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
+    return cls
+
+
+
+_funcs_kwargs's example processed with dbsrc: ===============
+
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>fdb.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=======================================================     Investigating funcs_kwargs     =======================================================
+==============================================================     on line None     ==============================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+def _f(self,a=1): return self.num + a # access the num attribute from the instance
+
+@funcs_kwargs(as_method=True)
+class T: 
+    _methods=['b']
+    num = 5
+    
+t = T(b = _f) # adds method b
+test_eq(t.b(5), 10) # self.num + 5 = 10
+
+def _f(self,a=1): return self.num * a #multiply instead of add 
+
+class T2(T):
+    def __init__(self,num):
+        super().__init__(b = _f) # add method b from the super class
+        self.num=num
+        
+t = T2(num=3)
+test_eq(t.b(a=5), 15) # 3 * 5 = 15
+test_sig(T2, '(num)')
+     
+
+def funcs_kwargs(as_method=False):========================================================(0)       
+    "Replace methods in `cls._methods` with those from `kwargs`"==========================(1) # how funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;; 
+    if callable(as_method): return _funcs_kwargs(as_method, False)========================(2) # how to check whether an object is callable; how to return a result of running a func; ; 
+    return partial(_funcs_kwargs, as_method=as_method)====================================(3) # how to custom the params of `_funcs_kwargs` for a particular use with partial; 
+                                                                                                                                                        (4)</code></pre>
+</div>
+</div>
+<div class="cell column-screen">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>fdb_.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>======================================================     Investigating _funcs_kwargs     =======================================================
+===============================================================     on line 12     ===============================================================
+     with example 
+@funcs_kwargs
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+t = T()
+test_eq(t.a(), 1)
+test_eq(t.b(), 2)
+
+test_sig(T, '(f=1, *, b=None)')
+inspect.signature(T)
+
+def _new_func(): return 5
+
+t = T(b = _new_func)
+test_eq(t.b(), 5)
+
+t = T(a = lambda:3)
+test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+
+     
+
+def _funcs_kwargs(cls, as_method):========================================================(0) # how does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; I need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True); 
+    old_init = cls.__init__===============================================================(1)       
+    def _init(self, *args, **kwargs):=====================================================(2) # how to define a method which can use self and accept any parameters; 
+        for k in cls._methods:============================================================(3) # how to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; ; 
+            arg = kwargs.pop(k,None)======================================================(4)       
+            if arg is not None:===========================================================(5)       
+                if as_method: arg = method(arg)===========================================(6) # how to turn a func into a method; 
+                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7) # how to give a method a different instance, like self; 
+                setattr(self, k, arg)=====================================================(8) # how to add a method to a class as an attribute; 
+        old_init(self, *args, **kwargs)===================================================(9)       
+    functools.update_wrapper(_init, old_init)=============================================(10) # how to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself; 
+    cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11) # how to add a list of names with None as default value to function `_init` to repalce its kwargs param; 
+    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__)) # how to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`;  (12)
+    return cls============================================================================(13)      
+                                                                                                                                                        (14)</code></pre>
+</div>
+</div>
+</section>
+<section id="snoop-only-_funcs_kwargs-by-breaking-up-funcs_kwargs" class="level3">
+<h3 class="anchored" data-anchor-id="snoop-only-_funcs_kwargs-by-breaking-up-funcs_kwargs">snoop only ’_funcs_kwargs’ by breaking up ‘funcs_kwargs’</h3>
+<p>I could do it this way, but I have to change more codes which leads to more efforts and potential errors. So not recommended.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>fdb <span class="op">=</span> Fastdb(funcs_kwargs)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>fdb_ <span class="op">=</span> Fastdb(_funcs_kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>fdb_.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="st">class T:</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="st">    _methods=['b'] # allows you to add method b upon instantiation</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="st">    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="st">    def a(self): return 1</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="st">    def b(self): return 2</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="st">t = _funcs_kwargs(T, False)()</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.a(), 1)</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.b(), 2)</span></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="st">test_sig(T, '(f=1, *, b=None)')</span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="st">inspect.signature(T)</span></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>fdb_.eg <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a><span class="st">class T:</span></span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a><span class="st">    _methods=['b'] # allows you to add method b upon instantiation</span></span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a><span class="st">    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__</span></span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a><span class="st">    def a(self): return 1</span></span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a><span class="st">    def b(self): return 2</span></span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a><span class="st">def _new_func(): return 5</span></span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a><span class="st">t = _funcs_kwargs(T, False)(b = _new_func)</span></span>
+<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a><span class="st">test_eq(t.b(), 5)</span></span>
+<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb45-28"><a href="#cb45-28" aria-hidden="true" tabindex="-1"></a><span class="co"># fdb_.eg = """</span></span>
+<span id="cb45-29"><a href="#cb45-29" aria-hidden="true" tabindex="-1"></a><span class="co"># class T:</span></span>
+<span id="cb45-30"><a href="#cb45-30" aria-hidden="true" tabindex="-1"></a><span class="co">#     _methods=['b'] # allows you to add method b upon instantiation</span></span>
+<span id="cb45-31"><a href="#cb45-31" aria-hidden="true" tabindex="-1"></a><span class="co">#     def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__</span></span>
+<span id="cb45-32"><a href="#cb45-32" aria-hidden="true" tabindex="-1"></a><span class="co">#     def a(self): return 1</span></span>
+<span id="cb45-33"><a href="#cb45-33" aria-hidden="true" tabindex="-1"></a><span class="co">#     def b(self): return 2</span></span>
+<span id="cb45-34"><a href="#cb45-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb45-35"><a href="#cb45-35" aria-hidden="true" tabindex="-1"></a><span class="co"># t = _funcs_kwargs(T, False)(a = lambda:3)</span></span>
+<span id="cb45-36"><a href="#cb45-36" aria-hidden="true" tabindex="-1"></a><span class="co"># test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.</span></span>
+<span id="cb45-37"><a href="#cb45-37" aria-hidden="true" tabindex="-1"></a><span class="co"># """</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fdb_.snoop(watch<span class="op">=</span>[<span class="st">"cls.__init__"</span>], deco<span class="op">=</span><span class="va">True</span>) <span class="co"># can't do this expression</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>22:29:00.04 &gt;&gt;&gt; Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
+22:29:00.04 ...... cls = &lt;class 'fastcore.meta.T'&gt;
+22:29:00.04 ...... as_method = False
+22:29:00.04    3 | def _funcs_kwargs(cls, as_method):
+22:29:00.04    4 |     old_init = cls.__init__
+22:29:00.05 .......... old_init = &lt;function T.__init__&gt;
+22:29:00.05    5 |     import snoop
+22:29:00.05 .......... snoop = &lt;class 'snoop.configuration.Config.__init__.&lt;locals&gt;.ConfiguredTracer'&gt;
+22:29:00.05    6 |     @snoop
+22:29:00.05    7 |     def _init(self, *args, **kwargs):
+22:29:00.05 .......... _init = &lt;function _funcs_kwargs.&lt;locals&gt;._init&gt;
+22:29:00.05   15 |     functools.update_wrapper(_init, old_init)
+22:29:00.05 .......... _init = &lt;function T.__init__&gt;
+22:29:00.05   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
+22:29:00.05   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
+22:29:00.05   18 |     return cls
+22:29:00.05 &lt;&lt;&lt; Return value from _funcs_kwargs: &lt;class 'fastcore.meta.T'&gt;
+22:29:00.05 &gt;&gt;&gt; Call to _funcs_kwargs.&lt;locals&gt;._init in File "/tmp/_funcs_kwargs.py", line 7
+22:29:00.05 .......... self = &lt;fastcore.meta.T object&gt;
+22:29:00.05 .......... args = ()
+22:29:00.05 .......... kwargs = {'b': &lt;function _new_func&gt;}
+22:29:00.05 .......... len(kwargs) = 1
+22:29:00.05 .......... as_method = False
+22:29:00.05 .......... cls = &lt;class 'fastcore.meta.T'&gt;
+22:29:00.05 .......... old_init = &lt;function T.__init__&gt;
+22:29:00.05    7 |     def _init(self, *args, **kwargs):
+22:29:00.05    8 |         for k in cls._methods:
+22:29:00.05 .............. k = 'b'
+22:29:00.05    9 |             arg = kwargs.pop(k,None)
+22:29:00.05 .................. kwargs = {}
+22:29:00.05 .................. arg = &lt;function _new_func&gt;
+22:29:00.05   10 |             if arg is not None:
+22:29:00.05   11 |                 if as_method: arg = method(arg)
+22:29:00.05   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+22:29:00.05   13 |                 setattr(self, k, arg)
+22:29:00.05    8 |         for k in cls._methods:
+22:29:00.05   14 |         old_init(self, *args, **kwargs)
+22:29:00.05 &lt;&lt;&lt; Return value from _funcs_kwargs.&lt;locals&gt;._init: None</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>======================================================     Investigating _funcs_kwargs     =======================================================
+==============================================================     on line None     ==============================================================
+     with example 
+class T:
+    _methods=['b'] # allows you to add method b upon instantiation
+    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+    def a(self): return 1
+    def b(self): return 2
+    
+def _new_func(): return 5
+
+t = _funcs_kwargs(T, False)(b = _new_func)
+test_eq(t.b(), 5)
+     
+</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
