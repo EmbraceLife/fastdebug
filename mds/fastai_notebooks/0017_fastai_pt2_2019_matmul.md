@@ -87,7 +87,6 @@ from torch import tensor
 
 ```
 
-
 ### [36:25](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=2185) - how to [download and extract](https://nbviewer.org/github/fastai/course-v3/blob/7fceebfd14d4f3bc7e0ec649834309b8cb786e40/nbs/dl2/01_matmul.ipynb#Get-data) mnist dataset using the most basic libraries: `fastai.datasets`, `gzip`, `pickle`
 
 
@@ -109,7 +108,6 @@ x_train,y_train,x_valid,y_valid = map(tensor, (x_train,y_train,x_valid,y_valid))
 n,c = x_train.shape
 x_train, x_train.shape, y_train, y_train.shape, y_train.min(), y_train.max()
 ```
-
 
 ### [38:15](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=2295) - how to build a test to check the dataset has the structure we expect using `assert` and `test_eq`
 
@@ -173,7 +171,6 @@ def matmul(a,b):
                 c[i,j] += a[i,k] * b[k,j]
     return c
 ```
-
 
 ### [42:57](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=2577) - run an example on `matmul` and test it and check how long does it take to calc a matrix of 5 rows; python is 1000 times slower than pytorch
 
@@ -436,7 +433,6 @@ m + c[:,None]
 c[:,None]
 ```
 
-
 ## Matmul with broadcasting
 ### [1:02:05](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=3725) - how to simplify the type of `c[None,:,:]` as `c[None]` and simplify `c[:,:,None]` as `c[...,None]` 
 
@@ -467,6 +463,7 @@ def matmul(a,b):
 ```
 
 ### how to understand the second inner most loop is replaced by broadcasting (homework assigned by Jeremy) I have written the following code blocks to understand it.
+
 ```python
 from fastdebug.utils import *
 from torch import tensor
@@ -514,7 +511,6 @@ a[0][:,None] * a
 (a[0][:,None] * a).sum(dim=1).shape
 ```
 
-
 ```python
 %timeit -n 10 _=matmul(m1, m2)
 ```
@@ -556,6 +552,7 @@ c[None] > c[:,None]
 ```
 
 ### Here is my own code for understanding the 2 rules of broadcasting
+
 ```python
 c = tensor([1,2,3])
 c
@@ -647,6 +644,7 @@ def batch_matmul(a,b): return torch.einsum('bik,bkj->bij', a, b)
 ```python
 test_near(t1, matmul(m1, m2))
 ```
+
 ### [1:15:48](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=4548) - what Jeremy does not like about `torch.einsum` and why APL, J and K are so great and what to expect from swift compiler, Julia
 
 

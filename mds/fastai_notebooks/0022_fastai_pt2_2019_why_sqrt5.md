@@ -275,5 +275,13 @@ stats(m[0].weight.grad)
 ```
 
 ```python
+from fastdebug.utils import *
+```
+
+```python
+fastnbs("The forward and backward passes")
+```
+
+```python
 
 ```

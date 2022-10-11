@@ -1,12 +1,3 @@
-```
-
-```
-
-
-```
-
-```
-
 # core
 
 > the core functionalities of fastdebug

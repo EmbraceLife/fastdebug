@@ -297,5 +297,142 @@ stats(m[0].weight.grad)
 
 
 ```
+from fastdebug.utils import *
+```
+
+
+```
+fastnbs("The forward and backward passes")
+```
+
+
+## <mark style="background-color: #ffff00">the</mark>  <mark style="background-color: #ffff00">forward</mark>  <mark style="background-color: #ffff00">and</mark>  <mark style="background-color: #ffff00">backward</mark>  <mark style="background-color: #FFFF00">passes</mark> 
+
+
+
+
+This section contains only the current heading 2 and its subheadings
+### get_data
+
+#### [1:23:03](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=4983) - how to download and prepare the mnist dataset and wrap the process into a function called `get_data`; 
+
+
+
+
+[Jump_to lesson 8 video](https://course19.fast.ai/videos/?lesson=8&t=4960)
+
+```python
+#export
+from exp.nb_01 import *
+
+def get_data():
+    path = datasets.download_data(MNIST_URL, ext='.gz')
+    with gzip.open(path, 'rb') as f:
+        ((x_train, y_train), (x_valid, y_valid), _) = pickle.load(f, encoding='latin-1')
+    return map(tensor, (x_train,y_train,x_valid,y_valid))
+```
+
+```python
+x_train,y_train,x_valid,y_valid = get_data()
+```
+
+
+### normalize(x, m, s)
+
+#### [1:23:48](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5028) - how to create `normalize` function to use broadcast to normalize the Xs and Ys; what does normalization to Xs and Ys mean (make Xs and Ys to have a distribution whose mean is 0 and std is 1)? how to make the mean and std of Xs and Ys to be 0 and 1 (using the formula of normalization below) Why we don't use validation set's mean and std to normalization Xs and Ys of validation set but use those of training set? (make sure validation set and training set share the same scale as training set) What example did Jeremy give to explain the importance of using training set's mean and std for normalization of validation set
+
+
+
+```python
+def normalize(x, m, s): return (x-m)/s
+```
+
+```python
+train_mean,train_std = x_train.mean(),x_train.std()
+train_mean,train_std
+```
+
+```python
+x_train = normalize(x_train, train_mean, train_std)
+# NB: Use training, not validation mean for validation set
+x_valid = normalize(x_valid, train_mean, train_std)
+```
+
+### test_near_zero  and  assert
+
+#### [1:24:52](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5092) - how to check the mean and std values are close to 0 and 1 using `test_near_zero` using `assert`
+
+```python
+train_mean,train_std = x_train.mean(),x_train.std()
+train_mean,train_std
+```
+
+```python
+#export
+def test_near_zero(a,tol=1e-3): assert a.abs()<tol, f"Near zero: {a}"
+```
+
+```python
+test_near_zero(x_train.mean())
+test_near_zero(1-x_train.std())
+```
+
+### getting dimensions of weights of different layers
+
+#### [1:25:16](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5116) - how to get the number of activations of each layer `n` (rows of input), `m` (columns of input), `c` (number of targets/classes) from the shape of `x_train` and `y_train`
+
+
+```python
+n,m = x_train.shape
+c = y_train.max()+1
+n,m,c
+```
+
+start of another heading 2
+## Foundations version
+
+
+
+[Open `0021_fastai_pt2_2019_fully_connected` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0021_fastai_pt2_2019_fully_connected.ipynb)
+
+
+
+### [1:55:22](https://youtu.be/4u8fxnedueg?list=plfyubjixbdttidte1u8qgyxo4jy2y91uj&t=6922) - how to put <mark style="background-color: #ffff00">forward</mark>  pass <mark style="background-color: #ffff00">and</mark>  <mark style="background-color: #FFFF00">backward</mark>  pass into one function `foward_and_backward`; <mark style="background-color: #ffff00">and</mark>  <mark style="background-color: #FFFF00">backward</mark>  pass is <mark style="background-color: #ffff00">the</mark>  chain rule (people who say no are liars) <mark style="background-color: #ffff00">and</mark>  saving <mark style="background-color: #ffff00">the</mark>  gradients as well; 
+
+
+
+
+This section contains only the current heading 3 and its subheadings
+
+```python
+def forward_and_backward(inp, targ):
+    # forward pass:
+    l1 = inp @ w1 + b1
+    l2 = relu(l1)
+    out = l2 @ w2 + b2
+    # we don't actually need the loss in backward!
+    loss = mse(out, targ)
+    
+    # backward pass:
+    mse_grad(out, targ)
+    lin_grad(l2, out, w2, b2)
+    relu_grad(l1, l2)
+    lin_grad(inp, l1, w1, b1)
+```
+
+```python
+forward_and_backward(x_train, y_train)
+```
+
+start of another heading 3
+### [1:56:41](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=7001) - how to use pytorch's gradient calculation functions to test whether our own gradients are calculated correctly; 
+
+
+
+[Open `0021_fastai_pt2_2019_fully_connected` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0021_fastai_pt2_2019_fully_connected.ipynb)
+
+
+
+```
 
 ```

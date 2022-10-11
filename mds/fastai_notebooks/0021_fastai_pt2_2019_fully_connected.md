@@ -53,7 +53,6 @@ def get_data():
 x_train,y_train,x_valid,y_valid = get_data()
 ```
 
-
 ### normalize(x, m, s)
 
 #### [1:23:48](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5028) - how to create `normalize` function to use broadcast to normalize the Xs and Ys; what does normalization to Xs and Ys mean (make Xs and Ys to have a distribution whose mean is 0 and std is 1)? how to make the mean and std of Xs and Ys to be 0 and 1 (using the formula of normalization below) Why we don't use validation set's mean and std to normalization Xs and Ys of validation set but use those of training set? (make sure validation set and training set share the same scale as training set) What example did Jeremy give to explain the importance of using training set's mean and std for normalization of validation set
@@ -127,10 +126,10 @@ hidden layer (activation layer) shape [hn] xx (weights [hn, 1] + biases [1] => o
 nh = 50
 ```
 
-
 [Tinker practice](https://course19.fast.ai/videos/?lesson=8&t=5255)
 
 #### using standared xavier init to initialize weights and biases
+
 ```python
 # standard xavier init
 w1 = torch.randn(m,nh)/math.sqrt(m)
@@ -145,18 +144,20 @@ test_near_zero(w1.std()-1/math.sqrt(m))
 ```
 
 #### x_valid has alread by normalized to have mean 0 and std 1
+
 ```python
 # This should be ~ (0,1) (mean,std)...
 x_valid.mean(),x_valid.std()
 ```
 
 #### write linear layer from scratch
+
 ```python
 def lin(x, w, b): return x@w + b
 ```
 
-
 #### check mean and std of activations of first layer
+
 ```python
 t = lin(x_valid, w1, b1)
 ```
@@ -186,7 +187,6 @@ t = relu(lin(x_valid, w1, b1))
 t.mean(),t.std()
 ```
 
-
 ### [1:31:47](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5505) - Jeremy introduced and lead us reading **Delving Deep into Rectifiers** by He; why we should read papers from competition winners than other papers; [1:32:43](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5563) - Jeremy explained Rectifiers in the paper and why random weights/biases won't get trained well using He's paper and Xavier's paper (Xavier's initialization didn't account for the impact of ReLU, this is where He's paper come in); the homework is to read this section (2.2) of the He's paper.
 From pytorch docs: `a: the negative slope of the rectifier used after this layer (0 for ReLU by default)`
 
@@ -210,7 +210,6 @@ w1.mean(),w1.std()
 t = relu(lin(x_valid, w1, b1))
 t.mean(),t.std()
 ```
-
 
 ### [1:36:26](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=5786) - Jeremy provided a guidance to us on how to read the Resnet paper
 
@@ -263,7 +262,6 @@ torch.nn.Linear.forward??
 torch.nn.functional.linear??
 ```
 
-
 ### [1:42:56](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=6176) - how to find and read source code of convolutional layer in pytorch and why it is a good idea to put the url of the paper you are implementing in the source code
 
 
@@ -291,7 +289,6 @@ w1 = torch.randn(m,nh)*math.sqrt(2./m )
 t1 = relu(lin(x_valid, w1, b1))
 t1.mean(),t1.std()
 ```
-
 
 ### [1:45:28](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=6328) - how to build our model `model` using the functions `lin`, `relu` we built above; how to test how fast it is to run; and how to verify the shape of the model output to be correct
 
@@ -372,7 +369,6 @@ def lin_grad(inp, out, w, b):
     w.g = (inp.unsqueeze(-1) * out.g.unsqueeze(1)).sum(0)
     b.g = out.g.sum(0)
 ```
-
 
 ### [1:55:22](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=6922) - how to put forward pass and backward pass into one function `foward_and_backward`; and backward pass is the chain rule (people who say No are liars) and saving the gradients as well; 
 

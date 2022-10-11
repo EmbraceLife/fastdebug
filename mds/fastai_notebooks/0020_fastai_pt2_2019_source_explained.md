@@ -31,7 +31,6 @@ def run_notebook(path):
 if __name__ == '__main__': fire.Fire(run_notebook)
 ```
 
-
 ### [34:08](https://youtu.be/4u8FxNEDUeg?list=PLfYUBJiXbdtTIdtE1U8qgyxo4Jy2Y91uj&t=2048) - Jeremy explaining the [source](https://github.com/fastai/course-v3/blob/7fceebfd14d4f3bc7e0ec649834309b8cb786e40/nbs/dl2/notebook2script.py#L32) code of `notebook2script.py`; Jupyter [notebook](https://nbviewer.org/github/fastai/course-v3/blob/7fceebfd14d4f3bc7e0ec649834309b8cb786e40/nbs/dl2/00_exports.ipynb) is just a json data file
 
 
