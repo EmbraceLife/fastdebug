@@ -49,15 +49,10 @@ website:
       - section: lib
         contents:
           - lib/00_core.ipynb
+          - lib/groundup_001_exp.ipynb
+          - lib/groundup_002_get_data_ready.ipynb
+          - lib/groundup_matmul.ipynb
           - lib/utils.ipynb
-          - section: fastai_from_scratch
-            contents:
-              - lib/fastai_from_scratch/0000_fastscratch_export.ipynb
-      - section: lib
-        contents:
-          - section: fastai_from_scratch
-            contents:
-              - lib/fastai_from_scratch/0001_fastscratch_matmul.ipynb
       - section: questions
         contents:
           - questions/00_question_anno_dict.ipynb
