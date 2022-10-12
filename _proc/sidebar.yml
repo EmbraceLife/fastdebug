@@ -51,7 +51,7 @@ website:
           - lib/00_core.ipynb
           - lib/groundup_001_exp.ipynb
           - lib/groundup_002_get_data_ready.ipynb
-          - lib/groundup_matmul.ipynb
+          - lib/groundup_003_matmul.ipynb
           - lib/utils.ipynb
       - section: questions
         contents:
