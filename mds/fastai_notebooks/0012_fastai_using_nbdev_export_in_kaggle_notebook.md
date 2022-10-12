@@ -30,10 +30,11 @@ It can be handy to create script files from notebooks, using nbdev's `notebook2s
 !pip install -U nbdev
 ```
 
-### which pyfile I am export the notebook to
+### default_exp 
+which pyfile I am export the notebook to
 
 ```python
-#|default_exp app
+#|default_exp to_delete
 ```
 
 ### what to export from the notebook to the pyfile 
@@ -43,14 +44,15 @@ It can be handy to create script files from notebooks, using nbdev's `notebook2s
 a=1
 ```
 
-### how to export the current current IPython history to a notebook file using `%notebook`
+### %notebook
+how to export the current current IPython history to a notebook file using `%notebook`
 
 ```python
 # NB: This only works if you run all the cells in order - click "Save Version" to do this automatically
 %notebook -e testnbdev.ipynb
 ```
 
-### how to check all the jupyter magic commands
+### %lsmagic
 
 ```python
 %lsmagic

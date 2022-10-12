@@ -49,10 +49,11 @@ website:
       - section: lib
         contents:
           - lib/00_core.ipynb
+          - lib/01_utils.ipynb
+          - lib/course22p2-0001-matmul.ipynb
           - lib/groundup_001_exp.ipynb
           - lib/groundup_002_get_data_ready.ipynb
           - lib/groundup_003_matmul.ipynb
-          - lib/utils.ipynb
       - section: questions
         contents:
           - questions/00_question_anno_dict.ipynb

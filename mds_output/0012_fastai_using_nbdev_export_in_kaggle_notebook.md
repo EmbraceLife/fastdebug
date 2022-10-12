@@ -56,11 +56,12 @@ It can be handy to create script files from notebooks, using nbdev's `notebook2s
     [33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv[0m[33m
     [0m
 
-### which pyfile I am export the notebook to
+### default_exp 
+which pyfile I am export the notebook to
 
 
 ```
-#|default_exp app
+#|default_exp to_delete
 ```
 
 ### what to export from the notebook to the pyfile 
@@ -71,7 +72,8 @@ It can be handy to create script files from notebooks, using nbdev's `notebook2s
 a=1
 ```
 
-### how to export the current current IPython history to a notebook file using `%notebook`
+### %notebook
+how to export the current current IPython history to a notebook file using `%notebook`
 
 
 ```
@@ -79,7 +81,7 @@ a=1
 %notebook -e testnbdev.ipynb
 ```
 
-### how to check all the jupyter magic commands
+### %lsmagic
 
 
 ```
