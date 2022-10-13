@@ -100,7 +100,7 @@ def imgs2tensor(img_folder:list, # a list of image files path in string
     mean_std(res)
     return res
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 20
+# %% ../nbs/lib/groundup_003_matmul.ipynb 21
 def get_exp_data():
     MNIST_URL='https://github.com/mnielsen/neural-networks-and-deep-learning/blob/master/data/mnist.pkl.gz?raw=true'
     path_data = Path('data')
@@ -111,13 +111,13 @@ def get_exp_data():
     with gzip.open(path_gz, 'rb') as f: ((x_train, y_train), (x_valid, y_valid), _) = pickle.load(f, encoding='latin-1')
     return x_train, y_train, x_valid, y_valid
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 25
+# %% ../nbs/lib/groundup_003_matmul.ipynb 26
 def chunks(x, sz):
     for i in range(0, len(x), sz): 
         print(i)
         yield x[i:i+sz]
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 50
+# %% ../nbs/lib/groundup_003_matmul.ipynb 51
 def chunks_faster(x, sz):
     "if the data is numpy.ndarray and shape is 1 dimension, then we use chunks to make it a pseudo 2d"
     lst = list(x)
@@ -126,13 +126,13 @@ def chunks_faster(x, sz):
     print(f'len: {len(img)}')
     return img
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 57
+# %% ../nbs/lib/groundup_003_matmul.ipynb 58
 class Matrix:
     "turning a list of list into a maxtrix like object"
     def __init__(self, xs): self.xs = xs
     def __getitem__(self, idxs): return self.xs[idxs[0]][idxs[1]]
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 90
+# %% ../nbs/lib/groundup_003_matmul.ipynb 91
 def rand():
     "create a random number between 0 and 1"
     global rnd_state
@@ -143,7 +143,7 @@ def rand():
     rnd_state = x,y,z
     return (x/30269 + y/30307 + z/30323) % 1.0
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 115
+# %% ../nbs/lib/groundup_003_matmul.ipynb 116
 def matmul_3loops(a, b):
     (ar,ac),(br,bc) = a.shape,b.shape
     c = torch.zeros(ar, bc)
@@ -154,14 +154,20 @@ def matmul_3loops(a, b):
     print(f'shapes => a: {a.shape}, b: {b.shape}, res: {c.shape}')
     return c
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 130
+# %% ../nbs/lib/groundup_003_matmul.ipynb 125
+import numba
+
+# %% ../nbs/lib/groundup_003_matmul.ipynb 128
+from numba import njit, jit
+
+# %% ../nbs/lib/groundup_003_matmul.ipynb 131
 @njit
 def dot(a,b):
     res = 0.
     for i in range(len(a)): res+=a[i]*b[i]
     return res
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 137
+# %% ../nbs/lib/groundup_003_matmul.ipynb 138
 def matmul_2loops_njit(a,b):
     "doing matrix multiplication with 2 python loops and 1 loop in machine code"
     a,b = a.numpy(),b.numpy() # njit or numba don't work with torch.tensor but numpy array
@@ -171,7 +177,7 @@ def matmul_2loops_njit(a,b):
         for j in range(bc): c[i,j] = dot(a[i,:], b[:,j])
     return c
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 160
+# %% ../nbs/lib/groundup_003_matmul.ipynb 161
 def matmul_2loops_elementwise(a,b):
     (ar,ac),(br,bc) = a.shape,b.shape
     c = torch.zeros(ar, bc)
@@ -179,7 +185,7 @@ def matmul_2loops_elementwise(a,b):
         for j in range(bc): c[i,j] = (a[i,:] * b[:,j]).sum()
     return c
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 166
+# %% ../nbs/lib/groundup_003_matmul.ipynb 167
 def matmul_2loops_dotproduct(a,b):
     (ar,ac),(br,bc) = a.shape,b.shape
     c = torch.zeros(ar, bc)
@@ -187,7 +193,7 @@ def matmul_2loops_dotproduct(a,b):
         for j in range(bc): c[i,j] = torch.dot(a[i,:], b[:,j])
     return c
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 231
+# %% ../nbs/lib/groundup_003_matmul.ipynb 232
 def matmul_1loop_broadcast(a,b):
     (ar,ac),(br,bc) = a.shape,b.shape
     c = torch.zeros(ar, bc)
@@ -195,7 +201,7 @@ def matmul_1loop_broadcast(a,b):
         c[i]   = (a[i,:,None] * b).sum(dim=0) # broadcast version
     return c
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 243
+# %% ../nbs/lib/groundup_003_matmul.ipynb 244
 def matmul_einsum_noloop(a,b): return torch.einsum('ik,kj->ij', a, b)
 # c[i,j] += a[i,k] * b[k,j]
 # c[i,j] = (a[i,:] * b[:,j]).sum()

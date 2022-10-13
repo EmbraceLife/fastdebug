@@ -3,5 +3,5 @@
 # %% auto 0
 __all__ = ['a']
 
-# %% ../nbs/lib/groundup_003_matmul.ipynb 19
+# %% ../nbs/lib/groundup_003_matmul.ipynb 20
 a = "todelete"
