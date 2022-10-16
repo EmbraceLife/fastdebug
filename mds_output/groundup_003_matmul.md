@@ -1,7 +1,11 @@
+```python
+
+```
+
 # groundup_003_matmul
 
 
-```
+```python
 #| default_exp delete0002
 ```
 ---
@@ -19,7 +23,7 @@ The *foundations* we'll assume throughout this course are:
 ## imports
 
 
-```
+```python
 from fastdebug.utils import *
 from fastdebug.core import *
 ```
@@ -29,12 +33,13 @@ from fastdebug.core import *
 
 
 
-```
-from fastdebug.groundup import *
+```python
+# from fastdebug.groundup import *
 ```
 
 
-```
+```python
+#| export groundup
 from pathlib import Path
 import pickle, gzip, math, os, time, shutil, matplotlib as mpl, matplotlib.pyplot as plt
 ```
@@ -42,7 +47,7 @@ import pickle, gzip, math, os, time, shutil, matplotlib as mpl, matplotlib.pyplo
 ## get_exp_data
 
 
-```
+```python
 MNIST_URL='https://github.com/mnielsen/neural-networks-and-deep-learning/blob/master/data/mnist.pkl.gz?raw=true'
 path_data = Path('data')
 path_data
@@ -56,12 +61,12 @@ path_data
 
 
 
-```
+```python
 path_data.mkdir(exist_ok=True) # created a data folder in the current directory
 ```
 
 
-```
+```python
 path_gz = path_data/'mnist.pkl.gz'
 path_gz
 ```
@@ -76,12 +81,12 @@ path_gz
 [urlretrieve](https://docs.python.org/3/library/urllib.request.html#urllib.request.urlretrieve) - (read the docs!)
 
 
-```
+```python
 from urllib.request import urlretrieve
 ```
 
 
-```
+```python
 check(urlretrieve)
 ```
 
@@ -111,12 +116,12 @@ check(urlretrieve)
 
 
 
-```
+```python
 if not path_gz.exists(): urlretrieve(MNIST_URL, path_gz)
 ```
 
 
-```
+```python
 !ls -l data
 ```
 
@@ -125,20 +130,21 @@ if not path_gz.exists(): urlretrieve(MNIST_URL, path_gz)
 
 
 
-```
+```python
 with gzip.open(path_gz, 'rb') as f: ((x_train, y_train), (x_valid, y_valid), _) = pickle.load(f, encoding='latin-1')
 ```
 
 
-```
+```python
 #| export
 a = "todelete"
 ```
 
 
-```
+```python
 #| export groundup
 def get_exp_data():
+    from pathlib import Path
     MNIST_URL='https://github.com/mnielsen/neural-networks-and-deep-learning/blob/master/data/mnist.pkl.gz?raw=true'
     path_data = Path('data')
     path_data.mkdir(exist_ok=True) # created a data folder in the current directory
@@ -150,12 +156,12 @@ def get_exp_data():
 ```
 
 
-```
+```python
 x_train, y_train, x_valid, y_valid = get_exp_data()
 ```
 
 
-```
+```python
 x_train[0].shape
 x_train[0].size
 type(x_train[0])
@@ -185,7 +191,7 @@ type(x_train[0])
 ### range, yield, chunks
 
 
-```
+```python
 lst1 = list(x_train[0])
 vals = lst1[200:210]
 vals
@@ -208,7 +214,7 @@ vals
 
 
 
-```
+```python
 #| export groundup
 def chunks(x, sz):
     for i in range(0, len(x), sz): 
@@ -217,7 +223,7 @@ def chunks(x, sz):
 ```
 
 
-```
+```python
 vals
 list(chunks(vals, 5))
 ```
@@ -251,13 +257,13 @@ list(chunks(vals, 5))
 
 
 
-```
+```python
 def chunks(x, sz):
     for i in range(0, len(x), sz): yield x[i:i+sz]
 ```
 
 
-```
+```python
 type(chunks(lst1, 28))
 ```
 
@@ -269,7 +275,7 @@ type(chunks(lst1, 28))
 
 
 
-```
+```python
 img = list(chunks(lst1, 28))
 len(img)
 ```
@@ -282,7 +288,7 @@ len(img)
 
 
 
-```
+```python
 check(plt.imshow)
 ```
 
@@ -313,26 +319,26 @@ check(plt.imshow)
 
 
 
-```
+```python
 mpl.rcParams['image.cmap'] = 'gray'
 plt.imshow(list(chunks(lst1, 28)));
 ```
 
 
     
-![png](groundup_003_matmul_files/groundup_003_matmul_31_0.png)
+![png](groundup_003_matmul_files/groundup_003_matmul_32_0.png)
     
 
 
 ### [islice](https://docs.python.org/3/library/itertools.html#itertools.islice)
 
 
-```
+```python
 from itertools import islice
 ```
 
 
-```
+```python
 islice.__class__
 ```
 
@@ -344,7 +350,7 @@ islice.__class__
 
 
 
-```
+```python
 help(islice)
 ```
 
@@ -387,7 +393,7 @@ help(islice)
 
 
 
-```
+```python
 vals
 len(vals)
 ```
@@ -416,7 +422,7 @@ len(vals)
 
 
 
-```
+```python
 it = iter(vals)
 islice(it, 5)
 ```
@@ -429,7 +435,7 @@ islice(it, 5)
 
 
 
-```
+```python
 list(islice(it, 5))
 ```
 
@@ -441,7 +447,7 @@ list(islice(it, 5))
 
 
 
-```
+```python
 list(islice(it, 5))
 ```
 
@@ -453,7 +459,7 @@ list(islice(it, 5))
 
 
 
-```
+```python
 list(islice(it, 5))
 ```
 
@@ -465,7 +471,7 @@ list(islice(it, 5))
 
 
 
-```
+```python
 check(iter)
 ```
 
@@ -493,23 +499,23 @@ check(iter)
 why using `islice` and `iter` over `chunks`
 
 
-```
+```python
 %timeit -n 10 it = iter(lst1)
 ```
 
-    59.5 ns ± 15 ns per loop (mean ± std. dev. of 7 runs, 10 loops each)
+    54.2 ns ± 17.1 ns per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 
 
-```
+```python
 %timeit -n 10 img = list(iter(lambda: list(islice(it, 28)), []))
 ```
 
-    386 ns ± 84 ns per loop (mean ± std. dev. of 7 runs, 10 loops each)
+    449 ns ± 151 ns per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 
 
-```
+```python
 len(img)
 ```
 
@@ -521,21 +527,21 @@ len(img)
 
 
 
-```
+```python
 def chunks(x, sz):
     for i in range(0, len(x), sz): yield x[i:i+sz]
 ```
 
 
-```
+```python
 %timeit -n 10 img = list(chunks(lst1, 28))
 ```
 
-    3.44 µs ± 468 ns per loop (mean ± std. dev. of 7 runs, 10 loops each)
+    3.48 µs ± 189 ns per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 
 
-```
+```python
 len(img)
 ```
 
@@ -547,7 +553,7 @@ len(img)
 
 
 
-```
+```python
 type(x_train[0])
 x_train[0].shape
 x_train[0].size
@@ -575,7 +581,7 @@ x_train[0].size
 
 
 
-```
+```python
 #| export groundup
 def chunks_faster(x, sz):
     "if the data is numpy.ndarray and shape is 1 dimension, then we use chunks to make it a pseudo 2d"
@@ -587,7 +593,7 @@ def chunks_faster(x, sz):
 ```
 
 
-```
+```python
 img = chunks_faster(x_train[0], 28)
 ```
 
@@ -595,13 +601,13 @@ img = chunks_faster(x_train[0], 28)
 
 
 
-```
+```python
 plt.imshow(img);
 ```
 
 
     
-![png](groundup_003_matmul_files/groundup_003_matmul_52_0.png)
+![png](groundup_003_matmul_files/groundup_003_matmul_53_0.png)
     
 
 
@@ -610,7 +616,7 @@ plt.imshow(img);
 ### list and Matrix
 
 
-```
+```python
 type(img)
 ```
 
@@ -622,7 +628,7 @@ type(img)
 
 
 
-```
+```python
 img[20][15]
 ```
 
@@ -634,7 +640,7 @@ img[20][15]
 
 
 
-```
+```python
 #| export groundup
 class Matrix:
     "turning a list of list into a maxtrix like object"
@@ -643,7 +649,7 @@ class Matrix:
 ```
 
 
-```
+```python
 m = Matrix(img)
 m[20,15]
 type(m)
@@ -666,13 +672,13 @@ type(m)
 ### tensor, map, np.array
 
 
-```
+```python
 import torch
 from torch import tensor
 ```
 
 
-```
+```python
 tensor([1,2,3])
 ```
 
@@ -684,7 +690,7 @@ tensor([1,2,3])
 
 
 
-```
+```python
 type(x_train)
 x_train.shape
 ```
@@ -704,7 +710,7 @@ x_train.shape
 
 
 
-```
+```python
 check(tensor)
 ```
 
@@ -734,7 +740,7 @@ check(tensor)
 
 
 
-```
+```python
 x_train,y_train,x_valid,y_valid = map(tensor, (x_train,y_train,x_valid,y_valid))
 x_train.shape
 ```
@@ -749,7 +755,7 @@ x_train.shape
 ### tensor.type, tensor.reshape
 
 
-```
+```python
 check(x_train.type)
 ```
 
@@ -779,7 +785,7 @@ check(x_train.type)
 
 
 
-```
+```python
 x_train.type()
 ```
 
@@ -791,7 +797,7 @@ x_train.type()
 
 
 
-```
+```python
 check(x_train.reshape)
 ```
 
@@ -821,7 +827,7 @@ check(x_train.reshape)
 
 
 
-```
+```python
 check(torch.reshape)
 ```
 
@@ -851,7 +857,7 @@ check(torch.reshape)
 
 
 
-```
+```python
 %whos Tensor
 ```
 
@@ -864,12 +870,12 @@ check(torch.reshape)
 
 
 
-```
+```python
 imgs = x_train.reshape((-1,28,28))
 ```
 
 
-```
+```python
 imgs.shape
 ```
 
@@ -881,18 +887,18 @@ imgs.shape
 
 
 
-```
+```python
 plt.imshow(imgs[0]);
 ```
 
 
     
-![png](groundup_003_matmul_files/groundup_003_matmul_73_0.png)
+![png](groundup_003_matmul_files/groundup_003_matmul_74_0.png)
     
 
 
 
-```
+```python
 imgs[0,20,15]
 ```
 
@@ -906,7 +912,7 @@ imgs[0,20,15]
 ### torch.shape
 
 
-```
+```python
 check(x_train.shape)
 ```
 
@@ -926,7 +932,7 @@ check(x_train.shape)
 
 
 
-```
+```python
 check(torch.Size)
 ```
 
@@ -954,7 +960,7 @@ check(torch.Size)
 
 
 
-```
+```python
 x_train.shape
 n,c = x_train.shape
 n,c
@@ -975,7 +981,7 @@ n,c
 
 
 
-```
+```python
 y_train, y_train.shape
 ```
 
@@ -987,7 +993,7 @@ y_train, y_train.shape
 
 
 
-```
+```python
 min(y_train),max(y_train)
 ```
 
@@ -999,7 +1005,7 @@ min(y_train),max(y_train)
 
 
 
-```
+```python
 y_train.min(), y_train.max()
 ```
 
@@ -1011,7 +1017,7 @@ y_train.min(), y_train.max()
 
 
 
-```
+```python
 
 ```
 
@@ -1023,7 +1029,7 @@ Based on the Wichmann Hill algorithm used before Python 2.3.
 Create your own random number between 0 and 1
 
 
-```
+```python
 divmod(10, 3)
 ```
 
@@ -1035,7 +1041,7 @@ divmod(10, 3)
 
 
 
-```
+```python
 rnd_state = None
 def seed(a):
     global rnd_state
@@ -1046,7 +1052,7 @@ def seed(a):
 ```
 
 
-```
+```python
 seed(457428938475)
 rnd_state
 ```
@@ -1059,7 +1065,7 @@ rnd_state
 
 
 
-```
+```python
 5%2
 5%3
 ```
@@ -1079,7 +1085,7 @@ rnd_state
 
 
 
-```
+```python
 #| export groundup
 def rand():
     "create a random number between 0 and 1"
@@ -1093,7 +1099,7 @@ def rand():
 ```
 
 
-```
+```python
 rand(),rand(),rand()
 ```
 
@@ -1105,7 +1111,7 @@ rand(),rand(),rand()
 
 
 
-```
+```python
 check(os.fork)
 ```
 
@@ -1127,7 +1133,7 @@ check(os.fork)
 
 
 
-```
+```python
 check(os._exit)
 ```
 
@@ -1147,7 +1153,7 @@ check(os._exit)
 
 
 
-```
+```python
 check(os.EX_OK)
 ```
 
@@ -1177,7 +1183,7 @@ check(os.EX_OK)
 
 
 
-```
+```python
 if os.fork(): print(f'In parent: {rand()}')
 else:
     print(f'In child: {rand()}')
@@ -1189,31 +1195,20 @@ else:
 
 
 
-```
+```python
 if os.fork(): print(f'In parent: {torch.rand(1)}')
 else:
     print(f'In child: {torch.rand(1)}')
     os._exit(os.EX_OK)
 ```
 
-    In parent: tensor([0.5278])
-    In child: tensor([0.5278])
+    In parent: tensor([0.2364])
+    In child: tensor([0.2364])
 
 
 
-```
+```python
 plt.plot([rand() for _ in range(50)]);
-```
-
-
-    
-![png](groundup_003_matmul_files/groundup_003_matmul_97_0.png)
-    
-
-
-
-```
-plt.hist([rand() for _ in range(10000)]);
 ```
 
 
@@ -1222,11 +1217,22 @@ plt.hist([rand() for _ in range(10000)]);
     
 
 
+
+```python
+plt.hist([rand() for _ in range(10000)]);
+```
+
+
+    
+![png](groundup_003_matmul_files/groundup_003_matmul_99_0.png)
+    
+
+
 ### torch.randn
 much faster than rand from scratch
 
 
-```
+```python
 check(torch.randn)
 ```
 
@@ -1256,23 +1262,23 @@ check(torch.randn)
 
 
 
-```
+```python
 %timeit -n 10 list(chunks([rand() for _ in range(7840)], 10))
 ```
 
-    2.24 ms ± 23 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+    2.26 ms ± 26.2 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 
 
-```
+```python
 %timeit -n 10 torch.randn(784,10)
 ```
 
-    95.8 µs ± 5.63 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+    99.2 µs ± 4.28 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 
 
-```
+```python
 rd = torch.randn(1, 1,784,10)
 rd.shape
 rd[:5].shape
@@ -1297,13 +1303,13 @@ rd[:5].shape
 ### matmul_3loops, torch.zeros
 
 
-```
+```python
 weights = torch.randn(784,10)
 bias = torch.zeros(10)
 ```
 
 
-```
+```python
 weights[0,:]
 len(weights[0,:])
 bias
@@ -1313,8 +1319,8 @@ len(bias)
 
 
 
-    tensor([-1.0583e-03,  7.9281e-01, -4.2801e-01,  5.6352e-01,  1.2624e-01,
-            -1.5809e+00, -9.4577e-01, -5.4839e-01, -5.6735e-01,  8.4620e-01])
+    tensor([-1.3237,  1.1737,  0.3392,  0.2210,  0.6607,  1.8192,  0.5331,  1.0146,
+             0.7724, -0.2601])
 
 
 
@@ -1340,13 +1346,13 @@ len(bias)
 
 
 
-```
+```python
 m1 = x_valid[:5] # as input
 m2 = weights # as layer1 weights
 ```
 
 
-```
+```python
 m1.shape,m2.shape
 ```
 
@@ -1358,7 +1364,7 @@ m1.shape,m2.shape
 
 
 
-```
+```python
 ar,ac = m1.shape # n_rows * n_cols
 br,bc = m2.shape
 (ar,ac),(br,bc)
@@ -1372,7 +1378,7 @@ br,bc = m2.shape
 
 
 
-```
+```python
 t1 = torch.zeros(ar, bc)
 t1.shape
 ```
@@ -1385,7 +1391,7 @@ t1.shape
 
 
 
-```
+```python
 for i in range(ar):         # 5
     for j in range(bc):     # 10
         for k in range(ac): # 784
@@ -1393,28 +1399,28 @@ for i in range(ar):         # 5
 ```
 
 
-```
+```python
 t1
 ```
 
 
 
 
-    tensor([[-17.7020,  -8.6148,  12.1728, -15.7812,   5.7751, -14.7503,  -8.6561,
-              -4.2844,  13.3434,   7.5200],
-            [  2.5126,  -0.4575,  10.7297, -11.6222,  12.9827,   2.5356,  -9.6560,
-               8.5241,   6.1100,  15.2349],
-            [ -4.3304, -15.7869,   1.8738,   5.8006,   0.3808,   5.1367,   3.6077,
-              -1.8988,   7.2987,   9.6041],
-            [ -9.2662,  -3.2193,   7.5908,   2.5368,   3.1693,  -2.1447,  -2.5075,
-               5.5763,   8.4250,   4.0281],
-            [ -2.4684,  -2.5412, -11.9244,  -4.8056,   0.8898,   2.1396,  -5.8808,
-               9.9556,  10.6771,  15.9383]])
+    tensor([[ 13.9416,  -2.0733,   7.3798,   4.8941,   9.7936,  11.2293,  -5.6609,
+               2.7170,   1.6722,   0.6240],
+            [ -3.9407,   8.6393,   1.4139,   3.4698,  -0.4061,  -6.5177,  -2.3376,
+               8.8883,   8.4269,   2.1366],
+            [  3.9033,   5.0146,  12.8683,  -8.9402,  11.4366,  31.3686,   3.2794,
+               2.2839,  11.1379,   0.6423],
+            [  6.6159,   1.9588,   2.2625,  12.5532,   5.5336,   0.8998,   0.5374,
+               7.7319,  -0.2104,   0.8249],
+            [ -5.4877,  19.7717,  12.5163,  -2.7179,   7.1121,   5.9905,  -2.4888,
+               6.5958,  22.2492, -10.1361]])
 
 
 
 
-```
+```python
 t1.shape
 ```
 
@@ -1426,7 +1432,7 @@ t1.shape
 
 
 
-```
+```python
 #| export groundup
 def matmul_3loops(a, b):
     (ar,ac),(br,bc) = a.shape,b.shape
@@ -1440,7 +1446,7 @@ def matmul_3loops(a, b):
 ```
 
 
-```
+```python
 matmul_3loops(m1,m2)
 ```
 
@@ -1450,28 +1456,28 @@ matmul_3loops(m1,m2)
 
 
 
-    tensor([[-17.7020,  -8.6148,  12.1728, -15.7812,   5.7751, -14.7503,  -8.6561,
-              -4.2844,  13.3434,   7.5200],
-            [  2.5126,  -0.4575,  10.7297, -11.6222,  12.9827,   2.5356,  -9.6560,
-               8.5241,   6.1100,  15.2349],
-            [ -4.3304, -15.7869,   1.8738,   5.8006,   0.3808,   5.1367,   3.6077,
-              -1.8988,   7.2987,   9.6041],
-            [ -9.2662,  -3.2193,   7.5908,   2.5368,   3.1693,  -2.1447,  -2.5075,
-               5.5763,   8.4250,   4.0281],
-            [ -2.4684,  -2.5412, -11.9244,  -4.8056,   0.8898,   2.1396,  -5.8808,
-               9.9556,  10.6771,  15.9383]])
+    tensor([[ 13.9416,  -2.0733,   7.3798,   4.8941,   9.7936,  11.2293,  -5.6609,
+               2.7170,   1.6722,   0.6240],
+            [ -3.9407,   8.6393,   1.4139,   3.4698,  -0.4061,  -6.5177,  -2.3376,
+               8.8883,   8.4269,   2.1366],
+            [  3.9033,   5.0146,  12.8683,  -8.9402,  11.4366,  31.3686,   3.2794,
+               2.2839,  11.1379,   0.6423],
+            [  6.6159,   1.9588,   2.2625,  12.5532,   5.5336,   0.8998,   0.5374,
+               7.7319,  -0.2104,   0.8249],
+            [ -5.4877,  19.7717,  12.5163,  -2.7179,   7.1121,   5.9905,  -2.4888,
+               6.5958,  22.2492, -10.1361]])
 
 
 
 ### torch.set_printoptions, np.set_printoptions
 
 
-```
+```python
 import numpy as np
 ```
 
 
-```
+```python
 torch.set_printoptions(precision=2, linewidth=140, sci_mode=False)
 np.set_printoptions(precision=2, linewidth=140)
 t1
@@ -1480,26 +1486,26 @@ t1
 
 
 
-    tensor([[-17.70,  -8.61,  12.17, -15.78,   5.78, -14.75,  -8.66,  -4.28,  13.34,   7.52],
-            [  2.51,  -0.46,  10.73, -11.62,  12.98,   2.54,  -9.66,   8.52,   6.11,  15.23],
-            [ -4.33, -15.79,   1.87,   5.80,   0.38,   5.14,   3.61,  -1.90,   7.30,   9.60],
-            [ -9.27,  -3.22,   7.59,   2.54,   3.17,  -2.14,  -2.51,   5.58,   8.43,   4.03],
-            [ -2.47,  -2.54, -11.92,  -4.81,   0.89,   2.14,  -5.88,   9.96,  10.68,  15.94]])
+    tensor([[ 13.94,  -2.07,   7.38,   4.89,   9.79,  11.23,  -5.66,   2.72,   1.67,   0.62],
+            [ -3.94,   8.64,   1.41,   3.47,  -0.41,  -6.52,  -2.34,   8.89,   8.43,   2.14],
+            [  3.90,   5.01,  12.87,  -8.94,  11.44,  31.37,   3.28,   2.28,  11.14,   0.64],
+            [  6.62,   1.96,   2.26,  12.55,   5.53,   0.90,   0.54,   7.73,  -0.21,   0.82],
+            [ -5.49,  19.77,  12.52,  -2.72,   7.11,   5.99,  -2.49,   6.60,  22.25, -10.14]])
 
 
 
 
-```
+```python
 %time _=matmul_3loops(m1, m2)
 ```
 
     shapes => a: torch.Size([5, 784]), b: torch.Size([784, 10]), res: torch.Size([5, 10])
-    CPU times: user 332 ms, sys: 2.02 ms, total: 334 ms
-    Wall time: 333 ms
+    CPU times: user 334 ms, sys: 2.33 ms, total: 336 ms
+    Wall time: 336 ms
 
 
 
-```
+```python
 
 ```
 
@@ -1509,12 +1515,13 @@ Numba is an open source JIT compiler that translates a subset of Python and NumP
 ### njit, dot, np.array
 
 
-```
+```python
+#| export groundup
 import numba
 ```
 
 
-```
+```python
 check(numba)
 ```
 
@@ -1976,7 +1983,7 @@ check(numba)
 
 
 
-```
+```python
 whatinside(numba)
 ```
 
@@ -1991,12 +1998,13 @@ whatinside(numba)
 
 
 
-```
+```python
+#| export groundup
 from numba import njit, jit
 ```
 
 
-```
+```python
 check(njit)
 ```
 
@@ -2018,7 +2026,7 @@ check(njit)
 
 
 
-```
+```python
 check(jit)
 ```
 
@@ -2048,7 +2056,7 @@ check(jit)
 
 
 
-```
+```python
 #| export groundup
 @njit
 def dot(a,b):
@@ -2058,17 +2066,17 @@ def dot(a,b):
 ```
 
 
-```
+```python
 from numpy import array
 ```
 
 
-```
+```python
 %time dot(array([1.,2,3]),array([2.,3,4]))
 ```
 
-    CPU times: user 175 ms, sys: 29.3 ms, total: 204 ms
-    Wall time: 251 ms
+    CPU times: user 174 ms, sys: 20.8 ms, total: 195 ms
+    Wall time: 219 ms
 
 
 
@@ -2079,12 +2087,12 @@ from numpy import array
 
 
 
-```
+```python
 %time dot(array([1.,2,3]),array([2.,3,4]))
 ```
 
-    CPU times: user 17 µs, sys: 1 µs, total: 18 µs
-    Wall time: 17.2 µs
+    CPU times: user 20 µs, sys: 1 µs, total: 21 µs
+    Wall time: 21 µs
 
 
 
@@ -2095,12 +2103,12 @@ from numpy import array
 
 
 
-```
+```python
 %time dot(array([1.,2,3]),array([2.,3,4]))
 ```
 
-    CPU times: user 14 µs, sys: 0 ns, total: 14 µs
-    Wall time: 16 µs
+    CPU times: user 29 µs, sys: 1 µs, total: 30 µs
+    Wall time: 31 µs
 
 
 
@@ -2115,7 +2123,7 @@ from numpy import array
 Now only two of our loops are running in Python, and the third loop is running in machine code
 
 
-```
+```python
 #| export groundup
 def matmul_2loops_njit(a,b):
     "doing matrix multiplication with 2 python loops and 1 loop in machine code"
@@ -2128,23 +2136,23 @@ def matmul_2loops_njit(a,b):
 ```
 
 
-```
+```python
 matmul_2loops_njit(m1,m2)
 ```
 
 
 
 
-    tensor([[-17.70,  -8.61,  12.17, -15.78,   5.78, -14.75,  -8.66,  -4.28,  13.34,   7.52],
-            [  2.51,  -0.46,  10.73, -11.62,  12.98,   2.54,  -9.66,   8.52,   6.11,  15.23],
-            [ -4.33, -15.79,   1.87,   5.80,   0.38,   5.14,   3.61,  -1.90,   7.30,   9.60],
-            [ -9.27,  -3.22,   7.59,   2.54,   3.17,  -2.14,  -2.51,   5.58,   8.43,   4.03],
-            [ -2.47,  -2.54, -11.92,  -4.81,   0.89,   2.14,  -5.88,   9.96,  10.68,  15.94]])
+    tensor([[ 13.94,  -2.07,   7.38,   4.89,   9.79,  11.23,  -5.66,   2.72,   1.67,   0.62],
+            [ -3.94,   8.64,   1.41,   3.47,  -0.41,  -6.52,  -2.34,   8.89,   8.43,   2.14],
+            [  3.90,   5.01,  12.87,  -8.94,  11.44,  31.37,   3.28,   2.28,  11.14,   0.64],
+            [  6.62,   1.96,   2.26,  12.55,   5.53,   0.90,   0.54,   7.73,  -0.21,   0.82],
+            [ -5.49,  19.77,  12.52,  -2.72,   7.11,   5.99,  -2.49,   6.60,  22.25, -10.14]])
 
 
 
 
-```
+```python
 check(m1.numpy)
 ```
 
@@ -2168,12 +2176,12 @@ check(m1.numpy)
 
 
 
-```
+```python
 m1a,m2a = m1.numpy(),m2.numpy()
 ```
 
 
-```
+```python
 m1.shape, m1a.shape
 ```
 
@@ -2187,12 +2195,12 @@ m1.shape, m1a.shape
 ### test_close, %timeit, %time
 
 
-```
+```python
 from fastcore.test import *
 ```
 
 
-```
+```python
 test_close(matmul_3loops(m1, m2),matmul_2loops_njit(m1, m2))
 ```
 
@@ -2200,24 +2208,24 @@ test_close(matmul_3loops(m1, m2),matmul_2loops_njit(m1, m2))
 
 
 
-```
+```python
 %timeit -n 10 matmul_2loops_njit(m1,m2)
 ```
 
-    219 µs ± 28.2 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+    259 µs ± 160 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 
 
-```
+```python
 %time _=matmul_2loops_njit(m1,m2)
 ```
 
-    CPU times: user 340 µs, sys: 193 µs, total: 533 µs
-    Wall time: 338 µs
+    CPU times: user 376 µs, sys: 160 µs, total: 536 µs
+    Wall time: 379 µs
 
 
 
-```
+```python
 
 ```
 
@@ -2228,7 +2236,7 @@ test_close(matmul_3loops(m1, m2),matmul_2loops_njit(m1, m2))
 ### elementwise by tensor
 
 
-```
+```python
 a = tensor([10., 6, -4])
 b = tensor([2., 8, 7])
 a,b
@@ -2242,7 +2250,7 @@ a,b
 
 
 
-```
+```python
 a + b
 ```
 
@@ -2254,7 +2262,7 @@ a + b
 
 
 
-```
+```python
 (a < b).float().mean()
 ```
 
@@ -2266,7 +2274,7 @@ a + b
 
 
 
-```
+```python
 m = tensor([[1., 2, 3], [4,5,6], [7,8,9]]); m
 ```
 
@@ -2290,7 +2298,7 @@ $$\| A \|_F = \left( \sum_{i,j=1}^n | a_{ij} |^2 \right)^{1/2}$$
 ```
 
 
-```
+```python
 (m*m).sum().sqrt()
 ```
 
@@ -2302,7 +2310,7 @@ $$\| A \|_F = \left( \sum_{i,j=1}^n | a_{ij} |^2 \right)^{1/2}$$
 
 
 
-```
+```python
 check(m.sum)
 ```
 
@@ -2324,7 +2332,7 @@ check(m.sum)
 
 
 
-```
+```python
 check(torch.sum)
 ```
 
@@ -2356,7 +2364,7 @@ check(torch.sum)
 ### matmul_2loops_elementwise
 
 
-```
+```python
 #| export groundup
 def matmul_2loops_elementwise(a,b):
     (ar,ac),(br,bc) = a.shape,b.shape
@@ -2367,7 +2375,7 @@ def matmul_2loops_elementwise(a,b):
 ```
 
 
-```
+```python
 test_close(matmul_3loops(m1,m2), matmul_2loops_elementwise(m1, m2))
 ```
 
@@ -2375,37 +2383,37 @@ test_close(matmul_3loops(m1,m2), matmul_2loops_elementwise(m1, m2))
 
 
 
-```
+```python
 %time _=matmul_3loops(m1, m2)
 ```
 
     shapes => a: torch.Size([5, 784]), b: torch.Size([784, 10]), res: torch.Size([5, 10])
-    CPU times: user 341 ms, sys: 1.91 ms, total: 342 ms
-    Wall time: 342 ms
+    CPU times: user 336 ms, sys: 3.59 ms, total: 340 ms
+    Wall time: 340 ms
 
 
 
-```
+```python
 %time _=matmul_2loops_njit(m1, m2)
 ```
 
-    CPU times: user 335 µs, sys: 168 µs, total: 503 µs
-    Wall time: 308 µs
+    CPU times: user 335 µs, sys: 198 µs, total: 533 µs
+    Wall time: 322 µs
 
 
 
-```
+```python
 %time _=matmul_2loops_elementwise(m1, m2)
 ```
 
-    CPU times: user 675 µs, sys: 377 µs, total: 1.05 ms
-    Wall time: 656 µs
+    CPU times: user 635 µs, sys: 370 µs, total: 1.01 ms
+    Wall time: 613 µs
 
 
 ### matmul_2loops_dotproduct
 
 
-```
+```python
 #| export groundup
 def matmul_2loops_dotproduct(a,b):
     (ar,ac),(br,bc) = a.shape,b.shape
@@ -2416,47 +2424,47 @@ def matmul_2loops_dotproduct(a,b):
 ```
 
 
-```
+```python
 test_close(t1,matmul_2loops_dotproduct(m1, m2))
 ```
 
 
-```
+```python
 %timeit -n 10 _=matmul_2loops_dotproduct(m1, m2)
 ```
 
-    400 µs ± 6.77 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+    393 µs ± 20.6 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 
 
-```
+```python
 %time _=matmul_2loops_njit(m1, m2)
 ```
 
-    CPU times: user 548 µs, sys: 445 µs, total: 993 µs
-    Wall time: 721 µs
+    CPU times: user 380 µs, sys: 230 µs, total: 610 µs
+    Wall time: 389 µs
 
 
 
-```
+```python
 %time _=matmul_2loops_elementwise(m1, m2)
 ```
 
-    CPU times: user 696 µs, sys: 393 µs, total: 1.09 ms
-    Wall time: 692 µs
+    CPU times: user 654 µs, sys: 410 µs, total: 1.06 ms
+    Wall time: 686 µs
 
 
 
-```
+```python
 %time _=matmul_2loops_dotproduct(m1, m2)
 ```
 
-    CPU times: user 558 µs, sys: 282 µs, total: 840 µs
-    Wall time: 555 µs
+    CPU times: user 584 µs, sys: 323 µs, total: 907 µs
+    Wall time: 576 µs
 
 
 
-```
+```python
 
 ```
 
@@ -2482,7 +2490,7 @@ In addition to the efficiency of broadcasting, it allows developers to write les
 How a scalar is broadcasted to do operation with a matrix
 
 
-```
+```python
 a
 ```
 
@@ -2494,7 +2502,7 @@ a
 
 
 
-```
+```python
 a > 0
 ```
 
@@ -2512,7 +2520,7 @@ For instance you can normalize our dataset by subtracting the mean (a scalar) fr
 Other examples of broadcasting with a scalar:
 
 
-```
+```python
 a + 1
 ```
 
@@ -2524,7 +2532,7 @@ a + 1
 
 
 
-```
+```python
 m
 ```
 
@@ -2538,7 +2546,7 @@ m
 
 
 
-```
+```python
 2*m
 ```
 
@@ -2558,7 +2566,7 @@ Although broadcasting a scalar is an idea that dates back to APL, the more power
 We can also broadcast a vector to a matrix, when the vector's shape is a scalar
 
 
-```
+```python
 c = tensor([10.,20,30]); 
 c
 ```
@@ -2571,7 +2579,7 @@ c
 
 
 
-```
+```python
 m
 ```
 
@@ -2585,7 +2593,7 @@ m
 
 
 
-```
+```python
 m.shape,c.shape
 ```
 
@@ -2597,7 +2605,7 @@ m.shape,c.shape
 
 
 
-```
+```python
 m + c
 ```
 
@@ -2611,7 +2619,7 @@ m + c
 
 
 
-```
+```python
 c + m
 ```
 
@@ -2629,7 +2637,7 @@ c + m
 We don't really copy the rows, but it looks as if we did. In fact, the rows are given a *stride* of 0.
 
 
-```
+```python
 check(c.expand_as)
 ```
 
@@ -2658,12 +2666,12 @@ check(c.expand_as)
 
 
 
-```
+```python
 t = c.expand_as(m)
 ```
 
 
-```
+```python
 t
 ```
 
@@ -2677,7 +2685,7 @@ t
 
 
 
-```
+```python
 m + t
 ```
 
@@ -2691,7 +2699,7 @@ m + t
 
 
 
-```
+```python
 check(t.storage)
 ```
 
@@ -2715,7 +2723,7 @@ check(t.storage)
 
 
 
-```
+```python
 t.storage()
 ```
 
@@ -2730,7 +2738,7 @@ t.storage()
 
 
 
-```
+```python
 check(t.stride)
 ```
 
@@ -2760,7 +2768,7 @@ check(t.stride)
 
 
 
-```
+```python
 t.stride(), t.shape
 ```
 
@@ -2776,7 +2784,7 @@ t.stride(), t.shape
 You can index with the special value [None] or use `unsqueeze()` to convert a 1-dimensional array into a 2-dimensional array (although one of those dimensions has value 1).
 
 
-```
+```python
 c
 c.shape
 ```
@@ -2796,7 +2804,7 @@ c.shape
 
 
 
-```
+```python
 c.unsqueeze(0), c[None, :]
 ```
 
@@ -2808,7 +2816,7 @@ c.unsqueeze(0), c[None, :]
 
 
 
-```
+```python
 c.unsqueeze(0).shape
 c[None, :].shape
 ```
@@ -2828,7 +2836,7 @@ c[None, :].shape
 
 
 
-```
+```python
 c.unsqueeze(1), c[:, None]
 ```
 
@@ -2845,7 +2853,7 @@ c.unsqueeze(1), c[:, None]
 
 
 
-```
+```python
 c.shape
 c.unsqueeze(1).shape
 c[:, None].shape
@@ -2876,7 +2884,7 @@ c[:, None].shape
 You can always skip trailling ':'s. And '...' means '*all preceding dimensions*'
 
 
-```
+```python
 c[None].shape,c[...,None].shape
 ```
 
@@ -2890,7 +2898,7 @@ c[None].shape,c[...,None].shape
 ### Broadcast a one-row/col matrix
 
 
-```
+```python
 # c[None,:].expand_as(m)
 c[None].expand_as(m)
 ```
@@ -2905,7 +2913,7 @@ c[None].expand_as(m)
 
 
 
-```
+```python
 c[:,None].expand_as(m)
 ```
 
@@ -2919,7 +2927,7 @@ c[:,None].expand_as(m)
 
 
 
-```
+```python
 m + c[:,None]
 ```
 
@@ -2933,7 +2941,7 @@ m + c[:,None]
 
 
 
-```
+```python
 m + c[None,:]
 ```
 
@@ -2950,7 +2958,7 @@ m + c[None,:]
 how to broadcast two 1-row/col matricies
 
 
-```
+```python
 c[None,:]
 ```
 
@@ -2962,7 +2970,7 @@ c[None,:]
 
 
 
-```
+```python
 c[None,:].shape
 ```
 
@@ -2974,7 +2982,7 @@ c[None,:].shape
 
 
 
-```
+```python
 c[:,None]
 ```
 
@@ -2988,7 +2996,7 @@ c[:,None]
 
 
 
-```
+```python
 c[:,None].shape
 ```
 
@@ -3000,7 +3008,7 @@ c[:,None].shape
 
 
 
-```
+```python
 c[None,:] * c[:,None]
 ```
 
@@ -3014,7 +3022,7 @@ c[None,:] * c[:,None]
 
 
 
-```
+```python
 c[None] > c[:,None]
 ```
 
@@ -3043,12 +3051,12 @@ Very helpful [examples](https://docs.scipy.org/doc/numpy-1.13.0/user/basics.broa
 
 
 
-```
+```python
 
 ```
 
 
-```
+```python
 
 ```
 
@@ -3057,7 +3065,7 @@ Very helpful [examples](https://docs.scipy.org/doc/numpy-1.13.0/user/basics.broa
 ### matmul_1loop_broadcast
 
 
-```
+```python
 rowZero = m1[0]
 rowZero.shape, m2.shape
 ```
@@ -3070,7 +3078,7 @@ rowZero.shape, m2.shape
 
 
 
-```
+```python
 rowZero[:,None].shape # make rowZero flip from horizontal to vertical
 ```
 
@@ -3082,7 +3090,7 @@ rowZero[:,None].shape # make rowZero flip from horizontal to vertical
 
 
 
-```
+```python
 rowZero[:,None].expand_as(m2).shape # broadcast from one column to 10 columns to match m2
 ```
 
@@ -3094,7 +3102,7 @@ rowZero[:,None].expand_as(m2).shape # broadcast from one column to 10 columns to
 
 
 
-```
+```python
 (rowZero[:,None]*m2).shape # (broadcast vertically) vector * matrix 
 ```
 
@@ -3106,7 +3114,7 @@ rowZero[:,None].expand_as(m2).shape # broadcast from one column to 10 columns to
 
 
 
-```
+```python
 (rowZero[:,None]*m2).sum(dim=0) 
 # dim=0, smash vertically to the ground so that we just have one row as output
 # dim=1, smash horizontal to the left/right so that we just have one column as output
@@ -3115,12 +3123,12 @@ rowZero[:,None].expand_as(m2).shape # broadcast from one column to 10 columns to
 
 
 
-    tensor([-17.70,  -8.61,  12.17, -15.78,   5.78, -14.75,  -8.66,  -4.28,  13.34,   7.52])
+    tensor([13.94, -2.07,  7.38,  4.89,  9.79, 11.23, -5.66,  2.72,  1.67,  0.62])
 
 
 
 
-```
+```python
 #| export groundup
 def matmul_1loop_broadcast(a,b):
     (ar,ac),(br,bc) = a.shape,b.shape
@@ -3131,7 +3139,7 @@ def matmul_1loop_broadcast(a,b):
 ```
 
 
-```
+```python
 test_close(matmul_3loops(m1,m2),matmul_1loop_broadcast(m1, m2))
 ```
 
@@ -3139,29 +3147,29 @@ test_close(matmul_3loops(m1,m2),matmul_1loop_broadcast(m1, m2))
 
 
 
-```
+```python
 %timeit -n 10 _=matmul_1loop_broadcast(m1, m2)
 ```
 
-    59.6 µs ± 9.68 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+    57.4 µs ± 8.95 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 
 
-```
+```python
 %time _=matmul_2loops_njit(m1,m2)
 %time _=matmul_2loops_elementwise(m1,m2)
 %time _=matmul_2loops_dotproduct(m1,m2)
 %time _=matmul_1loop_broadcast(m1,m2)
 ```
 
-    CPU times: user 359 µs, sys: 201 µs, total: 560 µs
-    Wall time: 377 µs
-    CPU times: user 596 µs, sys: 103 µs, total: 699 µs
-    Wall time: 638 µs
-    CPU times: user 399 µs, sys: 0 ns, total: 399 µs
-    Wall time: 401 µs
-    CPU times: user 80 µs, sys: 0 ns, total: 80 µs
-    Wall time: 82 µs
+    CPU times: user 364 µs, sys: 237 µs, total: 601 µs
+    Wall time: 370 µs
+    CPU times: user 600 µs, sys: 32 µs, total: 632 µs
+    Wall time: 639 µs
+    CPU times: user 397 µs, sys: 1e+03 ns, total: 398 µs
+    Wall time: 399 µs
+    CPU times: user 79 µs, sys: 0 ns, total: 79 µs
+    Wall time: 80.8 µs
 
 
 ### matmul on x_train and weights
@@ -3169,12 +3177,12 @@ test_close(matmul_3loops(m1,m2),matmul_1loop_broadcast(m1, m2))
 Our time has gone from ~500ms to <0.1ms, an over 5000x improvement! We can run on the whole dataset now.
 
 
-```
+```python
 tr = matmul_1loop_broadcast(x_train, weights)
 ```
 
 
-```
+```python
 tr.shape
 ```
 
@@ -3186,25 +3194,25 @@ tr.shape
 
 
 
-```
+```python
 %time _=matmul_2loops_njit(x_train, weights)
 %time _=matmul_2loops_elementwise(x_train, weights)
 %time _=matmul_2loops_dotproduct(x_train, weights)
 %time _=matmul_1loop_broadcast(x_train, weights)
 ```
 
-    CPU times: user 2.16 s, sys: 471 ms, total: 2.63 s
-    Wall time: 1.81 s
-    CPU times: user 4.44 s, sys: 504 ms, total: 4.94 s
-    Wall time: 4.1 s
-    CPU times: user 4.1 s, sys: 493 ms, total: 4.59 s
-    Wall time: 3.74 s
-    CPU times: user 962 ms, sys: 470 ms, total: 1.43 s
-    Wall time: 519 ms
+    CPU times: user 2.25 s, sys: 513 ms, total: 2.76 s
+    Wall time: 1.87 s
+    CPU times: user 4.34 s, sys: 500 ms, total: 4.84 s
+    Wall time: 4.06 s
+    CPU times: user 4.09 s, sys: 517 ms, total: 4.61 s
+    Wall time: 3.56 s
+    CPU times: user 1 s, sys: 507 ms, total: 1.51 s
+    Wall time: 501 ms
 
 
 
-```
+```python
 
 ```
 
@@ -3216,7 +3224,7 @@ tr.shape
 - Omitting a letter from the output means that values along that axis will be summed.
 
 
-```
+```python
 #| export groundup
 def matmul_einsum_noloop(a,b): return torch.einsum('ik,kj->ij', a, b)
 # c[i,j] += a[i,k] * b[k,j]
@@ -3224,12 +3232,12 @@ def matmul_einsum_noloop(a,b): return torch.einsum('ik,kj->ij', a, b)
 ```
 
 
-```
+```python
 test_close(tr, matmul_einsum_noloop(x_train, weights), eps=1e-3) # question: why 1e-3
 ```
 
 
-```
+```python
 %time _=matmul_2loops_njit(x_train, weights)
 %time _=matmul_2loops_elementwise(x_train, weights)
 %time _=matmul_2loops_dotproduct(x_train, weights)
@@ -3237,20 +3245,20 @@ test_close(tr, matmul_einsum_noloop(x_train, weights), eps=1e-3) # question: why
 %time _=matmul_einsum_noloop(x_train, weights)
 ```
 
-    CPU times: user 2.32 s, sys: 550 ms, total: 2.87 s
-    Wall time: 1.74 s
-    CPU times: user 4.33 s, sys: 487 ms, total: 4.81 s
-    Wall time: 3.89 s
-    CPU times: user 4.24 s, sys: 538 ms, total: 4.78 s
-    Wall time: 3.65 s
-    CPU times: user 913 ms, sys: 501 ms, total: 1.41 s
-    Wall time: 515 ms
-    CPU times: user 149 ms, sys: 10.4 ms, total: 159 ms
-    Wall time: 22.8 ms
+    CPU times: user 2.2 s, sys: 490 ms, total: 2.69 s
+    Wall time: 1.82 s
+    CPU times: user 4.36 s, sys: 499 ms, total: 4.86 s
+    Wall time: 4.01 s
+    CPU times: user 4.13 s, sys: 525 ms, total: 4.65 s
+    Wall time: 3.71 s
+    CPU times: user 898 ms, sys: 467 ms, total: 1.36 s
+    Wall time: 513 ms
+    CPU times: user 160 ms, sys: 16.1 ms, total: 176 ms
+    Wall time: 25 ms
 
 
 
-```
+```python
 
 ```
 
@@ -3259,12 +3267,12 @@ test_close(tr, matmul_einsum_noloop(x_train, weights), eps=1e-3) # question: why
 We can use pytorch's function or operator directly for matrix multiplication.
 
 
-```
+```python
 test_close(tr, x_train@weights, eps=1e-3)
 ```
 
 
-```
+```python
 %time _=matmul_2loops_njit(x_train, weights)
 %time _=matmul_2loops_elementwise(x_train, weights)
 %time _=matmul_2loops_dotproduct(x_train, weights)
@@ -3273,29 +3281,30 @@ test_close(tr, x_train@weights, eps=1e-3)
 %time _=torch.matmul(x_train, weights)
 ```
 
-    CPU times: user 2.18 s, sys: 517 ms, total: 2.7 s
-    Wall time: 1.79 s
-    CPU times: user 4.48 s, sys: 579 ms, total: 5.06 s
-    Wall time: 4.05 s
-    CPU times: user 4.13 s, sys: 546 ms, total: 4.68 s
-    Wall time: 3.72 s
-    CPU times: user 1.01 s, sys: 521 ms, total: 1.53 s
-    Wall time: 515 ms
-    CPU times: user 157 ms, sys: 8.41 ms, total: 165 ms
-    Wall time: 23.2 ms
-    CPU times: user 150 ms, sys: 10.1 ms, total: 160 ms
-    Wall time: 24 ms
+    CPU times: user 2.23 s, sys: 521 ms, total: 2.75 s
+    Wall time: 1.83 s
+    CPU times: user 4.34 s, sys: 502 ms, total: 4.84 s
+    Wall time: 3.99 s
+    CPU times: user 4.12 s, sys: 497 ms, total: 4.62 s
+    Wall time: 3.62 s
+    CPU times: user 1.12 s, sys: 528 ms, total: 1.64 s
+    Wall time: 505 ms
+    CPU times: user 174 ms, sys: 11.8 ms, total: 186 ms
+    Wall time: 25 ms
+    CPU times: user 171 ms, sys: 11.1 ms, total: 182 ms
+    Wall time: 25.3 ms
 
 
 
-```
+```python
 
 ```
 
 ## CUDA
+run from kaggle [notebook](https://www.kaggle.com/code/danielliao/course22p2-0001-matmul/edit/run/107870903)
 
 
-```
+```python
 def matmul(grid, a,b,c):
     i,j = grid 
     if i < c.shape[0] and j < c.shape[1]:
@@ -3305,7 +3314,7 @@ def matmul(grid, a,b,c):
 ```
 
 
-```
+```python
 res = torch.zeros(ar, bc)
 matmul((0,0), m1, m2, res)
 res
@@ -3323,14 +3332,14 @@ res
 
 
 
-```
+```python
 def launch_kernel(kernel, grid_x, grid_y, *args, **kwargs):
     for i in range(grid_x): # the 1st loop
         for j in range(grid_y): kernel((i,j), *args, **kwargs) # the 2nd loop
 ```
 
 
-```
+```python
 res = torch.zeros(ar, bc)
 launch_kernel(matmul, ar, bc, m1, m2, res)
 res
@@ -3348,12 +3357,12 @@ res
 
 
 
-```
+```python
 from numba import cuda
 ```
 
 
-```
+```python
 @cuda.jit
 def matmul(a,b,c):
     "the 3rd loop from python to machine code"
@@ -3366,7 +3375,7 @@ def matmul(a,b,c):
 ```
 
 
-```
+```python
 tr.shape
 ```
 
@@ -3378,78 +3387,37 @@ tr.shape
 
 
 
-```
-r = np.zeros(tr.shape) # prepare dataset in cuda
+```python
+r = np.zeros(tr.shape)
 m1g,m2g,rg = cuda.to_device(x_train),cuda.to_device(weights),cuda.to_device(r)
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    CudaSupportError                          Traceback (most recent call last)
-
-    Input In [130], in <cell line: 2>()
-          1 r = np.zeros(tr.shape)
-    ----> 2 m1g,m2g,rg = cuda.to_device(x_train),cuda.to_device(weights),cuda.to_device(r)
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/numba/cuda/cudadrv/devices.py:231, in require_context.<locals>._require_cuda_context(*args, **kws)
-        229 @functools.wraps(fn)
-        230 def _require_cuda_context(*args, **kws):
-    --> 231     with _runtime.ensure_context():
-        232         return fn(*args, **kws)
-
-
-    File ~/mambaforge/lib/python3.9/contextlib.py:119, in _GeneratorContextManager.__enter__(self)
-        117 del self.args, self.kwds, self.func
-        118 try:
-    --> 119     return next(self.gen)
-        120 except StopIteration:
-        121     raise RuntimeError("generator didn't yield") from None
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/numba/cuda/cudadrv/devices.py:121, in _Runtime.ensure_context(self)
-        110 @contextmanager
-        111 def ensure_context(self):
-        112     """Ensure a CUDA context is available inside the context.
-        113 
-        114     On entrance, queries the CUDA driver for an active CUDA context and
-       (...)
-        119     any top-level Numba CUDA API.
-        120     """
-    --> 121     with driver.get_active_context():
-        122         oldctx = self._get_attached_context()
-        123         newctx = self.get_or_create_context(None)
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/numba/cuda/cudadrv/driver.py:488, in _ActiveContext.__enter__(self)
-        486 else:
-        487     hctx = drvapi.cu_context(0)
-    --> 488     driver.cuCtxGetCurrent(byref(hctx))
-        489     hctx = hctx if hctx.value else None
-        491 if hctx is None:
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/numba/cuda/cudadrv/driver.py:288, in Driver.__getattr__(self, fname)
-        285 self.ensure_initialized()
-        287 if self.initialization_error is not None:
-    --> 288     raise CudaSupportError("Error at driver init: \n%s:" %
-        289                            self.initialization_error)
-        291 if USE_NV_BINDING:
-        292     return self._cuda_python_wrap_fn(fname)
-
-
-    CudaSupportError: Error at driver init: 
-    
-    CUDA driver library cannot be found.
-    If you are sure that a CUDA driver is installed,
-    try setting environment variable NUMBA_CUDA_DRIVER
-    with the file path of the CUDA driver shared library.
-    :
-
-
-
+```python
+m1g
 ```
+
+
+
+
+    <numba.cuda.cudadrv.devicearray.DeviceNDArray>
+
+
+
+
+```python
+m1g.shape
+```
+
+
+
+
+    (50000, 784)
+
+
+
+
+```python
 r.shape
 ```
 
@@ -3461,7 +3429,7 @@ r.shape
 
 
 
-```
+```python
 TPB = 16
 rr,rc = r.shape
 blockspergrid = (math.ceil(rr / TPB), math.ceil(rc / TPB))
@@ -3476,132 +3444,65 @@ blockspergrid
 
 
 
-```
-matmul[blockspergrid, (TPB,TPB)](m1g,m2g,rg)
+```python
+matmul[blockspergrid, (TPB,TPB)](m1g,m2g,rg) # not sure about [blockspergrid, (TPB,TPB)] part
 r = rg.copy_to_host()
 test_close(tr, r, eps=1.03)
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Input In [133], in <cell line: 1>()
-    ----> 1 matmul[blockspergrid, (TPB,TPB)](m1g,m2g,rg)
-          2 r = rg.copy_to_host()
-          3 test_close(tr, r, eps=1.03)
-
-
-    NameError: name 'm1g' is not defined
-
-
-
-```
+```python
 %%timeit -n 1
 matmul[blockspergrid, (TPB,TPB)](m1g,m2g,rg)
 r = rg.copy_to_host()
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Input In [134], in <cell line: 1>()
-    ----> 1 get_ipython().run_cell_magic('timeit', '-n 1', 'matmul[blockspergrid, (TPB,TPB)](m1g,m2g,rg)\nr = rg.copy_to_host()\n')
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/IPython/core/interactiveshell.py:2358, in InteractiveShell.run_cell_magic(self, magic_name, line, cell)
-       2356 with self.builtin_trap:
-       2357     args = (magic_arg_s, cell)
-    -> 2358     result = fn(*args, **kwargs)
-       2359 return result
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/IPython/core/magics/execution.py:1166, in ExecutionMagics.timeit(self, line, cell, local_ns)
-       1163         if time_number >= 0.2:
-       1164             break
-    -> 1166 all_runs = timer.repeat(repeat, number)
-       1167 best = min(all_runs) / number
-       1168 worst = max(all_runs) / number
-
-
-    File ~/mambaforge/lib/python3.9/timeit.py:205, in Timer.repeat(self, repeat, number)
-        203 r = []
-        204 for i in range(repeat):
-    --> 205     t = self.timeit(number)
-        206     r.append(t)
-        207 return r
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/IPython/core/magics/execution.py:156, in Timer.timeit(self, number)
-        154 gc.disable()
-        155 try:
-    --> 156     timing = self.inner(it, self.timer)
-        157 finally:
-        158     if gcold:
-
-
-    File <magic-timeit>:1, in inner(_it, _timer)
-
-
-    NameError: name 'm1g' is not defined
+    6.91 ms ± 45.2 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
 
 
 
-```
+```python
 m1c,m2c = x_train.cuda(),weights.cuda()
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    AssertionError                            Traceback (most recent call last)
-
-    Input In [135], in <cell line: 1>()
-    ----> 1 m1c,m2c = x_train.cuda(),weights.cuda()
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/torch/cuda/__init__.py:211, in _lazy_init()
-        207     raise RuntimeError(
-        208         "Cannot re-initialize CUDA in forked subprocess. To use CUDA with "
-        209         "multiprocessing, you must use the 'spawn' start method")
-        210 if not hasattr(torch._C, '_cuda_getDeviceCount'):
-    --> 211     raise AssertionError("Torch not compiled with CUDA enabled")
-        212 if _cudart is None:
-        213     raise AssertionError(
-        214         "libcudart functions unavailable. It looks like you have a broken build?")
-
-
-    AssertionError: Torch not compiled with CUDA enabled
-
-
-
+```python
+%timeit -n 1 rr = (m1c@m2c).cpu()
 ```
-%timeit -n 1 r==(m1c@m2c).cpu()
+
+    The slowest run took 939.39 times longer than the fastest. This could mean that an intermediate result is being cached.
+    117 ms ± 283 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+
+
+
+```python
+%time rr = (m1c@m2c).cpu()
 ```
+
+    CPU times: user 1.61 ms, sys: 0 ns, total: 1.61 ms
+    Wall time: 1.05 ms
+
 
 Our broadcasting version was >500ms, and our CUDA version is around 0.5ms, which is another 1000x improvement compared to broadcasting. So our total speedup is around 5 million times!
 
 
-```
+```python
 
 ```
 
 
-```
+```python
 
 ```
 
 
-```
+```python
 # |hide
 import nbdev
 nbdev.nbdev_export()
 ```
 
 
-```
+```python
 
 ```

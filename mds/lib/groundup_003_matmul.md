@@ -12,6 +12,10 @@ jupyter:
     name: python3
 ---
 
+```python
+
+```
+
 # groundup_003_matmul
 
 ```python
@@ -43,10 +47,11 @@ from fastdebug.core import *
 ```
 
 ```python
-from fastdebug.groundup import *
+# from fastdebug.groundup import *
 ```
 
 ```python
+#| export groundup
 from pathlib import Path
 import pickle, gzip, math, os, time, shutil, matplotlib as mpl, matplotlib.pyplot as plt
 ```
@@ -98,6 +103,7 @@ a = "todelete"
 ```python
 #| export groundup
 def get_exp_data():
+    from pathlib import Path
     MNIST_URL='https://github.com/mnielsen/neural-networks-and-deep-learning/blob/master/data/mnist.pkl.gz?raw=true'
     path_data = Path('data')
     path_data.mkdir(exist_ok=True) # created a data folder in the current directory
@@ -578,6 +584,7 @@ Numba is an open source JIT compiler that translates a subset of Python and NumP
 ### njit, dot, np.array
 
 ```python
+#| export groundup
 import numba
 ```
 
@@ -590,6 +597,7 @@ whatinside(numba)
 ```
 
 ```python
+#| export groundup
 from numba import njit, jit
 ```
 
@@ -1146,6 +1154,7 @@ test_close(tr, x_train@weights, eps=1e-3)
 ```
 
 ## CUDA
+run from kaggle [notebook](https://www.kaggle.com/code/danielliao/course22p2-0001-matmul/edit/run/107870903)
 
 ```python
 def matmul(grid, a,b,c):
@@ -1195,8 +1204,16 @@ tr.shape
 ```
 
 ```python
-r = np.zeros(tr.shape) # prepare dataset in cuda
+r = np.zeros(tr.shape)
 m1g,m2g,rg = cuda.to_device(x_train),cuda.to_device(weights),cuda.to_device(r)
+```
+
+```python
+m1g
+```
+
+```python
+m1g.shape
 ```
 
 ```python
@@ -1211,7 +1228,7 @@ blockspergrid
 ```
 
 ```python
-matmul[blockspergrid, (TPB,TPB)](m1g,m2g,rg)
+matmul[blockspergrid, (TPB,TPB)](m1g,m2g,rg) # not sure about [blockspergrid, (TPB,TPB)] part
 r = rg.copy_to_host()
 test_close(tr, r, eps=1.03)
 ```
@@ -1227,7 +1244,11 @@ m1c,m2c = x_train.cuda(),weights.cuda()
 ```
 
 ```python
-%timeit -n 1 r==(m1c@m2c).cpu()
+%timeit -n 1 rr = (m1c@m2c).cpu()
+```
+
+```python
+%time rr = (m1c@m2c).cpu()
 ```
 
 Our broadcasting version was >500ms, and our CUDA version is around 0.5ms, which is another 1000x improvement compared to broadcasting. So our total speedup is around 5 million times!
