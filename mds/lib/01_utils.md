@@ -255,7 +255,7 @@ c.InteractiveShellApp.exec_lines.append('print("Warning: disable autoreload in i
 ### If individual notebook, I can just run the function below to setup autoreload
 
 ```python
-#| exporti
+#| export
 def automagics():
     from IPython.core.interactiveshell import InteractiveShell
     get_ipython().run_line_magic(magic_name="load_ext", line = "autoreload")
@@ -1501,7 +1501,7 @@ def display_block(line, file, output=False, keywords=""):
             
     belowline = entire.split(line)[1]
     head_no = line.count("#")
-    full_section = "" + f"This section contains only the current heading {head_no} and its subheadings"
+    full_section = "" + f"The current section is heading {head_no}." + "\n\n"
     lst_belowline = belowline.split("\n")
     for idx, l in zip(range(len(lst_belowline)), lst_belowline):
         if l.strip().startswith("#"*(head_no-1)+" ") and not bool(lst_belowline[idx-1].strip()) \

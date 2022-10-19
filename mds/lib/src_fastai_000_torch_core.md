@@ -452,13 +452,8 @@ test_fig_exists(ax)
 
 ## Basics
 
-### Tensor.`__array_eq__`
+### Tensor.`__array_eq__(self:Tensor, b)`
 make 0 dim and 1 dim tensor comparison possible: `test_eq(tensor(1), tensor([1]))`
-
-```python
-# fastnbs("subplots")
-# fastlistnbs("src_fastai")
-```
 
 ```python
 from torch import tensor 
@@ -505,6 +500,12 @@ test_eq(tensor(1), torch.tensor([1]))
 ```
 
 ### Tensor._array2tensor(x)
+wrap around `torch.from_numpy` to turn np.array into torch tensor for special cases (np.uint16=> np.float32; np.int=>np.int64 win32)
+
+```python
+# fastnbs("__array_eq__")
+# fastlistnbs("src_fastai")
+```
 
 ```python
 #|export
@@ -516,6 +517,17 @@ def _array2tensor(x):
         if x.dtype==np.int: x = x.astype(np.int64)
     return torch.from_numpy(x)
 ```
+
+```python
+test_eq(array([1,2,3]).dtype, 'int64')
+test_eq(array([1.,2,3]).dtype, 'float64')
+test_eq(torch.from_numpy(array([1,2,3])).dtype, torch.int64)
+test_eq(torch.from_numpy(array([1.,2,3])).dtype, torch.float64)
+```
+
+### ```tensor(x, *rest, **kwargs)```
+- fastai.tensor can convert tuple, list, ndarray, pd.Series, pd.DataFrame and pure free flowing elements into torch.tensor
+- it has potential to turn data.__array__ or iterable data into torch.tensor (commented out at the moment)
 
 ```python
 #|export
@@ -536,13 +548,47 @@ def tensor(x, *rest, **kwargs):
 ```
 
 ```python
+# how to make a copy of a tensor properly using pytorch.tensor or fastai.tensor
+test_eq(torch.tensor([1,2,3]) is torch.tensor(torch.tensor([1,2,3])), False) # being False, meaning they are copies not reference
+# The above way of making a tensor copy will throw a warning, the pytorch recommend the following way
+test_eq(torch.tensor([1,2,3]) is torch.tensor([1,2,3]).clone().detach(), False) 
+# Fastai has the following intuitive way
+test_eq(tensor(torch.tensor([1,2,3])) is torch.tensor([1,2,3]), False)
+```
+
+```python
+# both fastai.tensor and torch.tensor can turn an array or a list into a tensor like below
+test_eq(torch.tensor(array([1,2,3])), tensor(array([1,2,3])))
+test_eq(torch.tensor([1,2,3]), tensor([1,2,3]))
+```
+
+```python
+# fastai.tensor can handle multiple elements directly, but not torch.tensor
+test_eq(tensor(1.), torch.tensor(1.))
+try:
+    torch.tensor(1,2,3)
+except: 
+    print("torch.tensor can't handle (1,2,3)")
+test_eq(tensor(1,2,3), torch.tensor([1,2,3]))
+```
+
+```python
 test_eq(tensor(torch.tensor([1,2,3])), torch.tensor([1,2,3]))
 test_eq(tensor(array([1,2,3])), torch.tensor([1,2,3]))
 test_eq(tensor(1,2,3), torch.tensor([1,2,3]))
 test_eq_type(tensor(1.0), torch.tensor(1.0))
 ```
 
+### ```set_seed(s, reproducible=False)```
+set random seed for either torch.tensor, ndarray, or just pure python random, and set True or False for ```torch.backends.cudnn.deterministic/benchmark```
+
+
 ```set_seed``` is useful for reproducibility between runs. It is important to remember that certain classes such as ```Dataloaders``` have internal random number generators that is not effected by this function, so this must be run before such objects are created in order to guarantee reproducibility. 
+
+```python
+test_eq(22 % 3, 1)
+test_eq(22 // 3, 7)
+```
 
 ```python
 #|export
@@ -563,16 +609,18 @@ def set_seed(s, reproducible=False):
 Here is an example of how ```set_seed``` can be used to reset the state of random number generators.
 
 ```python
-set_seed(2*33)
+# set_seed(2*33)
+set_seed(12)
 a1 = np.random.random()
 a2 = torch.rand(())
 a3 = random.random()
-set_seed(2*33)
+# set_seed(2*33)
+set_seed(12)
 b1 = np.random.random()
 b2 = torch.rand(())
 b3 = random.random()
 print('a\'s: {0:3.3f} {1:3.3f} {2:3.3f}'.format(a1,a2,a3))
-print('b\'s: {0:3.3f} {1:3.3f} {2:3.3f}'.format(b1,b2,a3))
+print('b\'s: {0:3.3f} {1:3.3f} {2:3.3f}'.format(b1,b2,b3))
 ```
 
 ```python
@@ -580,6 +628,16 @@ test_eq(a1,b1)
 test_eq(a2,b2)
 test_eq(a3,b3)
 ```
+
+```python
+
+```
+
+### ```get_random_states``` and ```set_random_states```
+get random states for pure python random, ndarray, torch.tensor... and set values for those random_states
+
+#### ```get_random_states```
+return a dict of states for python_random_state, numpy_state, torch_state, torch_cuda_state, torch_deterministic, torch_benchmark
 
 ```get_random_states``` and ```set_random_states``` are useful for storing a state so you can go back to it later. 
 
@@ -594,6 +652,9 @@ def get_random_states():
             'torch_deterministic':torch.backends.cudnn.deterministic,
             'torch_benchmark':torch.backends.cudnn.benchmark}
 ```
+
+#### ```set_random_states```
+set values for random_state,numpy_state,torch_state,torch_cuda_state,torch_deterministic,torch_benchmark
 
 ```python
 #|export
@@ -625,6 +686,9 @@ print('rewinds: {0:3.3f} {1:3.3f} {2:3.3f}'.format(*rewinds))
 test_ne(olds,news)
 test_eq(olds,rewinds)
 ```
+
+### ```no_random```
+
 
 In ```no_random``` we combine the ideas of rewinding state with ```get_random_states``` and ```set_random_states``` with the ability to ```set_seed``` and create a context manager that can allow us to control randomness in a portion of our code. 
 
