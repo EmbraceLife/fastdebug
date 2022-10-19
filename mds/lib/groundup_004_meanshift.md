@@ -32,7 +32,7 @@ The easiest way to demonstrate how clustering works is to simply generate some d
 
 ```python
 import math, matplotlib.pyplot as plt, operator, torch
-from fastdebug.utils import *
+from fastdebug.utils import * 
 ```
 
 ## torch.manual_seed(1)
@@ -293,13 +293,17 @@ weight.sum()
 ## meanshift
 
 ```python
+@snoop
 def meanshift(data):
     X = data.clone()
     for it in range(5):
         for i, x in enumerate(X):
             dist = torch.sqrt(((x-X)**2).sum(1))
             weight = gaussian(dist, 2.5)
+#             pp.deep(lambda: (weight[:,None]*X).sum(0)/weight.sum())
+            pp(weight.shape, weight[:,None].shape, (weight[:,None]*X).shape, (weight[:,None]*X).sum(0).shape, (weight.sum()).shape)
             X[i] = (weight[:,None]*X).sum(0)/weight.sum()
+            if i>0: break
     return X
 ```
 
@@ -336,7 +340,9 @@ We should be able to accelerate this algorithm with a GPU.
 To truly accelerate the algorithm, we need to be performing updates on a batch of points per iteration, instead of just one as we were doing.
 
 ```python
-def dist_b(a,b): return torch.sqrt(((a[None]-b[:,None])**2).sum(2))
+def dist_b(a,b): 
+    pp(a.shape, a[None].shape, b.shape, b[:, None].shape)
+    return torch.sqrt(((a[None]-b[:,None])**2).sum(2)) # see how the dim change to make wonders
 ```
 
 ```python
@@ -350,10 +356,11 @@ dist_b(X, x).shape
 ```
 
 ```python
+# %%snoop
 bs=5
 X = data.clone()
 x = X[:bs]
-weight = gaussian(dist_b(X, x), 2)
+weight = gaussian(dist_b(X, x), 2) # create 5 weights all together
 weight.shape
 ```
 
@@ -381,10 +388,15 @@ from fastcore.all import chunked
 ```
 
 ```python
-# slice??
+X[slice(0,5,3)]
 ```
 
 ```python
+from snoop import snoop
+```
+
+```python
+@snoop
 def meanshift(data, bs=500):
     n = len(data)
     X = data.clone()
@@ -395,12 +407,13 @@ def meanshift(data, bs=500):
             num = (weight[...,None]*X[None]).sum(1)
             div = weight.sum(1, keepdim=True)
             X[s] = num/div
+            if i>0: break
     return X
 ```
 
 Although each iteration still has to launch a new cuda kernel, there are now fewer iterations, and the acceleration from updating a batch of points more than makes up for it.
 
-```python editable=false deletable=false run_control={"frozen": true}
+```python
 data = data.cuda()
 ```
 
@@ -421,7 +434,7 @@ X = meanshift(data).cpu()
 ```
 
 ```python
-plot_centroids_sample(centroids+2, X, n_samples)
+plot_data(centroids+2, X, n_samples)
 ```
 
 ```python

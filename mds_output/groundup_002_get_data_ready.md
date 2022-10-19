@@ -100,7 +100,12 @@ start of another heading 2
 
 
 ```
+#| export
 import operator
+```
+
+
+```
 from fastdebug.delete0000 import *
 ```
 
@@ -1002,6 +1007,7 @@ def check(f, # function name, like PIL.Image.open
         
     print(f"__class__: {getattr(f, '__class__', None)}")
     print(f'__repr__: {f}\n')
+    print(f"__module__: {getattr(f, '__module__', None)}")
     
     if bool(getattr(f, '__doc__', None)): # make sure not None
         doclst = inspect.getdoc(f).split("\n")
@@ -1115,7 +1121,7 @@ PIL.Image.open(files_valid[-1])
 
 
     
-![png](groundup_002_get_data_ready_files/groundup_002_get_data_ready_80_0.png)
+![png](groundup_002_get_data_ready_files/groundup_002_get_data_ready_81_0.png)
     
 
 
@@ -1124,7 +1130,7 @@ PIL.Image.open(files_valid[-1])
 
 
     
-![png](groundup_002_get_data_ready_files/groundup_002_get_data_ready_80_1.png)
+![png](groundup_002_get_data_ready_files/groundup_002_get_data_ready_81_1.png)
     
 
 
@@ -1338,7 +1344,7 @@ img.size
 
 
     
-![png](groundup_002_get_data_ready_files/groundup_002_get_data_ready_93_0.png)
+![png](groundup_002_get_data_ready_files/groundup_002_get_data_ready_94_0.png)
     
 
 
@@ -1354,7 +1360,7 @@ img.size
 
 
     
-![png](groundup_002_get_data_ready_files/groundup_002_get_data_ready_93_2.png)
+![png](groundup_002_get_data_ready_files/groundup_002_get_data_ready_94_2.png)
     
 
 
@@ -1422,7 +1428,7 @@ img
 
 
     
-![png](groundup_002_get_data_ready_files/groundup_002_get_data_ready_97_0.png)
+![png](groundup_002_get_data_ready_files/groundup_002_get_data_ready_98_0.png)
     
 
 

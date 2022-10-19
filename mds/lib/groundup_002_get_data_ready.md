@@ -59,7 +59,11 @@ fastnbs("autoreload plus matplotlib")
 ### import operator
 
 ```python
+#| export
 import operator
+```
+
+```python
 from fastdebug.delete0000 import *
 ```
 
@@ -395,6 +399,7 @@ def check(f, # function name, like PIL.Image.open
         
     print(f"__class__: {getattr(f, '__class__', None)}")
     print(f'__repr__: {f}\n')
+    print(f"__module__: {getattr(f, '__module__', None)}")
     
     if bool(getattr(f, '__doc__', None)): # make sure not None
         doclst = inspect.getdoc(f).split("\n")

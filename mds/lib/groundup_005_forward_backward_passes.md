@@ -12,7 +12,7 @@ jupyter:
     name: python3
 ---
 
-# groundup_004_forward_backward_passes
+# groundup_005_forward_backward_passes
 
 <!-- #raw -->
 ---
@@ -40,7 +40,7 @@ from fastdebug.groundup import *
 ```
 
 ```python
-%whos function
+# %whos function
 ```
 
 ```python
@@ -50,12 +50,21 @@ from torch import tensor
 ```
 
 ```python
+# fastnbs("set_printoptions")
+```
+
+```python
 mpl.rcParams['image.cmap'] = 'gray'
 torch.set_printoptions(precision=2, linewidth=140, sci_mode=False)
 np.set_printoptions(precision=2, linewidth=140)
 ```
 
-## get_exp_data, map, tensor
+## get data: get_exp_data, map, tensor
+
+```python
+# fastnbs("idx check")
+# check(get_exp_data)
+```
 
 ```python
 path_data = Path('data')
@@ -67,7 +76,11 @@ Path
 ```
 
 ```python
-x_train, y_train, x_valid, y_valid = get_exp_data()
+# get_exp_data??
+```
+
+```python
+x_train, y_train, x_valid, y_valid = map(tensor, get_exp_data())
 ```
 
 ```python
@@ -75,22 +88,16 @@ x_train.shape
 type(x_train)
 ```
 
-```python
-x_train, y_train, x_valid, y_valid = map(tensor, [x_train, y_train, x_valid, y_valid])
-```
+## exploratory version
 
 ```python
-x_train.shape
-type(x_train)
+# fastlistnbs("groundup")
+
 ```
 
-## Foundations version
+### w1, b1, w2, b2
 
-<!-- #region heading_collapsed=true -->
-### Basic architecture
-<!-- #endregion -->
-
-```python hidden=true
+```python
 # n,m = x_train.shape
 # c = y_train.max()+1
 # n,m,c
@@ -101,17 +108,19 @@ type(x_train)
 ```
 
 ```python
-r,c = x_train.shape
-l = y_train.max()+1
-r,c,l
+input_r,input_c = x_train.shape
+label_num = y_train.max()+1
+input_r
+input_c
+label_num
 ```
 
-```python hidden=true
+```python
 # num hidden activations
 nh = 50
 ```
 
-```python hidden=true
+```python
 # w1 = torch.randn(m,nh)
 # b1 = torch.zeros(nh)
 # w2 = torch.randn(nh,1)
@@ -119,9 +128,9 @@ nh = 50
 ```
 
 ```python
-w1 = torch.randn(c,nh)
-b1 = torch.zeros(nh)
-w2 = torch.randn(nh,1)
+w1 = torch.randn(input_c,nh) # weights or coefficients for input
+b1 = torch.zeros(nh) # biases
+w2 = torch.randn(nh,1) # weights for hidden activations 
 b2 = torch.zeros(1)
 w1.shape
 b1.shape
@@ -129,88 +138,104 @@ w2.shape
 b2.shape
 ```
 
-```python hidden=true
+### lin(x,w,b)
+
+```python
 #| export groundup
 def lin(x, w, b): 
-    "use torch.matmul (faster version of einsum) to create a linear model"
+    "build a single layer linear model. use torch.matmul (faster version of einsum) to create a linear model"
     return x@w + b
 ```
 
-```python hidden=true
-t = lin(x_valid, w1, b1)
-t.shape
+```python
+hidden_layer_activations = lin(x_train, w1, b1)
+hidden_layer_activations.shape
 ```
 
-```python hidden=true
+```python
+# t = lin(x_valid, w1, b1)
+# t.shape
+```
+
+### relu(x)
+
+```python
+check(torch.clamp_min)
+```
+
+```python
 #| export groundup
 def relu(x): 
     "basic relu with max in torch"
     return x.clamp_min(0.)
 ```
 
-```python hidden=true
+```python
 t = relu(lin(x_valid, w1, b1)) # add relu unto the linear model
 t
 ```
 
 ```python
-(t >= 0).shape
-(t >= 0).count_nonzero()
-(t < 0).count_nonzero()
+t.shape
 ```
 
-```python hidden=true
+```python
+test_eq((t >= 0).count_nonzero(), 500000)
+test_eq((t < 0).count_nonzero(), 0)
+```
+
+### model(x_valid)
+
+```python
 def model(xb):
+    "build a model of 2 layers (1 hidden layer) using lin and relu"
     l1 = lin(xb, w1, b1)
     l2 = relu(l1)
-    return lin(l2, w2, b2)
+    res = lin(l2, w2, b2)
+    return res
 ```
 
-```python hidden=true
+```python
 res = model(x_valid)
 res.shape
 ```
 
-<!-- #region heading_collapsed=true -->
-### Loss function: MSE
-<!-- #endregion -->
+### MSE (mean of the squared error)
 
-<!-- #region hidden=true -->
+
 We need to get rid of that trailing (,1), in order to use `mse`.
-<!-- #endregion -->
 
-```python hidden=true
+```python
 res[:,0].shape
 ```
 
-<!-- #region hidden=true -->
 (Of course, `mse` is not a suitable loss function for multi-class classification; we'll use a better loss function soon. We'll use `mse` for now to keep things simple.)
-<!-- #endregion -->
 
-```python hidden=true
+```python
 def mse(output, targ): return (output[:,0]-targ).pow(2).mean()
 ```
 
-```python hidden=true
+```python
+y_train, y_valid
+```
+
+```python
 y_train,y_valid = y_train.float(),y_valid.float()
 ```
 
-```python hidden=true
+```python
 preds = model(x_train)
 preds.shape
 ```
 
-```python hidden=true
+```python
 mse(preds, y_train)
 ```
 
 ### Gradients and backward pass
 
-```python
-from sympy import symbols,diff
-x,y = symbols('x y')
-diff(x**2, x)
-```
+
+### question: gradients of input, w and b
 
 ```python
 def lin_grad(inp, out, w, b):
@@ -220,6 +245,89 @@ def lin_grad(inp, out, w, b):
     b.g = out.g.sum(0)
 ```
 
+#### derivaties on scalar
+
+```python
+from sympy import symbols, diff, Function
+```
+
+```python
+w,b,inp = symbols('w,b,inp', real=True)
+```
+
+```python
+f = Function('f')
+```
+
+```python
+f = f(w,b,inp)
+f
+```
+
+```python
+expr = w*inp + b
+expr
+```
+
+```python
+import sympy
+```
+
+```python
+sympy.Eq(f, expr)
+```
+
+```python
+#| export groundup
+def print_derivaties(func, expr, *variables):
+    import sympy
+    from fastdebug.utils import display_md
+    display_md("$"+sympy.latex(sympy.Eq(func, expr))+"$")
+    func = expr
+    lst_derivatives = []
+    for i in variables:
+        display_md("$\\frac{\\partial f}{\\partial " + str(i) + "} =" + sympy.latex(sympy.simplify(func.diff(i))) + "$")
+        lst_derivatives.append(func.diff(i))
+    return lst_derivatives
+```
+
+```python
+_ = print_derivaties(f, expr, inp, w, b)
+```
+
+#### derivaties on vector
+
+```python
+from sympy import symbols, Matrix, diff, Function
+```
+
+```python
+u1, u2, u3, v1, v2, v3, t, b = symbols('u_1 u_2 u_3 v_1 v_2 v_3  t b', real=True)
+f = Function('f')
+g = Function('g')
+inp = Matrix([u1,u2,u3])
+inp.shape
+w = Matrix([v1,v2,v3])
+f = f(inp, w, b)
+g = g(f)
+f
+g
+```
+
+```python
+expr = inp.dot(w) + b
+```
+
+```python
+expr
+```
+
+```python
+lst = print_derivaties(f, expr, inp, w, b)
+```
+
+### forward_backward
+
 ```python
 def forward_and_backward(inp, targ):
     # forward pass:
@@ -227,26 +335,28 @@ def forward_and_backward(inp, targ):
     l2 = relu(l1)
     out = l2 @ w2 + b2
     diff = out[:,0]-targ
-    loss = res.pow(2).mean()
+#     loss = res.pow(2).mean()
+    loss = diff.pow(2).mean()
     
     # backward pass:
-    out.g = 2.*diff[:,None] / inp.shape[0]
+    out.g = 2.*diff[:,None] / inp.shape[0] # d_loss/d_diff
+    # d_diff/d_out = 1
     lin_grad(l2, out, w2, b2)
-    l1.g = (l1>0).float() * l2.g
+    l1.g = (l1>0).float() * l2.g # derivate of relu(l1) with respect to l1
     lin_grad(inp, l1, w1, b1)
 ```
 
 ```python
-forward_and_backward(x_train, y_train)
+# forward_and_backward(x_train, y_train)
 ```
 
 ```python
-# Save for testing against later
-w1g = w1.g.clone()
-w2g = w2.g.clone()
-b1g = b1.g.clone()
-b2g = b2.g.clone()
-ig  = x_train.g.clone()
+# # Save for testing against later
+# w1g = w1.g.clone()
+# w2g = w2.g.clone()
+# b1g = b1.g.clone()
+# b2g = b2.g.clone()
+# ig  = x_train.g.clone()
 ```
 
 We cheat a little bit and use PyTorch autograd to check our results.
@@ -277,17 +387,22 @@ from fastcore.test import test_close
 ```
 
 ```python
-test_close(w22.grad, w2g, eps=0.01)
-test_close(b22.grad, b2g, eps=0.01)
-test_close(w12.grad, w1g, eps=0.01)
-test_close(b12.grad, b1g, eps=0.01)
-test_close(xt2.grad, ig , eps=0.01)
+# test_close(w22.grad, w2g, eps=0.01)
+# test_close(b22.grad, b2g, eps=0.01)
+# test_close(w12.grad, w1g, eps=0.01)
+# test_close(b12.grad, b1g, eps=0.01)
+# test_close(xt2.grad, ig , eps=0.01)
 ```
 
 ## Refactor model
 
 
 ### Layers as classes
+
+```python
+from snoop import snoop
+# https://github.com/alexmojaki/snoop
+```
 
 ```python
 class Relu():
@@ -300,6 +415,10 @@ class Relu():
 ```
 
 ```python
+Relu()(x_train)
+```
+
+```python
 class Lin():
     def __init__(self, w, b): self.w,self.b = w,b
         
@@ -308,7 +427,9 @@ class Lin():
         self.out = inp@self.w + self.b
         return self.out
 
+    @snoop
     def backward(self):
+        pp(self.inp.shape, self.out.g.shape, self.w.shape, self.w.t().shape)
         self.inp.g = self.out.g @ self.w.t()
         self.w.g = self.inp.t() @ self.out.g
         self.b.g = self.out.g.sum(0)
@@ -354,11 +475,11 @@ model = Model(w1, b1, w2, b2)
 ```
 
 ```python
-test_close(w2g, w2.g, eps=0.01)
-test_close(b2g, b2.g, eps=0.01)
-test_close(w1g, w1.g, eps=0.01)
-test_close(b1g, b1.g, eps=0.01)
-test_close(ig, x_train.g, eps=0.01)
+# test_close(w2g, w2.g, eps=0.01)
+# test_close(b2g, b2.g, eps=0.01)
+# test_close(w1g, w1.g, eps=0.01)
+# test_close(b1g, b1.g, eps=0.01)
+# test_close(ig, x_train.g, eps=0.01)
 ```
 
 ### Module.forward()
@@ -385,19 +506,36 @@ class Relu(Module):
 class Lin(Module):
     def __init__(self, w, b): self.w,self.b = w,b
     def forward(self, inp): return inp@self.w + self.b
+    
+#     @snoop(watch=('self.out.g.shape, self.w.shape, self.w.t().shape, inp.t().shape, self.w.g.shape, self.b.g.shape'))
     def bwd(self, out, inp):
-        inp.g = self.out.g @ self.w.t()
-        self.w.g = inp.t() @ self.out.g
-        self.b.g = self.out.g.sum(0)
+
+        from snoop import pp
+        with snoop: #(watch_explode=('self')):
+            pp(self.out.g.shape, self.w.t().shape)
+            inp.g = self.out.g @ self.w.t()
+            pp(inp.t().shape)        
+            self.w.g = inp.t() @ self.out.g
+            pp(self.out.g.sum(0), self.out.g.sum(0).shape)
+            self.b.g = self.out.g.sum(0)
 ```
+
+### use snoop
 
 ```python
 class Mse(Module):
+    @snoop
     def forward (self, inp, targ): return (inp.squeeze() - targ).pow(2).mean()
-    def bwd(self, out, inp, targ): inp.g = 2*(inp.squeeze()-targ).unsqueeze(-1) / targ.shape[0]
+    
+    @snoop
+    def bwd(self, out, inp, targ): 
+        from snoop import pp
+        pp(inp.shape, inp.squeeze().shape, 2*(inp.squeeze()-targ).unsqueeze(-1).shape, targ.shape[0])
+        inp.g = 2*(inp.squeeze()-targ).unsqueeze(-1) / targ.shape[0]
 ```
 
 ```python
+
 model = Model(w1, b1, w2, b2)
 ```
 
@@ -410,11 +548,11 @@ model = Model(w1, b1, w2, b2)
 ```
 
 ```python
-test_close(w2g, w2.g, eps=0.01)
-test_close(b2g, b2.g, eps=0.01)
-test_close(w1g, w1.g, eps=0.01)
-test_close(b1g, b1.g, eps=0.01)
-test_close(ig, x_train.g, eps=0.01)
+# test_close(w2g, w2.g, eps=0.01)
+# test_close(b2g, b2.g, eps=0.01)
+# test_close(w1g, w1.g, eps=0.01)
+# test_close(b1g, b1.g, eps=0.01)
+# test_close(ig, x_train.g, eps=0.01)
 ```
 
 ### Autograd
@@ -445,7 +583,7 @@ class Model(nn.Module):
 ```
 
 ```python
-model = Model(m, nh, 1)
+model = Model(input_c, nh, 1)
 loss = model(x_train, y_train)
 loss.backward()
 ```

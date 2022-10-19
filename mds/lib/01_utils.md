@@ -16,13 +16,89 @@ jupyter:
 
 > little functions to tell you the basics of a module
 
-
-## multi_output
-setup for exporting to a module
-
 ```python
 #| default_exp utils
 ```
+
+## snoop: pp, pp.deep, @snoop, %%snoop, watches
+
+```python
+#| export
+from snoop import snoop, pp
+```
+
+```python
+#| export
+snoop = snoop
+pp = pp
+```
+
+```python
+#| export
+def type_watch(source, value):
+    if value != None:
+        return 'type({})'.format(source), type(value)
+```
+
+```python
+#| export
+def sig_watch(source, value):
+    if inspect.isfunction(value):
+        return 'sig({})'.format(source), inspect.signature(value)
+```
+
+```python
+#| export
+def view(data): return (data.mean(), data.std())
+```
+
+```python
+from torch import tensor
+import torch
+```
+
+```python
+isinstance(tensor([1,2,3]), torch.Tensor)
+```
+
+```python
+#| export
+def stats_watch(source, value):
+    if (isinstance(value, np.ndarray) or isinstance(value, torch.Tensor)): 
+        return '{} stats: '.format(source), view(value)
+```
+
+```python
+[1, 2] + [2, 3]
+```
+
+```python
+#| export
+def snoop_onoff(on=True):
+    "activate or deactivate @snoop, pp, but not %%snoop in a cell which is activated by %load_ext snoop"
+    import snoop
+    from snoop.configuration import len_shape_watch
+    snoop.install(replace_watch_extras=[type_watch, len_shape_watch, sig_watch, stats_watch])
+
+```
+
+```python
+#| export 
+snoopon = snoop_onoff() # # no import or config for using snoop now
+```
+
+```python
+snoopon = """
+# snoop_onoff()
+# snoop.install(watch_extras=[type_watch, stats_watch])
+from snoop.configuration import len_shape_watch
+snoop.install(replace_watch_extras=[type_watch, len_shape_watch, sig_watch, stats_watch])
+"""
+
+```
+
+## multi_output
+setup for exporting to a module
 
 ```python
 #| export
@@ -167,6 +243,7 @@ c.InteractiveShellApp.exec_lines = []
 c.InteractiveShellApp.exec_lines.append('%load_ext autoreload')
 c.InteractiveShellApp.exec_lines.append('%autoreload 2')
 c.InteractiveShellApp.exec_lines.append('%matplotlib inline')
+c.InteractiveShellApp.exec_lines.append('%load_ext snoop')
 ```
 
 As well as an optional warning in case you need to take advantage of compiled Python code in .pyc files:
@@ -179,11 +256,12 @@ c.InteractiveShellApp.exec_lines.append('print("Warning: disable autoreload in i
 
 ```python
 #| exporti
-def autoreload():
+def automagics():
     from IPython.core.interactiveshell import InteractiveShell
     get_ipython().run_line_magic(magic_name="load_ext", line = "autoreload")
     get_ipython().run_line_magic(magic_name="autoreload", line = "2")
     get_ipython().run_line_magic(magic_name="matplotlib", line = "inline")
+    get_ipython().run_line_magic(magic_name="load_ext", line = "snoop")
 ```
 
 ```python
@@ -1596,6 +1674,8 @@ use fastnbs() display the entire learning points section including notes and cod
             file_fullname = file_path
         elif filter_folder == "part2" and "_fastai_pt2_" in file_path:
             file_fullname = file_path
+        elif filter_folder == "src_fastai" and "src_fastai_" in file_path:
+            file_fullname = file_path            
         elif filter_folder == "all": 
             file_fullname = file_path
         else: continue
@@ -2073,8 +2153,9 @@ def fastlistnbs(filter="fastai"):
 
 ```python
 #| export
-def fastlistnbs(flt_fd="fastai"): # other options: "part2", "all"
-    "display all my commented notebooks subheadings in a long list. Best to work with fastnbs together."
+def fastlistnbs(flt_fd="fastai"): # other options: "groundup", "part2", "all"
+    "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
+src_fastcore, all"
     nbs, folder, _, _, _, _ = get_all_nbs()
     nb_rt = ""
     for nb in nbs:
@@ -2082,6 +2163,10 @@ def fastlistnbs(flt_fd="fastai"): # other options: "part2", "all"
             nb_rt = nb
         elif flt_fd == "part2" and "_fastai_pt2" in nb:
             nb_rt = nb
+        elif flt_fd == "groundup" and "groundup_" in nb:            
+            nb_rt = nb
+        elif flt_fd == "src_fastai" and "src_fastai_" in nb:
+            nb_rt = nb            
         elif flt_fd == "all": 
             nb_rt = nb
         else: 
