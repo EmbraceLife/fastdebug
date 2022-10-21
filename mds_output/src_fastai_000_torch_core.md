@@ -324,7 +324,7 @@ def show_image(im, ax=None, figsize=None, title=None, ctx=None, **kwargs):
 
 
 ```
-# %%snoop # activated by %load_ext snoop, but pp, snoop, @snoop are not available
+%%snoop # activated by %load_ext snoop, but pp, snoop, @snoop are not available
 # pp.deep(lambda: Image.open(TEST_IMAGE_BW))
 im = Image.open(TEST_IMAGE_BW)
 # im = array(im)
@@ -332,9 +332,25 @@ im = Image.open(TEST_IMAGE_BW)
 ax = show_image(im, cmap="Greys")
 ```
 
+    16:25:10.44 >>> Call to <module> in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/3922523890.py", line 2
+    16:25:10.44 ...... TEST_IMAGE_BW = 'images/mnist3.png'
+    16:25:10.44 ...... type(TEST_IMAGE_BW) = <class 'str'>
+    16:25:10.44 ...... show_image = <function show_image>
+    16:25:10.44 ...... type(show_image) = <class 'function'>
+    16:25:10.44 ...... sig(show_image) = <Signature (im, ax=None, figsize=None, title=Non...0, resample=None, url=None, data=None, **kwargs)>
+    16:25:10.44    2 | im = Image.open(TEST_IMAGE_BW)
+    16:25:10.44    2 | im = Image.open(TEST_IMAGE_BW)
+    16:25:10.45 ...... im = <PIL.PngImagePlugin.PngImageFile image mode=L size=28x28>
+    16:25:10.45 ...... type(im) = <class 'PIL.PngImagePlugin.PngImageFile'>
+    16:25:10.45    5 | ax = show_image(im, cmap="Greys")
+    16:25:10.47 ...... ax = <AxesSubplot:>
+    16:25:10.47 ...... type(ax) = <class 'matplotlib.axes._subplots.AxesSubplot'>
+    16:25:10.47 <<< Return value from <module>: None
+
+
 
     
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_45_0.png)
+![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_45_1.png)
     
 
 
@@ -645,10 +661,6 @@ test_eq(tensor(1), torch.tensor([1]))
 ```
 
 
-<style>.container { width:100% !important; }</style>
-
-
-
 ```
 # fastnbs("__array_eq__")
 ```
@@ -715,7 +727,7 @@ test_eq(torch.tensor([1,2,3]) is torch.tensor([1,2,3]).clone().detach(), False)
 test_eq(tensor(torch.tensor([1,2,3])) is torch.tensor([1,2,3]), False)
 ```
 
-    /var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_87790/232156416.py:2: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+    /var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/232156416.py:2: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
       test_eq(torch.tensor([1,2,3]) is torch.tensor(torch.tensor([1,2,3])), False) # being False, meaning they are copies not reference
 
 
@@ -805,11 +817,6 @@ test_eq(a2,b2)
 test_eq(a3,b3)
 ```
 
-
-```
-
-```
-
 ### ```get_random_states``` and ```set_random_states```
 get random states for pure python random, ndarray, torch.tensor... and set values for those random_states
 
@@ -873,7 +880,8 @@ test_ne(olds,news)
 test_eq(olds,rewinds)
 ```
 
-### ```no_random```
+### ```no_random(seed=42, reproducible=True)```
+```with no_random(): ``` can create a random context
 
 In ```no_random``` we combine the ideas of rewinding state with ```get_random_states``` and ```set_random_states``` with the ability to ```set_seed``` and create a context manager that can allow us to control randomness in a portion of our code. 
 
@@ -920,15 +928,15 @@ print('seeded2: {0:3.3f} {1:3.3f} {2:3.3f}'.format(*seeded2))
 print('rewinds: {0:3.3f} {1:3.3f} {2:3.3f}'.format(*rewinds))
 ```
 
-    olds:    0.246 0.363 0.227
+    olds:    0.666 0.263 0.453
     new1:    0.639 0.375 0.882
     new2:    0.639 0.375 0.882
     seeded1: 0.146 0.543 0.112
     seeded2: 0.146 0.543 0.112
-    rewinds: 0.246 0.363 0.227
+    rewinds: 0.666 0.263 0.453
 
 
-Notice that olds, and rewinds are alos both equal to each other. From this  we can see that everything in the ```with``` blocks did not update the state outside of the block. Inside of the block, the state is reset for any particular seed, so for the same seed you should get the same random number generator results.  
+Notice that olds, and rewinds are also both equal to each other. From this  we can see that everything in the ```with``` blocks did not update the state outside of the block. Inside of the block, the state is reset for any particular seed, so for the same seed you should get the same random number generator results.  
 
 Note: It is important to remember that classes like ``` Dataloader``` have internal random number generators, and ```no_random``` will have no effect on those random number generators.
 
@@ -941,9 +949,13 @@ test_eq(seeded1,seeded2)
 test_eq(olds,rewinds)
 ```
 
+### ```unsqueeze(x, dim=-1,n=1)```
+unsqueeze or expand a tensor another n dimensions, if current x is 1 dim, and n=2, then x will be 3 dim
+
 
 ```
 #|export
+# @snoop
 def unsqueeze(x, dim=-1, n=1):
     "Same as `torch.unsqueeze` but can add `n` dims"
     for _ in range(n): x = x.unsqueeze(dim)
@@ -955,7 +967,11 @@ def unsqueeze(x, dim=-1, n=1):
 t = tensor([1])
 t2 = unsqueeze(t, n=2)
 test_eq(t2,t[:,None,None])
+test_eq(t.dim() + 2, t2.dim()) # dim == 3
 ```
+
+### ```unsqueeze_(x, dim=-1, n=1)```
+It can do unsqueeze above but inplace (without making another copy)
 
 
 ```
@@ -974,10 +990,29 @@ test_eq(t, tensor([1]).view(1,1,1))
 ```
 
 
+
+
+    tensor([[[1]]])
+
+
+
+### ```_fa_rebuild_tensor``` and ```_fa_rebuild_qtensor```
+not used in this notebook
+
+
 ```
 #|export
 def _fa_rebuild_tensor (cls, *args, **kwargs): return cls(torch._utils._rebuild_tensor_v2(*args, **kwargs))
 def _fa_rebuild_qtensor(cls, *args, **kwargs): return cls(torch._utils._rebuild_qtensor  (*args, **kwargs))
+```
+
+### ```apply(func, x, *args, **kwargs)```
+apply func to x, and x can be a list, tuple, L, dict or a scalar object
+
+
+```
+# retain_type?
+# is_listy?
 ```
 
 
@@ -993,7 +1028,101 @@ def apply(func, x, *args, **kwargs):
 
 
 ```
+# fastnotes("slice(")
+```
+
+
+```
+type([])([1,2,3]) # is equivalent to list([1,2,3])
+type(slice(1,3))(1,2,3) # is equivalent to slice(1,2,3)
+[0,1,2,3,4,5,6,7][slice(0,-1,2)] # how to use slice
+```
+
+
+
+
+    [1, 2, 3]
+
+
+
+
+
+
+    slice(1, 2, 3)
+
+
+
+
+
+
+    [0, 2, 4, 6]
+
+
+
+
+```
+apply(lambda x: x + 1, [1,2,3])
+apply(lambda x: x + 1, (1,2,3))
+apply(lambda x: x + 1, L(1,2,3))
+apply(lambda x: x + 1, {'a':1, 'b':2,'c':3})
+```
+
+
+
+
+    [2, 3, 4]
+
+
+
+
+
+
+    (2, 3, 4)
+
+
+
+
+
+
+    (#3) [2,3,4]
+
+
+
+
+
+
+    {'a': 2, 'b': 3, 'c': 4}
+
+
+
+### ```maybe_gather(x, axis=0)```
+Gather copies of `x` on `axis` (if training is distributed). used in ```to_detach```
+
+
+```
+# num_distrib(): Return the number of processes in distributed training (if applicable). defined below in this notebook
+# num_distrib? 
+```
+
+
+```
+test_eq(tensor(0).ndim, 0)
+test_eq(tensor(1,2,3).ndim, 1)
+test_eq(tensor([[[1],[2],[3]]]).ndim, 3)
+test_eq(tensor([[[1],[2],[3]]]).shape, (1,3,1))
+```
+
+
+```
+def num_distrib():
+    "Return the number of processes in distributed training (if applicable)."
+    return int(os.environ.get('WORLD_SIZE', 0))
+```
+
+
+```
 #|export
+@snoop
 def maybe_gather(x, axis=0):
     "Gather copies of `x` on `axis` (if training is distributed)"
     if num_distrib()<=1: return x
@@ -1003,11 +1132,24 @@ def maybe_gather(x, axis=0):
     return torch.cat(res, dim=axis) if ndim > 0 else torch.cat(res, dim=axis).mean()
 ```
 
+### ```to_detach(b, cpu=True, gather=True)```
+Recursively detach lists of tensors in `b ` (from graph and no more gradients); put them on the CPU if `cpu=True`. (non-tensor is dealt too)
+
+
+```
+# t.detach(): return a new tensor detached from graph so there will be no gradient
+# Tensor.detach? 
+# t.cpu(): return a new tensor stored in cpu memory
+# Tensor.cpu?
+```
+
 
 ```
 #|export
+@snoop
 def to_detach(b, cpu=True, gather=True):
     "Recursively detach lists of tensors in `b `; put them on the CPU if `cpu=True`."
+    @snoop
     def _inner(x, cpu=True, gather=True):
         if not isinstance(x,Tensor): return x
         x = x.detach()
@@ -1020,10 +1162,121 @@ def to_detach(b, cpu=True, gather=True):
 
 
 ```
+lstold = [tensor(1.,2, requires_grad=True), tensor([3.,4], requires_grad=True)]
+test_eq(lstold[0].requires_grad, True)
+lstnew = to_detach([tensor(1,2), tensor([3,4])])
+test_eq(lstnew[0].requires_grad, False)
+```
+
+    16:25:15.97 >>> Call to to_detach in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/2902278324.py", line 3
+    16:25:15.97 ...... b = [tensor([1, 2]), tensor([3, 4])]
+    16:25:15.97 ...... type(b) = <class 'list'>
+    16:25:15.97 ...... len(b) = 2
+    16:25:15.97 ...... cpu = True
+    16:25:15.97 ...... type(cpu) = <class 'bool'>
+    16:25:15.97 ...... gather = True
+    16:25:15.97 ...... type(gather) = <class 'bool'>
+    16:25:15.97    3 | def to_detach(b, cpu=True, gather=True):
+    16:25:15.98    5 |     @snoop
+    16:25:15.98    6 |     def _inner(x, cpu=True, gather=True):
+    16:25:15.98 .......... _inner = <function to_detach.<locals>._inner>
+    16:25:15.98 .......... type(_inner) = <class 'function'>
+    16:25:15.98 .......... sig(_inner) = <Signature (x, cpu=True, gather=True)>
+    16:25:15.98   11 |     return apply(_inner, b, cpu=cpu, gather=gather)
+        16:25:15.98 >>> Call to to_detach.<locals>._inner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/2902278324.py", line 6
+        16:25:15.98 .......... x = tensor([1, 2])
+        16:25:15.98 .......... type(x) = <class 'torch.Tensor'>
+        16:25:15.98 .......... x.shape = (2,)
+        16:25:15.98 .......... cpu = True
+        16:25:15.98 .......... type(cpu) = <class 'bool'>
+        16:25:15.98 .......... gather = True
+        16:25:15.98 .......... type(gather) = <class 'bool'>
+        16:25:15.98    6 |     def _inner(x, cpu=True, gather=True):
+        16:25:15.98    7 |         if not isinstance(x,Tensor): return x
+        16:25:15.98    8 |         x = x.detach()
+        16:25:15.98    9 |         if gather: x = maybe_gather(x)
+            16:25:15.98 >>> Call to maybe_gather in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/2315103875.py", line 3
+            16:25:15.98 ...... x = tensor([1, 2])
+            16:25:15.98 ...... type(x) = <class 'torch.Tensor'>
+            16:25:15.98 ...... x.shape = (2,)
+            16:25:15.98 ...... axis = 0
+            16:25:15.98 ...... type(axis) = <class 'int'>
+            16:25:15.98    3 | def maybe_gather(x, axis=0):
+            16:25:15.98    5 |     if num_distrib()<=1: return x
+            16:25:15.98 <<< Return value from maybe_gather: tensor([1, 2])
+        16:25:15.98    9 |         if gather: x = maybe_gather(x)
+        16:25:15.98   10 |         return x.cpu() if cpu else x
+        16:25:15.98 <<< Return value from to_detach.<locals>._inner: tensor([1, 2])
+        16:25:15.98 >>> Call to to_detach.<locals>._inner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/2902278324.py", line 6
+        16:25:15.98 .......... x = tensor([3, 4])
+        16:25:15.98 .......... type(x) = <class 'torch.Tensor'>
+        16:25:15.98 .......... x.shape = (2,)
+        16:25:15.98 .......... cpu = True
+        16:25:15.98 .......... type(cpu) = <class 'bool'>
+        16:25:15.98 .......... gather = True
+        16:25:15.98 .......... type(gather) = <class 'bool'>
+        16:25:15.98    6 |     def _inner(x, cpu=True, gather=True):
+        16:25:15.98    7 |         if not isinstance(x,Tensor): return x
+        16:25:15.98    8 |         x = x.detach()
+        16:25:15.98    9 |         if gather: x = maybe_gather(x)
+            16:25:15.99 >>> Call to maybe_gather in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/2315103875.py", line 3
+            16:25:15.99 ...... x = tensor([3, 4])
+            16:25:15.99 ...... type(x) = <class 'torch.Tensor'>
+            16:25:15.99 ...... x.shape = (2,)
+            16:25:15.99 ...... axis = 0
+            16:25:15.99 ...... type(axis) = <class 'int'>
+            16:25:15.99    3 | def maybe_gather(x, axis=0):
+            16:25:15.99    5 |     if num_distrib()<=1: return x
+            16:25:15.99 <<< Return value from maybe_gather: tensor([3, 4])
+        16:25:15.99    9 |         if gather: x = maybe_gather(x)
+        16:25:15.99   10 |         return x.cpu() if cpu else x
+        16:25:15.99 <<< Return value from to_detach.<locals>._inner: tensor([3, 4])
+    16:25:15.99   11 |     return apply(_inner, b, cpu=cpu, gather=gather)
+    16:25:15.99 <<< Return value from to_detach: [tensor([1, 2]), tensor([3, 4])]
+
+
+### ```to_half(b)```
+Recursively map lists of tensors in `b ` to FP16, if b is not floating point then return unchanged.
+
+
+```
+# check(torch.is_floating_point)
+# check(Tensor.half)
+```
+
+
+```
+test_eq(torch.is_floating_point(tensor(1.,2)), True)
+test_eq(torch.is_floating_point(tensor(1,2)), False)
+test_eq(tensor(1.,2.).dtype, torch.float32)
+test_eq(tensor(1.,2.).half().dtype, torch.float16)
+```
+
+
+```
 #|export
 def to_half(b):
     "Recursively map lists of tensors in `b ` to FP16."
     return apply(lambda x: x.half() if torch.is_floating_point(x) else x, b)
+```
+
+
+```
+test_eq([tensor(1.), tensor([1,2.])][0].dtype, torch.float32)
+test_eq(to_half([tensor(1.), tensor([1,2.])])[0].dtype, torch.float16)
+```
+
+### ```to_float(b)```
+Recursively map lists of int tensors in `b ` to float
+
+
+```
+# from fastai.torch_core import to_float
+```
+
+
+```
+# to_float??
 ```
 
 
@@ -1036,6 +1289,38 @@ def to_float(b):
 
 
 ```
+test_eq(torch.is_floating_point(tensor(1,2)), False)
+test_eq(torch.is_floating_point(tensor(1.,2)), True)
+test_eq([t.float() for t in [tensor(1,2), tensor([3,4])]], [tensor([1., 2.]), tensor([3., 4.])])
+test_eq(to_float([tensor(1,2), tensor([3,4])]), [tensor([1, 2]), tensor([3, 4])]) 
+```
+
+### ```_has_mps()```
+whether `torch.backends.mps` is available or not. what is [mps](https://huggingface.co/docs/accelerate/usage_guides/mps)?
+
+
+```
+# check(torch.backends.mps.is_available)
+```
+
+
+```
+#|export
+# @snoop
+def _has_mps(): return nested_attr(torch, 'backends.mps.is_available', noop)()
+```
+
+
+```
+# nested_attr??
+test_eq(torch.backends.mps.is_available(), True)
+```
+
+### ```default_device(use_cuda=-1)```
+use `default_device(True)` for torch to work in cuda or mps, and `default_device(False)` or `default_device(-1)` to work in cpu
+
+
+```
 #|export
 # None: True if available; True: error if not available; False: use CPU
 defaults.use_cuda = None
@@ -1044,6 +1329,7 @@ defaults.use_cuda = None
 
 ```
 #|export
+# @snoop
 def default_device(use_cuda=-1):
     "Return or set default device; `use_cuda`: None - CUDA if available; True - error if not available; False - CPU"
     if use_cuda != -1: defaults.use_cuda=use_cuda
@@ -1055,8 +1341,7 @@ def default_device(use_cuda=-1):
 
 ```
 #|export
-def _has_mps(): return nested_attr(torch, 'backends.mps.is_available', noop)()
-
+# @snoop
 def default_device(use=-1):
     "Return or set default device; `use_cuda`: -1 - CUDA/mps if available; True - error if not available; False - CPU"
     if use == -1: use = defaults.use_cuda
@@ -1072,18 +1357,31 @@ def default_device(use=-1):
 
 ```
 #|cuda
+# %%snoop # to work need to remove the line above, which is  #|cuda
 if torch.cuda.is_available():
     _td = torch.device(torch.cuda.current_device())
     test_eq(default_device(-1), _td)
     test_eq(default_device(True), _td)
 else:
     test_eq(default_device(False), torch.device('cpu'))
-default_device(-1);
+    test_eq(default_device(-1), torch.device('cpu'))
+    test_eq(default_device(True), torch.device('mps'))    
+    test_eq(_has_mps(), True)
+
+```
+
+### ```to_device(b, device=None, non_blocking=False)```
+Recursively put `b` (a list of tensors) on `device` (on cpu or cuda or mps).
+
+
+```
+# check(Tensor.to)
 ```
 
 
 ```
 #|export
+# @snoop
 def to_device(b, device=None, non_blocking=False):
     "Recursively put `b` on `device`."
     if defaults.use_cuda==False: device='cpu'
@@ -1097,8 +1395,22 @@ def to_device(b, device=None, non_blocking=False):
 
 
 ```
+defaults.use_cuda
+```
+
+
+
+
+    True
+
+
+
+
+```
 t = to_device((3,(tensor(3),tensor(2))))
 t1,(t2,t3) = t
+test_eq(str(t2.device), 'mps:0')
+test_eq(str(t3.device), 'mps:0')
 ```
 
 
@@ -1108,7 +1420,15 @@ if torch.cuda.is_available():
     test_eq_type(t,(3,(tensor(3).cuda(),tensor(2).cuda())))
     test_eq(t2.type(), "torch.cuda.LongTensor")
     test_eq(t3.type(), "torch.cuda.LongTensor")
+else: 
+    print("cuda is not available")
 ```
+
+    cuda is not available
+
+
+### ```to_cpu(b)```
+Recursively map lists of tensors in `b ` to the cpu exclusively.
 
 
 ```
@@ -1120,10 +1440,19 @@ def to_cpu(b):
 
 
 ```
+test_eq(t3.type(), "torch.mps.LongTensor")
+```
+
+
+```
 t3 = to_cpu(t3)
 test_eq(t3.type(), "torch.LongTensor")
 test_eq(t3, 2)
+test_eq(str(t3.device), 'cpu')
 ```
+
+### ```to_np(x)```
+Convert a tensor to a numpy array recursively.
 
 
 ```
@@ -1135,6 +1464,17 @@ def to_np(x):
 
 
 ```
+try: 
+    to_np(array(1))
+except AttributeError:
+    print('array has no attr: cpu')
+```
+
+    array has no attr: cpu
+
+
+
+```
 t3 = to_np(t3)
 test_eq(type(t3), np.ndarray)
 test_eq(t3, 2)
@@ -1142,7 +1482,148 @@ test_eq(t3, 2)
 
 
 ```
+to_np([tensor(1), tensor([2,3])])
+```
+
+
+
+
+    [array(1), array([2, 3])]
+
+
+
+
+```
+import numpy
+```
+
+
+```
+a, b = map(lambda t: type(t), to_np([tensor(1), tensor([2,3])]))
+test_eq(a, numpy.ndarray)
+test_eq(b, numpy.ndarray)
+```
+
+
+```
+
+```
+
+### ```range_of(a, b=None, step=None)```
+All indices of collection `a`, if `a` is a collection, otherwise `range`
+
+
+```
+check(range_of)
+```
+
+    signature: (a, b=None, step=None)
+    __class__: <class 'function'>
+    __repr__: <function range_of>
+    
+    __module__: fastcore.basics
+    __doc__:
+    All indices of collection `a`, if `a` is a collection, otherwise `range`
+    __dict__: 
+    {}
+    metaclass: False
+    class: False
+    decorator: False
+    function: True
+    method: False
+
+
+
+```
+range_of(tensor([[1,2]]))
+range_of(tensor([[1,2],[3,4]]))
+```
+
+
+
+
+    [0]
+
+
+
+
+
+
+    [0, 1]
+
+
+
+### sum
+
+
+```
+check(sum)
+```
+
+    signature: None
+    __class__: <class 'builtin_function_or_method'>
+    __repr__: <built-in function sum>
+    
+    __module__: builtins
+    __doc__:
+    Return the sum of a 'start' value (default: 0) plus an iterable of numbers
+    
+    When the iterable is empty, return the start value.
+    This function is intended specifically for use with numeric values and may
+    reject non-numeric types.
+    __dict__: not exist 
+    
+    metaclass: False
+    class: False
+    decorator: False
+    function: False
+    method: False
+
+
+
+```
+L(1,2,3)
+sum([1,2,3], L())
+sum([[1],[2],[3]], L())
+sum([[1],[2],[3]], list())
+```
+
+
+
+
+    (#3) [1,2,3]
+
+
+
+
+
+
+    (#3) [1,2,3]
+
+
+
+
+
+
+    (#3) [1,2,3]
+
+
+
+
+
+
+    [1, 2, 3]
+
+
+
+### ```to_concat(xs, dim=0)```
+Concat the element in `xs` (recursively if they are tuples/lists of tensors)
+
+
+```
 #|export
+# @snoop(depth=2)
+# @snoop
 def to_concat(xs, dim=0):
     "Concat the element in `xs` (recursively if they are tuples/lists of tensors)"
     if not xs: return xs
@@ -1151,27 +1632,320 @@ def to_concat(xs, dim=0):
     #We may receive xs that are not concatenable (inputs of a text classifier for instance),
     #   in this case we return a big list
     try:    return retain_type(torch.cat(xs, dim=dim), xs[0])
-    except: return sum([L(retain_type(o_.index_select(dim, tensor(i)).squeeze(dim), xs[0])
-                          for i in range_of(o_)) for o_ in xs], L())
+    except: 
+        lst = []
+        for o_ in xs:
+            for i in range_of(o_):
+#                 pp.deep(lambda: o_.index_select(dim, tensor(i)).squeeze(dim))
+                item = retain_type(o_.index_select(dim, tensor(i)).squeeze(dim), xs[0]) # squeeze out one dim for text classifier
+                lst.append(L(item))
+        return sum(lst, L()) # bring a list of things into a single L list
+#         return sum([L(retain_type(o_.index_select(dim, tensor(i)).squeeze(dim), xs[0])
+#                           for i in range_of(o_)) for o_ in xs], L())
 ```
 
 
 ```
-test_eq(to_concat([tensor([1,2]), tensor([3,4])]), tensor([1,2,3,4]))
-test_eq(to_concat([tensor([[1,2]]), tensor([[3,4]])], dim=1), tensor([[1,2,3,4]]))
-test_eq_type(to_concat([(tensor([1,2]), tensor([3,4])), (tensor([3,4]), tensor([5,6]))]), (tensor([1,2,3,4]), tensor([3,4,5,6])))
-test_eq_type(to_concat([[tensor([1,2]), tensor([3,4])], [tensor([3,4]), tensor([5,6])]]), [tensor([1,2,3,4]), tensor([3,4,5,6])])
-test_eq_type(to_concat([(tensor([1,2]),), (tensor([3,4]),)]), (tensor([1,2,3,4]),))
-
-test_eq(to_concat([tensor([[1,2]]), tensor([[3,4], [5,6]])], dim=1), [tensor([1]),tensor([3, 5]),tensor([4, 6])])
+retain_type
 ```
+
+
+
+
+    <function fastcore.dispatch.retain_type(new, old=None, typ=None, as_copy=False)>
+
+
+
+
+```
+test_eq(tensor([1,2]).shape, torch.Size([2]))
+test_eq(tensor([1,2]).dim(), 1)
+test_eq(tensor([1,2,3,4]).dim(), 1)
+test_eq(to_concat([tensor([1,2]), tensor([3,4])]), tensor([1,2,3,4])) # dim = 1 won't work as the tensors have only 0 dim
+```
+
+
+```
+test_eq(to_concat([tensor([[1,2]]), tensor([[3,4]])], dim=0).shape[0], 2) # concat on rows, as it has 2 dims
+test_eq(to_concat([tensor([[1,2]]), tensor([[3,4]])], dim=1).shape[1], 4) # concat on cols
+```
+
+
+```
+to_concat([(tensor([1,2]), tensor([3,4])), (tensor([3,4]), tensor([5,6]))]) 
+to_concat([(tensor([1,2]), tensor([3,4])), (tensor([3,4]), tensor([5,6]))], dim=-1) # when tensor has 1 dim, then dim=0 or -1 same
+to_concat([(tensor([[1,2]]), tensor([[3,4]])), (tensor([[3,4]]), tensor([[5,6]]))]) # when each tensor has 2 dims, dim=1 is working
+to_concat([(tensor([[1,2]]), tensor([[3,4]])), (tensor([[3,4]]), tensor([[5,6]]))], dim=1) # or dim=1 or -1
+```
+
+
+
+
+    (tensor([1, 2, 3, 4]), tensor([3, 4, 5, 6]))
+
+
+
+
+
+
+    (tensor([1, 2, 3, 4]), tensor([3, 4, 5, 6]))
+
+
+
+
+
+
+    (tensor([[1, 2],
+             [3, 4]]),
+     tensor([[3, 4],
+             [5, 6]]))
+
+
+
+
+
+
+    (tensor([[1, 2, 3, 4]]), tensor([[3, 4, 5, 6]]))
+
+
+
+
+```
+# when tensors have different dims, meaning can't concat, then sum(L(...)) get run to squeeze them out, and put into a L list
+# tensor([3,4]) is squeezed into tensor(3), tensor(4)
+# tensor([[5,6]]) is squeezed into tensor([5,6])
+to_concat([tensor([3,4]), tensor([[5,6]])]) 
+```
+
+
+
+
+    (#3) [tensor(3),tensor(4),tensor([5, 6])]
+
+
+
+
+```
+# dim can only be 0 or -1, as tensor([3,4]) and tensor([7,8]) have just 1 dim
+# now xs is a list of two lists, it uses a different formula, which concat the first parts of two lists, then 2nd parts of two lists
+# as as tensor([3,4]) and tensor([7,8]) have just 1 dim, so they can only concat as a long row
+to_concat([[tensor([3,4]), tensor([[5,6]])], [tensor([7,8]), tensor([[9,10]])]], dim=0) 
+to_concat([[tensor([3,4]), tensor([[5,6]])], [tensor([7,8]), tensor([[9,10]])]], dim=-1) 
+```
+
+
+
+
+    [tensor([3, 4, 7, 8]),
+     tensor([[ 5,  6],
+             [ 9, 10]])]
+
+
+
+
+
+
+    [tensor([3, 4, 7, 8]), tensor([[ 5,  6,  9, 10]])]
+
+
+
+
+```
+to_concat([(tensor([1,2]),), (tensor([3,4]),)])
+```
+
+
+
+
+    (tensor([1, 2, 3, 4]),)
+
+
+
+
+```
+# although xs[0] is not a list, but both tensors in xs share the same dim e.g., 2 here, torch.cat(xs,dim=0) can apply directly
+# test_eq(tensor([[1,2]]).dim(), tensor([[3,4], [5,6]]).dim())
+# tensor([[1,2]]).shape, tensor([[3,4], [5,6]]).shape
+to_concat([tensor([[1,2]]), tensor([[3,4], [5,6]])], dim=0) # concat on rows, ok because both tensors have same num of cols
+```
+
+
+
+
+    tensor([[1, 2],
+            [3, 4],
+            [5, 6]])
+
+
+
+
+```
+# to concat tensors on cols, require they having same num of rows, as this example below
+to_concat([tensor([[1,2],[7,8]]), tensor([[3,4], [5,6]])], dim=1)
+```
+
+
+
+
+    tensor([[1, 2, 3, 4],
+            [7, 8, 5, 6]])
+
+
+
+
+```
+# to concat tensors on cols, require they having same num of rows, but the tensors below don't match on rows, so 
+# we have to squeeze them and put into a long L list
+# only the tensor(1) get out of tensor([[1,2]]) is due to range_of(tensor([[1,2]])) returns [0]
+to_concat([tensor([[1,2]]), tensor([[3,4], [5,6]])], dim=1)
+```
+
+
+
+
+    (#3) [tensor([1]),tensor([3, 5]),tensor([4, 6])]
+
+
+
+
+```
+to_concat([tensor([[1,2]]), tensor([[3,4], [5,6]])], dim=0)
+```
+
+
+
+
+    tensor([[1, 2],
+            [3, 4],
+            [5, 6]])
+
+
+
+
+```
+# 1st part of two lists have different dims, so they are squeezed and put into a long L list as [tensor([1, 2]),tensor(3),tensor(4)]
+# 2nd parts of two lists have same dims, so they can concat as above
+to_concat([(tensor([[1,2]]), tensor([[3,4]])), (tensor([3,4]), tensor([[5,6]]))])
+to_concat([(tensor([[1,2]]), tensor([[3,4]])), (tensor([3,4]), tensor([[5,6]]))], dim=-1)
+```
+
+
+
+
+    ((#3) [tensor([1, 2]),tensor(3),tensor(4)],
+     tensor([[3, 4],
+             [5, 6]]))
+
+
+
+
+
+
+    ((#3) [tensor([1]),tensor(3),tensor(4)], tensor([[3, 4, 5, 6]]))
+
+
+
+
+```
+dict(foo=tensor([1,2]), bar=tensor(3,4))
+to_concat([dict(foo=tensor([1,2]), bar=tensor(3,4))])
+```
+
+
+
+
+    {'foo': tensor([1, 2]), 'bar': tensor([3, 4])}
+
+
+
+
+
+
+    {'foo': tensor([1, 2]), 'bar': tensor([3, 4])}
+
+
 
 
 ```
 test_eq(type(to_concat([dict(foo=tensor([1,2]), bar=tensor(3,4))])), dict)
 ```
 
+### ```Tensor.index_select(dim, index)```
+- select part of a tensor to become a new tensor, ```dim=0``` to select row, ```dim=1``` to select col, 
+- so when `dim=1` and `index=0` will select first col
+- `dim=0` and `index=1` will select second row
+
+
+```
+# check(Tensor.index_select)
+tensor([[1,2]]).shape
+tensor([[1,2]]).dim()
+```
+
+
+
+
+    torch.Size([1, 2])
+
+
+
+
+
+
+    2
+
+
+
+
+```
+tensor([[1,2],[3,4]]).index_select(1, tensor(0))
+tensor([[1,2],[3,4]]).index_select(1, tensor(1))
+tensor([[1,2],[3,4]]).index_select(0, tensor(0))
+tensor([[1,2]]).index_select(1, tensor(0))
+tensor([[1,2]]).index_select(1, tensor(1))
+```
+
+
+
+
+    tensor([[1],
+            [3]])
+
+
+
+
+
+
+    tensor([[2],
+            [4]])
+
+
+
+
+
+
+    tensor([[1, 2]])
+
+
+
+
+
+
+    tensor([[1]])
+
+
+
+
+
+
+    tensor([[2]])
+
+
+
 ## Tensor subtypes
+
+### ```t1.set_meta(t2, as_copy=False)```
+pass tensor t2's `__dict__` to Tensor t1, either as a copy or not
 
 
 ```
@@ -1186,30 +1960,101 @@ def set_meta(self:Tensor, x, as_copy=False):
 
 
 ```
+t2 = tensor(1,2)
+t2.__dict__ = {'a': 1}
+test_eq(t2.__dict__, {'a': 1})
+t1 = tensor(3,4)
+t1.set_meta(t2)
+test_eq(t1.__dict__, {'a': 1})
+```
+
+### pass ```torch.Tensor.as_subclass``` to ```torch.as_subclass```
+
+
+```
 #|export
 if not hasattr(torch,'as_subclass'): torch.as_subclass = torch.Tensor.as_subclass
 ```
+
+### ```retain_meta(x, res, as_copy=False)```
+- copy `x.__dict__` to `res.__dict__`
+
+
+```
+def retain_meta(x, res, as_copy=False):
+    "Call `res.set_meta(x)`, if it exists"
+    if hasattr(res,'set_meta'): 
+        res.set_meta(x, as_copy=as_copy)
+#         if hasattr(x, '__dict__'): print("{} of type {} .__dict__: {}".format(x, type(x), x.__dict__))
+#         if hasattr(res, '__dict__'): print("{} of type {} .__dict__: {}".format(res, type(res), res.__dict__))            
+    return res
+```
+
+### ```t2 = t.as_subclass(_T)```
+create another tensor `t2` as an instance of `_T` and copy `__dict__` from `t`
 
 
 ```
 #|export
 @patch
+# @snoop(depth=2)
 def as_subclass(self:Tensor, typ):
     "Cast to `typ` and include `__dict__` and meta"
     return retain_meta(self, torch.as_subclass(self, typ))
+```
+
+
+```
+# check(torch.as_subclass)
+class _T(Tensor): pass
+t = tensor(1.).requires_grad_()
+t.img_size = 1
+```
+
+
+```
+# torch.as_subclass(t, _T) only makes a new tensor instance of the class _T
+t1 = torch.as_subclass(t, _T) 
+test_eq(isinstance(t1, _T), True)
+test_eq(isinstance(t, _T), False)
+test_eq(t1.__dict__, {})
+test_eq(t.__dict__, {'img_size':1})
+```
+
+
+```
+# fastai's Tensor.as_subclass(self, _T): 
+# not only create an new tensor from _T, but also pass self (another tensor)'s __dict__ to the new tensor
+t2 = t.as_subclass(_T) 
+test_eq(isinstance(t2, _T), True)
+test_eq(t2.__dict__, t.__dict__)
 ```
 
 `Tensor.set_meta` and `Tensor.as_subclass` work together to maintain `__dict__` after casting.
 
 
 ```
+
+```
+
+
+```
 class _T(Tensor): pass
 t = tensor(1.).requires_grad_()
 t.img_size = 1
-t2 = t.as_subclass(_T)
+t2 = t.as_subclass(_T) # create 
 test_eq(t.img_size, t2.img_size)
 test_eq(t2.img_size, 1)
 assert(t2.requires_grad_)
+```
+
+### ```_torch_handled(args, opt, func)```
+False, if `func` is not in `opt`; True, if func in `opt` and `args` is an instance of `opt[func]`
+
+
+```
+test_eq(all([True, True, True]), True)
+test_eq(all([True, False, True]), False)
 ```
 
 
@@ -1220,6 +2065,9 @@ def _torch_handled(args, opt, func):
     for oks in opt[func]:
         if all(isinstance(arg,ok) for arg,ok in zip(args,oks) if ok): return True
 ```
+
+### ```_rebuild_from_type(func, type, args, dict)```
+`t = _rebuild_from_type(tensor, torch.Tensor, [1,2,3], {'b':1})`, to create an instance using a func, a class, args and a dict
 
 
 ```
@@ -1233,10 +2081,128 @@ def _rebuild_from_type(func, type, args, dict):
 
 
 ```
+t = _rebuild_from_type(tensor, torch.Tensor, [1,2,3], {'b':1})
+```
+
+
+```
+test_eq(t.__dict__, {'b':1})
+```
+
+### ```_find_args(x)```
+`_find_args(["a", "b", tensor(2)])` find the arg with `__dict__` from a list of args
+
+
+```
 #|export
 def _find_args(x):   
     x0 = x[0] if is_listy(x[0]) and x[0] else x
     return [a for a in x0 if hasattr(a,'__dict__')]
+```
+
+
+```
+test_eq(_find_args(["a", "b", tensor(2)]), [tensor(2)])
+```
+
+### ```TensorBase(Tensor)```
+Many methods inside are overriding those inside Tensor
+
+#### ```TensorBase.__new__(cls, x, **kwargs)```
+
+
+```
+#|export
+class TensorBase(Tensor):
+    "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
+    debug,_opt = False,defaultdict(list)
+    def __new__(cls, x, **kwargs):
+        res = cast(tensor(x), cls)
+        for k,v in kwargs.items(): setattr(res, k, v)
+        return res
+```
+
+
+```
+a = TensorBase(1)
+test_eq(type(a), TensorBase)
+a1 = TensorBase.__new__(TensorBase, 1)
+a2 = a.__new__(TensorBase, 1)
+test_eq_type(a, a1)
+test_eq_type(a2, a1)
+```
+
+
+```
+# `TensorBase` and its subclasses also allow for passing through metadata size as img_size...
+a = TensorBase(1,img_size=(128,128))
+test_eq(a.img_size,(128,128))
+```
+
+### ```TensorBase._before_cast(cls, x)```
+just return `tensor(x)` instead
+
+
+```
+#|export
+class TensorBase(Tensor):
+    "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
+    debug,_opt = False,defaultdict(list)
+    def __new__(cls, x, **kwargs):
+        res = cast(tensor(x), cls)
+        for k,v in kwargs.items(): setattr(res, k, v)
+        return res
+
+    @classmethod
+    def _before_cast(cls, x): return tensor(x)
+```
+
+
+```
+test_eq(TensorBase._before_cast(1), tensor(1))
+test_eq(TensorBase(2)._before_cast(1), tensor(1))
+```
+
+### ```TensorBase.__repr__(self)```
+represent the tensor in `TensorBase`
+
+
+```
+#|export
+class TensorBase(Tensor):
+    "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
+    debug,_opt = False,defaultdict(list)
+    def __new__(cls, x, **kwargs):
+        res = cast(tensor(x), cls)
+        for k,v in kwargs.items(): setattr(res, k, v)
+        return res
+
+    @classmethod
+    def _before_cast(cls, x): return tensor(x)
+    def __repr__(self): 
+#         pp(self.__class__, self.__class__.__name__, super().__repr__())
+        return re.sub('tensor', self.__class__.__name__, super().__repr__())
+```
+
+
+```
+TensorBase(1).__repr__()
+```
+
+
+
+
+    'TensorBase(1)'
+
+
+
+### ```TensorBase.__reduce_ex__(self, proto)```
+handling pickle.dump and pickle.loads, but no idea how this method get triggered (question)
+
+
+```
+# pickle.dump??
+# pickle.loads??
 ```
 
 
@@ -1252,7 +2218,250 @@ class TensorBase(Tensor):
 
     @classmethod
     def _before_cast(cls, x): return tensor(x)
-    def __repr__(self): return re.sub('tensor', self.__class__.__name__, super().__repr__())
+    def __repr__(self): 
+#         pp(self.__class__, self.__class__.__name__, super().__repr__())
+        return re.sub('tensor', self.__class__.__name__, super().__repr__())
+
+#     @snoop
+    def __reduce_ex__(self,proto):
+        torch.utils.hooks.warn_if_has_hooks(self)
+        args = (self.storage(), self.storage_offset(), tuple(self.size()), self.stride())
+        if self.is_quantized: args = args + (self.q_scale(), self.q_zero_point())
+        args = args + (self.requires_grad, OrderedDict())
+        f = torch._utils._rebuild_qtensor if self.is_quantized else  torch._utils._rebuild_tensor_v2
+        return (_rebuild_from_type, (f, type(self), args, self.__dict__))
+```
+
+
+```
+class _T(TensorBase): pass
+t = _T(range(5))
+test_eq(type(pickle.loads(pickle.dumps(t))), _T) # trigger __reduce_ex__(self,proto)
+```
+
+
+```
+
+```
+
+### ```TensorBase.register_func(cls, func, *oks)```
+add a list of functions stored in `oks` to `cls._opt[func]`. There is no code example in this notebook
+
+
+```
+#|export
+class TensorBase(Tensor):
+    "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
+    debug,_opt = False,defaultdict(list)
+    def __new__(cls, x, **kwargs):
+        res = cast(tensor(x), cls)
+        for k,v in kwargs.items(): setattr(res, k, v)
+        return res
+
+    @classmethod
+    def _before_cast(cls, x): return tensor(x)
+    def __repr__(self): 
+#         pp(self.__class__, self.__class__.__name__, super().__repr__())
+        return re.sub('tensor', self.__class__.__name__, super().__repr__())
+
+#     @snoop
+    def __reduce_ex__(self,proto):
+        torch.utils.hooks.warn_if_has_hooks(self)
+        args = (self.storage(), self.storage_offset(), tuple(self.size()), self.stride())
+        if self.is_quantized: args = args + (self.q_scale(), self.q_zero_point())
+        args = args + (self.requires_grad, OrderedDict())
+        f = torch._utils._rebuild_qtensor if self.is_quantized else  torch._utils._rebuild_tensor_v2
+        return (_rebuild_from_type, (f, type(self), args, self.__dict__))
+
+
+    @classmethod
+#     @snoop
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
+#         pp.deep(lambda: cls._opt[func].append(oks))
+```
+
+
+```
+# to run this example, need to run cells below which define TensorMask etc
+# for o in Tensor.__getitem__, Tensor.__ne__,Tensor.__eq__,Tensor.add,Tensor.sub,Tensor.mul,Tensor.div,Tensor.__rsub__,Tensor.__radd__,Tensor.matmul,Tensor.bmm:
+#     TensorBase.register_func(o, TensorMask, TensorImageBase)
+#     TensorBase.register_func(o, TensorImageBase, TensorMask)
+```
+
+### ```TensorBase.__torch_function__```
+- performing operation like addition, repr, multiplication etc 
+- and take meta info from tensors and give it to the resulting tensor of the operation; 
+- set `TensorBase.debug=True` to print out more info; 
+
+
+```
+#|export
+class TensorBase(Tensor):
+    "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
+    debug,_opt = False,defaultdict(list)
+    def __new__(cls, x, **kwargs):
+        res = cast(tensor(x), cls)
+        for k,v in kwargs.items(): setattr(res, k, v)
+        return res
+
+    @classmethod
+    def _before_cast(cls, x): return tensor(x)
+    def __repr__(self): 
+#         pp(self.__class__, self.__class__.__name__, super().__repr__())
+        return re.sub('tensor', self.__class__.__name__, super().__repr__())
+
+#     @snoop
+    def __reduce_ex__(self,proto):
+        torch.utils.hooks.warn_if_has_hooks(self)
+        args = (self.storage(), self.storage_offset(), tuple(self.size()), self.stride())
+        if self.is_quantized: args = args + (self.q_scale(), self.q_zero_point())
+        args = args + (self.requires_grad, OrderedDict())
+        f = torch._utils._rebuild_qtensor if self.is_quantized else  torch._utils._rebuild_tensor_v2
+        return (_rebuild_from_type, (f, type(self), args, self.__dict__))
+
+    @classmethod
+#     @snoop
+    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+
+    @classmethod
+#     @snoop
+    def __torch_function__(cls, func, types, args=(), kwargs=None):
+        if cls.debug and func.__name__ not in ('__str__','__repr__'): print(func, types, args, kwargs)
+        if _torch_handled(args, cls._opt, func): types = (torch.Tensor,)
+        res = super().__torch_function__(func, types, args, ifnone(kwargs, {}))
+        dict_objs = _find_args(args) if args else _find_args(list(kwargs.values()))
+        if issubclass(type(res),TensorBase) and dict_objs: res.set_meta(dict_objs[0],as_copy=True)
+        return res
+
+```
+
+
+```
+# TensorBase.__torch_function__??
+```
+
+`TensorBase` hooks into `__torch_function__` to ensure metadata is not lost. To see all functions being called, set `debug`.
+
+
+```
+a = TensorBase(1)
+# a.debug=True
+TensorBase.debug=True
+# a.debug=False
+1/(a+1)
+# a + 1
+```
+
+    <method 'add' of 'torch._C._TensorBase' objects> (<class '__main__.TensorBase'>,) (TensorBase(1), 1) None
+    <function Tensor.__rdiv__> (<class '__main__.TensorBase'>,) (TensorBase(2), 1) {}
+
+
+
+
+
+    TensorBase(0.5000)
+
+
+
+#### ```default_collate(listy)```
+to prepare a batch of data or tensors
+
+
+```
+from torch.utils.data._utils.collate import default_collate
+```
+
+
+```
+# default_collate??
+```
+
+
+```
+# Example with a batch of `int`s:
+test_eq(default_collate([0, 1, 2, 3]), tensor([0, 1, 2, 3]))
+# Example with a batch of `str`s:
+test_eq(default_collate(['a', 'b', 'c']), ['a', 'b', 'c'])
+# Example with `Map` inside the batch:
+default_collate([{'A':0, 'B':1}, {'A': 100, 'B': 100}]) # {'A': tensor([  0, 100]), 'B': tensor([  1, 100])}
+# Example with `NamedTuple` inside the batch:
+Point = namedtuple('Point', ['x', 'y'])
+test_eq(default_collate([Point(0, 0), Point(1, 1)]), Point(x=tensor([0, 1]), y=tensor([0, 1])))
+# Example with `Tuple` inside the batch:
+test_eq(default_collate([(0, 1), (2, 3)]), [tensor([0, 2]), tensor([1, 3])])
+# Example with `List` inside the batch:
+test_eq(default_collate([[0, 1], [2, 3]]), [tensor([0, 2]), tensor([1, 3])])
+```
+
+
+
+
+    {'A': tensor([  0, 100]), 'B': tensor([  1, 100])}
+
+
+
+
+```
+default_collate([a,b])
+```
+
+
+    ---------------------------------------------------------------------------
+
+    TypeError                                 Traceback (most recent call last)
+
+    Input In [184], in <cell line: 1>()
+    ----> 1 default_collate([a,b])
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/torch/utils/data/_utils/collate.py:141, in default_collate(batch)
+        139         storage = elem.storage()._new_shared(numel, device=elem.device)
+        140         out = elem.new(storage).resize_(len(batch), *list(elem.size()))
+    --> 141     return torch.stack(batch, 0, out=out)
+        142 elif elem_type.__module__ == 'numpy' and elem_type.__name__ != 'str_' \
+        143         and elem_type.__name__ != 'string_':
+        144     if elem_type.__name__ == 'ndarray' or elem_type.__name__ == 'memmap':
+        145         # array of string classes and object
+
+
+    TypeError: expected Tensor as element 1 in argument 0, but got type
+
+
+
+```
+test_eq(default_collate([a,b]).img_size,(128,128))
+```
+
+### ```TensorBase.new_tensor(size, dtype=None, device=None, requires_grad=False)```
+- `t.new_tensor(1)`
+- first, use `tensor.new_tensor` to create a new tensor with data 1, then use `as_subclass` to make the new tensor of the same class as t
+
+
+```
+# check out the original pytorch Tensor.new_tensor docs
+# Tensor.new_tensor??
+```
+
+
+```
+tensor(1).new_tensor((1))
+```
+
+
+```
+#|export
+class TensorBase(Tensor):
+    "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
+    debug,_opt = False,defaultdict(list)
+    def __new__(cls, x, **kwargs):
+        res = cast(tensor(x), cls)
+        for k,v in kwargs.items(): setattr(res, k, v)
+        return res
+
+    @classmethod
+    def _before_cast(cls, x): return tensor(x)
+    def __repr__(self): 
+        return re.sub('tensor', self.__class__.__name__, super().__repr__())
 
     def __reduce_ex__(self,proto):
         torch.utils.hooks.warn_if_has_hooks(self)
@@ -1263,7 +2472,341 @@ class TensorBase(Tensor):
         return (_rebuild_from_type, (f, type(self), args, self.__dict__))
 
     @classmethod
-    def register_func(cls, func, *oks): cls._opt[func].append(oks)
+    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+
+    @classmethod
+    def __torch_function__(cls, func, types, args=(), kwargs=None):
+        if cls.debug and func.__name__ not in ('__str__','__repr__'): print(func, types, args, kwargs)
+        if _torch_handled(args, cls._opt, func): types = (torch.Tensor,)
+        res = super().__torch_function__(func, types, args, ifnone(kwargs, {}))
+        dict_objs = _find_args(args) if args else _find_args(list(kwargs.values()))
+        if issubclass(type(res),TensorBase) and dict_objs: res.set_meta(dict_objs[0],as_copy=True)
+        return res
+
+#     @snoop
+    def new_tensor(self, size, dtype=None, device=None, requires_grad=False):
+        cls = type(self)
+        return self.as_subclass(Tensor).new_tensor(size, dtype=dtype, device=device, requires_grad=requires_grad).as_subclass(cls)
+
+```
+
+
+```
+# fastnbs("as_subclass")
+```
+
+
+```
+# TensorBase.new_tensor??
+```
+
+
+```
+class _T(TensorBase): pass
+t = _T(range(5))
+test_eq(t.new_tensor(1), _T(1))
+# test_eq_type(t.new_tensor([1,2]), _T([1,2]))
+```
+
+### ```TensorBase.new_ones(self, data, dtype=None, device=None, requires_grad=False)```
+- `t.new_ones((2,3))`
+- make `t` a subclass of `torch.Tensor` and use `Tensor.new_ones` to create a tensor of value with shape (2,3)
+- then make the new tensor a subclass as that of `t`
+
+
+```
+# Tensor.new_ones?
+# torch.as_subclass??
+```
+
+
+```
+t1 = torch.tensor((), dtype=torch.int32)
+t1.new_ones((2, 3))
+```
+
+
+
+
+    tensor([[1, 1, 1],
+            [1, 1, 1]], dtype=torch.int32)
+
+
+
+
+```
+#|export
+class TensorBase(Tensor):
+    "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
+    debug,_opt = False,defaultdict(list)
+    def __new__(cls, x, **kwargs):
+        res = cast(tensor(x), cls)
+        for k,v in kwargs.items(): setattr(res, k, v)
+        return res
+
+    @classmethod
+    def _before_cast(cls, x): return tensor(x)
+    def __repr__(self): 
+#         pp(self.__class__, self.__class__.__name__, super().__repr__())
+        return re.sub('tensor', self.__class__.__name__, super().__repr__())
+
+    def __reduce_ex__(self,proto):
+        torch.utils.hooks.warn_if_has_hooks(self)
+        args = (self.storage(), self.storage_offset(), tuple(self.size()), self.stride())
+        if self.is_quantized: args = args + (self.q_scale(), self.q_zero_point())
+        args = args + (self.requires_grad, OrderedDict())
+        f = torch._utils._rebuild_qtensor if self.is_quantized else  torch._utils._rebuild_tensor_v2
+        return (_rebuild_from_type, (f, type(self), args, self.__dict__))
+
+    @classmethod
+    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+
+    @classmethod
+    def __torch_function__(cls, func, types, args=(), kwargs=None):
+        if cls.debug and func.__name__ not in ('__str__','__repr__'): print(func, types, args, kwargs)
+        if _torch_handled(args, cls._opt, func): types = (torch.Tensor,)
+        res = super().__torch_function__(func, types, args, ifnone(kwargs, {}))
+        dict_objs = _find_args(args) if args else _find_args(list(kwargs.values()))
+        if issubclass(type(res),TensorBase) and dict_objs: res.set_meta(dict_objs[0],as_copy=True)
+        return res
+
+    def new_tensor(self, size, dtype=None, device=None, requires_grad=False):
+        cls = type(self)
+        return self.as_subclass(Tensor).new_tensor(size, dtype=dtype, device=device, requires_grad=requires_grad).as_subclass(cls)
+
+#     @snoop
+    def new_ones(self, data, dtype=None, device=None, requires_grad=False):
+        cls = type(self)
+        return self.as_subclass(Tensor).new_ones(data, dtype=dtype, device=device, requires_grad=requires_grad).as_subclass(cls)
+
+```
+
+
+```
+class _T(TensorBase): pass
+t = _T(range(5))
+t
+```
+
+
+
+
+    _T([0, 1, 2, 3, 4])
+
+
+
+
+```
+t.new_ones(3)
+t.new_ones((2,3))
+```
+
+
+
+
+    _T([1, 1, 1])
+
+
+
+
+
+
+    _T([[1, 1, 1],
+        [1, 1, 1]])
+
+
+
+
+```
+test_eq_type(t.new_ones(1), _T([1]))
+```
+
+### ```TensorBase.new((self, x=None)```
+- use `Tensor.new` to create a new tensor
+- use `as_subclass` to make the new tensor to receive `t`'s class but **not** `t.__dict__`
+
+
+```
+t2 = Tensor([1,2])
+t2.__dict__ = {'a':1}
+t2.new()
+```
+
+
+
+
+    tensor([])
+
+
+
+
+```
+t3 = t2.new((2,3))
+getattr(t3, "__dict__")
+# help(t2.new)
+```
+
+
+
+
+    {}
+
+
+
+
+```
+#|export
+class TensorBase(Tensor):
+    "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
+    debug,_opt = False,defaultdict(list)
+    def __new__(cls, x, **kwargs):
+        res = cast(tensor(x), cls)
+        for k,v in kwargs.items(): setattr(res, k, v)
+        return res
+
+    @classmethod
+    def _before_cast(cls, x): return tensor(x)
+    def __repr__(self): 
+#         pp(self.__class__, self.__class__.__name__, super().__repr__())
+        return re.sub('tensor', self.__class__.__name__, super().__repr__())
+
+    def __reduce_ex__(self,proto):
+        torch.utils.hooks.warn_if_has_hooks(self)
+        args = (self.storage(), self.storage_offset(), tuple(self.size()), self.stride())
+        if self.is_quantized: args = args + (self.q_scale(), self.q_zero_point())
+        args = args + (self.requires_grad, OrderedDict())
+        f = torch._utils._rebuild_qtensor if self.is_quantized else  torch._utils._rebuild_tensor_v2
+        return (_rebuild_from_type, (f, type(self), args, self.__dict__))
+
+    @classmethod
+    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+
+    @classmethod
+    def __torch_function__(cls, func, types, args=(), kwargs=None):
+        if cls.debug and func.__name__ not in ('__str__','__repr__'): print(func, types, args, kwargs)
+        if _torch_handled(args, cls._opt, func): types = (torch.Tensor,)
+        res = super().__torch_function__(func, types, args, ifnone(kwargs, {}))
+        dict_objs = _find_args(args) if args else _find_args(list(kwargs.values()))
+        if issubclass(type(res),TensorBase) and dict_objs: res.set_meta(dict_objs[0],as_copy=True)
+        return res
+
+    def new_tensor(self, size, dtype=None, device=None, requires_grad=False):
+        cls = type(self)
+        return self.as_subclass(Tensor).new_tensor(size, dtype=dtype, device=device, requires_grad=requires_grad).as_subclass(cls)
+
+
+    def new_ones(self, data, dtype=None, device=None, requires_grad=False):
+        cls = type(self)
+        return self.as_subclass(Tensor).new_ones(data, dtype=dtype, device=device, requires_grad=requires_grad).as_subclass(cls)
+
+#     @snoop(depth=3)
+    def new(self, x=None):
+        cls = type(self)
+        res = self.as_subclass(Tensor).new() if x is None else self.as_subclass(Tensor).new(x)
+        return res.as_subclass(cls)
+```
+
+
+```
+class T(TensorBase): pass
+t = T(1)
+t.__dict__ = {'a':1}
+```
+
+    1 of type <class 'torch.Tensor'> .__dict__: {}
+    1 of type <class '__main__.T'> .__dict__: {}
+
+
+
+```
+# t.as_subclass??
+# retain_meta??
+```
+
+
+```
+t1 = t.new()
+t1.__class__
+```
+
+    1 of type <class '__main__.T'> .__dict__: {'a': 1}
+    1 of type <class 'torch.Tensor'> .__dict__: {'a': 1}
+    tensor([], dtype=torch.int64) of type <class 'torch.Tensor'> .__dict__: {}
+    T([], dtype=torch.int64) of type <class '__main__.T'> .__dict__: {}
+
+
+
+
+
+    __main__.T
+
+
+
+
+```
+# help(tensor)
+# tensor??
+```
+
+
+```
+# fastnbs("as_subclass")
+```
+
+
+```
+T(1).new((1,2))
+```
+
+
+
+
+    T([1, 2])
+
+
+
+
+```
+T(1.).new((1.,2.))
+```
+
+
+
+
+    T([1., 2.])
+
+
+
+### ```TensorBase.requires_grad_(self, requires_grad=True)```
+- set a tensor's `requires_grad` to be True or False
+
+
+```
+#|export
+class TensorBase(Tensor):
+    "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
+    debug,_opt = False,defaultdict(list)
+    def __new__(cls, x, **kwargs):
+        res = cast(tensor(x), cls)
+        for k,v in kwargs.items(): setattr(res, k, v)
+        return res
+
+    @classmethod
+    def _before_cast(cls, x): return tensor(x)
+    def __repr__(self): 
+#         pp(self.__class__, self.__class__.__name__, super().__repr__())
+        return re.sub('tensor', self.__class__.__name__, super().__repr__())
+
+    def __reduce_ex__(self,proto):
+        torch.utils.hooks.warn_if_has_hooks(self)
+        args = (self.storage(), self.storage_offset(), tuple(self.size()), self.stride())
+        if self.is_quantized: args = args + (self.q_scale(), self.q_zero_point())
+        args = args + (self.requires_grad, OrderedDict())
+        f = torch._utils._rebuild_qtensor if self.is_quantized else  torch._utils._rebuild_tensor_v2
+        return (_rebuild_from_type, (f, type(self), args, self.__dict__))
+
+    @classmethod
+    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
 
     @classmethod
     def __torch_function__(cls, func, types, args=(), kwargs=None):
@@ -1287,29 +2830,32 @@ class TensorBase(Tensor):
         res = self.as_subclass(Tensor).new() if x is None else self.as_subclass(Tensor).new(x)
         return res.as_subclass(cls)
     
+#     @snoop
     def requires_grad_(self, requires_grad=True):
         # Workaround https://github.com/pytorch/pytorch/issues/50219
         self.requires_grad = requires_grad
         return self
 ```
 
-`TensorBase` hooks into `__torch_function__` to ensure metadata is not lost. To see all functions being called, set `debug`.
+
+```
+#|hide
+# test of https://github.com/pytorch/pytorch/issues/50219
+x = TensorBase(torch.rand(4,3,16,16))
+with torch.no_grad():
+    y = x.requires_grad_()
+    assert y.requires_grad and x.requires_grad
+```
 
 
 ```
-a = TensorBase(1)
-a.debug=True
-1/(a+1)
+help(cast)
 ```
 
+    Help on TypeDispatch in module fastcore.dispatch:
+    
+    (object,object) -> cast
 
-
-
-    TensorBase(0.5000)
-
-
-
-`TensorBase` and its subclasses also allow for passing through metadata size as img_size...
 
 
 ```
@@ -1317,10 +2863,8 @@ a = TensorBase(1,img_size=(128,128))
 test_eq(a.img_size,(128,128))
 b = cast(a,TensorBase)
 test_eq(b.img_size,(128,128))
+test_eq(torch.stack([a,b],0), TensorBase([1, 1]))
 test_eq(torch.stack([a,b],0).img_size,(128,128))
-
-from torch.utils.data._utils.collate import default_collate
-test_eq(default_collate([a,b]).img_size,(128,128))
 ```
 
 
@@ -1344,14 +2888,13 @@ t2+t1
 class _T(TensorBase): pass
 
 t = _T(range(5))
+test_eq(repr(t), '_T([0, 1, 2, 3, 4])')
 test_eq(t[0], 0)
 test_eq_type(t+1, _T(range(1,6)))
-test_eq(repr(t), '_T([0, 1, 2, 3, 4])')
+
 test_eq_type(t[_T([False,False,True,True,True])], _T([2,3,4]))
 test_eq_type(t[_T([2,3,4])], _T([2,3,4]))
-test_eq(type(pickle.loads(pickle.dumps(t))), _T)
-test_eq_type(t.new_ones(1), _T([1]))
-test_eq_type(t.new_tensor([1,2]), _T([1,2]))
+
 ```
 
 
@@ -1393,15 +2936,7 @@ test_eq_type(t.new([1,2]), _T([1.,2.]))
 test_eq_type(t.new(), _T([]))
 ```
 
-
-```
-#|hide
-# test of https://github.com/pytorch/pytorch/issues/50219
-x = TensorBase(torch.rand(4,3,16,16))
-with torch.no_grad():
-    y = x.requires_grad_()
-    assert y.requires_grad and x.requires_grad
-```
+### ```TensorImageBase(TensorBase)```
 
 
 ```
@@ -1412,17 +2947,23 @@ class TensorImageBase(TensorBase):
         return show_image(self, ctx=ctx, **{**self._show_args, **kwargs})
 ```
 
+### ```TensorImage(TensorImageBase)```
+
 
 ```
 #|export
 class TensorImage(TensorImageBase): pass
 ```
 
+### ```TensorImageBW(TensorImage)```
+
 
 ```
 #|export
 class TensorImageBW(TensorImage): _show_args = ArrayImageBW._show_args
 ```
+
+### ```TensorMask(TensorImageBase)```
 
 
 ```
@@ -1435,6 +2976,8 @@ class TensorMask(TensorImageBase):
         if codes is not None: kwargs = merge({'vmin': 0, 'vmax': len(codes)}, kwargs)
         return super().show(ctx=ctx, **kwargs)
 ```
+
+### register many funcs
 
 
 ```
@@ -1464,12 +3007,6 @@ _ =(im_t == im_t2)
 ```
 
 
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_169_0.png)
-    
-
-
-
 ```
 test_fig_exists(ax)
 ```
@@ -1489,6 +3026,8 @@ test_eq_type(1-a, TensorMask([0,-1]))
 test_eq_type(to_concat([TensorImage([1,2]), TensorImage([3,4])]), TensorImage([1,2,3,4]))
 ```
 
+### ```TensorFlowField(TensorBase)```
+
 
 ```
 #|export
@@ -1502,6 +3041,8 @@ t1 = TensorImage([1.]).view(1,1,1,1)
 t2 = TensorFlowField([1.,1.]).view(1,1,1,2)
 test_eq_type(F.grid_sample(t1, t2), TensorImage([[[[0.25]]]]))
 ```
+
+### ```TensorCategory(TensorBase)```
 
 
 ```
@@ -1520,11 +3061,15 @@ test_eq(mask_t[tc], tensor([2,4,5]))
 test_eq(im_t[tc], tensor([2,4,5]))
 ```
 
+### ```TensorMultiCategory(TensorCategory)```
+
 
 ```
 #|export 
 class TensorMultiCategory(TensorCategory): pass
 ```
+
+### ```TitledTensorScalar(TensorBase)```
 
 
 ```
@@ -1558,19 +3103,6 @@ def cat  (self:L, dim=0):
 show_doc(L.tensored)
 ```
 
-
-
-
----
-
-### L.tensored
-
->      L.tensored ()
-
-`mapped(tensor)`
-
-
-
 There are shortcuts for `torch.stack` and `torch.cat` if your `L` contains tensors or something convertible. You can manually convert with `tensored`.
 
 
@@ -1585,19 +3117,6 @@ show_doc(L.stack)
 ```
 
 
-
-
----
-
-### L.stack
-
->      L.stack (dim=0)
-
-Same as `torch.stack`
-
-
-
-
 ```
 test_eq(t.stack(), tensor([[1,2],[3,4]]))
 ```
@@ -1606,19 +3125,6 @@ test_eq(t.stack(), tensor([[1,2],[3,4]]))
 ```
 show_doc(L.cat)
 ```
-
-
-
-
----
-
-### L.cat
-
->      L.cat (dim=0)
-
-Same as `torch.cat`
-
-
 
 
 ```
@@ -1792,53 +3298,14 @@ show_doc(TitledInt, title_level=3)
 ```
 
 
-
-
----
-
-### TitledInt
-
-
-
-An `int` with `show`
-
-
-
-
 ```
 show_doc(TitledStr, title_level=3)
 ```
 
 
-
-
----
-
-### TitledStr
-
-
-
-An `str` with `show`
-
-
-
-
 ```
 show_doc(TitledFloat, title_level=3)
 ```
-
-
-
-
----
-
-### TitledFloat
-
->      TitledFloat (x=0)
-
-A `float` with `show`
-
-
 
 
 ```
@@ -1850,19 +3317,6 @@ test_stdout(lambda: TitledInt(1).show(), '1')
 ```
 show_doc(TitledTuple, title_level=3)
 ```
-
-
-
-
----
-
-### TitledTuple
-
->      TitledTuple (x=None, *rest)
-
-A `fastuple` with `show`
-
-
 
 
 ```
@@ -2033,19 +3487,6 @@ show_doc(Module, title_level=3)
 ```
 
 
-
-
----
-
-### Module
-
->      Module ()
-
-Same as `nn.Module`, but no need for subclasses to call `super().__init__`
-
-
-
-
 ```
 class _T(Module):
     def __init__(self): self.f = nn.Linear(1,1)
@@ -2054,13 +3495,6 @@ class _T(Module):
 t = _T()
 t(tensor([1.]))
 ```
-
-
-
-
-    tensor([-0.0832], grad_fn=<AddBackward0>)
-
-
 
 
 ```
@@ -2214,12 +3648,6 @@ plt.scatter(brks,ys)
 plt.scatter(pts,preds)
 plt.legend(['breaks','preds']);
 ```
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_241_0.png)
-    
-
 
 
 ```
@@ -2389,21 +3817,9 @@ plt.imshow(make_cross_image(), cmap="Greys");
 ```
 
 
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_261_0.png)
-    
-
-
-
 ```
 plt.imshow(make_cross_image(False).permute(1,2,0));
 ```
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_262_0.png)
-    
-
 
 
 ```
@@ -2421,12 +3837,6 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
 ```
 show_image_batch(([Image.open(TEST_IMAGE_BW),Image.open(TEST_IMAGE)],['bw','color']), items=2)
 ```
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_264_0.png)
-    
-
 
 ## Model init
 
@@ -2610,65 +4020,6 @@ def notmax_torch(max_version):
 #|hide
 import nbdev; nbdev.nbdev_export()
 ```
-
-    /Users/Natsume/mambaforge/lib/python3.9/site-packages/nbdev/export.py:54: UserWarning: Notebook '/Users/Natsume/Documents/fastai/nbs/09c_vision.widgets.ipynb' uses `#|export` without `#|default_exp` cell.
-    Note nbdev2 no longer supports nbdev1 syntax. Run `nbdev_migrate` to upgrade.
-    See https://nbdev.fast.ai/getting_started.html for more information.
-      warn(f"Notebook '{nbname}' uses `#|export` without `#|default_exp` cell.\n"
-
-
-
-    ---------------------------------------------------------------------------
-
-    ValueError                                Traceback (most recent call last)
-
-    Input In [192], in <cell line: 2>()
-          1 #|hide
-    ----> 2 import nbdev; nbdev.nbdev_export()
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastcore/script.py:110, in call_parse.<locals>._f(*args, **kwargs)
-        107 @wraps(func)
-        108 def _f(*args, **kwargs):
-        109     mod = inspect.getmodule(inspect.currentframe().f_back)
-    --> 110     if not mod: return func(*args, **kwargs)
-        111     if not SCRIPT_INFO.func and mod.__name__=="__main__": SCRIPT_INFO.func = func.__name__
-        112     if len(sys.argv)>1 and sys.argv[1]=='': sys.argv.pop(1)
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/nbdev/doclinks.py:135, in nbdev_export(path, **kwargs)
-        133 for f in files: nb_export(f)
-        134 add_init(get_config().lib_path)
-    --> 135 _build_modidx()
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/nbdev/doclinks.py:97, in _build_modidx(dest, nbs_path, skip_exists)
-         95 code_root = dest.parent.resolve()
-         96 for file in globtastic(dest, file_glob="*.py", skip_file_re='^_', skip_folder_re="\.ipynb_checkpoints"):
-    ---> 97     res['syms'].update(_get_modidx((dest.parent/file).resolve(), code_root, nbs_path=nbs_path))
-         98 idxfile.write_text("# Autogenerated by nbdev\n\nd = "+pformat(res, width=140, indent=2, compact=True))
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/nbdev/doclinks.py:71, in _get_modidx(py_path, code_root, nbs_path)
-         69 for cell in _iter_py_cells(py_path):
-         70     if cell.nb == 'auto': continue
-    ---> 71     loc = _nbpath2html(cell.nb_path.relative_to(nbs_path))
-         73     def _stor(nm):
-         74         for n in L(nm): d[f'{mod_name}.{n}'] = f'{loc.as_posix()}#{n.lower()}',rel_name
-
-
-    File ~/mambaforge/lib/python3.9/pathlib.py:939, in PurePath.relative_to(self, *other)
-        937 if (root or drv) if n == 0 else cf(abs_parts[:n]) != cf(to_abs_parts):
-        938     formatted = self._format_parsed_parts(to_drv, to_root, to_parts)
-    --> 939     raise ValueError("{!r} is not in the subpath of {!r}"
-        940             " OR one path is relative and the other is absolute."
-        941                      .format(str(self), str(formatted)))
-        942 return self._from_parsed_parts('', root if n == 1 else '',
-        943                                abs_parts[n:])
-
-
-    ValueError: '/Users/Natsume/Documents/fastai/fastai/nbs/09c_vision.widgets.ipynb' is not in the subpath of '/Users/Natsume/Documents/fastai/nbs' OR one path is relative and the other is absolute.
-
 
 
 ```
