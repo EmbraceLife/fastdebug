@@ -945,51 +945,55 @@ def __init__(self:pd.DataFrame, data=None, index=None, columns=None, dtype=None,
     if data is not None and isinstance(data, Tensor): data = to_np(data)
     self._old_init(data, index=index, columns=columns, dtype=dtype, copy=copy)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 411
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 413
 def get_empty_df(n):
     "Return `n` empty rows of a dataframe"
     df = pd.DataFrame(index = range(n))
     return [df.iloc[i] for i in range(n)]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 412
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 416
 def display_df(df):
     "Display `df` in a notebook or defaults to print"
     try: from IPython.display import display, HTML
     except: return print(df)
     display(HTML(df.to_html()))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 413
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 419
 def get_first(c):
     "Get the first element of c, even if c is a dataframe"
     return getattr(c, 'iloc', c)[0]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 414
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 422
 def one_param(m):
     "First parameter in `m`"
     return first(m.parameters())
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 415
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 424
+# @snoop
 def item_find(x, idx=0):
     "Recursively takes the `idx`-th element of `x`"
     if is_listy(x): return item_find(x[idx])
+#     if is_listy(x): return item_find(x[idx], idx) # another way of interpreting recursively take the idx-th element   
     if isinstance(x,dict):
         key = list(x.keys())[idx] if isinstance(idx, int) else idx
         return item_find(x[key])
     return x
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 416
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 428
+# @snoop(depth=2)
 def find_device(b):
-    "Recursively search the device of `b`."
+    "Recursively search the device of `b`. the first of the first device"
     return item_find(b).device
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 418
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 432
+# @snoop
 def find_bs(b):
     "Recursively search the batch size of `b`."
     res = item_find(b)
     if not hasattr(res, "shape"): return len(b)
     return res.shape[0]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 420
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 439
 def np_func(f):
     "Convert a function taking and returning numpy arrays to one taking and returning tensors"
     def _inner(*args, **kwargs):
@@ -998,46 +1002,47 @@ def np_func(f):
     functools.update_wrapper(_inner, f)
     return _inner
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 424
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 444
 class Module(nn.Module, metaclass=PrePostInitMeta):
     "Same as `nn.Module`, but no need for subclasses to call `super().__init__`"
     def __pre_init__(self, *args, **kwargs): super().__init__()
     def __init__(self): pass
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 427
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 449
 from torch.nn.parallel import DistributedDataParallel
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 428
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 450
 def get_model(model):
     "Return the model maybe wrapped inside `model`."
     return model.module if isinstance(model, (DistributedDataParallel, nn.DataParallel)) else model
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 429
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 452
 def one_hot(x, c):
     "One-hot encode `x` with `c` classes."
     res = torch.zeros(c, dtype=torch.uint8)
-    if isinstance(x, Tensor) and x.numel()>0: res[x] = 1.
+    if isinstance(x, Tensor) and x.numel()>0: 
+        res[x] = 1.
     else: res[list(L(x, use_list=None))] = 1.
     return res
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 431
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 459
 def one_hot_decode(x, vocab=None):
     return L(vocab[i] if vocab else i for i,x_ in enumerate(x) if x_==1)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 433
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 463
 def params(m):
     "Return all parameters of `m`"
     return [p for p in m.parameters()]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 434
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 465
 def trainable_params(m):
     "Return all trainable parameters of `m`"
     return [p for p in m.parameters() if p.requires_grad]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 436
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 469
 norm_types = (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d, nn.InstanceNorm1d, nn.InstanceNorm2d, nn.InstanceNorm3d, nn.LayerNorm)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 437
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 471
 def norm_bias_params(m, with_bias=True):
     "Return all bias and BatchNorm parameters"
     if isinstance(m, norm_types): return L(m.parameters())
@@ -1045,15 +1050,18 @@ def norm_bias_params(m, with_bias=True):
     if with_bias and getattr(m, 'bias', None) is not None: res.append(m.bias)
     return res
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 439
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 477
+# @snoop
 def batch_to_samples(b, max_n=10):
     "'Transposes' a batch to (at most `max_n`) samples"
-    if isinstance(b, Tensor): return retain_types(list(b[:max_n]), [b])
+    if isinstance(b, Tensor): 
+        return retain_types(list(b[:max_n]), [b])
     else:
+#         pp.deep(lambda: L(b).map(partial(batch_to_samples,max_n=max_n)))
         res = L(b).map(partial(batch_to_samples,max_n=max_n))
         return retain_types(res.zip(), [b])
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 441
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 487
 @patch
 def interp_1d(x:Tensor, xp, fp):
     "Same as `np.interp`"
@@ -1063,7 +1071,7 @@ def interp_1d(x:Tensor, xp, fp):
     locs = locs.clamp(0,len(slopes)-1)
     return slopes[locs]*x + incx[locs]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 443
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 493
 @patch
 def pca(x:Tensor, k=2):
     "Compute PCA of `x` with `k` dimensions."
@@ -1071,56 +1079,56 @@ def pca(x:Tensor, k=2):
     U,S,V = torch.svd(x.t())
     return torch.mm(x,U[:,:k])
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 444
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 495
 def logit(x):
     "Logit of `x`, clamped to avoid inf."
     x = x.clamp(1e-7, 1-1e-7)
     return -(1/x-1).log()
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 445
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 498
 def num_distrib():
     "Return the number of processes in distributed training (if applicable)."
     return int(os.environ.get('WORLD_SIZE', 0))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 446
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 501
 def rank_distrib():
     "Return the distributed rank of this process (if applicable)."
     return int(os.environ.get('RANK', 0))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 447
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 504
 def distrib_barrier():
     "Place a synchronization barrier in distributed training"
     if num_distrib() > 1 and torch.distributed.is_initialized(): torch.distributed.barrier()
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 449
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 506
 # Saving arrays requires pytables - optional dependency
 try: import tables
 except: pass
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 450
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 507
 def _comp_filter(lib='lz4',lvl=3): return tables.Filters(complib=f'blosc:{lib}', complevel=lvl)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 451
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 509
 @patch
 def save_array(p:Path, o, complib='lz4', lvl=3):
     "Save numpy array to a compressed `pytables` file, using compression level `lvl`"
     if isinstance(o,Tensor): o = to_np(o)
     with tables.open_file(p, mode='w', filters=_comp_filter(lib=complib,lvl=lvl)) as f: f.create_carray('/', 'data', obj=o)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 453
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 512
 @patch
 def load_array(p:Path):
     "Save numpy array to a `pytables` file"
     with tables.open_file(p, 'r') as f: return f.root.data.read()
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 454
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 514
 def base_doc(elt):
     "Print a base documentation of `elt`"
     name = getattr(elt, '__qualname__', getattr(elt, '__name__', ''))
     print(f'{name}{inspect.signature(elt)}\n{inspect.getdoc(elt)}\n')
     print('To get a prettier result with hyperlinks to source code and documentation, install nbdev: pip install nbdev')
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 455
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 515
 def doc(elt):
     "Try to use doc form nbdev and fall back to `base_doc`"
     try:
@@ -1128,7 +1136,7 @@ def doc(elt):
         doc(elt)
     except: base_doc(elt)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 456
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 517
 def nested_reorder(t, idxs):
     "Reorder all tensors in `t` using `idxs`"
     if isinstance(t, (Tensor,L)): return t[idxs]
@@ -1136,14 +1144,14 @@ def nested_reorder(t, idxs):
     if t is None: return t
     raise TypeError(f"Expected tensor, tuple, list or L but got {type(t)}")
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 458
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 523
 def flatten_check(inp, targ):
-    "Check that `out` and `targ` have the same number of elements and flatten them."
+    "Check that `inp` and `targ` have the same number of elements and flatten them."
     inp,targ = TensorBase(inp.contiguous()).view(-1),TensorBase(targ.contiguous()).view(-1)
     test_eq(len(inp), len(targ))
     return inp,targ
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 461
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 528
 def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
     if bw:
@@ -1156,22 +1164,24 @@ def make_cross_image(bw=True):
         im[1,:,2] = 1.
     return im
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 464
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 533
+# @snoop
 def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, **kwargs):
     "Display batch `b` in a grid of size `items` with `cols` width"
     if items<cols: cols=items
     rows = (items+cols-1) // cols
     if figsize is None: figsize = (cols*3, rows*3)
     fig,axs = plt.subplots(rows, cols, figsize=figsize)
-    for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
+    for *o,ax in zip(*to_cpu(b), axs.flatten()): 
+        show(o, ax=ax, **kwargs)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 467
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 539
 def requires_grad(m):
     "Check if the first parameter of `m` requires grad or not"
     ps = list(m.parameters())
     return ps[0].requires_grad if len(ps)>0 else False
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 469
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 544
 def init_default(m, func=nn.init.kaiming_normal_):
     "Initialize `m` weights with `func` and set `bias` to 0."
     if func:
@@ -1179,31 +1189,31 @@ def init_default(m, func=nn.init.kaiming_normal_):
         if hasattr(m, 'bias') and hasattr(m.bias, 'data'): m.bias.data.fill_(0.)
     return m
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 471
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 550
 def cond_init(m, func):
     "Apply `init_default` to `m` unless it's a batchnorm module"
     if (not isinstance(m, norm_types)) and requires_grad(m): init_default(m, func)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 473
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 555
 def apply_leaf(m, f):
     "Apply `f` to children of `m`."
     c = m.children()
     if isinstance(m, nn.Module): f(m)
     for l in c: apply_leaf(l,f)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 475
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 560
 def apply_init(m, func=nn.init.kaiming_normal_):
     "Initialize all non-batchnorm layers of `m` with `func`."
     apply_leaf(m, partial(cond_init, func=func))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 478
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 564
 def script_use_ctx(f):
     "Decorator: create jit script and pass everything in `ctx.saved_variables to `f`, after `*args`"
     sf = torch.jit.script(f)
     def _f(ctx, *args, **kwargs): return sf(*args, *ctx.saved_variables, **kwargs)
     return update_wrapper(_f,f)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 479
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 565
 def script_save_ctx(static, *argidx):
     "Decorator: create jit script and save args with indices `argidx` using `ctx.save_for_backward`"
     def _dec(f):
@@ -1218,29 +1228,29 @@ def script_save_ctx(static, *argidx):
         return update_wrapper(_f,f)
     return _dec
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 480
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 566
 def script_fwd(*argidx):
     "Decorator: create static jit script and save args with indices `argidx` using `ctx.save_for_backward`"
     return script_save_ctx(True, *argidx)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 481
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 567
 def script_bwd(f):
     "Decorator: create static jit script and pass everything in `ctx.saved_variables to `f`, after `*args`"
     return staticmethod(script_use_ctx(f))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 482
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 568
 def grad_module(cls):
     "Decorator: convert `cls` into an autograd function"
     class _c(nn.Module):
         def forward(self, *args, **kwargs): return cls.apply(*args, **kwargs)
     return _c
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 484
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 571
 def ismin_torch(min_version):
     "Check if `torch.__version__` >= `min_version` using packaging.version"
     return parse(torch.__version__) >= parse(min_version)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 485
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 572
 def notmax_torch(max_version):
     "Check if `torch.__version__` < `max_version` using packaging.version"
     return parse(torch.__version__) < parse(max_version)
