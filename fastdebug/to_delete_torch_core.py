@@ -498,7 +498,7 @@ class TensorBase(Tensor):
 
     @classmethod
 #     @snoop
-    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
 
     @classmethod
 #     @snoop
@@ -511,7 +511,7 @@ class TensorBase(Tensor):
         return res
 
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 262
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 260
 class TensorBase(Tensor):
     "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
     debug,_opt = False,defaultdict(list)
@@ -534,7 +534,7 @@ class TensorBase(Tensor):
         return (_rebuild_from_type, (f, type(self), args, self.__dict__))
 
     @classmethod
-    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
 
     @classmethod
     def __torch_function__(cls, func, types, args=(), kwargs=None):
@@ -551,7 +551,7 @@ class TensorBase(Tensor):
         return self.as_subclass(Tensor).new_tensor(size, dtype=dtype, device=device, requires_grad=requires_grad).as_subclass(cls)
 
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 269
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 267
 class TensorBase(Tensor):
     "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
     debug,_opt = False,defaultdict(list)
@@ -575,7 +575,7 @@ class TensorBase(Tensor):
         return (_rebuild_from_type, (f, type(self), args, self.__dict__))
 
     @classmethod
-    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
 
     @classmethod
     def __torch_function__(cls, func, types, args=(), kwargs=None):
@@ -596,7 +596,7 @@ class TensorBase(Tensor):
         return self.as_subclass(Tensor).new_ones(data, dtype=dtype, device=device, requires_grad=requires_grad).as_subclass(cls)
 
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 276
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 274
 class TensorBase(Tensor):
     "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
     debug,_opt = False,defaultdict(list)
@@ -620,7 +620,7 @@ class TensorBase(Tensor):
         return (_rebuild_from_type, (f, type(self), args, self.__dict__))
 
     @classmethod
-    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
 
     @classmethod
     def __torch_function__(cls, func, types, args=(), kwargs=None):
@@ -646,7 +646,7 @@ class TensorBase(Tensor):
         res = self.as_subclass(Tensor).new() if x is None else self.as_subclass(Tensor).new(x)
         return res.as_subclass(cls)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 285
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 283
 class TensorBase(Tensor):
     "A `Tensor` which support subclass pickling, and maintains metadata when casting or after methods"
     debug,_opt = False,defaultdict(list)
@@ -670,7 +670,7 @@ class TensorBase(Tensor):
         return (_rebuild_from_type, (f, type(self), args, self.__dict__))
 
     @classmethod
-    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
 
     @classmethod
     def __torch_function__(cls, func, types, args=(), kwargs=None):
@@ -700,19 +700,19 @@ class TensorBase(Tensor):
         self.requires_grad = requires_grad
         return self
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 295
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 294
 class TensorImageBase(TensorBase):
     _show_args = ArrayImageBase._show_args
     def show(self, ctx=None, **kwargs):
         return show_image(self, ctx=ctx, **{**self._show_args, **kwargs})
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 297
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 296
 class TensorImage(TensorImageBase): pass
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 299
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 301
 class TensorImageBW(TensorImage): _show_args = ArrayImageBW._show_args
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 301
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 303
 class TensorMask(TensorImageBase):
     _show_args = ArrayMask._show_args
 
@@ -721,7 +721,7 @@ class TensorMask(TensorImageBase):
         if codes is not None: kwargs = merge({'vmin': 0, 'vmax': len(codes)}, kwargs)
         return super().show(ctx=ctx, **kwargs)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 303
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 306
 for o in Tensor.__getitem__, Tensor.__ne__,Tensor.__eq__,Tensor.add,Tensor.sub,Tensor.mul,Tensor.div,Tensor.__rsub__,Tensor.__radd__,Tensor.matmul,Tensor.bmm:
     TensorBase.register_func(o, TensorMask, TensorImageBase)
     TensorBase.register_func(o, TensorImageBase, TensorMask)
@@ -729,51 +729,87 @@ for o in Tensor.__getitem__, Tensor.__ne__,Tensor.__eq__,Tensor.add,Tensor.sub,T
 TensorMask.register_func(torch.einsum, str, TensorImageBase, TensorMask)
 TensorMask.register_func(torch.einsum, str, TensorMask, TensorImageBase)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 311
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 312
 class TensorFlowField(TensorBase): pass
 TensorImage.register_func(F.grid_sample, TensorImageBase, TensorFlowField)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 314
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 319
 class TensorCategory(TensorBase): pass
-
 TensorBase.register_func(Tensor.__getitem__, TensorImageBase, TensorCategory)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 317
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 322
 class TensorMultiCategory(TensorCategory): pass
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 319
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 324
 class TitledTensorScalar(TensorBase):
     "A tensor containing a scalar that has a `show` method"
     def show(self, **kwargs): show_title(self.item(), **kwargs)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 321
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 328
 @patch
+# @snoop
 def tensored(self:L):
     "`mapped(tensor)`"
-    return self.map(tensor)
-@patch
-def stack(self:L, dim=0):
-    "Same as `torch.stack`"
-    return torch.stack(list(self.tensored()), dim=dim)
-@patch
-def cat  (self:L, dim=0):
-    "Same as `torch.cat`"
-    return torch.cat  (list(self.tensored()), dim=dim)
+    ### original source
+#     return self.map(tensor)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 330
+    ### fastdebug source
+    sp1 = tensor
+    sp2 = self.map(sp1)
+    return sp2
+
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 342
+# @snoop
 def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"
-    if not len(ls): return []
+    ### original source
+#     if not len(ls): return []
+#     it = ls[0]
+#     if isinstance(it,torch.Tensor): res = torch.cat(ls)
+#     elif isinstance(it,ndarray): res = np.concatenate(ls)
+#     else:
+#         res = itertools.chain.from_iterable(map(L,ls))
+#         if isinstance(it,(tuple,list)): res = type(it)(res)
+#         else: res = L(res)
+#     return retain_type(res, it)
+
+    ### fastdebug source
+    if not len(ls): 
+        return []
     it = ls[0]
-    if isinstance(it,torch.Tensor): res = torch.cat(ls)
-    elif isinstance(it,ndarray): res = np.concatenate(ls)
+    if isinstance(it,torch.Tensor): 
+        res = torch.cat(ls)
+    elif isinstance(it,ndarray): 
+        res = np.concatenate(ls)
     else:
-        res = itertools.chain.from_iterable(map(L,ls))
-        if isinstance(it,(tuple,list)): res = type(it)(res)
-        else: res = L(res)
+        sp1 = map(L,ls) # make a tuple of lists into a map object
+        res = itertools.chain.from_iterable(sp1) # make a map object into a itertool chain object
+        if isinstance(it,(tuple,list)): 
+            res = type(it)(res) # convert a itertool chain object into a longer/merged list
+        else: 
+            res = L(res)
     return retain_type(res, it)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 332
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 353
+class Chunks:
+    "Slice and int indexing into a list of lists"
+#     @snoop
+    def __init__(self, chunks, lens=None):
+        ### original source
+#         self.chunks = chunks
+#         self.lens = L(map(len,self.chunks) if lens is None else lens)
+#         self.cumlens = np.cumsum(0+self.lens)
+#         self.totlen = self.cumlens[-1]
+        
+        ### fastdebug
+        self.chunks = chunks
+#         pp.deep(lambda: L(map(len,self.chunks) if lens is None else lens))
+        self.lens = L(map(len,self.chunks) if lens is None else lens)
+#         pp.deep(lambda: np.cumsum(0+self.lens))
+        self.cumlens = np.cumsum(0+self.lens)
+        self.totlen = self.cumlens[-1]        
+
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 364
 class Chunks:
     "Slice and int indexing into a list of lists"
     def __init__(self, chunks, lens=None):
@@ -782,67 +818,110 @@ class Chunks:
         self.cumlens = np.cumsum(0+self.lens)
         self.totlen = self.cumlens[-1]
 
+#     @snoop(depth=1)
     def __getitem__(self,i):
-        if isinstance(i,slice): return retain_type(self.getslice(i), old=self.chunks[0])
+        ### original source
+#         if isinstance(i,slice): return retain_type(self.getslice(i), old=self.chunks[0])
+#         di,idx = self.doc_idx(i)
+#         return retain_type(self.chunks[di][idx], old=self.chunks[0])
+    
+        ### fastdebug source
+        if isinstance(i,slice): 
+            return retain_type(self.getslice(i), old=self.chunks[0])
         di,idx = self.doc_idx(i)
-        return retain_type(self.chunks[di][idx], old=self.chunks[0])
+        ret = retain_type(self.chunks[di][idx], old=self.chunks[0])
+        return ret
 
+#     @snoop
     def getslice(self, i):
+        "get the elements of the selected lists concatenated into a longer list. Not sure about the logic of the source"
+        ### original source
+#         st_d,st_i = self.doc_idx(ifnone(i.start,0))
+#         en_d,en_i = self.doc_idx(ifnone(i.stop,self.totlen+1))
+#         res = [self.chunks[st_d][st_i:(en_i if st_d==en_d else sys.maxsize)]]
+#         for b in range(st_d+1,en_d): res.append(self.chunks[b])
+#         if st_d!=en_d and en_d<len(self.chunks): res.append(self.chunks[en_d][:en_i])
+#         return concat(*res)
+
+        ### fastdebug source
         st_d,st_i = self.doc_idx(ifnone(i.start,0))
         en_d,en_i = self.doc_idx(ifnone(i.stop,self.totlen+1))
+#         pp.deep(lambda: [self.chunks[st_d][st_i:(en_i if st_d==en_d else sys.maxsize)]])
         res = [self.chunks[st_d][st_i:(en_i if st_d==en_d else sys.maxsize)]]
-        for b in range(st_d+1,en_d): res.append(self.chunks[b])
-        if st_d!=en_d and en_d<len(self.chunks): res.append(self.chunks[en_d][:en_i])
+        for b in range(st_d+1,en_d): 
+            res.append(self.chunks[b])
+        if st_d!=en_d and en_d<len(self.chunks): 
+            res.append(self.chunks[en_d][:en_i])
         return concat(*res)
-
+    
+#     @snoop
     def doc_idx(self, i):
-        if i<0: i=self.totlen+i # count from end
-        docidx = np.searchsorted(self.cumlens, i+1)-1
-        cl = self.cumlens[docidx]
-        return docidx,i-cl
+        "get index for outer and inner lists. Still not clear about the logic of the source "
+        ### original source
+#         if i<0: i=self.totlen+i # count from end
+#         docidx = np.searchsorted(self.cumlens, i+1)-1
+#         cl = self.cumlens[docidx]
+#         return docidx,i-cl
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 337
+        ### fastdebug source
+        if i<0: 
+            i = self.totlen+i # count from end
+#         pp.deep(lambda: np.searchsorted(self.cumlens, i+1)-1)
+        docidx = np.searchsorted(self.cumlens, i+1)-1
+#         pp.deep(lambda: self.cumlens[docidx])
+        cl = self.cumlens[docidx]
+        return docidx,i-cl     
+
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 384
+# @snoop
 def show_title(o, ax=None, ctx=None, label=None, color='black', **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
     if ax is None: print(o)
     elif hasattr(ax, 'set_title'):
         t = ax.title.get_text()
-        if len(t) > 0: o = t+'\n'+str(o)
+        if len(t) > 0: 
+            o = t+'\n'+str(o)
         ax.set_title(o, color=color)
     elif isinstance(ax, pd.Series):
-        while label in ax: label += '_'
+        while label in ax: 
+            label += '_'
         ax = pd.concat([ax,pd.Series({label: o})])
     return ax
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 339
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 392
 class ShowTitle:
     "Base class that adds a simple `show`"
     _show_args = {'label': 'text'}
+    @delegates(show_title, keep=True)    
     def show(self, ctx=None, **kwargs):
         "Show self"
         return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
 
 class TitledInt(Int, ShowTitle):
     _show_args = {'label': 'text'}
+    @delegates(show_title, keep=True)    
     def show(self, ctx=None, **kwargs):
         "Show self"
         return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
 
 class TitledFloat(Float, ShowTitle):
     _show_args = {'label': 'text'}
+    @delegates(show_title, keep=True)
     def show(self, ctx=None, **kwargs):
         "Show self"
         return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
 
 class TitledStr(Str, ShowTitle):
     _show_args = {'label': 'text'}
+    @delegates(show_title, keep=True)    
     def show(self, ctx=None, **kwargs):
         "Show self"
         return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
 
 class TitledTuple(fastuple, ShowTitle):
     _show_args = {'label': 'text'}
+    @delegates(show_title, keep=True)    
     def show(self, ctx=None, **kwargs):
         "Show self"
         return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
@@ -850,46 +929,46 @@ class TitledTuple(fastuple, ShowTitle):
 add_docs(TitledInt, "An `int` with `show`"); add_docs(TitledStr, "An `str` with `show`");
 add_docs(TitledFloat, "A `float` with `show`"); add_docs(TitledTuple, "A `fastuple` with `show`")
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 346
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 404
 @patch
 def truncate(self:TitledStr, n):
     "Truncate self to `n`"
     words = self.split(' ')[:n]
     return TitledStr(' '.join(words))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 348
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 408
 if not hasattr(pd.DataFrame,'_old_init'): pd.DataFrame._old_init = pd.DataFrame.__init__
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 349
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 410
 @patch
 def __init__(self:pd.DataFrame, data=None, index=None, columns=None, dtype=None, copy=None):
     if data is not None and isinstance(data, Tensor): data = to_np(data)
     self._old_init(data, index=index, columns=columns, dtype=dtype, copy=copy)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 350
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 411
 def get_empty_df(n):
     "Return `n` empty rows of a dataframe"
     df = pd.DataFrame(index = range(n))
     return [df.iloc[i] for i in range(n)]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 351
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 412
 def display_df(df):
     "Display `df` in a notebook or defaults to print"
     try: from IPython.display import display, HTML
     except: return print(df)
     display(HTML(df.to_html()))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 352
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 413
 def get_first(c):
     "Get the first element of c, even if c is a dataframe"
     return getattr(c, 'iloc', c)[0]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 353
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 414
 def one_param(m):
     "First parameter in `m`"
     return first(m.parameters())
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 354
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 415
 def item_find(x, idx=0):
     "Recursively takes the `idx`-th element of `x`"
     if is_listy(x): return item_find(x[idx])
@@ -898,19 +977,19 @@ def item_find(x, idx=0):
         return item_find(x[key])
     return x
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 355
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 416
 def find_device(b):
     "Recursively search the device of `b`."
     return item_find(b).device
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 357
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 418
 def find_bs(b):
     "Recursively search the batch size of `b`."
     res = item_find(b)
     if not hasattr(res, "shape"): return len(b)
     return res.shape[0]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 359
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 420
 def np_func(f):
     "Convert a function taking and returning numpy arrays to one taking and returning tensors"
     def _inner(*args, **kwargs):
@@ -919,21 +998,21 @@ def np_func(f):
     functools.update_wrapper(_inner, f)
     return _inner
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 363
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 424
 class Module(nn.Module, metaclass=PrePostInitMeta):
     "Same as `nn.Module`, but no need for subclasses to call `super().__init__`"
     def __pre_init__(self, *args, **kwargs): super().__init__()
     def __init__(self): pass
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 366
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 427
 from torch.nn.parallel import DistributedDataParallel
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 367
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 428
 def get_model(model):
     "Return the model maybe wrapped inside `model`."
     return model.module if isinstance(model, (DistributedDataParallel, nn.DataParallel)) else model
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 368
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 429
 def one_hot(x, c):
     "One-hot encode `x` with `c` classes."
     res = torch.zeros(c, dtype=torch.uint8)
@@ -941,24 +1020,24 @@ def one_hot(x, c):
     else: res[list(L(x, use_list=None))] = 1.
     return res
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 370
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 431
 def one_hot_decode(x, vocab=None):
     return L(vocab[i] if vocab else i for i,x_ in enumerate(x) if x_==1)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 372
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 433
 def params(m):
     "Return all parameters of `m`"
     return [p for p in m.parameters()]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 373
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 434
 def trainable_params(m):
     "Return all trainable parameters of `m`"
     return [p for p in m.parameters() if p.requires_grad]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 375
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 436
 norm_types = (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d, nn.InstanceNorm1d, nn.InstanceNorm2d, nn.InstanceNorm3d, nn.LayerNorm)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 376
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 437
 def norm_bias_params(m, with_bias=True):
     "Return all bias and BatchNorm parameters"
     if isinstance(m, norm_types): return L(m.parameters())
@@ -966,7 +1045,7 @@ def norm_bias_params(m, with_bias=True):
     if with_bias and getattr(m, 'bias', None) is not None: res.append(m.bias)
     return res
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 378
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 439
 def batch_to_samples(b, max_n=10):
     "'Transposes' a batch to (at most `max_n`) samples"
     if isinstance(b, Tensor): return retain_types(list(b[:max_n]), [b])
@@ -974,7 +1053,7 @@ def batch_to_samples(b, max_n=10):
         res = L(b).map(partial(batch_to_samples,max_n=max_n))
         return retain_types(res.zip(), [b])
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 380
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 441
 @patch
 def interp_1d(x:Tensor, xp, fp):
     "Same as `np.interp`"
@@ -984,7 +1063,7 @@ def interp_1d(x:Tensor, xp, fp):
     locs = locs.clamp(0,len(slopes)-1)
     return slopes[locs]*x + incx[locs]
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 382
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 443
 @patch
 def pca(x:Tensor, k=2):
     "Compute PCA of `x` with `k` dimensions."
@@ -992,56 +1071,56 @@ def pca(x:Tensor, k=2):
     U,S,V = torch.svd(x.t())
     return torch.mm(x,U[:,:k])
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 383
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 444
 def logit(x):
     "Logit of `x`, clamped to avoid inf."
     x = x.clamp(1e-7, 1-1e-7)
     return -(1/x-1).log()
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 384
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 445
 def num_distrib():
     "Return the number of processes in distributed training (if applicable)."
     return int(os.environ.get('WORLD_SIZE', 0))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 385
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 446
 def rank_distrib():
     "Return the distributed rank of this process (if applicable)."
     return int(os.environ.get('RANK', 0))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 386
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 447
 def distrib_barrier():
     "Place a synchronization barrier in distributed training"
     if num_distrib() > 1 and torch.distributed.is_initialized(): torch.distributed.barrier()
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 388
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 449
 # Saving arrays requires pytables - optional dependency
 try: import tables
 except: pass
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 389
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 450
 def _comp_filter(lib='lz4',lvl=3): return tables.Filters(complib=f'blosc:{lib}', complevel=lvl)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 390
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 451
 @patch
 def save_array(p:Path, o, complib='lz4', lvl=3):
     "Save numpy array to a compressed `pytables` file, using compression level `lvl`"
     if isinstance(o,Tensor): o = to_np(o)
     with tables.open_file(p, mode='w', filters=_comp_filter(lib=complib,lvl=lvl)) as f: f.create_carray('/', 'data', obj=o)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 392
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 453
 @patch
 def load_array(p:Path):
     "Save numpy array to a `pytables` file"
     with tables.open_file(p, 'r') as f: return f.root.data.read()
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 393
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 454
 def base_doc(elt):
     "Print a base documentation of `elt`"
     name = getattr(elt, '__qualname__', getattr(elt, '__name__', ''))
     print(f'{name}{inspect.signature(elt)}\n{inspect.getdoc(elt)}\n')
     print('To get a prettier result with hyperlinks to source code and documentation, install nbdev: pip install nbdev')
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 394
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 455
 def doc(elt):
     "Try to use doc form nbdev and fall back to `base_doc`"
     try:
@@ -1049,7 +1128,7 @@ def doc(elt):
         doc(elt)
     except: base_doc(elt)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 395
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 456
 def nested_reorder(t, idxs):
     "Reorder all tensors in `t` using `idxs`"
     if isinstance(t, (Tensor,L)): return t[idxs]
@@ -1057,14 +1136,14 @@ def nested_reorder(t, idxs):
     if t is None: return t
     raise TypeError(f"Expected tensor, tuple, list or L but got {type(t)}")
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 397
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 458
 def flatten_check(inp, targ):
     "Check that `out` and `targ` have the same number of elements and flatten them."
     inp,targ = TensorBase(inp.contiguous()).view(-1),TensorBase(targ.contiguous()).view(-1)
     test_eq(len(inp), len(targ))
     return inp,targ
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 400
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 461
 def make_cross_image(bw=True):
     "Create a tensor containing a cross image, either `bw` (True) or color"
     if bw:
@@ -1077,7 +1156,7 @@ def make_cross_image(bw=True):
         im[1,:,2] = 1.
     return im
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 403
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 464
 def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, **kwargs):
     "Display batch `b` in a grid of size `items` with `cols` width"
     if items<cols: cols=items
@@ -1086,13 +1165,13 @@ def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, *
     fig,axs = plt.subplots(rows, cols, figsize=figsize)
     for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 406
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 467
 def requires_grad(m):
     "Check if the first parameter of `m` requires grad or not"
     ps = list(m.parameters())
     return ps[0].requires_grad if len(ps)>0 else False
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 408
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 469
 def init_default(m, func=nn.init.kaiming_normal_):
     "Initialize `m` weights with `func` and set `bias` to 0."
     if func:
@@ -1100,31 +1179,31 @@ def init_default(m, func=nn.init.kaiming_normal_):
         if hasattr(m, 'bias') and hasattr(m.bias, 'data'): m.bias.data.fill_(0.)
     return m
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 410
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 471
 def cond_init(m, func):
     "Apply `init_default` to `m` unless it's a batchnorm module"
     if (not isinstance(m, norm_types)) and requires_grad(m): init_default(m, func)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 412
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 473
 def apply_leaf(m, f):
     "Apply `f` to children of `m`."
     c = m.children()
     if isinstance(m, nn.Module): f(m)
     for l in c: apply_leaf(l,f)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 414
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 475
 def apply_init(m, func=nn.init.kaiming_normal_):
     "Initialize all non-batchnorm layers of `m` with `func`."
     apply_leaf(m, partial(cond_init, func=func))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 417
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 478
 def script_use_ctx(f):
     "Decorator: create jit script and pass everything in `ctx.saved_variables to `f`, after `*args`"
     sf = torch.jit.script(f)
     def _f(ctx, *args, **kwargs): return sf(*args, *ctx.saved_variables, **kwargs)
     return update_wrapper(_f,f)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 418
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 479
 def script_save_ctx(static, *argidx):
     "Decorator: create jit script and save args with indices `argidx` using `ctx.save_for_backward`"
     def _dec(f):
@@ -1139,29 +1218,29 @@ def script_save_ctx(static, *argidx):
         return update_wrapper(_f,f)
     return _dec
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 419
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 480
 def script_fwd(*argidx):
     "Decorator: create static jit script and save args with indices `argidx` using `ctx.save_for_backward`"
     return script_save_ctx(True, *argidx)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 420
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 481
 def script_bwd(f):
     "Decorator: create static jit script and pass everything in `ctx.saved_variables to `f`, after `*args`"
     return staticmethod(script_use_ctx(f))
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 421
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 482
 def grad_module(cls):
     "Decorator: convert `cls` into an autograd function"
     class _c(nn.Module):
         def forward(self, *args, **kwargs): return cls.apply(*args, **kwargs)
     return _c
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 423
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 484
 def ismin_torch(min_version):
     "Check if `torch.__version__` >= `min_version` using packaging.version"
     return parse(torch.__version__) >= parse(min_version)
 
-# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 424
+# %% ../nbs/lib/src_fastai_000_torch_core.ipynb 485
 def notmax_torch(max_version):
     "Check if `torch.__version__` < `max_version` using packaging.version"
     return parse(torch.__version__) < parse(max_version)
