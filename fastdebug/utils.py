@@ -378,13 +378,16 @@ def jn_link(name, file_path, where="locally"):
     from IPython.display import Markdown
     display(Markdown(f'[Open `{name}` in Jupyter Notebook {where}]({file_path})'))                
 
-# %% ../nbs/lib/01_utils.ipynb 111
+# %% ../nbs/lib/01_utils.ipynb 112
+from pathlib import *
+
+# %% ../nbs/lib/01_utils.ipynb 116
 def get_all_nbs():
     "return paths for all nbs both in md and ipynb format into lists"
 #     md_folder = '/Users/Natsume/Documents/divefastai/Debuggable/jupytext/'
-    md_folder = '/Users/Natsume/Documents/fastdebug/mds/'
-    md_output_folder = '/Users/Natsume/Documents/fastdebug/mds_output/'    
-    ipy_folder = '/Users/Natsume/Documents/fastdebug/nbs/'
+    md_folder = str(Path.home()/"Documents/fastdebug/mds") + "/" # '/Users/Natsume/Documents/fastdebug/mds/'
+    md_output_folder = str(Path.home()/"Documents/fastdebug/mds_output") + "/" # '/Users/Natsume/Documents/fastdebug/mds_output/'    
+    ipy_folder = str(Path.home()/"Documents/fastdebug/nbs") + "/" # '/Users/Natsume/Documents/fastdebug/nbs/'
     md_nbs = []
     for i in os.listdir(md_folder):
         if "." not in i:
@@ -402,7 +405,7 @@ def get_all_nbs():
             
     return (md_nbs, md_folder, ipy_nbs, ipy_folder, md_output_nbs, md_output_folder)
 
-# %% ../nbs/lib/01_utils.ipynb 118
+# %% ../nbs/lib/01_utils.ipynb 123
 def openNB(name, db=False):
     "Get a link to the notebook at by searching keyword or notebook name"
     _, _, ipynbs, _, _, _= get_all_nbs()
@@ -426,7 +429,7 @@ def openNB(name, db=False):
                 file_name = path_server + f
                 jn_link(name, file_name)
 
-# %% ../nbs/lib/01_utils.ipynb 123
+# %% ../nbs/lib/01_utils.ipynb 128
 kagglenbs = [
     "https://www.kaggle.com/code/jhoward/how-does-a-neural-net-really-work",
     "https://www.kaggle.com/code/jhoward/is-it-a-bird-creating-a-model-from-your-own-data",
@@ -457,7 +460,7 @@ kagglenbs = [
     "https://www.kaggle.com/code/jhoward/improved-lstm-baseline-glove-dropout"
 ]
 
-# %% ../nbs/lib/01_utils.ipynb 125
+# %% ../nbs/lib/01_utils.ipynb 130
 def openNBKaggle(filename_full, db=False):
     if 'fastai' in filename_full:
         # split by 'fastai' and take the later
@@ -475,7 +478,7 @@ def openNBKaggle(filename_full, db=False):
                 if db: print(f'pct is {pct}')
                 jn_link(filename_full.split(".md")[0], f, where="on Kaggle") 
 
-# %% ../nbs/lib/01_utils.ipynb 133
+# %% ../nbs/lib/01_utils.ipynb 138
 def highlight(question:str, line:str, db=False):
     "highlight a string with yellow background"
     questlst = question.split(' ')
@@ -487,13 +490,13 @@ def highlight(question:str, line:str, db=False):
     if db: print(f'line: {line}')
     return line
 
-# %% ../nbs/lib/01_utils.ipynb 137
+# %% ../nbs/lib/01_utils.ipynb 142
 def display_md(text):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(text))                
 
-# %% ../nbs/lib/01_utils.ipynb 148
+# %% ../nbs/lib/01_utils.ipynb 153
 def display_block(line, file, output=False, keywords=""):
     "`line` is a section title, find all subsequent lines which belongs to the same section and display them together"
     from IPython.display import Markdown
@@ -522,7 +525,7 @@ def display_block(line, file, output=False, keywords=""):
     else: print(full_section)
 
 
-# %% ../nbs/lib/01_utils.ipynb 158
+# %% ../nbs/lib/01_utils.ipynb 163
 def fastnbs(question:str, # query in string
             filter_folder="all", # options: all, fastai, part2, src
             output=False, # True for nice print of cell output
@@ -567,7 +570,7 @@ use fastnbs() display the entire learning points section including notes and cod
                             openNB(file_name, db=db)
                             openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/01_utils.ipynb 162
+# %% ../nbs/lib/01_utils.ipynb 167
 def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
     "using keywords to search learning points from commented sources files"
     questlst = question.split(' ')
@@ -598,7 +601,7 @@ def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/01_utils.ipynb 175
+# %% ../nbs/lib/01_utils.ipynb 180
 def fastnotes(question:str, 
               search_code:bool=False, # if search code, do check True for nicer printing
               accu:float=0.8, 
@@ -675,7 +678,7 @@ of surrounding lines."
                         openNB(file_name, db=db)
                         openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/01_utils.ipynb 185
+# %% ../nbs/lib/01_utils.ipynb 190
 def fastlistnbs(flt_fd="fastai"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
 src_fastcore, all"
@@ -688,7 +691,7 @@ src_fastcore, all"
             nb_rt = nb
         elif flt_fd == "groundup" and "groundup_" in nb:            
             nb_rt = nb
-        elif flt_fd == "src_fastai" and "src_fastai_" in nb:
+        elif flt_fd == "src" and "src_" in nb:
             nb_rt = nb            
         elif flt_fd == "all": 
             nb_rt = nb
@@ -701,7 +704,7 @@ src_fastcore, all"
                 if "##" in l:
                     print(l, end="") # no extra new line between each line printed       
 
-# %% ../nbs/lib/01_utils.ipynb 190
+# %% ../nbs/lib/01_utils.ipynb 195
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
