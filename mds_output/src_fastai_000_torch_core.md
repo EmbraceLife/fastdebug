@@ -332,20 +332,20 @@ im = Image.open(TEST_IMAGE_BW)
 ax = show_image(im, cmap="Greys")
 ```
 
-    16:25:10.44 >>> Call to <module> in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/3922523890.py", line 2
-    16:25:10.44 ...... TEST_IMAGE_BW = 'images/mnist3.png'
-    16:25:10.44 ...... type(TEST_IMAGE_BW) = <class 'str'>
-    16:25:10.44 ...... show_image = <function show_image>
-    16:25:10.44 ...... type(show_image) = <class 'function'>
-    16:25:10.44 ...... sig(show_image) = <Signature (im, ax=None, figsize=None, title=Non...0, resample=None, url=None, data=None, **kwargs)>
-    16:25:10.44    2 | im = Image.open(TEST_IMAGE_BW)
-    16:25:10.44    2 | im = Image.open(TEST_IMAGE_BW)
-    16:25:10.45 ...... im = <PIL.PngImagePlugin.PngImageFile image mode=L size=28x28>
-    16:25:10.45 ...... type(im) = <class 'PIL.PngImagePlugin.PngImageFile'>
-    16:25:10.45    5 | ax = show_image(im, cmap="Greys")
-    16:25:10.47 ...... ax = <AxesSubplot:>
-    16:25:10.47 ...... type(ax) = <class 'matplotlib.axes._subplots.AxesSubplot'>
-    16:25:10.47 <<< Return value from <module>: None
+    22:21:46.31 >>> Call to <module> in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/3922523890.py", line 2
+    22:21:46.31 ...... TEST_IMAGE_BW = 'images/mnist3.png'
+    22:21:46.31 ...... type(TEST_IMAGE_BW) = <class 'str'>
+    22:21:46.31 ...... show_image = <function show_image>
+    22:21:46.31 ...... type(show_image) = <class 'function'>
+    22:21:46.31 ...... sig(show_image) = <Signature (im, ax=None, figsize=None, title=Non...0, resample=None, url=None, data=None, **kwargs)>
+    22:21:46.31    2 | im = Image.open(TEST_IMAGE_BW)
+    22:21:46.31    2 | im = Image.open(TEST_IMAGE_BW)
+    22:21:46.32 ...... im = <PIL.PngImagePlugin.PngImageFile image mode=L size=28x28>
+    22:21:46.32 ...... type(im) = <class 'PIL.PngImagePlugin.PngImageFile'>
+    22:21:46.32    5 | ax = show_image(im, cmap="Greys")
+    22:21:46.34 ...... ax = <AxesSubplot:>
+    22:21:46.34 ...... type(ax) = <class 'matplotlib.axes._subplots.AxesSubplot'>
+    22:21:46.34 <<< Return value from <module>: None
 
 
 
@@ -727,7 +727,7 @@ test_eq(torch.tensor([1,2,3]) is torch.tensor([1,2,3]).clone().detach(), False)
 test_eq(tensor(torch.tensor([1,2,3])) is torch.tensor([1,2,3]), False)
 ```
 
-    /var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/232156416.py:2: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+    /var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/232156416.py:2: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
       test_eq(torch.tensor([1,2,3]) is torch.tensor(torch.tensor([1,2,3])), False) # being False, meaning they are copies not reference
 
 
@@ -1168,71 +1168,71 @@ lstnew = to_detach([tensor(1,2), tensor([3,4])])
 test_eq(lstnew[0].requires_grad, False)
 ```
 
-    16:25:15.97 >>> Call to to_detach in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/2902278324.py", line 3
-    16:25:15.97 ...... b = [tensor([1, 2]), tensor([3, 4])]
-    16:25:15.97 ...... type(b) = <class 'list'>
-    16:25:15.97 ...... len(b) = 2
-    16:25:15.97 ...... cpu = True
-    16:25:15.97 ...... type(cpu) = <class 'bool'>
-    16:25:15.97 ...... gather = True
-    16:25:15.97 ...... type(gather) = <class 'bool'>
-    16:25:15.97    3 | def to_detach(b, cpu=True, gather=True):
-    16:25:15.98    5 |     @snoop
-    16:25:15.98    6 |     def _inner(x, cpu=True, gather=True):
-    16:25:15.98 .......... _inner = <function to_detach.<locals>._inner>
-    16:25:15.98 .......... type(_inner) = <class 'function'>
-    16:25:15.98 .......... sig(_inner) = <Signature (x, cpu=True, gather=True)>
-    16:25:15.98   11 |     return apply(_inner, b, cpu=cpu, gather=gather)
-        16:25:15.98 >>> Call to to_detach.<locals>._inner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/2902278324.py", line 6
-        16:25:15.98 .......... x = tensor([1, 2])
-        16:25:15.98 .......... type(x) = <class 'torch.Tensor'>
-        16:25:15.98 .......... x.shape = (2,)
-        16:25:15.98 .......... cpu = True
-        16:25:15.98 .......... type(cpu) = <class 'bool'>
-        16:25:15.98 .......... gather = True
-        16:25:15.98 .......... type(gather) = <class 'bool'>
-        16:25:15.98    6 |     def _inner(x, cpu=True, gather=True):
-        16:25:15.98    7 |         if not isinstance(x,Tensor): return x
-        16:25:15.98    8 |         x = x.detach()
-        16:25:15.98    9 |         if gather: x = maybe_gather(x)
-            16:25:15.98 >>> Call to maybe_gather in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/2315103875.py", line 3
-            16:25:15.98 ...... x = tensor([1, 2])
-            16:25:15.98 ...... type(x) = <class 'torch.Tensor'>
-            16:25:15.98 ...... x.shape = (2,)
-            16:25:15.98 ...... axis = 0
-            16:25:15.98 ...... type(axis) = <class 'int'>
-            16:25:15.98    3 | def maybe_gather(x, axis=0):
-            16:25:15.98    5 |     if num_distrib()<=1: return x
-            16:25:15.98 <<< Return value from maybe_gather: tensor([1, 2])
-        16:25:15.98    9 |         if gather: x = maybe_gather(x)
-        16:25:15.98   10 |         return x.cpu() if cpu else x
-        16:25:15.98 <<< Return value from to_detach.<locals>._inner: tensor([1, 2])
-        16:25:15.98 >>> Call to to_detach.<locals>._inner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/2902278324.py", line 6
-        16:25:15.98 .......... x = tensor([3, 4])
-        16:25:15.98 .......... type(x) = <class 'torch.Tensor'>
-        16:25:15.98 .......... x.shape = (2,)
-        16:25:15.98 .......... cpu = True
-        16:25:15.98 .......... type(cpu) = <class 'bool'>
-        16:25:15.98 .......... gather = True
-        16:25:15.98 .......... type(gather) = <class 'bool'>
-        16:25:15.98    6 |     def _inner(x, cpu=True, gather=True):
-        16:25:15.98    7 |         if not isinstance(x,Tensor): return x
-        16:25:15.98    8 |         x = x.detach()
-        16:25:15.98    9 |         if gather: x = maybe_gather(x)
-            16:25:15.99 >>> Call to maybe_gather in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_60003/2315103875.py", line 3
-            16:25:15.99 ...... x = tensor([3, 4])
-            16:25:15.99 ...... type(x) = <class 'torch.Tensor'>
-            16:25:15.99 ...... x.shape = (2,)
-            16:25:15.99 ...... axis = 0
-            16:25:15.99 ...... type(axis) = <class 'int'>
-            16:25:15.99    3 | def maybe_gather(x, axis=0):
-            16:25:15.99    5 |     if num_distrib()<=1: return x
-            16:25:15.99 <<< Return value from maybe_gather: tensor([3, 4])
-        16:25:15.99    9 |         if gather: x = maybe_gather(x)
-        16:25:15.99   10 |         return x.cpu() if cpu else x
-        16:25:15.99 <<< Return value from to_detach.<locals>._inner: tensor([3, 4])
-    16:25:15.99   11 |     return apply(_inner, b, cpu=cpu, gather=gather)
-    16:25:15.99 <<< Return value from to_detach: [tensor([1, 2]), tensor([3, 4])]
+    22:21:48.14 >>> Call to to_detach in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/2902278324.py", line 3
+    22:21:48.14 ...... b = [tensor([1, 2]), tensor([3, 4])]
+    22:21:48.14 ...... type(b) = <class 'list'>
+    22:21:48.14 ...... len(b) = 2
+    22:21:48.14 ...... cpu = True
+    22:21:48.14 ...... type(cpu) = <class 'bool'>
+    22:21:48.14 ...... gather = True
+    22:21:48.14 ...... type(gather) = <class 'bool'>
+    22:21:48.14    3 | def to_detach(b, cpu=True, gather=True):
+    22:21:48.14    5 |     @snoop
+    22:21:48.14    6 |     def _inner(x, cpu=True, gather=True):
+    22:21:48.15 .......... _inner = <function to_detach.<locals>._inner>
+    22:21:48.15 .......... type(_inner) = <class 'function'>
+    22:21:48.15 .......... sig(_inner) = <Signature (x, cpu=True, gather=True)>
+    22:21:48.15   11 |     return apply(_inner, b, cpu=cpu, gather=gather)
+        22:21:48.15 >>> Call to to_detach.<locals>._inner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/2902278324.py", line 6
+        22:21:48.15 .......... x = tensor([1, 2])
+        22:21:48.15 .......... type(x) = <class 'torch.Tensor'>
+        22:21:48.15 .......... x.shape = (2,)
+        22:21:48.15 .......... cpu = True
+        22:21:48.15 .......... type(cpu) = <class 'bool'>
+        22:21:48.15 .......... gather = True
+        22:21:48.15 .......... type(gather) = <class 'bool'>
+        22:21:48.15    6 |     def _inner(x, cpu=True, gather=True):
+        22:21:48.15    7 |         if not isinstance(x,Tensor): return x
+        22:21:48.15    8 |         x = x.detach()
+        22:21:48.15    9 |         if gather: x = maybe_gather(x)
+            22:21:48.15 >>> Call to maybe_gather in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/2315103875.py", line 3
+            22:21:48.15 ...... x = tensor([1, 2])
+            22:21:48.15 ...... type(x) = <class 'torch.Tensor'>
+            22:21:48.15 ...... x.shape = (2,)
+            22:21:48.15 ...... axis = 0
+            22:21:48.15 ...... type(axis) = <class 'int'>
+            22:21:48.15    3 | def maybe_gather(x, axis=0):
+            22:21:48.15    5 |     if num_distrib()<=1: return x
+            22:21:48.15 <<< Return value from maybe_gather: tensor([1, 2])
+        22:21:48.15    9 |         if gather: x = maybe_gather(x)
+        22:21:48.15   10 |         return x.cpu() if cpu else x
+        22:21:48.15 <<< Return value from to_detach.<locals>._inner: tensor([1, 2])
+        22:21:48.15 >>> Call to to_detach.<locals>._inner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/2902278324.py", line 6
+        22:21:48.15 .......... x = tensor([3, 4])
+        22:21:48.15 .......... type(x) = <class 'torch.Tensor'>
+        22:21:48.15 .......... x.shape = (2,)
+        22:21:48.15 .......... cpu = True
+        22:21:48.15 .......... type(cpu) = <class 'bool'>
+        22:21:48.15 .......... gather = True
+        22:21:48.15 .......... type(gather) = <class 'bool'>
+        22:21:48.15    6 |     def _inner(x, cpu=True, gather=True):
+        22:21:48.15    7 |         if not isinstance(x,Tensor): return x
+        22:21:48.15    8 |         x = x.detach()
+        22:21:48.15    9 |         if gather: x = maybe_gather(x)
+            22:21:48.15 >>> Call to maybe_gather in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/2315103875.py", line 3
+            22:21:48.15 ...... x = tensor([3, 4])
+            22:21:48.15 ...... type(x) = <class 'torch.Tensor'>
+            22:21:48.15 ...... x.shape = (2,)
+            22:21:48.15 ...... axis = 0
+            22:21:48.15 ...... type(axis) = <class 'int'>
+            22:21:48.15    3 | def maybe_gather(x, axis=0):
+            22:21:48.15    5 |     if num_distrib()<=1: return x
+            22:21:48.16 <<< Return value from maybe_gather: tensor([3, 4])
+        22:21:48.16    9 |         if gather: x = maybe_gather(x)
+        22:21:48.16   10 |         return x.cpu() if cpu else x
+        22:21:48.16 <<< Return value from to_detach.<locals>._inner: tensor([3, 4])
+    22:21:48.16   11 |     return apply(_inner, b, cpu=cpu, gather=gather)
+    22:21:48.16 <<< Return value from to_detach: [tensor([1, 2]), tensor([3, 4])]
 
 
 ### ```to_half(b)```
@@ -2321,7 +2321,7 @@ class TensorBase(Tensor):
 
     @classmethod
 #     @snoop
-    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
 
     @classmethod
 #     @snoop
@@ -2400,38 +2400,6 @@ test_eq(default_collate([[0, 1], [2, 3]]), [tensor([0, 2]), tensor([1, 3])])
 
 
 
-
-```
-default_collate([a,b])
-```
-
-
-    ---------------------------------------------------------------------------
-
-    TypeError                                 Traceback (most recent call last)
-
-    Input In [184], in <cell line: 1>()
-    ----> 1 default_collate([a,b])
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/torch/utils/data/_utils/collate.py:141, in default_collate(batch)
-        139         storage = elem.storage()._new_shared(numel, device=elem.device)
-        140         out = elem.new(storage).resize_(len(batch), *list(elem.size()))
-    --> 141     return torch.stack(batch, 0, out=out)
-        142 elif elem_type.__module__ == 'numpy' and elem_type.__name__ != 'str_' \
-        143         and elem_type.__name__ != 'string_':
-        144     if elem_type.__name__ == 'ndarray' or elem_type.__name__ == 'memmap':
-        145         # array of string classes and object
-
-
-    TypeError: expected Tensor as element 1 in argument 0, but got type
-
-
-
-```
-test_eq(default_collate([a,b]).img_size,(128,128))
-```
-
 ### ```TensorBase.new_tensor(size, dtype=None, device=None, requires_grad=False)```
 - `t.new_tensor(1)`
 - first, use `tensor.new_tensor` to create a new tensor with data 1, then use `as_subclass` to make the new tensor of the same class as t
@@ -2446,6 +2414,13 @@ test_eq(default_collate([a,b]).img_size,(128,128))
 ```
 tensor(1).new_tensor((1))
 ```
+
+
+
+
+    tensor(1)
+
+
 
 
 ```
@@ -2472,7 +2447,7 @@ class TensorBase(Tensor):
         return (_rebuild_from_type, (f, type(self), args, self.__dict__))
 
     @classmethod
-    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
 
     @classmethod
     def __torch_function__(cls, func, types, args=(), kwargs=None):
@@ -2559,7 +2534,7 @@ class TensorBase(Tensor):
         return (_rebuild_from_type, (f, type(self), args, self.__dict__))
 
     @classmethod
-    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
 
     @classmethod
     def __torch_function__(cls, func, types, args=(), kwargs=None):
@@ -2679,7 +2654,7 @@ class TensorBase(Tensor):
         return (_rebuild_from_type, (f, type(self), args, self.__dict__))
 
     @classmethod
-    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
 
     @classmethod
     def __torch_function__(cls, func, types, args=(), kwargs=None):
@@ -2713,10 +2688,6 @@ t = T(1)
 t.__dict__ = {'a':1}
 ```
 
-    1 of type <class 'torch.Tensor'> .__dict__: {}
-    1 of type <class '__main__.T'> .__dict__: {}
-
-
 
 ```
 # t.as_subclass??
@@ -2728,12 +2699,6 @@ t.__dict__ = {'a':1}
 t1 = t.new()
 t1.__class__
 ```
-
-    1 of type <class '__main__.T'> .__dict__: {'a': 1}
-    1 of type <class 'torch.Tensor'> .__dict__: {'a': 1}
-    tensor([], dtype=torch.int64) of type <class 'torch.Tensor'> .__dict__: {}
-    T([], dtype=torch.int64) of type <class '__main__.T'> .__dict__: {}
-
 
 
 
@@ -2806,7 +2771,7 @@ class TensorBase(Tensor):
         return (_rebuild_from_type, (f, type(self), args, self.__dict__))
 
     @classmethod
-    def register_func(cls, func, *oks): pp.deep(lambda: cls._opt[func].append(oks))
+    def register_func(cls, func, *oks): cls._opt[func].append(oks)
 
     @classmethod
     def __torch_function__(cls, func, types, args=(), kwargs=None):
@@ -2847,15 +2812,12 @@ with torch.no_grad():
     assert y.requires_grad and x.requires_grad
 ```
 
+### More demonstration of ```TensorBase```
+
 
 ```
-help(cast)
+# fastnbs("cast(x", filter_folder="src")
 ```
-
-    Help on TypeDispatch in module fastcore.dispatch:
-    
-    (object,object) -> cast
-
 
 
 ```
@@ -2937,6 +2899,8 @@ test_eq_type(t.new(), _T([]))
 ```
 
 ### ```TensorImageBase(TensorBase)```
+- add `ArrayImageBase._show_args` to ```TensorImageBase._show_args```
+- add method `show(self, ctx=None, **kwargs)` to enable ```show_image``` here
 
 
 ```
@@ -2948,6 +2912,7 @@ class TensorImageBase(TensorBase):
 ```
 
 ### ```TensorImage(TensorImageBase)```
+- empty subclass of ```TensorImageBase```
 
 
 ```
@@ -2955,7 +2920,32 @@ class TensorImageBase(TensorBase):
 class TensorImage(TensorImageBase): pass
 ```
 
+
+```
+im = Image.open(TEST_IMAGE)
+im_t = cast(array(im), TensorImage)
+test_eq(type(im_t), TensorImage)
+```
+
+
+```
+ax = im_t.show(figsize=(2,2))
+```
+
+
+    
+![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_298_0.png)
+    
+
+
+
+```
+test_fig_exists(ax)
+```
+
 ### ```TensorImageBW(TensorImage)```
+- a subclass of ```TensorImage```
+- add ```ArrayImageBW._show_args``` to ```TensorImageBW._show_args```
 
 
 ```
@@ -2964,6 +2954,9 @@ class TensorImageBW(TensorImage): _show_args = ArrayImageBW._show_args
 ```
 
 ### ```TensorMask(TensorImageBase)```
+- a subclass of TensorImageBase
+- use ```ArrayMask._show_args``` as its own `_show_args`
+- ```TensorMask.show``` is a wrapper around ```TensorImageBase.show``` with attr `codes` setting up the `vmin` and `vmax`
 
 
 ```
@@ -2977,7 +2970,14 @@ class TensorMask(TensorImageBase):
         return super().show(ctx=ctx, **kwargs)
 ```
 
-### register many funcs
+
+```
+im_t2 = cast(tensor(1), TensorMask)
+test_eq(type(im_t2), TensorMask)
+test_eq(im_t2, tensor(1))
+```
+
+### register many subclasses into ```TensorBase``` and ```TensorMask```
 
 
 ```
@@ -2990,26 +2990,7 @@ TensorMask.register_func(torch.einsum, str, TensorImageBase, TensorMask)
 TensorMask.register_func(torch.einsum, str, TensorMask, TensorImageBase)
 ```
 
-
-```
-im = Image.open(TEST_IMAGE)
-im_t = cast(array(im), TensorImage)
-test_eq(type(im_t), TensorImage)
-```
-
-
-```
-im_t2 = cast(tensor(1), TensorMask)
-test_eq(type(im_t2), TensorMask)
-test_eq(im_t2, tensor(1))
-ax = im_t.show(figsize=(2,2))
-_ =(im_t == im_t2)
-```
-
-
-```
-test_fig_exists(ax)
-```
+### when ```TensorMask``` operate with ```TensorImageBase```
 
 Operations between `TensorMask` and `TensorImageBase` objects return the type of the `TensorImageBase` object:
 
@@ -3027,6 +3008,8 @@ test_eq_type(to_concat([TensorImage([1,2]), TensorImage([3,4])]), TensorImage([1
 ```
 
 ### ```TensorFlowField(TensorBase)```
+- a subclass of ```TensorBase```
+- store ```TensorImageBase``` and ```TensorFlowField``` under ```TensorImage._opt[F.grid_sample]```
 
 
 ```
@@ -3037,18 +3020,50 @@ TensorImage.register_func(F.grid_sample, TensorImageBase, TensorFlowField)
 
 
 ```
+TensorImage._opt[F.grid_sample]
+```
+
+
+
+
+    [(__main__.TensorImageBase, __main__.TensorFlowField)]
+
+
+
+
+```
 t1 = TensorImage([1.]).view(1,1,1,1)
+test_eq(t1.shape, torch.Size([1, 1, 1, 1]))
 t2 = TensorFlowField([1.,1.]).view(1,1,1,2)
+test_eq(t2.shape, torch.Size([1, 1, 1, 2]))
+```
+
+
+```
+test_eq(F.grid_sample(t1, t2), TensorImage([[[[0.2500]]]]))
+test_eq(F.grid_sample(t1, t2).shape, torch.Size([1, 1, 1, 1]))
+```
+
+
+```
 test_eq_type(F.grid_sample(t1, t2), TensorImage([[[[0.25]]]]))
 ```
 
+
+```
+# TensorImage.register_func??
+# F.grid_sample?
+```
+
 ### ```TensorCategory(TensorBase)```
+- a subclass of ```TensorBase```
+- register ```TensorImageBase, TensorCategory``` under ```TensorBase._opt[Tensor.__getitem__]```
+- ```TensorMask, TensorImage``` can use ```TensorCategory``` as index
 
 
 ```
 #|export 
 class TensorCategory(TensorBase): pass
-
 TensorBase.register_func(Tensor.__getitem__, TensorImageBase, TensorCategory)
 ```
 
@@ -3070,6 +3085,7 @@ class TensorMultiCategory(TensorCategory): pass
 ```
 
 ### ```TitledTensorScalar(TensorBase)```
+- ```show_title``` not defined (question)
 
 
 ```
@@ -3079,41 +3095,57 @@ class TitledTensorScalar(TensorBase):
     def show(self, **kwargs): show_title(self.item(), **kwargs)
 ```
 
+
+```
+# TitledTensorScalar(1).show()
+```
+
 ## L -
+
+### ```tensored(self:L)```
+- turn a L list of lists into a list of tensors
 
 
 ```
 #|export
 @patch
+# @snoop
 def tensored(self:L):
     "`mapped(tensor)`"
-    return self.map(tensor)
-@patch
-def stack(self:L, dim=0):
-    "Same as `torch.stack`"
-    return torch.stack(list(self.tensored()), dim=dim)
-@patch
-def cat  (self:L, dim=0):
-    "Same as `torch.cat`"
-    return torch.cat  (list(self.tensored()), dim=dim)
-```
+    ### original source
+#     return self.map(tensor)
 
-
+    ### fastdebug source
+    sp1 = tensor
+    sp2 = self.map(sp1)
+    return sp2
 ```
-show_doc(L.tensored)
-```
-
-There are shortcuts for `torch.stack` and `torch.cat` if your `L` contains tensors or something convertible. You can manually convert with `tensored`.
 
 
 ```
 t = L(([1,2],[3,4]))
+test_eq(t, [[1, 2],[3, 4]])
 test_eq(t.tensored(), [tensor(1,2),tensor(3,4)])
 ```
 
+### ```stack(self:L, dim=0)```
+- run `L.tensored` to turn a L list of lists into a list of tensors
+- stack a list of tenors on top of each other (on the same cols extending rows) into a large tensor
+
 
 ```
-show_doc(L.stack)
+@patch
+# @snoop
+def stack(self:L, dim=0):
+    "Same as `torch.stack`"
+    ### original source
+#     return torch.stack(list(self.tensored()), dim=dim)
+
+    ### fastdebug source
+    sp1 = self.tensored()
+    sp2 = list(sp1)
+    sp3 = torch.stack(sp2, dim=dim)
+    return sp3
 ```
 
 
@@ -3123,7 +3155,27 @@ test_eq(t.stack(), tensor([[1,2],[3,4]]))
 
 
 ```
-show_doc(L.cat)
+# torch.stack??
+```
+
+### ```cat  (self:L, dim=0)```
+- - run `L.tensored` to turn a L list of lists into a list of tensors
+- stack a list of tenors on the same rows (extend cols) into a large tensor
+
+
+```
+@patch
+# @snoop
+def cat  (self:L, dim=0):
+    "Same as `torch.cat`"
+    ### original source
+#     return torch.cat  (list(self.tensored()), dim=dim)
+    
+    ### fastdebug
+    sp1 = self.tensored()
+    sp2 = list(sp1) # convert a L into a list
+    sp3 = torch.cat(sp2, dim=dim)
+    return sp3
 ```
 
 
@@ -3131,36 +3183,202 @@ show_doc(L.cat)
 test_eq(t.cat(), tensor([1,2,3,4]))
 ```
 
+
+```
+# torch.cat?? vs torch.stack??
+```
+
+
+```
+# show_doc(L.tensored)
+```
+
+
+```
+
+```
+
 ## Chunks
+
+### ```concat(*ls)```
+- merge a num of lists, tuples, arrays, tensors, TensorBases into a longer ones
+- the output type is the first item's type (different types allowed)
+- if the first item is not those types above, then make it a L type
 
 
 ```
 #|export
+# @snoop
 def concat(*ls):
     "Concatenate tensors, arrays, lists, or tuples"
-    if not len(ls): return []
+    ### original source
+#     if not len(ls): return []
+#     it = ls[0]
+#     if isinstance(it,torch.Tensor): res = torch.cat(ls)
+#     elif isinstance(it,ndarray): res = np.concatenate(ls)
+#     else:
+#         res = itertools.chain.from_iterable(map(L,ls))
+#         if isinstance(it,(tuple,list)): res = type(it)(res)
+#         else: res = L(res)
+#     return retain_type(res, it)
+
+    ### fastdebug source
+    if not len(ls): 
+        return []
     it = ls[0]
-    if isinstance(it,torch.Tensor): res = torch.cat(ls)
-    elif isinstance(it,ndarray): res = np.concatenate(ls)
+    if isinstance(it,torch.Tensor): 
+        res = torch.cat(ls)
+    elif isinstance(it,ndarray): 
+        res = np.concatenate(ls)
     else:
-        res = itertools.chain.from_iterable(map(L,ls))
-        if isinstance(it,(tuple,list)): res = type(it)(res)
-        else: res = L(res)
+        sp1 = map(L,ls) # make a tuple of lists into a map object
+        res = itertools.chain.from_iterable(sp1) # make a map object into a itertool chain object
+        if isinstance(it,(tuple,list)): 
+            res = type(it)(res) # convert a itertool chain object into a longer/merged list
+        else: 
+            res = L(res)
     return retain_type(res, it)
 ```
 
 
 ```
 a,b,c = [1],[1,2],[1,1,2]
-test_eq(concat(a,b), c)
-test_eq_type(concat(tuple (a),tuple (b)), tuple (c))
-test_eq_type(concat(array (a),array (b)), array (c))
-test_eq_type(concat(tensor(a),tensor(b)), tensor(c))
-test_eq_type(concat(TensorBase(a),TensorBase(b)), TensorBase(c))
-test_eq_type(concat([1,1],1), [1,1,1])
-test_eq_type(concat(1,1,1), L(1,1,1))
-test_eq_type(concat(L(1,2),1), L(1,2,1))
+test_eq(concat(a,b), c) # concat 2 lists into a longer list
 ```
+
+
+```
+test_eq_type(concat(tuple (a),tuple (b)), tuple (c)) # concat 2 tuples into a long tuple
+```
+
+
+```
+test_eq_type(concat(array (a),array (b)), array (c)) # concat 2 arrays into a long array
+```
+
+
+```
+test_eq_type(concat(tensor(a),tensor(b)), tensor(c)) # concat 2 tensors into a long tensor
+```
+
+
+```
+test_eq_type(concat(TensorBase(a),TensorBase(b)), TensorBase(c)) # concat 2 TensorBase into a long TensorBase
+```
+
+
+```
+test_eq_type(concat([1,1],1), [1,1,1]) # concat a list and an int into a long list
+```
+
+
+```
+test_eq_type(concat(1,1,1), L(1,1,1)) # concat 3 int into a long L
+```
+
+
+```
+test_eq_type(concat(L(1,2),1), L(1,2,1)) # concat a L and an int into a long L
+```
+
+## ```Chunks(docs)```
+- docs is a L list of lists
+- merge a list of lists into an iterable and indexable (like a long list)
+- merge a list of tensors or TensorBase(of different len) into a long list of single number tensors (iterable and indexable)
+
+### ```Chunks.__init__(self, chunks, lens=None)```
+
+
+```
+#|export
+class Chunks:
+    "Slice and int indexing into a list of lists"
+#     @snoop
+    def __init__(self, chunks, lens=None):
+        ### original source
+#         self.chunks = chunks
+#         self.lens = L(map(len,self.chunks) if lens is None else lens)
+#         self.cumlens = np.cumsum(0+self.lens)
+#         self.totlen = self.cumlens[-1]
+        
+        ### fastdebug
+        self.chunks = chunks
+#         pp.deep(lambda: L(map(len,self.chunks) if lens is None else lens))
+        self.lens = L(map(len,self.chunks) if lens is None else lens)
+#         pp.deep(lambda: np.cumsum(0+self.lens))
+        self.cumlens = np.cumsum(0+self.lens)
+        self.totlen = self.cumlens[-1]        
+```
+
+
+```
+### original example
+docs = L(list(string.ascii_lowercase[a:b]) for a,b in ((0,3),(3,7),(7,8),(8,16),(16,24),(24,26)))
+docs
+### fastdebug example
+# docs = pp.deep(lambda: L(list(string.ascii_lowercase[a:b]) for a,b in ((0,3),(3,7),(7,8),(8,16),(16,24),(24,26))))
+# docs
+```
+
+
+
+
+    (#6) [['a', 'b', 'c'],['d', 'e', 'f', 'g'],['h'],['i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'],['q', 'r', 's', 't', 'u', 'v', 'w', 'x'],['y', 'z']]
+
+
+
+
+```
+b = Chunks(docs) # merge a list of lists into an iterable (like a long list)
+```
+
+
+```
+test_eq(type(b), Chunks)
+```
+
+
+```
+
+```
+
+### ```np.searchsorted(a, v, side='left', sorter=None)```
+
+
+```
+np.searchsorted??
+```
+
+
+```
+np.searchsorted([1,2,3,4,5],-10)
+```
+
+
+
+
+    0
+
+
+
+
+```
+np.searchsorted([1,2,3,4,5], [-10, 10, 12, 13])
+```
+
+
+
+
+    array([0, 5, 5, 5])
+
+
+
+
+```
+
+```
+
+### ```Chunks.__getitem__(self, i), getslice(self, i), doc_idx(self, i)```
 
 
 ```
@@ -3173,34 +3391,116 @@ class Chunks:
         self.cumlens = np.cumsum(0+self.lens)
         self.totlen = self.cumlens[-1]
 
+#     @snoop(depth=1)
     def __getitem__(self,i):
-        if isinstance(i,slice): return retain_type(self.getslice(i), old=self.chunks[0])
+        ### original source
+#         if isinstance(i,slice): return retain_type(self.getslice(i), old=self.chunks[0])
+#         di,idx = self.doc_idx(i)
+#         return retain_type(self.chunks[di][idx], old=self.chunks[0])
+    
+        ### fastdebug source
+        if isinstance(i,slice): 
+            return retain_type(self.getslice(i), old=self.chunks[0])
         di,idx = self.doc_idx(i)
-        return retain_type(self.chunks[di][idx], old=self.chunks[0])
+        ret = retain_type(self.chunks[di][idx], old=self.chunks[0])
+        return ret
 
+#     @snoop
     def getslice(self, i):
+        "get the elements of the selected lists concatenated into a longer list. Not sure about the logic of the source"
+        ### original source
+#         st_d,st_i = self.doc_idx(ifnone(i.start,0))
+#         en_d,en_i = self.doc_idx(ifnone(i.stop,self.totlen+1))
+#         res = [self.chunks[st_d][st_i:(en_i if st_d==en_d else sys.maxsize)]]
+#         for b in range(st_d+1,en_d): res.append(self.chunks[b])
+#         if st_d!=en_d and en_d<len(self.chunks): res.append(self.chunks[en_d][:en_i])
+#         return concat(*res)
+
+        ### fastdebug source
         st_d,st_i = self.doc_idx(ifnone(i.start,0))
         en_d,en_i = self.doc_idx(ifnone(i.stop,self.totlen+1))
+#         pp.deep(lambda: [self.chunks[st_d][st_i:(en_i if st_d==en_d else sys.maxsize)]])
         res = [self.chunks[st_d][st_i:(en_i if st_d==en_d else sys.maxsize)]]
-        for b in range(st_d+1,en_d): res.append(self.chunks[b])
-        if st_d!=en_d and en_d<len(self.chunks): res.append(self.chunks[en_d][:en_i])
+        for b in range(st_d+1,en_d): 
+            res.append(self.chunks[b])
+        if st_d!=en_d and en_d<len(self.chunks): 
+            res.append(self.chunks[en_d][:en_i])
         return concat(*res)
-
+    
+#     @snoop
     def doc_idx(self, i):
-        if i<0: i=self.totlen+i # count from end
+        "get index for outer and inner lists. Still not clear about the logic of the source "
+        ### original source
+#         if i<0: i=self.totlen+i # count from end
+#         docidx = np.searchsorted(self.cumlens, i+1)-1
+#         cl = self.cumlens[docidx]
+#         return docidx,i-cl
+
+        ### fastdebug source
+        if i<0: 
+            i = self.totlen+i # count from end
+#         pp.deep(lambda: np.searchsorted(self.cumlens, i+1)-1)
         docidx = np.searchsorted(self.cumlens, i+1)-1
+#         pp.deep(lambda: self.cumlens[docidx])
         cl = self.cumlens[docidx]
-        return docidx,i-cl
+        return docidx,i-cl     
 ```
 
 
 ```
+# depth=1
+
 docs = L(list(string.ascii_lowercase[a:b]) for a,b in ((0,3),(3,7),(7,8),(8,16),(16,24),(24,26)))
-
+docs
 b = Chunks(docs)
+test_eq([b[ o] for o in range(0,1)], ['a'])
+```
+
+
+
+
+    (#6) [['a', 'b', 'c'],['d', 'e', 'f', 'g'],['h'],['i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'],['q', 'r', 's', 't', 'u', 'v', 'w', 'x'],['y', 'z']]
+
+
+
+
+```
+# depth=2
+docs = L(list(string.ascii_lowercase[a:b]) for a,b in ((0,3),(3,7),(7,8),(8,16),(16,24),(24,26)))
+docs
+b = Chunks(docs)
+test_eq([b[ o] for o in range(0,1)], ['a'])
+```
+
+
+
+
+    (#6) [['a', 'b', 'c'],['d', 'e', 'f', 'g'],['h'],['i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'],['q', 'r', 's', 't', 'u', 'v', 'w', 'x'],['y', 'z']]
+
+
+
+
+```
+test_eq([b[ o] for o in range(0,2)], ['a', 'b'])
+```
+
+
+```
 test_eq([b[ o] for o in range(0,5)], ['a','b','c','d','e'])
+```
+
+
+```
 test_eq([b[-o] for o in range(1,6)], ['z','y','x','w','v'])
+```
+
+
+```
 test_eq(b[6:13], 'g,h,i,j,k,l,m'.split(','))
+```
+
+
+```
 test_eq(b[20:77], 'u,v,w,x,y,z'.split(','))
 test_eq(b[:5], 'a,b,c,d,e'.split(','))
 test_eq(b[:2], 'a,b'.split(','))
@@ -3209,10 +3509,41 @@ test_eq(b[:2], 'a,b'.split(','))
 
 ```
 t = torch.arange(26)
+test_eq(t, tensor([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25]))
 docs = L(t[a:b] for a,b in ((0,3),(3,7),(7,8),(8,16),(16,24),(24,26)))
-b = Chunks(docs)
+test_eq(docs, [tensor([0, 1, 2]),tensor([3, 4, 5, 6]),tensor([7]),\
+               tensor([ 8,  9, 10, 11, 12, 13, 14, 15]),tensor([16, 17, 18, 19, 20, 21, 22, 23]),tensor([24, 25])])
+```
+
+
+```
+b = Chunks(docs) # merge a list of tensors (of different len) into a long list of single number tensors (iterable and indexable)
+test_eq(list(b), list(t))
+```
+
+
+```
+[b[-o] for o in range(1,6)]
+```
+
+
+
+
+    [tensor(25), tensor(24), tensor(23), tensor(22), tensor(21)]
+
+
+
+
+```
+test_eq([b[ o] for o in range(0,5)], [tensor(0), tensor(1), tensor(2), tensor(3), tensor(4)])
 test_eq([b[ o] for o in range(0,5)], range(0,5))
+test_eq([b[-o] for o in range(1,6)], [tensor(25), tensor(24), tensor(23), tensor(22), tensor(21)])
 test_eq([b[-o] for o in range(1,6)], [25,24,23,22,21])
+```
+
+
+```
 test_eq(b[6:13], torch.arange(6,13))
 test_eq(b[20:77], torch.arange(20,26))
 test_eq(b[:5], torch.arange(5))
@@ -3222,37 +3553,126 @@ test_eq(b[:2], torch.arange(2))
 
 ```
 docs = L(TensorBase(t[a:b]) for a,b in ((0,3),(3,7),(7,8),(8,16),(16,24),(24,26)))
+docs
+```
+
+
+
+
+    (#6) [TensorBase([0, 1, 2]),TensorBase([3, 4, 5, 6]),TensorBase([7]),TensorBase([ 8,  9, 10, 11, 12, 13, 14, 15]),TensorBase([16, 17, 18, 19, 20, 21, 22, 23]),TensorBase([24, 25])]
+
+
+
+
+```
 b = Chunks(docs)
+# list(b)
+```
+
+
+```
 test_eq_type(b[:2], TensorBase(range(2)))
 test_eq_type(b[:5], TensorBase(range(5)))
 test_eq_type(b[9:13], TensorBase(range(9,13)))
 ```
 
+#### more demos of ```Chunks```
+
+
+```
+ck = Chunks([[1,3], [2,4]])
+test_eq(ck[2], 2)
+```
+
 ## Simple types
+
+### ```show_title(o, ax=None, ctx=None, label=None, color='black', **kwargs)```
+- why do we need `show_title`?
+- add title to pd.series
 
 
 ```
 #|export
+# @snoop
 def show_title(o, ax=None, ctx=None, label=None, color='black', **kwargs):
     "Set title of `ax` to `o`, or print `o` if `ax` is `None`"
     ax = ifnone(ax,ctx)
     if ax is None: print(o)
     elif hasattr(ax, 'set_title'):
         t = ax.title.get_text()
-        if len(t) > 0: o = t+'\n'+str(o)
+        if len(t) > 0: 
+            o = t+'\n'+str(o)
         ax.set_title(o, color=color)
     elif isinstance(ax, pd.Series):
-        while label in ax: label += '_'
+        while label in ax: 
+            label += '_'
         ax = pd.concat([ax,pd.Series({label: o})])
     return ax
 ```
 
 
 ```
+show_title("title")
+```
+
+    title
+
+
+
+```
 test_stdout(lambda: show_title("title"), "title")
+```
+
+
+```
+pd.Series(dict(a=1))
+```
+
+
+
+
+    a    1
+    dtype: int64
+
+
+
+
+```
+show_title("title", ctx=pd.Series(dict(a=1)), label='a')
+```
+
+
+
+
+    a         1
+    a_    title
+    dtype: object
+
+
+
+
+```
+pd.Series(dict(a=1,a_='title'))
+```
+
+
+
+
+    a         1
+    a_    title
+    dtype: object
+
+
+
+
+```
 # ensure that col names are unique when showing to a pandas series
 assert show_title("title", ctx=pd.Series(dict(a=1)), label='a').equals(pd.Series(dict(a=1,a_='title')))
 ```
+
+### ```ShowTitle as superclass to TitledInt, TitledFloat, TitledStr, TitledTuple```
+- why having all these classes?
+- to give int, float, str, tuple a title and print them out
 
 
 ```
@@ -3260,30 +3680,35 @@ assert show_title("title", ctx=pd.Series(dict(a=1)), label='a').equals(pd.Series
 class ShowTitle:
     "Base class that adds a simple `show`"
     _show_args = {'label': 'text'}
+    @delegates(show_title, keep=True)    
     def show(self, ctx=None, **kwargs):
         "Show self"
         return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
 
 class TitledInt(Int, ShowTitle):
     _show_args = {'label': 'text'}
+    @delegates(show_title, keep=True)    
     def show(self, ctx=None, **kwargs):
         "Show self"
         return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
 
 class TitledFloat(Float, ShowTitle):
     _show_args = {'label': 'text'}
+    @delegates(show_title, keep=True)
     def show(self, ctx=None, **kwargs):
         "Show self"
         return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
 
 class TitledStr(Str, ShowTitle):
     _show_args = {'label': 'text'}
+    @delegates(show_title, keep=True)    
     def show(self, ctx=None, **kwargs):
         "Show self"
         return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
 
 class TitledTuple(fastuple, ShowTitle):
     _show_args = {'label': 'text'}
+    @delegates(show_title, keep=True)    
     def show(self, ctx=None, **kwargs):
         "Show self"
         return show_title(str(self), ctx=ctx, **merge(self._show_args, kwargs))
@@ -3294,39 +3719,158 @@ add_docs(TitledFloat, "A `float` with `show`"); add_docs(TitledTuple, "A `fastup
 
 
 ```
-show_doc(TitledInt, title_level=3)
-```
-
-
-```
-show_doc(TitledStr, title_level=3)
-```
-
-
-```
-show_doc(TitledFloat, title_level=3)
-```
-
-
-```
 test_stdout(lambda: TitledStr('s').show(), 's')
 test_stdout(lambda: TitledInt(1).show(), '1')
-```
-
-
-```
-show_doc(TitledTuple, title_level=3)
+test_stdout(lambda: TitledFloat(1.).show(), '1.0')
 ```
 
 
 ```
 #|hide
-df = pd.DataFrame(index = range(1))
-row = df.iloc[0]
-x = TitledFloat(2.56)
-row = x.show(ctx=row, label='lbl')
-test_eq(float(row.lbl), 2.56)
+df = pd.DataFrame(index = range(2,5))
+df
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+    </tr>
+    <tr>
+      <th>3</th>
+    </tr>
+    <tr>
+      <th>4</th>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```
+TitledStr('s').show()
+TitledStr('s').show("title")
+TitledInt(1).show()
+TitledFloat(1.).show()
+```
+
+    s
+
+
+
+
+
+    'title'
+
+
+
+    1
+    1.0
+
+
+
+```
+row1 = df.iloc[0]
+row2 = df.iloc[1]
+```
+
+
+```
+x1 = TitledFloat(2.56)
+x2 = TitledInt(3)
+```
+
+
+```
+TitledFloat(1.)
+TitledFloat(1.).show()
+```
+
+
+
+
+    1.0
+
+
+
+    1.0
+
+
+
+```
+# show_doc(TitledTuple, title_level=3)
+```
+
+
+```
+x1show = x1.show(ctx=row1, label='lbl')
+x2show = x2.show(ctx=row2, label='lbl')
+```
+
+
+```
+x1show
+x2show
+```
+
+
+
+
+    lbl    2.56
+    dtype: object
+
+
+
+
+
+
+    lbl    3
+    dtype: object
+
+
+
+
+```
+x1show, type(x1show), x1show.lbl
+```
+
+
+
+
+    (lbl    2.56
+     dtype: object,
+     pandas.core.series.Series,
+     '2.56')
+
+
+
+### ```truncate(self:TitledStr, n)```
+- why need ```TitledStr.truncate(n)```?
+- to cut the first n words from the string and print them out together as a string
 
 
 ```
@@ -3338,6 +3882,31 @@ def truncate(self:TitledStr, n):
     return TitledStr(' '.join(words))
 ```
 
+
+```
+TitledStr("this is me")
+TitledStr("this is me").truncate(1)
+```
+
+
+
+
+    'this is me'
+
+
+
+
+
+
+    'this'
+
+
+
+
+```
+
+```
+
 ## Other functions
 
 
@@ -3345,6 +3914,11 @@ def truncate(self:TitledStr, n):
 #|export
 if not hasattr(pd.DataFrame,'_old_init'): pd.DataFrame._old_init = pd.DataFrame.__init__
 ```
+
+### ```pd.DataFrame.__init__(self:pd.DataFrame, data=None, index=None, columns=None, dtype=None, copy=None)```
+- why do we need a new ```__init__``` for ```pd.DataFrame```? because
+- 1. to first turn a tensor to a np.ndarray first using ```to_np```
+- 2. and then use original ```pd.DataFrame.__init__``` above to turn array into a DataFrame
 
 
 ```
@@ -3357,12 +3931,124 @@ def __init__(self:pd.DataFrame, data=None, index=None, columns=None, dtype=None,
 
 
 ```
+pd.DataFrame([1,2])
+to_np(tensor(1,2))
+pd.DataFrame(tensor(1,2))
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+
+
+    array([1, 2])
+
+
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+### ```get_empty_df(n)```
+- Return `n` empty rows of a dataframe
+
+
+```
 #|export
 def get_empty_df(n):
     "Return `n` empty rows of a dataframe"
     df = pd.DataFrame(index = range(n))
     return [df.iloc[i] for i in range(n)]
 ```
+
+
+```
+get_empty_df(3)
+```
+
+
+
+
+    [Series([], Name: 0, dtype: float64),
+     Series([], Name: 1, dtype: float64),
+     Series([], Name: 2, dtype: float64)]
+
+
+
+### ```display_df(df)```
+- print out in HTML of a dataframe or just print
 
 
 ```
@@ -3376,11 +4062,96 @@ def display_df(df):
 
 
 ```
+display_df(pd.DataFrame(tensor(1,2)))
+```
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+
+
+### ```get_first(c)```
+- Get the first element of c (anything listy), even if c is a dataframe
+
+
+```
 #|export
 def get_first(c):
     "Get the first element of c, even if c is a dataframe"
     return getattr(c, 'iloc', c)[0]
 ```
+
+
+```
+get_first([1,2,3])
+get_first((1,2,3))
+get_first(range(5))
+get_first(array([1,2,3]))
+get_first(tensor([1,2,3]))
+get_first(pd.DataFrame(tensor(1,2)))
+```
+
+
+
+
+    1
+
+
+
+
+
+
+    1
+
+
+
+
+
+
+    0
+
+
+
+
+
+
+    1
+
+
+
+
+
+
+    tensor(1)
+
+
+
+
+
+
+    0    1
+    Name: 0, dtype: int64
+
+
+
+### ```one_param(m)```
+- get the first parameter of a model object
 
 
 ```
@@ -3390,12 +4161,18 @@ def one_param(m):
     return first(m.parameters())
 ```
 
+### ```item_find(x, idx=0)```
+- Recursively takes the `idx`-th element of `x`, and take the 1st element of that
+- and `x` can be a list of lists or dict of dict or list
+
 
 ```
 #|export
+# @snoop
 def item_find(x, idx=0):
     "Recursively takes the `idx`-th element of `x`"
     if is_listy(x): return item_find(x[idx])
+#     if is_listy(x): return item_find(x[idx], idx) # another way of interpreting recursively take the idx-th element   
     if isinstance(x,dict):
         key = list(x.keys())[idx] if isinstance(idx, int) else idx
         return item_find(x[key])
@@ -3404,25 +4181,107 @@ def item_find(x, idx=0):
 
 
 ```
+item_find({'a':[1,2,9], 'b':[3,4,8], 'c':[5,6,7]}, idx=2)
+```
+
+
+
+
+    5
+
+
+
+
+```
+item_find([[1,2,9], [3,4,8],[5,6,7]], idx=1)
+```
+
+
+
+
+    3
+
+
+
+### ```find_device(b)```
+Recursively search the device of `b`. the first of the first device
+
+
+```
 #|export
+# @snoop(depth=2)
 def find_device(b):
-    "Recursively search the device of `b`."
+    "Recursively search the device of `b`. the first of the first device"
     return item_find(b).device
 ```
 
 
 ```
+t1 = to_device(tensor(1))
 t2 = to_device(tensor(0))
 dev = default_device()
-test_eq(find_device(t2), dev)
-test_eq(find_device([t2,t2]), dev)
-test_eq(find_device({'a':t2,'b':t2}), dev)
-test_eq(find_device({'a':[[t2],[t2]],'b':t2}), dev)
+t1
+t2
+dev
 ```
+
+
+
+
+    tensor(1, device='mps:0')
+
+
+
+
+
+
+    tensor(0, device='mps:0')
+
+
+
+
+
+
+    device(type='mps')
+
+
+
+
+```
+find_device(t2)
+find_device([t1,t2])
+find_device({'a':t1,'b':t2})
+```
+
+
+
+
+    device(type='mps', index=0)
+
+
+
+
+
+
+    device(type='mps', index=0)
+
+
+
+
+
+
+    device(type='mps', index=0)
+
+
+
+### ```finds_bs(b)```
+- Recursively search the batch size of `b`.
+- b can be a list (single array) or a 2d matrix or a tuple of 2 matricies, or a dict of many matricies
 
 
 ```
 #|export
+# @snoop
 def find_bs(b):
     "Recursively search the batch size of `b`."
     res = item_find(b)
@@ -3432,15 +4291,36 @@ def find_bs(b):
 
 
 ```
-x = torch.randn(4,5)
 x1 = [1,2,3]
 test_eq(find_bs(x1), 3)
+```
+
+
+```
+x2 = array([1,2,3])
+test_eq(find_bs(x2), 3)
+```
+
+
+```
+x = torch.randn(4,5)
 test_eq(find_bs(x), 4)
+```
+
+
+```
 test_eq(find_bs((x,x)), 4)
+```
+
+
+```
 test_eq(find_bs([x, x]), 4)
 test_eq(find_bs({'a':x,'b':x}), 4)
 test_eq(find_bs({'a':[[x],[x]],'b':x}), 4)
 ```
+
+### ```np_func(f)```
+- Convert a function taking and returning numpy arrays to one taking and returning tensors
 
 
 ```
@@ -3472,6 +4352,9 @@ test_eq(f1_score(a1,a2), t)
 assert isinstance(t,Tensor)
 ```
 
+### ```Module(nn.Module, metaclass=PrePostInitMeta)```
+- Same as `nn.Module`, but no need for subclasses to call `super().__init__`
+
 
 ```
 #|export
@@ -3483,7 +4366,7 @@ class Module(nn.Module, metaclass=PrePostInitMeta):
 
 
 ```
-show_doc(Module, title_level=3)
+# show_doc(Module, title_level=3)
 ```
 
 
@@ -3491,10 +4374,23 @@ show_doc(Module, title_level=3)
 class _T(Module):
     def __init__(self): self.f = nn.Linear(1,1)
     def forward(self,x): return self.f(x)
+```
 
+
+```
 t = _T()
 t(tensor([1.]))
 ```
+
+
+
+
+    tensor([-0.1482], grad_fn=<AddBackward0>)
+
+
+
+### ```get_model(model)```
+Return the model even when the model is wrapped inside `model` through `model.module` and `model` is an instance of ```DistributedDataParallel, nn.DataParallel```
 
 
 ```
@@ -3510,16 +4406,104 @@ def get_model(model):
     return model.module if isinstance(model, (DistributedDataParallel, nn.DataParallel)) else model
 ```
 
+### ```one_hot(x, c)```
+- why need one_hot(x, c)? 
+- one_hot(3, 5) can give us the 3rd class out of 5 classes in one hot encoding
+
 
 ```
 #|export
 def one_hot(x, c):
     "One-hot encode `x` with `c` classes."
     res = torch.zeros(c, dtype=torch.uint8)
-    if isinstance(x, Tensor) and x.numel()>0: res[x] = 1.
+    if isinstance(x, Tensor) and x.numel()>0: 
+        res[x] = 1.
     else: res[list(L(x, use_list=None))] = 1.
     return res
 ```
+
+
+```
+# help(L)
+# L([1,2], use_list=False)
+# L((1,2), use_list=True)
+```
+
+
+```
+tensor(3).numel()
+tensor(2,3).numel() # number of elements in the tensor?
+tensor([[2,3],[3,4]]).numel()
+```
+
+
+
+
+    1
+
+
+
+
+
+
+    2
+
+
+
+
+
+
+    4
+
+
+
+
+```
+one_hot([1,2], 5)
+one_hot([1,4,3,0,0,0], 6)
+one_hot([0], 5)
+one_hot(tensor(2,3,4), 5)
+```
+
+
+
+
+    tensor([0, 1, 1, 0, 0], dtype=torch.uint8)
+
+
+
+
+
+
+    tensor([1, 1, 0, 1, 1, 0], dtype=torch.uint8)
+
+
+
+
+
+
+    tensor([1, 0, 0, 0, 0], dtype=torch.uint8)
+
+
+
+
+
+
+    tensor([0, 0, 1, 1, 1], dtype=torch.uint8)
+
+
+
+
+```
+tensor(0,1,0,0,1).byte()
+```
+
+
+
+
+    tensor([0, 1, 0, 0, 1], dtype=torch.uint8)
+
+
 
 
 ```
@@ -3527,6 +4511,9 @@ test_eq(one_hot([1,4], 5), tensor(0,1,0,0,1).byte())
 test_eq(one_hot(torch.tensor([]), 5), tensor(0,0,0,0,0).byte())
 test_eq(one_hot(2, 5), tensor(0,0,1,0,0).byte())
 ```
+
+### ```one_hot_decode(x, vocab=None)```
+- reverse from one_hot to classes
 
 
 ```
@@ -3544,11 +4531,29 @@ test_eq(one_hot_decode(tensor(0,0,1,0,0)), [2  ])
 
 
 ```
+one_hot_decode(tensor(0,1,0,0,1), vocab=['a', 'b', 'c', 'd', 'e'])
+```
+
+
+
+
+    (#2) ['b','e']
+
+
+
+### ```params(m)```
+- return a list of parameters in a model `m`
+
+
+```
 #|export
 def params(m):
     "Return all parameters of `m`"
     return [p for p in m.parameters()]
 ```
+
+### ```trainable_params(m)```
+- Return all trainable parameters of `m` into a list, meaning their `requires_grad` is True
 
 
 ```
@@ -3560,6 +4565,17 @@ def trainable_params(m):
 
 
 ```
+m = nn.Linear(20, 30)
+input = torch.randn(128, 20)
+output = m(input)
+print(output.size())
+```
+
+    torch.Size([128, 30])
+
+
+
+```
 m = nn.Linear(4,5)
 test_eq(trainable_params(m), [m.weight, m.bias])
 m.weight.requires_grad_(False)
@@ -3567,10 +4583,28 @@ test_eq(trainable_params(m), [m.bias])
 ```
 
 
+
+
+    Parameter containing:
+    tensor([[-0.3910, -0.2063,  0.1080,  0.4927],
+            [ 0.2911, -0.1194, -0.4741,  0.0905],
+            [-0.4546,  0.3977, -0.4361, -0.4012],
+            [-0.3717, -0.3067,  0.2818,  0.2976],
+            [-0.2562, -0.1199, -0.4604, -0.2900]])
+
+
+
+### ```norm_types``` 
+- have all normalization functions stored inside a tuple
+
+
 ```
 #|export
 norm_types = (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d, nn.InstanceNorm1d, nn.InstanceNorm2d, nn.InstanceNorm3d, nn.LayerNorm)
 ```
+
+### ```norm_bias_params(m, with_bias=True)```
+- Return all bias and BatchNorm parameters, not other weights parameters
 
 
 ```
@@ -3585,6 +4619,91 @@ def norm_bias_params(m, with_bias=True):
 
 
 ```
+m = nn.Linear(10, 20)
+m.weight.shape
+m.bias.shape
+# m.weight.grad?
+```
+
+
+
+
+    torch.Size([20, 10])
+
+
+
+
+
+
+    torch.Size([20])
+
+
+
+
+```
+model = nn.Sequential(nn.Linear(10,20), nn.BatchNorm1d(20), nn.Conv1d(3,4, 3))
+model
+# model[0].weight.shape
+model[0].bias.shape
+model[1].weight.shape
+model[1].bias.shape
+# model[2].weight.shape
+model[2].bias.shape
+```
+
+
+
+
+    Sequential(
+      (0): Linear(in_features=10, out_features=20, bias=True)
+      (1): BatchNorm1d(20, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): Conv1d(3, 4, kernel_size=(3,), stride=(1,))
+    )
+
+
+
+
+
+
+    torch.Size([20])
+
+
+
+
+
+
+    torch.Size([20])
+
+
+
+
+
+
+    torch.Size([20])
+
+
+
+
+
+
+    torch.Size([4])
+
+
+
+
+```
+[i.shape for i in norm_bias_params(model)]
+```
+
+
+
+
+    [torch.Size([20]), torch.Size([20]), torch.Size([20]), torch.Size([4])]
+
+
+
+
+```
 for norm_func in [nn.BatchNorm1d, partial(nn.InstanceNorm1d, affine=True)]:
     model = nn.Sequential(nn.Linear(10,20), norm_func(20), nn.Conv1d(3,4, 3))
     test_eq(norm_bias_params(model), [model[0].bias, model[1].weight, model[1].bias, model[2].bias])
@@ -3594,20 +4713,71 @@ for norm_func in [nn.BatchNorm1d, partial(nn.InstanceNorm1d, affine=True)]:
     test_eq(norm_bias_params(model, with_bias=False), [model[1][0].weight, model[1][0].bias])
 ```
 
+### ```batch_to_samples(b, max_n=10)```
+- 'Transposes' a batch to (at most `max_n`) samples
+- it's like to slice a batch of data by n cols for a smaller sample data, and transpose it
+
 
 ```
 #|export
+# @snoop
 def batch_to_samples(b, max_n=10):
     "'Transposes' a batch to (at most `max_n`) samples"
-    if isinstance(b, Tensor): return retain_types(list(b[:max_n]), [b])
+    if isinstance(b, Tensor): 
+        return retain_types(list(b[:max_n]), [b])
     else:
+#         pp.deep(lambda: L(b).map(partial(batch_to_samples,max_n=max_n)))
         res = L(b).map(partial(batch_to_samples,max_n=max_n))
         return retain_types(res.zip(), [b])
 ```
 
 
 ```
+batch_to_samples(tensor(1,2,3), 2)
+```
+
+
+
+
+    [tensor(1), tensor(2)]
+
+
+
+
+```
 t = tensor([1,2,3])
+[t,t+1]
+batch_to_samples([t,t+1], max_n=2)
+```
+
+
+
+
+    [tensor([1, 2, 3]), tensor([2, 3, 4])]
+
+
+
+
+
+
+    (#2) [(tensor(1), tensor(2)),(tensor(2), tensor(3))]
+
+
+
+
+```
+batch_to_samples([tensor([1,2,3]), tensor([4,5,6])], 10)
+```
+
+
+
+
+    (#3) [(tensor(1), tensor(4)),(tensor(2), tensor(5)),(tensor(3), tensor(6))]
+
+
+
+
+```
 test_eq(batch_to_samples([t,t+1], max_n=2), ([1,2],[2,3]))
 test_eq(batch_to_samples(tensor([1,2,3]), 10), [1, 2, 3])
 test_eq(batch_to_samples([tensor([1,2,3]), tensor([4,5,6])], 10), [(1, 4), (2, 5), (3, 6)])
@@ -3615,10 +4785,39 @@ test_eq(batch_to_samples([tensor([1,2,3]), tensor([4,5,6])], 2), [(1, 4), (2, 5)
 test_eq(batch_to_samples([tensor([1,2,3]), [tensor([4,5,6]),tensor([7,8,9])]], 10), 
         [(1, (4, 7)), (2, (5, 8)), (3, (6, 9))])
 test_eq(batch_to_samples([tensor([1,2,3]), [tensor([4,5,6]),tensor([7,8,9])]], 2), [(1, (4, 7)), (2, (5, 8))])
+```
 
+
+```
+# fastnbs("fastuple")
+```
+
+
+```
 t = fastuple(tensor([1,2,3]),TensorBase([2,3,4]))
+t
+```
+
+
+
+
+    (tensor([1, 2, 3]), TensorBase([2, 3, 4]))
+
+
+
+
+```
 test_eq_type(batch_to_samples(t)[0][1], TensorBase(2))
 test_eq(batch_to_samples(t).map(type), [fastuple]*3)
+```
+
+### ```interp_1d(x:Tensor, xp, fp)```
+- Same as `np.interp`, run `np.interp??`
+- a quick [video](https://youtu.be/nGwg5MrbZxo?t=82) about what 1d linear interpolation mean and for 
+
+
+```
+
 ```
 
 
@@ -3636,18 +4835,47 @@ def interp_1d(x:Tensor, xp, fp):
 
 
 ```
+
+```
+
+
+```
+# %%snoop
 brks = tensor(0,1,2,4,8,64).float()
 ys = tensor(range_of(brks)).float()
 ys /= ys[-1].item()
 pts = tensor(0.2,0.5,0.8,3,5,63)
+```
 
+
+```
+# %%snoop
 preds = pts.interp_1d(brks, ys)
+preds
 test_close(preds.numpy(), np.interp(pts.numpy(), brks.numpy(), ys.numpy()))
+```
 
+
+
+
+    tensor([0.0400, 0.1000, 0.1600, 0.5000, 0.6500, 0.9964])
+
+
+
+
+```
 plt.scatter(brks,ys)
 plt.scatter(pts,preds)
 plt.legend(['breaks','preds']);
 ```
+
+
+    
+![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_491_0.png)
+    
+
+
+### ```pca(x:Tensor, k=2)```
 
 
 ```
@@ -3660,6 +4888,9 @@ def pca(x:Tensor, k=2):
     return torch.mm(x,U[:,:k])
 ```
 
+### ```logit(x)```
+- Logit of `x`, clamped to avoid inf.
+
 
 ```
 #|export
@@ -3671,6 +4902,29 @@ def logit(x):
 
 
 ```
+logit(tensor(1e-18))
+logit(tensor(1-1e-8))
+```
+
+
+
+
+    tensor(-16.1181)
+
+
+
+
+
+
+    tensor(15.9424)
+
+
+
+### ```num_distrib()```
+- Return the number of processes in distributed training (if applicable).
+
+
+```
 #|export
 def num_distrib():
     "Return the number of processes in distributed training (if applicable)."
@@ -3679,11 +4933,41 @@ def num_distrib():
 
 
 ```
+num_distrib()
+```
+
+
+
+
+    0
+
+
+
+### ```rank_distrib()```
+Return the distributed rank of this process (if applicable).
+
+
+```
 #|export
 def rank_distrib():
     "Return the distributed rank of this process (if applicable)."
     return int(os.environ.get('RANK', 0))
 ```
+
+
+```
+rank_distrib()
+```
+
+
+
+
+    0
+
+
+
+### ```distrib_barrier()```
+Place a synchronization barrier in distributed training
 
 
 ```
@@ -3709,6 +4993,10 @@ except: pass
 def _comp_filter(lib='lz4',lvl=3): return tables.Filters(complib=f'blosc:{lib}', complevel=lvl)
 ```
 
+### ```save_array(p:Path, o, complib='lz4', lvl=3)```
+- turn a tensor into an array
+- save/write the array in a pytable file under the Path
+
 
 ```
 #|export
@@ -3721,6 +5009,10 @@ def save_array(p:Path, o, complib='lz4', lvl=3):
 
 Compression lib can be any of: blosclz, lz4, lz4hc, snappy, zlib or zstd.
 
+### ```load_array(p:Path)```
+- add a method ```load_array``` to Path
+- to open and read from a pytable file 
+
 
 ```
 #|export
@@ -3729,6 +5021,9 @@ def load_array(p:Path):
     "Save numpy array to a `pytables` file"
     with tables.open_file(p, 'r') as f: return f.root.data.read()
 ```
+
+### ```base_doc(elt), doc(elt)```
+- how to use ```doc``` and what goes on behind the scene
 
 
 ```
@@ -3751,6 +5046,10 @@ def doc(elt):
     except: base_doc(elt)
 ```
 
+### ```nested_reorder(t, idxs)```
+- Reorder all tensors in `t` using `idxs`
+- all the tensors reordered will be put back to list or tuple where they were from
+
 
 ```
 #|export
@@ -3766,18 +5065,65 @@ def nested_reorder(t, idxs):
 ```
 x = tensor([0,1,2,3,4,5])
 idxs = tensor([2,5,1,0,3,4])
-test_eq_type(nested_reorder(([x], x), idxs), ([idxs], idxs))
+nested_reorder(x, idxs)
+```
 
+
+
+
+    tensor([2, 5, 1, 0, 3, 4])
+
+
+
+
+```
+nested_reorder([[x], x], idxs)
+test_eq_type(nested_reorder(([x], x), idxs), ([idxs], idxs))
+```
+
+
+
+
+    [[tensor([2, 5, 1, 0, 3, 4])], tensor([2, 5, 1, 0, 3, 4])]
+
+
+
+
+```
+tensor(1).item()
+```
+
+
+
+
+    1
+
+
+
+
+```
 y = L(0,1,2,3,4,5)
+# pp.deep(lambda: L(i.item() for i in idxs))
 z = L(i.item() for i in idxs)
+nested_reorder((y, x), idxs)
 test_eq_type(nested_reorder((y, x), idxs), (z,idxs))
 ```
+
+
+
+
+    ((#6) [2,5,1,0,3,4], tensor([2, 5, 1, 0, 3, 4]))
+
+
+
+### ```flatten_check(inp, targ)```
+- Check that `inp` and `targ` have the same number of elements and flatten them into a single row or 1d data
 
 
 ```
 #|export
 def flatten_check(inp, targ):
-    "Check that `out` and `targ` have the same number of elements and flatten them."
+    "Check that `inp` and `targ` have the same number of elements and flatten them."
     inp,targ = TensorBase(inp.contiguous()).view(-1),TensorBase(targ.contiguous()).view(-1)
     test_eq(len(inp), len(targ))
     return inp,targ
@@ -3789,11 +5135,18 @@ x1,x2 = torch.randn(5,4),torch.randn(20)
 x1,x2 = flatten_check(x1,x2)
 test_eq(x1.shape, [20])
 test_eq(x2.shape, [20])
+```
+
+
+```
 x1,x2 = torch.randn(5,4),torch.randn(21)
 test_fail(lambda: flatten_check(x1,x2))
 ```
 
 ## Image helpers
+
+### ```make_cross_image(bw=True)```
+Create a tensor containing a cross image, either `bw` (True) or color
 
 
 ```
@@ -3813,8 +5166,32 @@ def make_cross_image(bw=True):
 
 
 ```
+plt.imshow(make_cross_image()) # imshow's cmap default is with color
+```
+
+
+
+
+    <matplotlib.image.AxesImage>
+
+
+
+
+    
+![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_529_1.png)
+    
+
+
+
+```
 plt.imshow(make_cross_image(), cmap="Greys");
 ```
+
+
+    
+![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_530_0.png)
+    
+
 
 
 ```
@@ -3822,23 +5199,65 @@ plt.imshow(make_cross_image(False).permute(1,2,0));
 ```
 
 
+    
+![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_531_0.png)
+    
+
+
+### ```show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, **kwargs)```
+- Display batch `b` in a grid of size `items` with `cols` width
+- images with titles
+
+
 ```
 #|export
+# @snoop
 def show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, **kwargs):
     "Display batch `b` in a grid of size `items` with `cols` width"
     if items<cols: cols=items
     rows = (items+cols-1) // cols
     if figsize is None: figsize = (cols*3, rows*3)
     fig,axs = plt.subplots(rows, cols, figsize=figsize)
-    for *o,ax in zip(*to_cpu(b), axs.flatten()): show(o, ax=ax, **kwargs)
+    for *o,ax in zip(*to_cpu(b), axs.flatten()): 
+        show(o, ax=ax, **kwargs)
 ```
+
+
+```
+# fastnbs("show_titled_image")
+```
+
+
+```
+to_cpu(([Image.open(TEST_IMAGE_BW),Image.open(TEST_IMAGE)],['bw','color']))
+```
+
+
+
+
+    ([<PIL.PngImagePlugin.PngImageFile image mode=L size=28x28>,
+      <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1200x803>],
+     ['bw', 'color'])
+
+
 
 
 ```
 show_image_batch(([Image.open(TEST_IMAGE_BW),Image.open(TEST_IMAGE)],['bw','color']), items=2)
 ```
 
+
+    
+![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_536_0.png)
+    
+
+
 ## Model init
+
+### ```requires_grad(m)```
+
+- Check if the first parameter of `m` requires grad or not
+
 
 
 ```
@@ -3852,10 +5271,50 @@ def requires_grad(m):
 
 ```
 tst = nn.Linear(4,5)
+requires_grad(tst)
 assert requires_grad(tst)
+```
+
+
+
+
+    True
+
+
+
+
+```
+# fastnbs("requires_grad_")
+```
+
+
+```
 for p in tst.parameters(): p.requires_grad_(False)
 assert not requires_grad(tst)
 ```
+
+
+
+
+    Parameter containing:
+    tensor([[ 4.4120e-01,  3.4470e-01,  2.9548e-01, -1.4258e-01],
+            [-1.8221e-04, -2.7301e-01,  1.5419e-01, -3.9706e-01],
+            [ 4.1367e-01, -3.7189e-01,  1.9104e-02,  1.9271e-01],
+            [-3.6554e-01,  3.6430e-01, -4.4612e-01, -3.3471e-01],
+            [ 1.1128e-01, -3.5243e-02, -2.6971e-01, -3.8887e-02]])
+
+
+
+
+
+
+    Parameter containing:
+    tensor([ 0.0543, -0.2563,  0.2105,  0.0902, -0.0938])
+
+
+
+### ```init_default(m, func=nn.init.kaiming_normal_)```
+- Initialize `m` weights with `func` and set `bias` to 0.
 
 
 ```
@@ -3871,12 +5330,85 @@ def init_default(m, func=nn.init.kaiming_normal_):
 
 ```
 tst = nn.Linear(4,5)
+tst.weight.data
 tst.weight.data.uniform_(-1,1)
+```
+
+
+
+
+    tensor([[-0.0095,  0.0070, -0.2772, -0.3292],
+            [-0.1613,  0.1548,  0.1702,  0.4081],
+            [-0.1261, -0.4718,  0.4416, -0.3217],
+            [ 0.1468, -0.0882, -0.2151,  0.1999],
+            [-0.1668,  0.0645,  0.1543,  0.0799]])
+
+
+
+
+
+
+    tensor([[ 0.7235, -0.2019,  0.7836, -0.5412],
+            [ 0.1940,  0.0356, -0.2875,  0.4810],
+            [ 0.8678,  0.1957,  0.9521, -0.0210],
+            [ 0.6293, -0.4421, -0.2445,  0.0396],
+            [-0.2243,  0.5162, -0.7565,  0.7576]])
+
+
+
+
+```
+tst.bias.data
 tst.bias.data.uniform_(-1,1)
+```
+
+
+
+
+    tensor([ 0.1235, -0.4675,  0.0362, -0.1601, -0.4447])
+
+
+
+
+
+
+    tensor([-0.9772, -0.9947, -0.0934, -0.4716,  0.5859])
+
+
+
+
+```
 tst = init_default(tst, func = lambda x: x.data.fill_(1.))
+tst.weight.data
+tst.bias.data
+```
+
+
+
+
+    tensor([[1., 1., 1., 1.],
+            [1., 1., 1., 1.],
+            [1., 1., 1., 1.],
+            [1., 1., 1., 1.],
+            [1., 1., 1., 1.]])
+
+
+
+
+
+
+    tensor([0., 0., 0., 0., 0.])
+
+
+
+
+```
 test_eq(tst.weight, torch.ones(5,4))
 test_eq(tst.bias, torch.zeros(5))
 ```
+
+### ```cond_init(m, func)```
+- Apply `init_default` to `m` as long as it is not a batchnorm module and first parameters require grads"
 
 
 ```
@@ -3888,19 +5420,66 @@ def cond_init(m, func):
 
 
 ```
+norm_types
+# requires_grad?
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+
+
+    (torch.nn.modules.batchnorm.BatchNorm1d,
+     torch.nn.modules.batchnorm.BatchNorm2d,
+     torch.nn.modules.batchnorm.BatchNorm3d,
+     torch.nn.modules.instancenorm.InstanceNorm1d,
+     torch.nn.modules.instancenorm.InstanceNorm2d,
+     torch.nn.modules.instancenorm.InstanceNorm3d,
+     torch.nn.modules.normalization.LayerNorm)
+
+
+
+
+```
 tst = nn.Linear(4,5)
 tst.weight.data.uniform_(-1,1)
 tst.bias.data.uniform_(-1,1)
 cond_init(tst, func = lambda x: x.data.fill_(1.))
 test_eq(tst.weight, torch.ones(5,4))
 test_eq(tst.bias, torch.zeros(5))
+```
 
+
+
+
+    tensor([[-0.5553, -0.7698,  0.6734, -0.3296],
+            [-0.1207,  0.5504,  0.4411, -0.9057],
+            [ 0.4188, -0.2044, -0.1616, -0.3007],
+            [ 0.7291,  0.9034, -0.5751,  0.2195],
+            [ 0.5748,  0.3230,  0.3982, -0.1674]])
+
+
+
+
+
+
+    tensor([-0.6805, -0.3261,  0.8352,  0.7603,  0.2669])
+
+
+
+
+```
 tst = nn.BatchNorm2d(5)
 init = [tst.weight.clone(), tst.bias.clone()]
 cond_init(tst, func = lambda x: x.data.fill_(1.))
 test_eq(tst.weight, init[0])
 test_eq(tst.bias, init[1])
 ```
+
+### ```apply_leaf(m, f)```
+- Apply `f` to children of `m` (every layers of a model)
 
 
 ```
@@ -3915,10 +5494,48 @@ def apply_leaf(m, f):
 
 ```
 tst = nn.Sequential(nn.Linear(4,5), nn.Sequential(nn.Linear(4,5), nn.Linear(4,5)))
+tst[0].weight.shape
+```
+
+
+
+
+    torch.Size([5, 4])
+
+
+
+
+```
+list(tst.children())
+```
+
+
+
+
+    [Linear(in_features=4, out_features=5, bias=True),
+     Sequential(
+       (0): Linear(in_features=4, out_features=5, bias=True)
+       (1): Linear(in_features=4, out_features=5, bias=True)
+     )]
+
+
+
+
+```
 apply_leaf(tst, partial(init_default, func=lambda x: x.data.fill_(1.)))
-for l in [tst[0], *tst[1]]: test_eq(l.weight, torch.ones(5,4))
+for l in [tst[0], *tst[1]]: 
+    print(f"l.weight.shape: {l.weight.shape}")
+    test_eq(l.weight, torch.ones(5,4))
 for l in [tst[0], *tst[1]]: test_eq(l.bias,   torch.zeros(5))
 ```
+
+    l.weight.shape: torch.Size([5, 4])
+    l.weight.shape: torch.Size([5, 4])
+    l.weight.shape: torch.Size([5, 4])
+
+
+### ```apply_init(m, func=nn.init.kaiming_normal_)```
+- Initialize all non-batchnorm layers of `m` with `func`.
 
 
 ```
@@ -3940,6 +5557,9 @@ test_eq(tst[1][1].bias,   init[1])
 ```
 
 ## autograd jit functions
+
+### ```script_use_ctx(f), script_save_ctx(static, *argidx), script_fwd(*argidx), script_bwd(f), grad_module(cls)```
+- funcs to automate autograd 
 
 
 ```
@@ -3996,6 +5616,9 @@ def grad_module(cls):
 ```
 
 ## Torch Version Checks -
+
+### ```ismin_torch(min_version), notmax_torch(max_version)```
+- check whether the torch version greater than the minimum version; check whether is less than the maximum version
 
 
 ```

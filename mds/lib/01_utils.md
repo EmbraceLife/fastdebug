@@ -1656,7 +1656,7 @@ fastnbs() can use keywords to search learning points (a section title and a sect
 ```python
 #| export
 def fastnbs(question:str, # query in string
-            filter_folder="all", # options: all, fastai, part2
+            filter_folder="all", # options: all, fastai, part2, src
             output=False, # True for nice print of cell output
             accu:float=0.8, 
             nb=True, 
@@ -1674,7 +1674,7 @@ use fastnbs() display the entire learning points section including notes and cod
             file_fullname = file_path
         elif filter_folder == "part2" and "_fastai_pt2_" in file_path:
             file_fullname = file_path
-        elif filter_folder == "src_fastai" and "src_fastai_" in file_path:
+        elif filter_folder == "src" and "src_fast" in file_path:
             file_fullname = file_path            
         elif filter_folder == "all": 
             file_fullname = file_path
