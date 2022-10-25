@@ -1094,13 +1094,34 @@ def get_all_nbs():
 ### add index.ipynb
 
 ```python
+!push-code-new
+```
+
+```python
+#| export
+from pathlib import *
+```
+
+```python
+# fastnbs("Path")
+```
+
+```python
+list(map(str, list((Path.home()/"Documents/fastdebug/mds").ls())))
+```
+
+```python
+str(Path.home()/"Documents/fastdebug/mds") + "/"
+```
+
+```python
 #| export
 def get_all_nbs():
     "return paths for all nbs both in md and ipynb format into lists"
 #     md_folder = '/Users/Natsume/Documents/divefastai/Debuggable/jupytext/'
-    md_folder = '/Users/Natsume/Documents/fastdebug/mds/'
-    md_output_folder = '/Users/Natsume/Documents/fastdebug/mds_output/'    
-    ipy_folder = '/Users/Natsume/Documents/fastdebug/nbs/'
+    md_folder = str(Path.home()/"Documents/fastdebug/mds") + "/" # '/Users/Natsume/Documents/fastdebug/mds/'
+    md_output_folder = str(Path.home()/"Documents/fastdebug/mds_output") + "/" # '/Users/Natsume/Documents/fastdebug/mds_output/'    
+    ipy_folder = str(Path.home()/"Documents/fastdebug/nbs") + "/" # '/Users/Natsume/Documents/fastdebug/nbs/'
     md_nbs = []
     for i in os.listdir(md_folder):
         if "." not in i:
@@ -2165,7 +2186,7 @@ src_fastcore, all"
             nb_rt = nb
         elif flt_fd == "groundup" and "groundup_" in nb:            
             nb_rt = nb
-        elif flt_fd == "src_fastai" and "src_fastai_" in nb:
+        elif flt_fd == "src" and "src_" in nb:
             nb_rt = nb            
         elif flt_fd == "all": 
             nb_rt = nb

@@ -39,6 +39,16 @@ from nbdev.showdoc import *
 from fastdebug.utils import *
 ```
 
+```python
+import fastai.layers as fl
+import fastai.torch_core as ft
+```
+
+```python
+whatinside(ft)
+whatinside(fl)
+```
+
 # Layers
 > Custom fastai layers and basic functions to grab them.
 
@@ -149,8 +159,12 @@ tst
 - Layer that applies `partial(func, **kwargs)`"
 
 ```python
-fastnbs("module(", filter_folder="src")
+# fastnbs("module(*flds", filter_folder="src")
 ```
+
+### ```PartialLambda(Lambda)```
+- a subclass of Lambda, which is a subclass of module, which wrap around nn.Module
+- Layer that applies `partial(func, **kwargs)` which can custom the `func` of ```Lambda```
 
 ```python
 #|export
@@ -167,37 +181,91 @@ class PartialLambda(Lambda):
 ```python
 def test_func(a,b=2): return a+b
 tst = PartialLambda(test_func, b=5)
+x.shape
 test_eq(tst(x), x+5)
 ```
+
+### ```view(self:Tensor-1), x.view(x.size(0), -1)```
+- flatten x into a 1d tensor
+- flatten x into a 2d tensor, keep the 1dim unchanged, but flatten the rest dims
+
+
+```python
+# Tensor.view?
+```
+
+```python
+x = torch.randn(4, 4)
+x.size()
+y = x.view(16)
+y.size()
+z = x.view(-1, 8)  # the size -1 is inferred from other dimensions
+z.size()
+z1 = x.view(-1)
+z1.shape
+```
+
+### ```Flatten(self, x)```
+- Flatten `x` to a single dimension, e.g. at end of a model. `full` for rank-1 tensor"
+Logic: 
+- use decorator ```module(full=False)``` to make ```Flatten``` a layer and create a parameter ```full=False```
+- ```Flatten(self, x)``` works as the `forward` function
+- `self.full` can be access in the `forward` function above
+- ```Flatten(full=True)```: to flatten all dims of a tensor into a 1d tensor
+- ```Flatten(full=False)```: to keep 1st dim and flatten the rest dims
+
 
 ```python
 #|export
 @module(full=False)
 def Flatten(self, x):
     "Flatten `x` to a single dimension, e.g. at end of a model. `full` for rank-1 tensor"
+#     pp(x.shape, x.view(-1).shape, x.size(0), x.size(), x.view(x.size(0), -1).shape)
     return TensorBase(x.view(-1) if self.full else x.view(x.size(0), -1))
 ```
 
 ```python
-tst = Flatten()
+tst = Flatten() # this is running __init__
 x = torch.randn(10,5,4)
+```
+
+```python
 test_eq(tst(x).shape, [10,20])
 tst = Flatten(full=True)
 test_eq(tst(x).shape, [200])
 ```
 
+### ```ToTensorBase(self, x)```
+- make ```ToTensorBase``` a subclass of `module` which is a subclass of `nn.Module`
+- ```ToTensorBase(tensor_cls=TensorBase)``` initialize itself with a tensor class (default to TensorBase) as a parameter
+- after initialization, the output function can take in `x` to turn `x` into an instance of ```TensorBase```
+
 ```python
 #|export
-@module(tensor_cls=TensorBase)
+@module(tensor_cls=TensorBase) # the args here are for ToTensorBase.__init__
 def ToTensorBase(self, x):
-    "Remove `tensor_cls` to x"
+    "Convert x to TensorBase"
     return self.tensor_cls(x)
+```
+
+```python
+# fastnbs("def module(")
 ```
 
 ```python
 ttb = ToTensorBase()
 timg = TensorImage(torch.rand(1,3,32,32))
 test_eq(type(ttb(timg)), TensorBase)
+```
+
+### ```View(Module)```
+- ```View``` is a subclass of ```Module```, which inherites from ```nn.Module``` and ```metaclass=PrePostInitMeta```
+- so, ```View``` is to create a layer for Viewing data
+- ```View(*size)``` can initialize itself by setting values for `self.size`
+- ```View.forward(x)``` can run `x.view(self.size)` to create a new tensor based on `x` but with different shape
+
+```python
+# fastnbs("class Module(") # to remind me of `Module`
 ```
 
 ```python
@@ -209,8 +277,18 @@ class View(Module):
 ```
 
 ```python
+x = torch.randn(4,5,10)
 tst = View(10,5,4)
 test_eq(tst(x).shape, [10,5,4])
+```
+
+### ```ResizeBatch(Module)```
+- ```ResizeBatch``` is a subclass of nn.Module and no need to run `super().__init__`
+- ```ResizeBatch(*size)``` can initialize itself with a specific shape/size for tensors
+- ```rb(x)``` can reshape `x` so that the batch size dim is unchanged but other dims is changed based on `*size`
+
+```python
+(3,) + (1,2,3)
 ```
 
 ```python
@@ -223,7 +301,16 @@ class ResizeBatch(Module):
 
 ```python
 tst = ResizeBatch(5,4)
+x = torch.randn(10,20)
 test_eq(tst(x).shape, [10,5,4])
+```
+
+### ```Debugger(self,x)```
+- ```Debugger``` is made into a layer by decorator `module` using `nn.Module`
+- after initialization, `db(x)` will run `set_trace()` and return `x` which is a model object
+
+```python
+# fastnbs("module(*")
 ```
 
 ```python
@@ -236,6 +323,18 @@ def Debugger(self,x):
 ```
 
 ```python
+tst = nn.Sequential(nn.Linear(4,5), nn.Sequential(nn.Linear(4,5), nn.Linear(4,5)))
+tst
+```
+
+```python
+# Debugger()(tst) # run this code to activate the ipdb
+```
+
+### ```sigmoid_range(x, low, high)```
+- calculate sigmoid on tensor `x` and also keep the sigmoid values within `[low, high]`
+
+```python
 #|export
 def sigmoid_range(x, low, high):
     "Sigmoid function with range `(low, high)`"
@@ -244,10 +343,20 @@ def sigmoid_range(x, low, high):
 
 ```python
 test = tensor([-10.,0.,10.])
+torch.sigmoid(test)
+sigmoid_range(test, -1,  2)
+```
+
+```python
 assert torch.allclose(sigmoid_range(test, -1,  2), tensor([-1.,0.5, 2.]), atol=1e-4, rtol=1e-4)
 assert torch.allclose(sigmoid_range(test, -5, -1), tensor([-5.,-3.,-1.]), atol=1e-4, rtol=1e-4)
 assert torch.allclose(sigmoid_range(test,  2,  4), tensor([2.,  3., 4.]), atol=1e-4, rtol=1e-4)
 ```
+
+### ```SigmoidRange(self, x)```
+- ```SigmoidRange``` is a subclass of `nn.Module`, and the func defined under `SigmoidRange` is used as `forward` func, thanks to ```module``` decorator
+- ```sr = SigmoidRange(low, high)``` initialize an instance with the value range `[low, high]`, with `low` and `high` as args for `__init__`
+- `sr(x)` to calc sigmoid on `x` and put it within the range `[low, high]`
 
 ```python
 #|export
@@ -258,11 +367,22 @@ def SigmoidRange(self, x):
 ```
 
 ```python
+# fastlistnbs("src")
+# fastnbs("module(*f", "src")
+```
+
+```python
 tst = SigmoidRange(-1, 2)
 assert torch.allclose(tst(test), tensor([-1.,0.5, 2.]), atol=1e-4, rtol=1e-4)
 ```
 
 ## Pooling layers
+
+### ```AdaptiveConcatPool1d(Module)```
+- becomes a layer, which is a subclass of `Module`, which inherits from `nn.Module` and `PrePostInitMeta` to avoid `super().__init__`
+- this layer that concats `AdaptiveAvgPool1d` and `AdaptiveMaxPool1d` side by side with each other
+- ```acp = AdaptiveConcatPool1d(size)``` to initialize the layer with size or num of activations
+- `acp(x)` is to run tensor `x` through the layer, and if `x.shape` is (5, 10), then the output shape is (5, 2)
 
 ```python
 #|export
@@ -276,6 +396,56 @@ class AdaptiveConcatPool1d(Module):
 ```
 
 ```python
+AdaptiveConcatPool1d()
+```
+
+```python
+type(AdaptiveConcatPool1d())
+```
+
+```python
+x.shape
+```
+
+```python
+list(AdaptiveConcatPool1d().children())[0](x).shape
+```
+
+```python
+AdaptiveConcatPool1d()(x).shape
+```
+
+### ```torch.max(a, dim, keepdim)```
+
+```python
+a = torch.randn(4, 4)
+a
+```
+
+```python
+torch.max(a, 1)
+torch.max(a, 1)[0].shape
+torch.max(a, 1)[1].shape
+torch.max(a, dim=1, keepdim=True)
+torch.max(a, dim=1, keepdim=True)[0].shape
+torch.max(a, dim=1, keepdim=True)[1].shape
+```
+
+```python
+torch.max(a, 0)
+torch.max(a, 0)[0].shape
+torch.max(a, 0)[1].shape
+torch.max(a, dim=0, keepdim=True)
+torch.max(a, dim=0, keepdim=True)[0].shape
+torch.max(a, dim=0, keepdim=True)[1].shape
+```
+
+### ```AdaptiveConcatPool2d(Module)```
+- it is like ```AdaptiveConcatPoold(Module)```, but deal with 2d
+- Layer that concats `AdaptiveAvgPool2d` and `AdaptiveMaxPool2d`"
+- If the input is `bs x nf x h x h`, the output will be `bs x 2*nf x 1 x 1` if no size is passed or `bs x 2*nf x size x size` (nf: num of filters)
+
+```python
 #|export
 class AdaptiveConcatPool2d(Module):
     "Layer that concats `AdaptiveAvgPool2d` and `AdaptiveMaxPool2d`"
@@ -286,24 +456,41 @@ class AdaptiveConcatPool2d(Module):
     def forward(self, x): return torch.cat([self.mp(x), self.ap(x)], 1)
 ```
 
-If the input is `bs x nf x h x h`, the output will be `bs x 2*nf x 1 x 1` if no size is passed or `bs x 2*nf x size x size`
-
 ```python
 tst = AdaptiveConcatPool2d()
 x = torch.randn(10,5,4,4)
 test_eq(tst(x).shape, [10,10,1,1])
+```
+
+```python
 max1 = torch.max(x,    dim=2, keepdim=True)[0]
+max2 = torch.max(x,    dim=2, keepdim=False)[0]
 maxp = torch.max(max1, dim=3, keepdim=True)[0]
+max1.shape
+maxp.shape
+x.shape
+tst(x).shape
 test_eq(tst(x)[:,:5], maxp)
 test_eq(tst(x)[:,5:], x.mean(dim=[2,3], keepdim=True))
+```
+
+```python
 tst = AdaptiveConcatPool2d(2)
+x.shape
 test_eq(tst(x).shape, [10,10,2,2])
 ```
+
+### ```PoolType.Avg, PoolType.Max, PoolType.Cat```
+- they are class properties, which are strings `Avg`, `Max` and `Cat`
 
 ```python
 #|export
 class PoolType: Avg,Max,Cat = 'Avg','Max','Cat'
 ```
+
+### ```adaptive_pool(pool_type)```
+- `pool_type` can be `Avg`, `Max` or `Cat`
+- return `nn.AdaptiveAvgPool2d`, `nn.AdaptiveMaxPool2d`, `nn.AdaptiveConcatPool2d`
 
 ```python
 #|export
@@ -311,11 +498,18 @@ def adaptive_pool(pool_type):
     return nn.AdaptiveAvgPool2d if pool_type=='Avg' else nn.AdaptiveMaxPool2d if pool_type=='Max' else AdaptiveConcatPool2d
 ```
 
+### ```PoolFlatten(nn.Sequential)```
+- Combine `nn.AdaptiveAvgPool2d` and `Flatten`.
+
 ```python
 #|export
 class PoolFlatten(nn.Sequential):
     "Combine `nn.AdaptiveAvgPool2d` and `Flatten`."
     def __init__(self, pool_type=PoolType.Avg): super().__init__(adaptive_pool(pool_type)(1), Flatten())
+```
+
+```python
+# Flatten??
 ```
 
 ```python
