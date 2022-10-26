@@ -20,6 +20,138 @@ jupyter:
 #| default_exp utils
 ```
 
+## doc from fastai.torch_core
+
+```python
+#| export
+from fastai.torch_core import doc
+```
+
+```python
+#| export
+doc = doc
+```
+
+## objprint
+
+```python
+#| export
+from objprint import op
+```
+
+```python
+#| export
+op = op
+```
+
+```python
+class Position:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+class Player():
+    def __init__(self):
+        self.name = "Alice"
+        self.age = 18
+        self.items = ["axe", "armor"]
+        self.coins = {"gold": 1, "silver": 33, "bronze": 57}
+        self.position = Position(3, 5)
+        self.x = 0
+        self.y = 0
+    
+    def move(self, a, b):
+        pos = Position(a, b)
+        self.x = pos.x
+        self.y = pos.y
+```
+
+```python
+op(Position(1,2))
+op(Player())
+p = Player()
+op(p.move(2,4))
+```
+
+## ic from icecream 
+
+```python
+#| export
+from icecream import ic, argumentToString
+import numpy as np
+from torch import Tensor
+from pandas import DataFrame, Series
+```
+
+```python
+#| export
+# Register a function to summarize numpy array
+@argumentToString.register(np.ndarray)
+def _(obj):
+    return f"ndarray, shape={obj.shape}, dtype={obj.dtype}"
+```
+
+```python
+x = np.zeros((1, 2))
+ic(x)
+```
+
+```python
+#| export
+# Register a function to summarize numpy array
+@argumentToString.register(Tensor)
+def _(obj):
+    return f"class={type(obj)}, shape={obj.shape}, dtype={obj.dtype}"
+```
+
+```python
+from fastai.torch_core import *
+```
+
+```python
+x = Tensor((1,2,3))
+x = Tensor(([1],[2],[3]))
+x = tensor(1)
+x = TensorBase(1)
+ic(x)
+```
+
+```python
+#| export
+# Register a function to summarize numpy array
+@argumentToString.register(DataFrame)
+def _(obj):
+    return f"class={type(obj)}, shape={obj.shape}"
+```
+
+```python
+x1 = DataFrame([[1,2,3]])
+ic(x1)
+x1 = DataFrame([1,2,3])
+ic(x1)
+# x1 = DataFrame([[1],[2],[3]])
+# ic(x1)
+```
+
+```python
+#| export
+# Register a function to summarize numpy array
+@argumentToString.register(Series)
+def _(obj):
+    return f"class={type(obj)}, shape={obj.shape}"
+```
+
+```python
+x2 = Series([1,2,3])
+# x2 = Series([[1],[2],[3]])
+ic(x2)
+```
+
+```python
+#| export
+ic = ic
+```
+
 ## snoop: pp, pp.deep, @snoop, %%snoop, watches
 
 ```python

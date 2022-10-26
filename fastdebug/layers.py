@@ -145,42 +145,48 @@ class PoolFlatten(nn.Sequential):
     "Combine `nn.AdaptiveAvgPool2d` and `Flatten`."
     def __init__(self, pool_type=PoolType.Avg): super().__init__(adaptive_pool(pool_type)(1), Flatten())
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 88
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 89
 NormType = Enum('NormType', 'Batch BatchZero Weight Spectral Instance InstanceZero')
-# ic(NormType)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 90
+
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 95
+# @snoop(watch=('bn.bias.data', 'bn.weight.data'))
 def _get_norm(prefix, nf, ndim=2, zero=False, **kwargs):
     "Norm layer with `nf` features and `ndim` initialized depending on `norm_type`."
     assert 1 <= ndim <= 3
+#     pp.deep(lambda: getattr(nn, f"{prefix}{ndim}d")(nf, **kwargs))
     bn = getattr(nn, f"{prefix}{ndim}d")(nf, **kwargs)
     if bn.affine:
         bn.bias.data.fill_(1e-3)
         bn.weight.data.fill_(0. if zero else 1.)
     return bn
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 91
-@delegates(nn.BatchNorm2d)
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 98
+@delegates(nn.BatchNorm2d) # pass its args to BatchNorm
 def BatchNorm(nf, ndim=2, norm_type=NormType.Batch, **kwargs):
     "BatchNorm layer with `nf` features and `ndim` initialized depending on `norm_type`."
     return _get_norm('BatchNorm', nf, ndim, zero=norm_type==NormType.BatchZero, **kwargs)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 92
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 103
 @delegates(nn.InstanceNorm2d)
 def InstanceNorm(nf, ndim=2, norm_type=NormType.Instance, affine=True, **kwargs):
     "InstanceNorm layer with `nf` features and `ndim` initialized depending on `norm_type`."
     return _get_norm('InstanceNorm', nf, ndim, zero=norm_type==NormType.InstanceZero, affine=affine, **kwargs)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 98
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 109
 class BatchNorm1dFlat(nn.BatchNorm1d):
     "`nn.BatchNorm1d`, but first flattens leading dimensions"
+#     @snoop(watch=('snp.shape', 'help(x.contiguous)'))
     def forward(self, x):
-        if x.dim()==2: return super().forward(x)
+        if x.dim()==2: 
+            return super().forward(x)
         *f,l = x.shape
+#         snp = x.contiguous()
+#         snp = snp.view(-1,1)
         x = x.contiguous().view(-1,l)
         return super().forward(x).view(*f,l)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 100
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 115
 class LinBnDrop(nn.Sequential):
     "Module grouping `BatchNorm1d`, `Dropout` and `Linear` layers"
     def __init__(self, n_in, n_out, bn=True, p=0., act=None, lin_first=False):
@@ -191,40 +197,40 @@ class LinBnDrop(nn.Sequential):
         layers = lin+layers if lin_first else layers+lin
         super().__init__(*layers)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 104
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 126
 def sigmoid(input, eps=1e-7):
     "Same as `torch.sigmoid`, plus clamping to `(eps,1-eps)"
     return input.sigmoid().clamp(eps,1-eps)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 105
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 130
 def sigmoid_(input, eps=1e-7):
     "Same as `torch.sigmoid_`, plus clamping to `(eps,1-eps)"
     return input.sigmoid_().clamp_(eps,1-eps)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 106
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 133
 from torch.nn.init import kaiming_uniform_,uniform_,xavier_uniform_,normal_
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 107
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 135
 def vleaky_relu(input, inplace=True):
     "`F.leaky_relu` with 0.3 slope"
     return F.leaky_relu(input, negative_slope=0.3, inplace=inplace)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 108
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 138
 for o in F.relu,nn.ReLU,F.relu6,nn.ReLU6,F.leaky_relu,nn.LeakyReLU:
     o.__default_init__ = kaiming_uniform_
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 109
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 140
 for o in F.sigmoid,nn.Sigmoid,F.tanh,nn.Tanh,sigmoid,sigmoid_:
     o.__default_init__ = xavier_uniform_
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 110
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 144
 def init_default(m, func=nn.init.kaiming_normal_):
     "Initialize `m` weights with `func` and set `bias` to 0."
     if func and hasattr(m, 'weight'): func(m.weight)
     with torch.no_grad(): nested_callable(m, 'bias.fill_')(0.)
     return m
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 111
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 147
 def init_linear(m, act_func=None, init='auto', bias_std=0.01):
     if getattr(m,'bias',None) is not None and bias_std is not None:
         if bias_std != 0: normal_(m.bias, 0, bias_std)
@@ -235,16 +241,16 @@ def init_linear(m, act_func=None, init='auto', bias_std=0.01):
         if init == noop: init = getcallable(act_func, '__default_init__')
     if callable(init): init(m.weight)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 113
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 151
 def _conv_func(ndim=2, transpose=False):
     "Return the proper conv `ndim` function, potentially `transposed`."
     assert 1 <= ndim <=3
     return getattr(nn, f'Conv{"Transpose" if transpose else ""}{ndim}d')
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 115
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 154
 defaults.activation=nn.ReLU
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 116
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 158
 class ConvLayer(nn.Sequential):
     "Create a sequence of convolutional (`ni` to `nf`), ReLU (if `use_activ`) and `norm_type` layers."
     @delegates(nn.Conv2d)
@@ -270,38 +276,38 @@ class ConvLayer(nn.Sequential):
         if xtra: layers.append(xtra)
         super().__init__(*layers)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 130
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 177
 def AdaptiveAvgPool(sz=1, ndim=2):
     "nn.AdaptiveAvgPool layer for `ndim`"
     assert 1 <= ndim <= 3
     return getattr(nn, f"AdaptiveAvgPool{ndim}d")(sz)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 131
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 180
 def MaxPool(ks=2, stride=None, padding=0, ndim=2, ceil_mode=False):
     "nn.MaxPool layer for `ndim`"
     assert 1 <= ndim <= 3
     return getattr(nn, f"MaxPool{ndim}d")(ks, stride=stride, padding=padding)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 132
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 185
 def AvgPool(ks=2, stride=None, padding=0, ndim=2, ceil_mode=False):
     "nn.AvgPool layer for `ndim`"
     assert 1 <= ndim <= 3
     return getattr(nn, f"AvgPool{ndim}d")(ks, stride=stride, padding=padding, ceil_mode=ceil_mode)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 134
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 189
 def trunc_normal_(x, mean=0., std=1.):
     "Truncated normal initialization (approximation)"
     # From https://discuss.pytorch.org/t/implementing-truncated-normal-initializer/4778/12
     return x.normal_().fmod_(2).mul_(std).add_(mean)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 135
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 191
 class Embedding(nn.Embedding):
     "Embedding layer with truncated normal initialization"
     def __init__(self, ni, nf, std=0.01):
         super().__init__(ni, nf)
         trunc_normal_(self.weight.data, std=std)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 139
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 197
 class SelfAttention(Module):
     "Self attention layer for `n_channels`."
     def __init__(self, n_channels):
@@ -320,7 +326,7 @@ class SelfAttention(Module):
         o = self.gamma * torch.bmm(h, beta) + x
         return o.view(*size).contiguous()
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 148
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 209
 class PooledSelfAttention2d(Module):
     "Pooled self attention layer for 2d."
     def __init__(self, n_channels):
@@ -341,7 +347,7 @@ class PooledSelfAttention2d(Module):
         o = self.out(torch.bmm(h, beta.transpose(1,2)).view(-1, self.n_channels//2, x.shape[2], x.shape[3]))
         return self.gamma * o + x
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 150
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 213
 def _conv1d_spect(ni:int, no:int, ks:int=1, stride:int=1, padding:int=0, bias:bool=False):
     "Create and initialize a `nn.Conv1d` layer with spectral normalization."
     conv = nn.Conv1d(ni, no, ks, stride=stride, padding=padding, bias=bias)
@@ -349,7 +355,7 @@ def _conv1d_spect(ni:int, no:int, ks:int=1, stride:int=1, padding:int=0, bias:bo
     if bias: conv.bias.data.zero_()
     return spectral_norm(conv)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 151
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 216
 class SimpleSelfAttention(Module):
     def __init__(self, n_in:int, ks=1, sym=False):
         self.sym,self.n_in = sym,n_in
@@ -371,19 +377,22 @@ class SimpleSelfAttention(Module):
         o = self.gamma * o + x
         return o.view(*size).contiguous()
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 154
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 220
+# @snoop
 def icnr_init(x, scale=2, init=nn.init.kaiming_normal_):
     "ICNR init of `x`, with `scale` and `init` function"
     ni,nf,h,w = x.shape
     ni2 = int(ni/(scale**2))
+#     pp(x.new_zeros([ni2,nf,h,w]).shape, init(x.new_zeros([ni2,nf,h,w])).shape)
     k = init(x.new_zeros([ni2,nf,h,w])).transpose(0, 1)
     k = k.contiguous().view(ni2, nf, -1)
     k = k.repeat(1, 1, scale**2)
     return k.contiguous().view([nf,ni,h,w]).transpose(0, 1)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 157
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 225
 class PixelShuffle_ICNR(nn.Sequential):
     "Upsample by `scale` from `ni` filters to `nf` (default `ni`), using `nn.PixelShuffle`."
+#     @snoop
     def __init__(self, ni, nf=None, scale=2, blur=False, norm_type=NormType.Weight, act_cls=defaults.activation):
         super().__init__()
         nf = ifnone(nf, ni)
@@ -397,7 +406,7 @@ class PixelShuffle_ICNR(nn.Sequential):
         if blur: layers += [nn.ReplicationPad2d((1,0,1,0)), nn.AvgPool2d(2, stride=1)]
         super().__init__(*layers)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 163
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 235
 def sequential(*args):
     "Create an `nn.Sequential`, wrapping items with `Lambda` if needed"
     if len(args) != 1 or not isinstance(args[0], OrderedDict):
@@ -406,11 +415,12 @@ def sequential(*args):
             if not isinstance(o,nn.Module): args[i] = Lambda(o)
     return nn.Sequential(*args)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 164
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 239
 class SequentialEx(Module):
     "Like `nn.Sequential`, but with ModuleList semantics, and can access module input"
     def __init__(self, *layers): self.layers = nn.ModuleList(layers)
 
+#     @snoop
     def forward(self, x):
         res = x
         for l in self.layers:
@@ -426,13 +436,19 @@ class SequentialEx(Module):
     def extend(self,l):      return self.layers.extend(l)
     def insert(self,i,l):    return self.layers.insert(i,l)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 166
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 242
 class MergeLayer(Module):
     "Merge a shortcut with the result of the module by adding them or concatenating them if `dense=True`."
     def __init__(self, dense:bool=False): self.dense=dense
-    def forward(self, x): return torch.cat([x,x.orig], dim=1) if self.dense else (x+x.orig)
+#     @snoop
+    def forward(self, x): 
+#         return torch.cat([x,x.orig], dim=1) if self.dense else (x+x.orig)
+        if self.dense:
+            return torch.cat([x,x.orig], dim=1) 
+        else: 
+            return (x+x.orig)        
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 171
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 250
 class Cat(nn.ModuleList):
     "Concatenate layers outputs over a given dim"
     def __init__(self, layers, dim=1):
@@ -440,9 +456,10 @@ class Cat(nn.ModuleList):
         super().__init__(layers)
     def forward(self, x): return torch.cat([l(x) for l in self], dim=self.dim)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 174
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 255
 class SimpleCNN(nn.Sequential):
     "Create a simple CNN with `filters`."
+#     @snoop
     def __init__(self, filters, kernel_szs=None, strides=None, bn=True):
         nl = len(filters)-1
         kernel_szs = ifnone(kernel_szs, [3]*nl)
@@ -452,15 +469,15 @@ class SimpleCNN(nn.Sequential):
         layers.append(PoolFlatten())
         super().__init__(*layers)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 181
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 265
 class ProdLayer(Module):
     "Merge a shortcut with the result of the module by multiplying them."
     def forward(self, x): return x * x.orig
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 182
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 267
 inplace_relu = partial(nn.ReLU, inplace=True)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 183
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 269
 def SEModule(ch, reduction, act_cls=defaults.activation):
     nf = math.ceil(ch//reduction/8)*8
     return SequentialEx(nn.AdaptiveAvgPool2d(1),
@@ -468,9 +485,10 @@ def SEModule(ch, reduction, act_cls=defaults.activation):
                         ConvLayer(nf, ch, ks=1, norm_type=None, act_cls=nn.Sigmoid),
                         ProdLayer())
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 184
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 271
 class ResBlock(Module):
     "Resnet block from `ni` to `nh` with `stride`"
+#     @snoop
     @delegates(ConvLayer.__init__)
     def __init__(self, expansion, ni, nf, stride=1, groups=1, reduction=None, nh1=None, nh2=None, dw=False, g2=1,
                  sa=False, sym=False, norm_type=NormType.Batch, act_cls=defaults.activation, ndim=2, ks=3,
@@ -499,25 +517,35 @@ class ResBlock(Module):
 
     def forward(self, x): return self.act(self.convpath(x) + self.idpath(x))
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 186
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 276
 def SEBlock(expansion, ni, nf, groups=1, reduction=16, stride=1, **kwargs):
     return ResBlock(expansion, ni, nf, stride=stride, groups=groups, reduction=reduction, nh1=nf*2, nh2=nf*expansion, **kwargs)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 187
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 278
 def SEResNeXtBlock(expansion, ni, nf, groups=32, reduction=16, stride=1, base_width=4, **kwargs):
     w = math.floor(nf * (base_width / 64)) * groups
     return ResBlock(expansion, ni, nf, stride=stride, groups=groups, reduction=reduction, nh2=w, **kwargs)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 188
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 280
 def SeparableBlock(expansion, ni, nf, reduction=16, stride=1, base_width=4, **kwargs):
     return ResBlock(expansion, ni, nf, stride=stride, reduction=reduction, nh2=nf*2, dw=True, **kwargs)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 191
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 285
+# @snoop
 def _stack_tups(tuples, stack_dim=1):
     "Stack tuple of tensors along `stack_dim`"
     return tuple(torch.stack([t[i] for t in tuples], dim=stack_dim) for i in range_of(tuples[0]))
+#     lst = []
+#     res = []
+#     pp(range_of(tuples[0]))
+#     for i in range_of(tuples[0]):
+#         for t in tuples:
+#             lst.append(t[i])
+#         res.append(torch.stack(lst, dim=stack_dim))
+#     return tuple(res)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 192
+
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 287
 class TimeDistributed(Module):
     "Applies `module` over `tdim` identically for each step, use `low_mem` to compute one at a time." 
     def __init__(self, module, low_mem=False, tdim=1):
@@ -554,10 +582,10 @@ class TimeDistributed(Module):
     def __repr__(self):
         return f'TimeDistributed({self.module})'
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 211
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 308
 from torch.jit import script
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 212
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 309
 @script
 def _swish_jit_fwd(x): return x.mul(torch.sigmoid(x))
 
@@ -577,14 +605,14 @@ class _SwishJitAutoFn(torch.autograd.Function):
         x = ctx.saved_variables[0]
         return _swish_jit_bwd(x, grad_output)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 213
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 310
 def swish(x, inplace=False): return _SwishJitAutoFn.apply(x)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 214
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 311
 class Swish(Module):
     def forward(self, x): return _SwishJitAutoFn.apply(x)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 215
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 312
 @script
 def _mish_jit_fwd(x): return x.mul(torch.tanh(F.softplus(x)))
 
@@ -605,26 +633,27 @@ class MishJitAutoFn(torch.autograd.Function):
         x = ctx.saved_variables[0]
         return _mish_jit_bwd(x, grad_output)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 216
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 313
 def mish(x): return F.mish(x) if torch.__version__ >= '1.9' else MishJitAutoFn.apply(x)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 217
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 314
 class Mish(Module):
     def forward(self, x): return MishJitAutoFn.apply(x)
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 218
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 315
 if ismin_torch('1.9'): Mish = nn.Mish
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 219
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 316
 for o in swish,Swish,mish,Mish: o.__default_init__ = kaiming_uniform_
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 222
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 320
 class ParameterModule(Module):
     "Register a lone parameter `p` in a module."
     def __init__(self, p): self.val = p
     def forward(self, x): return x
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 223
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 322
+# @snoop
 def children_and_parameters(m):
     "Return the children of `m` and its direct parameters not registered in modules."
     children = list(m.children())
@@ -633,18 +662,18 @@ def children_and_parameters(m):
         if id(p) not in children_p: children.append(ParameterModule(p))
     return children
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 225
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 325
 def has_children(m):
     try: next(m.children())
     except StopIteration: return False
     return True
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 227
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 327
 def flatten_model(m):
     "Return the list of all submodules and parameters of `m`"
     return sum(map(flatten_model,children_and_parameters(m)),[]) if has_children(m) else [m]
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 229
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 329
 class NoneReduce():
     "A context manager to evaluate `loss_func` with none reduce."
     def __init__(self, loss_func): self.loss_func,self.old_red = loss_func,None
@@ -659,7 +688,7 @@ class NoneReduce():
     def __exit__(self, type, value, traceback):
         if self.old_red is not None: self.loss_func.reduction = self.old_red
 
-# %% ../nbs/lib/src_fastai_001_layers.ipynb 231
+# %% ../nbs/lib/src_fastai_001_layers.ipynb 331
 def in_channels(m):
     "Return the shape of the first weight layer in `m`."
     try: return next(l.weight.shape[1] for l in flatten_model(m) if nested_attr(l,'weight.ndim',-1)==4)

@@ -11,7 +11,7 @@ from fastai.layers import *
 __all__ = ['BaseLoss', 'CrossEntropyLossFlat', 'FocalLoss', 'FocalLossFlat', 'BCEWithLogitsLossFlat', 'BCELossFlat',
            'MSELossFlat', 'L1LossFlat', 'LabelSmoothingCrossEntropy', 'LabelSmoothingCrossEntropyFlat', 'DiceLoss']
 
-# %% ../nbs/lib/src_fastai_001a_losses.ipynb 5
+# %% ../nbs/lib/src_fastai_001a_losses.ipynb 8
 class BaseLoss():
     "Same as `loss_cls`, but flattens input and target."
     activation=decodes=noops
@@ -57,7 +57,7 @@ class BaseLoss():
         "Move the loss function to a specified `device`"
         if isinstance(self.func, nn.Module): self.func.to(device)
 
-# %% ../nbs/lib/src_fastai_001a_losses.ipynb 8
+# %% ../nbs/lib/src_fastai_001a_losses.ipynb 11
 @delegates()
 class CrossEntropyLossFlat(BaseLoss):
     "Same as `nn.CrossEntropyLoss`, but flattens input and target."
@@ -78,7 +78,7 @@ class CrossEntropyLossFlat(BaseLoss):
         "`nn.CrossEntropyLoss`'s fused activation function applied to model output"
         return F.softmax(x, dim=self.axis)
 
-# %% ../nbs/lib/src_fastai_001a_losses.ipynb 13
+# %% ../nbs/lib/src_fastai_001a_losses.ipynb 16
 class FocalLoss(Module):
     y_int=True # y interpolation
     def __init__(self, 
@@ -125,7 +125,7 @@ class FocalLossFlat(BaseLoss):
         "`F.cross_entropy`'s fused activation function applied to model output"
         return F.softmax(x, dim=self.axis)
 
-# %% ../nbs/lib/src_fastai_001a_losses.ipynb 16
+# %% ../nbs/lib/src_fastai_001a_losses.ipynb 19
 @delegates()
 class BCEWithLogitsLossFlat(BaseLoss):
     "Same as `nn.BCEWithLogitsLoss`, but flattens input and target."
@@ -151,7 +151,7 @@ class BCEWithLogitsLossFlat(BaseLoss):
         "`nn.BCEWithLogitsLoss`'s fused activation function applied to model output"
         return torch.sigmoid(x)
 
-# %% ../nbs/lib/src_fastai_001a_losses.ipynb 18
+# %% ../nbs/lib/src_fastai_001a_losses.ipynb 21
 @use_kwargs_dict(weight=None, reduction='mean')
 def BCELossFlat(
     *args, 
@@ -162,7 +162,7 @@ def BCELossFlat(
     "Same as `nn.BCELoss`, but flattens input and target."
     return BaseLoss(nn.BCELoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
-# %% ../nbs/lib/src_fastai_001a_losses.ipynb 20
+# %% ../nbs/lib/src_fastai_001a_losses.ipynb 23
 @use_kwargs_dict(reduction='mean')
 def MSELossFlat(
     *args, 
@@ -173,7 +173,7 @@ def MSELossFlat(
     "Same as `nn.MSELoss`, but flattens input and target."
     return BaseLoss(nn.MSELoss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
-# %% ../nbs/lib/src_fastai_001a_losses.ipynb 23
+# %% ../nbs/lib/src_fastai_001a_losses.ipynb 26
 @use_kwargs_dict(reduction='mean')
 def L1LossFlat(
     *args, 
@@ -184,7 +184,7 @@ def L1LossFlat(
     "Same as `nn.L1Loss`, but flattens input and target."
     return BaseLoss(nn.L1Loss, *args, axis=axis, floatify=floatify, is_2d=False, **kwargs)
 
-# %% ../nbs/lib/src_fastai_001a_losses.ipynb 24
+# %% ../nbs/lib/src_fastai_001a_losses.ipynb 27
 class LabelSmoothingCrossEntropy(Module):
     y_int = True # y interpolation
     def __init__(self, 
@@ -212,7 +212,7 @@ class LabelSmoothingCrossEntropy(Module):
         "Converts model output to target format"
         return out.argmax(dim=-1)
 
-# %% ../nbs/lib/src_fastai_001a_losses.ipynb 27
+# %% ../nbs/lib/src_fastai_001a_losses.ipynb 30
 @delegates()
 class LabelSmoothingCrossEntropyFlat(BaseLoss):
     "Same as `LabelSmoothingCrossEntropy`, but flattens input and target."
@@ -232,7 +232,7 @@ class LabelSmoothingCrossEntropyFlat(BaseLoss):
         "Converts model output to target format"
         return out.argmax(dim=-1)
 
-# %% ../nbs/lib/src_fastai_001a_losses.ipynb 30
+# %% ../nbs/lib/src_fastai_001a_losses.ipynb 33
 class DiceLoss:
     "Dice loss for segmentation"
     def __init__(self, 

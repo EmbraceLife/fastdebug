@@ -64,6 +64,7 @@ whatinside(fl)
 ```python
 #|export
 # @snoop
+# @pysnoop()
 def module(*flds, **defaults):
     "Decorator to create an `nn.Module` using `f` as `forward` method"
     pa = [inspect.Parameter(o, inspect.Parameter.POSITIONAL_OR_KEYWORD) for o in flds]
@@ -73,6 +74,7 @@ def module(*flds, **defaults):
     all_flds = [*flds,*defaults.keys()]
     
 #     @snoop
+#     @pysnoop()
     def _f(f):
         class c(nn.Module):
 #             @snoop # to enable debug for Identity()
@@ -104,20 +106,15 @@ def Identity(self, x): # running _f(Identify) and return c, c has __name__ as `I
 ```
 
 ```python
-check(Identity)
+# doc(module)
+# doc(Identity)
+# fastnbs("module(*", "src")
+# module?
 ```
 
 ```python
-from icecream import ic
-```
-
-```python
-ic(Identity())
-```
-
-```python
-# %%snoop
-ic(Identity()(1)) # running Identity's own function
+pp(module)
+# ic(Identity()(1)) # running Identity's own function
 ```
 
 ```python
@@ -212,12 +209,13 @@ Logic:
 - ```Flatten(self, x)``` works as the `forward` function
 - `self.full` can be access in the `forward` function above
 - ```Flatten(full=True)```: to flatten all dims of a tensor into a 1d tensor
-- ```Flatten(full=False)```: to keep 1st dim and flatten the rest dims
+- ```Flatten(full=False)```: to keep 1st dim and flatten the rest dims, so only 2 dims remains
 
 
 ```python
 #|export
 @module(full=False)
+# @snoop
 def Flatten(self, x):
     "Flatten `x` to a single dimension, e.g. at end of a model. `full` for rank-1 tensor"
 #     pp(x.shape, x.view(-1).shape, x.size(0), x.size(), x.view(x.size(0), -1).shape)
@@ -498,8 +496,42 @@ def adaptive_pool(pool_type):
     return nn.AdaptiveAvgPool2d if pool_type=='Avg' else nn.AdaptiveMaxPool2d if pool_type=='Max' else AdaptiveConcatPool2d
 ```
 
+### ```nn.AdaptiveAvgPool2d((*output_size))```
+- to initialize the layer using output_size such as `(5,7)`, `7`, `(None, 7)`
+
+```python
+# nn.AdaptiveAvgPool2d??
+# target output size of 5x7
+m = nn.AdaptiveAvgPool2d((5,7))
+m
+input = torch.randn(1, 64, 8, 9)
+output = m(input)
+output.shape
+```
+
+```python
+# target output size of 7x7 (square)
+m = nn.AdaptiveAvgPool2d(7)
+m
+input = torch.randn(1, 64, 10, 9)
+output = m(input)
+output.shape
+```
+
+```python
+# target output size of 10x7
+m = nn.AdaptiveAvgPool2d((None, 7))
+m
+input = torch.randn(1, 64, 10, 9)
+output = m(input)
+output.shape
+```
+
 ### ```PoolFlatten(nn.Sequential)```
-- Combine `nn.AdaptiveAvgPool2d` and `Flatten`.
+- it inherits from `nn.Sequential`, so it can be a layer
+- it combines `nn.AdaptiveAvgPool2d` and `Flatten`
+- its `nn.AdaptiveAvgPool2d` layer has the last 2 dims to be (1,1)
+- its `Flatten` layer only keeps two dims
 
 ```python
 #|export
@@ -509,27 +541,69 @@ class PoolFlatten(nn.Sequential):
 ```
 
 ```python
-# Flatten??
+# fastnbs("Flatten(")
 ```
 
 ```python
 tst = PoolFlatten()
+tst
+x.shape
+nn.AdaptiveAvgPool2d(1)(x).shape
+Flatten()(nn.AdaptiveAvgPool2d(1)(x)).shape
 test_eq(tst(x).shape, [10,5])
 test_eq(tst(x), x.mean(dim=[2,3]))
 ```
 
+```python
+ic(x)
+```
+
 ## BatchNorm layers
+
+### ```NormType``` with `Enum`
 
 ```python
 #|export
 NormType = Enum('NormType', 'Batch BatchZero Weight Spectral Instance InstanceZero')
+
 ```
 
 ```python
+# help(Enum)
+list(NormType)
+```
+
+```python
+list(NormType)[0].name
+list(NormType)[0].value
+```
+
+```python
+check(NormType)
+```
+
+```python
+check(list(NormType)[0])
+```
+
+### ```_get_norm(prefix, nf, ndim=2, zero=False, **kwargs)```
+official doc: Norm layer with `nf` features and `ndim` initialized depending on `norm_type`.
+
+My doc: to create a `nn.BatchNorm` between 1d to 3d, and output `nf` activation, and can set `weight.data` to either 0 or 1
+- to get normalization layer
+- `prefix`: tell which type of normalization layer, like 'BatchNorm'
+- `ndim=2`: default to 2d, so we get `BatchNorm2d`
+- `nf`: like 15, to return 15 output or activation at the end of the BatchNorm2d layer
+- `zero`: True or False, to set BatchNorm layer's weight to be either 0 or 1
+- `bn.affine`: when it is False, then weight and bias will be None
+
+```python
 #|export
+# @snoop(watch=('bn.bias.data', 'bn.weight.data'))
 def _get_norm(prefix, nf, ndim=2, zero=False, **kwargs):
     "Norm layer with `nf` features and `ndim` initialized depending on `norm_type`."
     assert 1 <= ndim <= 3
+#     pp.deep(lambda: getattr(nn, f"{prefix}{ndim}d")(nf, **kwargs))
     bn = getattr(nn, f"{prefix}{ndim}d")(nf, **kwargs)
     if bn.affine:
         bn.bias.data.fill_(1e-3)
@@ -537,23 +611,35 @@ def _get_norm(prefix, nf, ndim=2, zero=False, **kwargs):
     return bn
 ```
 
+### ```BatchNorm(nf, ndim=2, norm_type=NormType.Batch, **kwargs)```
+Official doc:  BatchNorm layer with `nf` features and `ndim` initialized depending on `norm_type`.
+
+My doc: create a BatchNorm layer (2d, by default) by wrapping around `_get_norm`
+- use kwargs from `nn.BatchNorm2d`
+- `ndim=2`: by default to create a `nn.BatchNorm2d`
+- `nf`: like 15, to output 15 activations
+- `norm_type`: if not `NormType.BatchZero`, then make `wegith.data` all equals 1; otherwise, equals 0
+
+```python
+NormType.Batch
+NormType.BatchZero
+```
+
 ```python
 #|export
-@delegates(nn.BatchNorm2d)
+@delegates(nn.BatchNorm2d) # pass its args to BatchNorm
 def BatchNorm(nf, ndim=2, norm_type=NormType.Batch, **kwargs):
     "BatchNorm layer with `nf` features and `ndim` initialized depending on `norm_type`."
     return _get_norm('BatchNorm', nf, ndim, zero=norm_type==NormType.BatchZero, **kwargs)
 ```
 
 ```python
-#|export
-@delegates(nn.InstanceNorm2d)
-def InstanceNorm(nf, ndim=2, norm_type=NormType.Instance, affine=True, **kwargs):
-    "InstanceNorm layer with `nf` features and `ndim` initialized depending on `norm_type`."
-    return _get_norm('InstanceNorm', nf, ndim, zero=norm_type==NormType.InstanceZero, affine=affine, **kwargs)
+# help(torch.nn.modules.batchnorm.BatchNorm2d) # to check the meaning of variables
 ```
 
-`kwargs` are passed to `nn.BatchNorm` and can be `eps`, `momentum`, `affine` and `track_running_stats`.
+```python
+BatchNorm # receive kwargs from nn.BatchNorm2d
+```
 
 ```python
 tst = BatchNorm(15)
@@ -565,7 +651,26 @@ tst = BatchNorm(15, ndim=1)
 assert isinstance(tst, nn.BatchNorm1d)
 tst = BatchNorm(15, ndim=3)
 assert isinstance(tst, nn.BatchNorm3d)
+test_eq(BatchNorm(15, affine=False).weight, None)
 ```
+
+### ```InstanceNorm(nf, ndim=2, norm_type=NormType.Instance, affine=True, **kwargs)```
+official doc: InstanceNorm layer with `nf` features and `ndim` initialized depending on `norm_type`.
+
+mydoc: to create a InstanceNorm layer (1d-3d), any num of activations, set weight.data to 0 or 1, set `affine` True by default
+- wrapping around `_get_norm`
+- using kwargs from `nn.InstanceNorm2d`; 
+- default to `NormType.Instance` and `weight.data` will be set to 1; if `NormType.InstanceZero` then `weight.data` is set to 0
+
+```python
+#|export
+@delegates(nn.InstanceNorm2d)
+def InstanceNorm(nf, ndim=2, norm_type=NormType.Instance, affine=True, **kwargs):
+    "InstanceNorm layer with `nf` features and `ndim` initialized depending on `norm_type`."
+    return _get_norm('InstanceNorm', nf, ndim, zero=norm_type==NormType.InstanceZero, affine=affine, **kwargs)
+```
+
+`kwargs` are passed to `nn.BatchNorm` and can be `eps`, `momentum`, `affine` and `track_running_stats`.
 
 ```python
 tst = InstanceNorm(15)
@@ -586,27 +691,67 @@ test_eq(BatchNorm(15, affine=False).weight, None)
 test_eq(InstanceNorm(15, affine=False).weight, None)
 ```
 
+### ```BatchNorm1dFlat(nn.BatchNorm1d)```, `running_mean`, `running_var`, `contiguous`
+official doc: `nn.BatchNorm1d`, but first flattens leading dimensions
+
+mydoc: allow high dim `x` to run through `nn.BatchNorm1d` by flattening leading dims first, and return `x` in its original shape
+- how to use `torch.Tensor.contiguous`: stackoverflow [answer](https://stackoverflow.com/questions/48915810/what-does-contiguous-do-in-pytorch)
+- how to access `bn.running_mean` and `bn.running_var`
+
 ```python
 #|export
 class BatchNorm1dFlat(nn.BatchNorm1d):
     "`nn.BatchNorm1d`, but first flattens leading dimensions"
+#     @snoop(watch=('snp.shape', 'help(x.contiguous)'))
     def forward(self, x):
-        if x.dim()==2: return super().forward(x)
+        if x.dim()==2: 
+            return super().forward(x)
         *f,l = x.shape
+#         snp = x.contiguous()
+#         snp = snp.view(-1,1)
         x = x.contiguous().view(-1,l)
         return super().forward(x).view(*f,l)
 ```
 
 ```python
+# check(BatchNorm1dFlat)
+# help(BatchNorm1dFlat)
+# help(torch.nn.modules.batchnorm._NormBase)
+# help(torch.nn.modules.module.Module)
+```
+
+```python
 tst = BatchNorm1dFlat(15)
+tst
+tst.running_mean
+tst.running_var
+```
+
+```python
 x = torch.randn(32, 64, 15)
 y = tst(x)
+y.shape
+tst.running_mean
+tst.running_var
+```
+
+```python
 mean = x.mean(dim=[0,1])
 test_close(tst.running_mean, 0*0.9 + mean*0.1)
 var = (x-mean).pow(2).mean(dim=[0,1])
 test_close(tst.running_var, 1*0.9 + var*0.1, eps=1e-4)
 test_close(y, (x-mean)/torch.sqrt(var+1e-5) * tst.weight + tst.bias, eps=1e-4)
 ```
+
+### ```LinBnDrop(nn.Sequential)```
+official doc: Module grouping `BatchNorm1d`, `Dropout` and `Linear` layers"
+
+mydoc: create a block of layers (BatchNorm1d, Dropout, Linear) together 
+- `lin_first=False`: default to put linear layer to the end of the block
+- `act=None`: default to None, adding a something (None, or a layer like nn.ReLu, maybe) behind linear layer
+- `p=0.`: default to 0., as num of dropouts
+- `bn=True`: default to True, to have a BatchNorm layer or not; if True, the linear layer removes bias
+- `n_in, n_out`: num of input and output activations
 
 ```python
 #|export
@@ -625,32 +770,64 @@ The `BatchNorm` layer is skipped if `bn=False`, as is the dropout if `p=0.`. Opt
 
 ```python
 tst = LinBnDrop(10, 20)
+tst
 mods = list(tst.children())
+mods
 test_eq(len(mods), 2)
 assert isinstance(mods[0], nn.BatchNorm1d)
 assert isinstance(mods[1], nn.Linear)
+```
 
+```python
 tst = LinBnDrop(10, 20, p=0.1)
+tst
 mods = list(tst.children())
+mods
 test_eq(len(mods), 3)
 assert isinstance(mods[0], nn.BatchNorm1d)
 assert isinstance(mods[1], nn.Dropout)
 assert isinstance(mods[2], nn.Linear)
+```
 
+```python
 tst = LinBnDrop(10, 20, act=nn.ReLU(), lin_first=True)
+tst
 mods = list(tst.children())
+mods
 test_eq(len(mods), 3)
 assert isinstance(mods[0], nn.Linear)
 assert isinstance(mods[1], nn.ReLU)
 assert isinstance(mods[2], nn.BatchNorm1d)
+```
 
+```python
 tst = LinBnDrop(10, 20, bn=False)
+tst
 mods = list(tst.children())
+mods
 test_eq(len(mods), 1)
 assert isinstance(mods[0], nn.Linear)
 ```
 
 ## Inits
+
+### ```clamp(min, max)```
+
+```python
+help(x.clamp)
+```
+
+```python
+x = torch.randn(2,3)
+x
+x.sigmoid()
+x.sigmoid().clamp(0,0.5)
+```
+
+### ```sigmoid(input, eps=1e-7)```
+official docs: Same as `torch.sigmoid`, plus clamping to `(eps,1-eps)`
+
+mydoc: wrap around `torch.sigmoid` and clamping values to be within `[eps, 1-eps]`
 
 ```python
 #|export
@@ -660,6 +837,23 @@ def sigmoid(input, eps=1e-7):
 ```
 
 ```python
+x = torch.randn(2,3)
+x
+x.sigmoid()
+x.sigmoid().clamp(0,0.5)
+```
+
+```python
+sigmoid(x)
+x
+```
+
+### ```sigmoid_(input, eps=1e-7)```
+official docs: Same as `torch.sigmoid_`, plus clamping to `(eps,1-eps)`
+
+mydoc: inplace version of `sigmoid`
+
+```python
 #|export
 def sigmoid_(input, eps=1e-7):
     "Same as `torch.sigmoid_`, plus clamping to `(eps,1-eps)"
@@ -667,9 +861,23 @@ def sigmoid_(input, eps=1e-7):
 ```
 
 ```python
+x = torch.randn(2,3)
+x
+sigmoid_(x)
+x
+```
+
+### ```kaiming_uniform_,uniform_,xavier_uniform_,normal_``` from `torch.nn.init`
+
+```python
 #|export
 from torch.nn.init import kaiming_uniform_,uniform_,xavier_uniform_,normal_
 ```
+
+### ```vleaky_relu(input, inplace=True)```
+original docs: `F.leaky_relu` with 0.3 slope
+
+mydoc: wrap `F.leaky_rely` and set `negative_slop` to 0.3 and set `inplace` True
 
 ```python
 #|export
@@ -679,16 +887,42 @@ def vleaky_relu(input, inplace=True):
 ```
 
 ```python
+x = torch.randn(2,3)
+x
+F.leaky_relu(x)
+vleaky_relu(x)
+```
+
+### ```__default_init__``` of all ReLus are set to ```kaiming_uniform_```
+
+```python
 #|export
 for o in F.relu,nn.ReLU,F.relu6,nn.ReLU6,F.leaky_relu,nn.LeakyReLU:
     o.__default_init__ = kaiming_uniform_
 ```
+
+### ```__default_init__``` of all sigmoid are set to ```xavier_uniform_```
 
 ```python
 #|export
 for o in F.sigmoid,nn.Sigmoid,F.tanh,nn.Tanh,sigmoid,sigmoid_:
     o.__default_init__ = xavier_uniform_
 ```
+
+### ```nested_callable(m, 'bias.fill_')```
+
+```python
+m = nn.Linear(3,2)
+m.bias.data
+with torch.no_grad(): nested_callable(m, 'bias.fill_')(0.)
+```
+
+### ```init_default(m, func=nn.init.kaiming_normal_)```
+official docs:Initialize `m` weights with `func` and set `bias` to 0.
+
+mydoc: 
+- initialize a model `m.weight` with `func` which default to `kaiming_normal_`
+- initialize `m.bias` with 0
 
 ```python
 #|export
@@ -698,6 +932,21 @@ def init_default(m, func=nn.init.kaiming_normal_):
     with torch.no_grad(): nested_callable(m, 'bias.fill_')(0.)
     return m
 ```
+
+```python
+m = nn.Linear(3,2)
+m.weight
+m.bias
+init_default(m)
+m.weight
+m.bias
+```
+
+### ```init_linear(m, act_func=None, init='auto', bias_std=0.01)```
+mydoc: initialize a linear layer or any layer's weight and bias
+- normalize bias with 0 mean and bias_std=0.01 by default; if bias is not available or bias_std is None, then set biase to be 0
+- normalize weight with `kaiming_uniform_`
+
 
 ```python
 #|export
@@ -712,7 +961,16 @@ def init_linear(m, act_func=None, init='auto', bias_std=0.01):
     if callable(init): init(m.weight)
 ```
 
+```python
+normal_
+```
+
 ## Convolutions
+
+### ```_conv_func(ndim=2, transpose=False)```
+official: Return the proper conv `ndim` function, potentially a `transposed`
+
+mydoc: return a conv layer with 1d to 3d, can be transposed if set True
 
 ```python
 #|export
@@ -732,10 +990,41 @@ test_eq(_conv_func(ndim=2, transpose=True),torch.nn.modules.conv.ConvTranspose2d
 test_eq(_conv_func(ndim=3, transpose=True),torch.nn.modules.conv.ConvTranspose3d)
 ```
 
+### ```defaults.activation``` is set to `nn.ReLU`
+
 ```python
 #|export
 defaults.activation=nn.ReLU
 ```
+
+### ```weight_norm```
+
+```python
+# help(weight_norm)
+nn.Linear(20, 40)
+m = weight_norm(nn.Linear(20, 40), name='weight')
+m
+m.weight_g.size()
+m.weight_v.size()
+```
+
+### ```ConvLayer(nn.Sequential)```
+official:    Create a sequence of convolutional (`ni` to `nf`), ReLU (if `use_activ`) and `norm_type` layers.
+
+mydoc: create a block/sequence of layers including convolutional, ReLU and norm_type layers
+- use `padding` and `transpose` to set padding to be `(ks-1)/2` or 0
+- set `bn` True if either `NormType.Batch` or `NormType.BatchZero`
+- set `inn` True if either `NormType.Instance` or `NormType.InstanceZero`
+- set `bias` True, if `bn` or `inn` is False and `bias` is given as None
+- `conv_func` is assigned to a conv layer class created by `_conv_func` with `ndim` dimension and `transpose` or not
+- `conv` is assigned to an actual conv layer object by running `conv_func(ni, nf, kernel_size=ks, bias=bias, stride=stride, padding=padding, **kwargs)`
+- `act` is assigned to None or a layer class by calling `act_cls()` which gives us ReLU
+- use `init_linear(conv, act, init=init, bias_std=bias_std)` to initialize weight and bias of `conv` 
+- use `weight_norm` or `spectral_norm` to normalize the weight of `conv` if `norm_type == NormType.Weight` or `==NormType.Spectral`
+- create a list `act_bn` to store `act` layer, `BatchNorm(nf, norm_type=norm_type, ndim=ndim)`, `InstanceNorm(nf, norm_type=norm_type, ndim=ndim)` if `act is not None`, `bn, inn` are True respectively; and reverse the list order if `bn_1st` True
+- put `conv` layer in the front of the `act_bn` list and assign the new list to `layers`
+- if there is `xtra` layer, then add it to the end of the list `layers`
+- finally asking the `super()` i.e., `nn.Sequential` initialze all the layers inside `layers`
 
 ```python
 #|export
@@ -773,7 +1062,15 @@ This defines a conv layer with `ndim` (1,2 or 3) that will be a ConvTranspose if
 
 ```python
 tst = ConvLayer(16, 32)
+tst
+```
+
+```python
 mods = list(tst.children())
+mods
+```
+
+```python
 test_eq(len(mods), 3)
 test_eq(mods[1].weight, torch.ones(32))
 test_eq(mods[0].padding, (1,1))
@@ -816,6 +1113,9 @@ for t in [None, NormType.Spectral, NormType.Weight]:
 #Various n_dim/tranpose
 tst = ConvLayer(16, 32, ndim=3)
 assert isinstance(list(tst.children())[0], nn.Conv3d)
+```
+
+```python
 tst = ConvLayer(16, 32, ndim=1, transpose=True)
 assert isinstance(list(tst.children())[0], nn.ConvTranspose1d)
 ```
@@ -823,10 +1123,17 @@ assert isinstance(list(tst.children())[0], nn.ConvTranspose1d)
 ```python
 #No activation/leaky
 tst = ConvLayer(16, 32, ndim=3, act_cls=None)
+tst
 mods = list(tst.children())
+mods
 test_eq(len(mods), 2)
+```
+
+```python
 tst = ConvLayer(16, 32, ndim=3, act_cls=partial(nn.LeakyReLU, negative_slope=0.1))
+tst
 mods = list(tst.children())
+mods
 test_eq(len(mods), 3)
 assert isinstance(mods[2], nn.LeakyReLU)
 ```
@@ -866,6 +1173,13 @@ assert isinstance(mods[2], nn.LeakyReLU)
 #     return ConvLayer(ni, nf, ks, stride=stride, ndim=ndim, norm_type=norm_type, **kwargs)
 ```
 
+### ```AdaptiveAvgPool(sz=1, ndim=2)```
+official: nn.AdaptiveAvgPool layer for `ndim`
+
+instantiate an AdaptiveAvgPool2d layer object with 1 activation output by default
+- it can be 1d to 3d
+- it can output any number of activations with `sz` arg
+
 ```python
 #|export
 def AdaptiveAvgPool(sz=1, ndim=2):
@@ -873,6 +1187,17 @@ def AdaptiveAvgPool(sz=1, ndim=2):
     assert 1 <= ndim <= 3
     return getattr(nn, f"AdaptiveAvgPool{ndim}d")(sz)
 ```
+
+```python
+AdaptiveAvgPool(3, 3)
+```
+
+### ```MaxPool(ks=2, stride=None, padding=0, ndim=2, ceil_mode=False)```
+official: nn.MaxPool layer for `ndim`
+
+instantiate an nn.MaxPool2d layer object with kernel size 2, stride 2, padding 0, no ceil_mode by default
+- it can be 1d to 3d
+- according to `nn.MaxPool2d`, by default `stride` is equal to `ks`
 
 ```python
 #|export
@@ -883,6 +1208,25 @@ def MaxPool(ks=2, stride=None, padding=0, ndim=2, ceil_mode=False):
 ```
 
 ```python
+# help(nn.MaxPool2d)
+```
+
+```python
+MaxPool()
+```
+
+```python
+MaxPool(3, ndim=3)
+```
+
+### ```AvgPool(ks=2, stride=None, padding=0, ndim=2, ceil_mode=False)```
+official: nn.AvgPool layer for `ndim`
+
+instantiate an nn.AvgPool2d layer object with kernel size 2, stride 2, padding 0, no ceil_mode by default
+- it can be 1d to 3d
+- according to `nn.AvgPool2d`, by default `stride` is equal to `ks`
+
+```python
 #|export
 def AvgPool(ks=2, stride=None, padding=0, ndim=2, ceil_mode=False):
     "nn.AvgPool layer for `ndim`"
@@ -890,7 +1234,17 @@ def AvgPool(ks=2, stride=None, padding=0, ndim=2, ceil_mode=False):
     return getattr(nn, f"AvgPool{ndim}d")(ks, stride=stride, padding=padding, ceil_mode=ceil_mode)
 ```
 
+```python
+AvgPool()
+AvgPool(3, 5, 2, 3)
+```
+
 ## Embeddings
+
+### ```trunc_normal_(x, mean=0., std=1.)```
+official: Truncated normal initialization (approximation)
+
+This is to implement a finding from a paper. There is discussion on how to implement it. https://discuss.pytorch.org/t/implementing-truncated-normal-initializer/4778/12
 
 ```python
 #|export
@@ -900,6 +1254,13 @@ def trunc_normal_(x, mean=0., std=1.):
     return x.normal_().fmod_(2).mul_(std).add_(mean)
 ```
 
+### ```Embedding(nn.Embedding)```
+official: Embedding layer with truncated normal initialization
+
+- is a subclass of `nn.Embedding`
+- instantiate an embedding layer with `nn.Embedding(num_input, n_features, std=0.01)`
+- then apply truncated normalization on the weight using std=0.01 by default
+
 ```python
 #|export
 class Embedding(nn.Embedding):
@@ -907,6 +1268,10 @@ class Embedding(nn.Embedding):
     def __init__(self, ni, nf, std=0.01):
         super().__init__(ni, nf)
         trunc_normal_(self.weight.data, std=std)
+```
+
+```python
+Embedding(10, 5)
 ```
 
 Truncated normal initialization bounds the distribution to avoid large value. For a given standard deviation `std`, the bounds are roughly `-2*std`, `2*std`.
@@ -921,6 +1286,14 @@ test_close(tst.weight.std(), std, 0.1)
 ```
 
 ## Self attention
+
+### ```SelfAttention(Module)```
+official: Self attention layer for `n_channels`.
+
+To build SelfAttention from scratch, key implementation details is discussed below
+- `sa = SelfAttention(n_channels)` to instantiate a SelfAttention layer
+- during instantiation, 3 conv1d layers are created with `n_in`, `n_out` calculated based on `n_channels`
+- the forward function is to implement the paper in the link below
 
 ```python
 #|export
@@ -949,6 +1322,11 @@ Initially, no change is done to the input. This is controlled by a trainable par
 
 ```python
 tst = SelfAttention(16)
+tst
+tst.gamma.data
+```
+
+```python
 x = torch.randn(32, 16, 8, 8)
 test_eq(tst(x),x)
 ```
@@ -959,9 +1337,15 @@ Then during training `gamma` will probably change since it's a trainable paramet
 tst.gamma.data.fill_(1.)
 y = tst(x)
 test_eq(y.shape, [32,16,8,8])
+test_ne(y, x)
 ```
 
 The attention mechanism requires three matrix multiplications (here represented by 1x1 convs). The multiplications are done on the channel level (the second dimension in our tensor) and we flatten the feature map (which is 8x8 here). As in the paper, we note `f`, `g` and `h` the results of those multiplications.
+
+```python
+tst.query
+tst.query[0]
+```
 
 ```python
 q,k,v = tst.query[0].weight.data,tst.key[0].weight.data,tst.value[0].weight.data
@@ -981,6 +1365,11 @@ out = torch.bmm(h.transpose(1,2), beta)
 test_eq(out.shape, [32, 16, 64])
 test_close(y, x + out.view(32, 16, 8, 8), eps=1e-4)
 ```
+
+### ```PooledSelfAttention2d(Module)```
+official: Pooled self attention layer for 2d.
+
+Implemented from scratch and build with the template of `SelfAttention`, and the difference between `SelfAttention` is discussed below
 
 ```python
 #|export
@@ -1010,6 +1399,18 @@ Self-attention layer used in the [Big GAN paper](https://arxiv.org/abs/1809.1109
 It uses the same attention as in `SelfAttention` but adds a max pooling of stride 2 before computing the matrices `g` and `h`: the attention is ported on one of the 2x2 max-pooled window, not the whole feature map. There is also a final matrix product added at the end to the output, before retuning `gamma * out + x`.
 
 ```python
+PooledSelfAttention2d(8)
+```
+
+### ```_conv1d_spect(ni:int, no:int, ks:int=1, stride:int=1, padding:int=0, bias:bool=False)```
+official : Create and initialize a `nn.Conv1d` layer with spectral normalization.
+
+- create a conv1d layer with `nn.Conv1d(ni, no, ks, stride=stride, padding=padding, bias=bias)`
+- initialize it with `nn.init.kaiming_normal_(conv.weight)`
+- if `bias=True`, make them zero
+- run spectral normalization on this conv layer and return it
+
+```python
 #|export
 def _conv1d_spect(ni:int, no:int, ks:int=1, stride:int=1, padding:int=0, bias:bool=False):
     "Create and initialize a `nn.Conv1d` layer with spectral normalization."
@@ -1018,6 +1419,12 @@ def _conv1d_spect(ni:int, no:int, ks:int=1, stride:int=1, padding:int=0, bias:bo
     if bias: conv.bias.data.zero_()
     return spectral_norm(conv)
 ```
+
+```python
+_conv1d_spect(3,2)
+```
+
+### ```SimpleSelfAttention(self, n_in:int, ks=1, sym=False)```
 
 ```python
 #|export
@@ -1050,12 +1457,17 @@ PixelShuffle introduced in [this article](https://arxiv.org/pdf/1609.05158.pdf) 
 
 <img src="images/pixelshuffle.png" alt="Pixelshuffle" width="800" />
 
+### ```icnr_init(x, scale=2, init=nn.init.kaiming_normal_)```
+official: ICNR init of `x`, with `scale` and `init` function
+
 ```python
 #|export
+# @snoop
 def icnr_init(x, scale=2, init=nn.init.kaiming_normal_):
     "ICNR init of `x`, with `scale` and `init` function"
     ni,nf,h,w = x.shape
     ni2 = int(ni/(scale**2))
+#     pp(x.new_zeros([ni2,nf,h,w]).shape, init(x.new_zeros([ni2,nf,h,w])).shape)
     k = init(x.new_zeros([ni2,nf,h,w])).transpose(0, 1)
     k = k.contiguous().view(ni2, nf, -1)
     k = k.repeat(1, 1, scale**2)
@@ -1069,16 +1481,30 @@ ICNR init was introduced in [this article](https://arxiv.org/abs/1707.02937). It
 ```python
 tst = torch.randn(16*4, 32, 1, 1)
 tst = icnr_init(tst)
+```
+
+```python
 for i in range(0,16*4,4):
     test_eq(tst[i],tst[i+1])
     test_eq(tst[i],tst[i+2])
     test_eq(tst[i],tst[i+3])
 ```
 
+### ```PixelShuffle_ICNR(nn.Sequential)```
+official: Upsample by `scale` from `ni` filters to `nf` (default `ni`), using `nn.PixelShuffle`.
+
+- subclass of `nn.Sequential`
+- if `nf` is None, set it to be `ni`
+- create a list of layers, by default they are Conv2d, ReLU, PixelShuffle
+- if NormType.Weight, apply ICNR init to Conv2d's weight_v, and weight_g
+- if blur, add nn.ReplicationPad2d, nn.AvgPool2d to the layers list
+- finally, put all the layers into the Sequential block
+
 ```python
 #|export
 class PixelShuffle_ICNR(nn.Sequential):
     "Upsample by `scale` from `ni` filters to `nf` (default `ni`), using `nn.PixelShuffle`."
+#     @snoop
     def __init__(self, ni, nf=None, scale=2, blur=False, norm_type=NormType.Weight, act_cls=defaults.activation):
         super().__init__()
         nf = ifnone(nf, ni)
@@ -1099,9 +1525,26 @@ The `blur` option comes from [Super-Resolution using Convolutional Neural Networ
 
 ```python
 psfl = PixelShuffle_ICNR(16)
+psfl
+psfl[0][0]
+psfl[0][1]
+psfl[1]
+```
+
+```python
 x = torch.randn(64, 16, 8, 8)
 y = psfl(x)
+ic(psfl(x).shape)
+ic(psfl[0][0](x).shape)
+layer1 = psfl[0][0](x)
+ic(psfl[0][1](layer1).shape)
+layer2 = psfl[0][1](layer1)
+ic(psfl[1](layer2).shape)
+
 test_eq(y.shape, [64, 16, 16, 16])
+```
+
+```python
 #ICNR init makes every 2x2 window (stride 2) have the same elements
 for i in range(0,16,2):
     for j in range(0,16,2):
@@ -1138,6 +1581,14 @@ for i in range(0,16,2):
 
 ## Sequential extensions
 
+### ```sequential(*args)```
+official: Create an `nn.Sequential`, wrapping items with `Lambda` if needed"
+
+```python
+# help(Lambda)
+# help(nn.ReLU)
+```
+
 ```python
 #|export
 def sequential(*args):
@@ -1150,11 +1601,28 @@ def sequential(*args):
 ```
 
 ```python
+Lambda(nn.ReLU)
+```
+
+```python
+sequential()
+sequential([nn.ReLU, nn.Linear])
+```
+
+### ```SequentialEx(Module)```
+official: Like `nn.Sequential`, but with ModuleList semantics, and can access module input"
+
+To build a block of layers and let x pass through them one after another and each layer's input remembers the original input
+- This is useful to write layers that require to remember the input (like a resnet block) in a sequential way.
+- the input is remembered as `x.orig` or `res.orig` before running `l(res)` so that `MergeLayer.forward(res)` defined below can utilize `res.orig` before setting to None
+
+```python
 #|export
 class SequentialEx(Module):
     "Like `nn.Sequential`, but with ModuleList semantics, and can access module input"
     def __init__(self, *layers): self.layers = nn.ModuleList(layers)
 
+#     @snoop
     def forward(self, x):
         res = x
         for l in self.layers:
@@ -1173,30 +1641,63 @@ class SequentialEx(Module):
 
 This is useful to write layers that require to remember the input (like a resnet block) in a sequential way.
 
+### ```MergeLayer(Module)```
+official: Merge a shortcut with the result of the module by adding them or concatenating them if `dense=True`.
+
+- MergeLayer() turns to be the last layer of the layer block, so `x` for MergeLayer.forward is usually the output of last layer
+- since MergeLayer is used inside SequentialEx, `x` will bring the original input `x.orig` into `MergeLayer.forward` to process
+- if `dense=False`, the output shape won't change as `x + x.orig`
+- if `dense=True`, the output shape (2nd dim) will double due to `torch.concat([x, x.orig], dim=1)`
+
 ```python
 #|export
 class MergeLayer(Module):
     "Merge a shortcut with the result of the module by adding them or concatenating them if `dense=True`."
     def __init__(self, dense:bool=False): self.dense=dense
-    def forward(self, x): return torch.cat([x,x.orig], dim=1) if self.dense else (x+x.orig)
+#     @snoop
+    def forward(self, x): 
+#         return torch.cat([x,x.orig], dim=1) if self.dense else (x+x.orig)
+        if self.dense:
+            return torch.cat([x,x.orig], dim=1) 
+        else: 
+            return (x+x.orig)        
 ```
 
 ```python
+x = torch.randn(32, 16, 8, 8)
+res_block = SequentialEx(ConvLayer(16, 16), ConvLayer(16,16))
+y = res_block(x)
+test_eq(y.shape, (32, 16, 8, 8))
+test_eq(y.orig, None)
+```
+
+```python
+res_block.append(MergeLayer()) # just to test append - normally it would be in init params
+y1 = res_block(x)
+test_eq(y1.shape, [32, 16, 8, 8])
+test_eq(y1.orig, None)
+```
+
+```python
+x = torch.randn(32, 16, 8, 8)
 res_block = SequentialEx(ConvLayer(16, 16), ConvLayer(16,16))
 res_block.append(MergeLayer()) # just to test append - normally it would be in init params
-x = torch.randn(32, 16, 8, 8)
 y = res_block(x)
-test_eq(y.shape, [32, 16, 8, 8])
 test_eq(y, x + res_block[1](res_block[0](x)))
 ```
 
 ```python
-x = TensorBase(torch.randn(32, 16, 8, 8))
+res_block.append(MergeLayer(True)) # just to test append - normally it would be in init params
 y = res_block(x)
-test_is(y.orig, None)
+test_eq(y.shape, [32, 32, 8, 8])
 ```
 
 ## Concat
+
+### ```Cat(nn.ModuleList)```
+official: Concatenate layers outputs over a given dim
+
+by default, the outputs of all layers inside the ModuleList will be concatenated on 2nd dim
 
 
 Equivalent to keras.layers.Concatenate, it will concat the outputs of a ModuleList over a given dimension (default the filter dimension)
@@ -1215,16 +1716,28 @@ class Cat(nn.ModuleList):
 layers = [ConvLayer(2,4), ConvLayer(2,4), ConvLayer(2,4)] 
 x = torch.rand(1,2,8,8) 
 cat = Cat(layers) 
+cat
+```
+
+```python
 test_eq(cat(x).shape, [1,12,8,8]) 
-test_eq(cat(x), torch.cat([l(x) for l in layers], dim=1))
+test_eq(cat(x), torch.cat([ic(l(x)) for l in layers], dim=1)) # a good use case for ic
 ```
 
 ## Ready-to-go models
+
+### ```SimpleCNN(nn.Sequential)```
+Create a simple CNN with `filters`.
+
+- use `filters` like `[8, 16, 32]` to define `kernel_szs` and `strides`, and the number of Conv layers to create
+- then add a PoolFlatten layer
+- finally put them all into a Sequential block
 
 ```python
 #|export
 class SimpleCNN(nn.Sequential):
     "Create a simple CNN with `filters`."
+#     @snoop
     def __init__(self, filters, kernel_szs=None, strides=None, bn=True):
         nl = len(filters)-1
         kernel_szs = ifnone(kernel_szs, [3]*nl)
@@ -1239,7 +1752,14 @@ The model is a succession of convolutional layers from `(filters[0],filters[1])`
 
 ```python
 tst = SimpleCNN([8,16,32])
+tst
+```
+
+```python
 mods = list(tst.children())
+```
+
+```python
 test_eq(len(mods), 3)
 test_eq([[m[0].in_channels, m[0].out_channels] for m in mods[:2]], [[8,16], [16,32]])
 ```
@@ -1260,6 +1780,11 @@ mods = list(tst.children())
 test_eq([m[0].stride for m in mods[:2]], [(1,1),(2,2)])
 ```
 
+### ```ProdLayer(Module)```
+official: Merge a shortcut with the result of the module by multiplying them.
+
+check ```MergeLayer``` doc for better understanding of ProdLayer
+
 ```python
 #|export
 class ProdLayer(Module):
@@ -1267,10 +1792,15 @@ class ProdLayer(Module):
     def forward(self, x): return x * x.orig
 ```
 
+### ```inplace_relu```
+
 ```python
 #|export
 inplace_relu = partial(nn.ReLU, inplace=True)
 ```
+
+### ```SEModule(ch, reduction, act_cls=defaults.activation)```
+Use SequentialEx to put AdaptiveAvgPool2d, 2 ConvLayer, ProdLayer together
 
 ```python
 #|export
@@ -1282,10 +1812,24 @@ def SEModule(ch, reduction, act_cls=defaults.activation):
                         ProdLayer())
 ```
 
+### ```ResBlock(Module)```
+official: Resnet block from `ni` to `nh` with `stride`
+
+- user inputs without default: `expansion`, `ni`, `nf`
+- `norm2` is to choose between `BatchZero`, `InstanceZero`, or other `norm_type`
+- `nh1` and `nh2` are defined by `nf`
+- `nf` and `ni` is multiplied with `expansion`
+- `k0`, `k1` are two dicts of norm_type, act_cls, ndim, and `**kwargs`
+- `convpath`: a list of ConvLayers; if expansion == 1, 2 ConvLayers; otherwise, 3 ConvLayers
+- if reduction, then add SEModule layer block
+- if sa: 
+
+
 ```python
 #|export
 class ResBlock(Module):
     "Resnet block from `ni` to `nh` with `stride`"
+    @snoop
     @delegates(ConvLayer.__init__)
     def __init__(self, expansion, ni, nf, stride=1, groups=1, reduction=None, nh1=None, nh2=None, dw=False, g2=1,
                  sa=False, sym=False, norm_type=NormType.Batch, act_cls=defaults.activation, ndim=2, ks=3,
@@ -1318,6 +1862,10 @@ class ResBlock(Module):
 This is a resnet block (normal or bottleneck depending on `expansion`, 1 for the normal block and 4 for the traditional bottleneck) that implements the tweaks from [Bag of Tricks for Image Classification with Convolutional Neural Networks](https://arxiv.org/abs/1812.01187). In particular, the last batchnorm layer (if that is the selected `norm_type`) is initialized with a weight (or gamma) of zero to facilitate the flow from the beginning to the end of the network. It also implements optional [Squeeze and Excitation](https://arxiv.org/abs/1709.01507) and grouped convs for [ResNeXT](https://arxiv.org/abs/1611.05431) and similar models (use `dw=True` for depthwise convs).
 
 The `kwargs` are passed to `ConvLayer` along with `norm_type`.
+
+```python
+ResBlock(1, 4, 2)
+```
 
 ```python
 #|export
