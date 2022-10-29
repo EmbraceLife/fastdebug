@@ -1,0 +1,109 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="Discover &amp; share this Angry Duck Sticker for iOS and Android. Bring your texts and messages to life with our collection of GIPHY Stickers.">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+        <meta property="fb:app_id" content="406655189415060">
+    <meta property="og:site_name" content="GIPHY">
+    <meta property="og:url" content="https://i.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.gif">
+    <meta property="og:title" content="T-Rex Crying Sticker by Angry Duck for iOS &amp; Android | GIPHY">
+    <meta property="og:description" content="Discover &amp; share this Angry Duck Sticker for iOS and Android. Bring your texts and messages to life with our collection of GIPHY Stickers.">
+
+    
+
+    
+    <meta property="og:type" content="video.other">
+    <meta property="og:image" content="https://i.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.gif">
+    <meta property="og:image:type" content="image/gif">
+    <meta property="og:image:width" content="400">
+    <meta property="og:image:height" content="480">
+    
+    
+    <meta property="og:video" content="https://i.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.mp4">
+    <meta property="og:video:url" content="https://i.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.mp4">
+    <meta property="og:video:secure_url" content="https://i.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.mp4">
+    <meta property="og:video:type" content="video/mp4">
+    <meta property="og:video:width" content="400">
+    <meta property="og:video:height" content="480">
+    
+
+    <meta name="twitter:account_id" content="1020383864" />
+    <meta name="twitter:card" content="player">
+    <meta name="twitter:title" content="T-Rex Crying Sticker by Angry Duck for iOS &amp; Android | GIPHY">
+    <meta name="twitter:creator" content="@giphy">
+    <meta name="twitter:site" content="@giphy">
+    <meta name="twitter:description" content="Discover &amp; share this Angry Duck Sticker for iOS and Android. Bring your texts and messages to life with our collection of GIPHY Stickers.">
+    
+    <meta name="twitter:image:src" content="https://i.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy_s.gif">
+    <meta name="twitter:image" content="https://i.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy_s.gif">
+    
+    <meta name="twitter:domain" content="giphy.com">
+
+    
+    <meta name="twitter:player" content="https://giphy.com/embed/TcewOTG9tkj1kr9oMW/twitter/iframe">
+    <meta name="twitter:player:width" content="435">
+    <meta name="twitter:player:height" content="522">
+    
+
+    
+    <meta name="rating" content="general">
+    <meta name="image:rating" content="g">
+    
+
+    <!-- /twitter seo -->
+
+    <meta name="description" content="Discover &amp; share this Angry Duck Sticker for iOS and Android. Bring your texts and messages to life with our collection of GIPHY Stickers."/>
+    <meta name="author" content="GIPHY"/>
+    <meta name="keywords" content="transparent, crying, trex, t-rex, unlucky, bad luck, angry duck, poor t-rex, GIF, Animated GIF">
+    <meta name="pinterest" content="nohover">
+
+    
+    <link rel="alternate" type="application/json+oembed" href="https://giphy.com/services/oembed?url=https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.gif" title="T-Rex Crying Sticker by Angry Duck for iOS &amp; Android | GIPHY oEmbed Lookup" />
+    
+    <title>T-Rex Crying Sticker by Angry Duck for iOS &amp; Android | GIPHY</title>
+  </head>
+  <body style="background-color:#121212">
+    <article class="media">
+        
+    </article>
+
+    <!--DIDOMI-->
+    <script type="text/javascript">window.gdprAppliesGlobally=true;(function(){function a(e){if(!window.frames[e]){if(document.body&&document.body.firstChild){var t=document.body;var n=document.createElement("iframe");n.style.display="none";n.name=e;n.title=e;t.insertBefore(n,t.firstChild)}
+      else{setTimeout(function(){a(e)},5)}}}function e(n,r,o,c,s){function e(e,t,n,a){if(typeof n!=="function"){return}if(!window[r]){window[r]=[]}var i=false;if(s){i=s(e,t,n)}if(!i){window[r].push({command:e,parameter:t,callback:n,version:a})}}e.stub=true;function t(a){if(!window[n]||window[n].stub!==true){return}if(!a.data){return}
+      var i=typeof a.data==="string";var e;try{e=i?JSON.parse(a.data):a.data}catch(t){return}if(e[o]){var r=e[o];window[n](r.command,r.parameter,function(e,t){var n={};n[c]={returnValue:e,success:t,callId:r.callId};a.source.postMessage(i?JSON.stringify(n):n,"*")},r.version)}}
+      if(typeof window[n]!=="function"){window[n]=e;if(window.addEventListener){window.addEventListener("message",t,false)}else{window.attachEvent("onmessage",t)}}}e("__tcfapi","__tcfapiBuffer","__tcfapiCall","__tcfapiReturn");a("__tcfapiLocator");(function(e){
+        var t=document.createElement("script");t.id="spcloader";t.type="text/javascript";t.async=true;t.src="https://sdk.privacy-center.org/"+e+"/loader.js?target="+document.location.hostname;t.charset="utf-8";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n)})("8878f527-7872-49a5-abd4-f6b2e56cb64a")})();</script>          <!-- END DIDOMI -->
+
+    <!-- Google Analytics -->
+    <script type="didomi/javascript" data-vendor="c:googleana-jHcphUGX">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-38174542-34', 'auto');
+    ga('require', 'GTM-WXRB58X');
+    
+    ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
+    <script src="/static/dist/runtime.55877b23.bundle.js"></script>
+    <script src="/static/dist/mediaLanding.2f94d7df.bundle.js"></script>
+    <script>
+        var Giphy = Giphy || {};
+        if (Giphy.renderMediaLanding) {
+            Giphy.renderMediaLanding(document.querySelector('.media'), {
+                gif: {"id": "TcewOTG9tkj1kr9oMW", "title": "T-Rex Crying Sticker by Angry Duck", "images": {"looping": {"mp4": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy-loop.mp4", "mp4_size": 146294}, "source": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/source.gif", "width": 400, "height": 480, "size": 36465}, "downsized": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.gif", "width": 400, "height": 480, "size": 29311}, "downsized_large": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.gif", "width": 400, "height": 480, "size": 29311}, "downsized_medium": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.gif", "width": 400, "height": 480, "size": 29311}, "downsized_small": {"width": 400, "height": 480, "mp4": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy-downsized-small.mp4", "mp4_size": 30342}, "downsized_still": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy_s.gif", "width": 400, "height": 480, "size": 29311}, "fixed_height": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200.gif", "width": 167, "height": 200, "size": 9085, "mp4": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200.mp4", "mp4_size": 11402, "webp": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200.webp", "webp_size": 14684}, "fixed_height_downsampled": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200_d.gif", "width": 167, "height": 200, "size": 9085, "webp": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200_d.webp", "webp_size": 14222}, "fixed_height_small": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/100.gif", "width": 84, "height": 100, "size": 4400, "mp4": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/100.mp4", "mp4_size": 5430, "webp": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/100.webp", "webp_size": 6578}, "fixed_height_small_still": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/100_s.gif", "width": 84, "height": 100, "size": 1562}, "fixed_height_still": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200_s.gif", "width": 167, "height": 200, "size": 3530}, "fixed_width": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200w.gif", "width": 200, "height": 240, "size": 11226, "mp4": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200w.mp4", "mp4_size": 14006, "webp": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200w.webp", "webp_size": 22638}, "fixed_width_downsampled": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200w_d.gif", "width": 200, "height": 240, "size": 11226, "webp": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200w_d.webp", "webp_size": 17466}, "fixed_width_small": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/100w.gif", "width": 100, "height": 120, "size": 5492, "mp4": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/100w.mp4", "mp4_size": 6551, "webp": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/100w.webp", "webp_size": 9270}, "fixed_width_small_still": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/100w_s.gif", "width": 100, "height": 120, "size": 2359}, "fixed_width_still": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/200w_s.gif", "width": 200, "height": 240, "size": 4256}, "original": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.gif", "width": 400, "height": 480, "size": 29311, "frames": 3, "hash": "e9765eda55fb315195edbdcc8cac2c3e", "mp4": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.mp4", "mp4_size": 39640, "webp": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.webp", "webp_size": 35142}, "original_mp4": {"width": 480, "height": 576, "mp4": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy.mp4", "mp4_size": 39640}, "original_still": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy_s.gif", "width": 400, "height": 480, "size": 11480}, "preview": {"width": 400, "height": 480, "mp4": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy-preview.mp4", "mp4_size": 30342}, "preview_gif": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy-preview.gif", "width": 400, "height": 480, "size": 36465}, "preview_webp": {"url": "https://media3.giphy.com/media/TcewOTG9tkj1kr9oMW/giphy-preview.webp", "width": 400, "height": 480, "size": 35142}}, "is_video": false, "tags": ["transparent", "crying", "trex", "t-rex", "unlucky", "bad luck", "angry duck", "poor t-rex"], "cta": {"text": "", "link": ""}, "featured_tags": [], "embed_url": "https://giphy.com/embed/TcewOTG9tkj1kr9oMW", "relative_url": "/gifs/t-rex-trex-poor-TcewOTG9tkj1kr9oMW", "type": "sticker", "index_id": 77533456, "slug": "t-rex-trex-poor-TcewOTG9tkj1kr9oMW", "url": "https://giphy.com/gifs/t-rex-trex-poor-TcewOTG9tkj1kr9oMW", "short_url": "https://gph.is/st/ENAAb2m", "bitly_url": "https://gph.is/st/ENAAb2m", "username": "angryduck", "rating": "g", "source_image_url": "/tmp/akka-http-upload2506718107688408475.tmp.gif", "source_post_url": "http://www.argaankan.com/aboutz.html", "source_content_url": "", "source_tld": "www.argaankan.com", "source_domain": "http://www.argaankan.com", "source_caption": "", "source_body": "", "has_attribution": false, "is_hidden": false, "is_removed": false, "is_community": false, "is_anonymous": false, "is_featured": false, "is_realtime": false, "is_indexable": false, "is_sticker": true, "is_preserve_size": false, "is_trending": false, "gps_no_trend": false, "create_datetime": "2019-05-08T20:36:59+0000", "update_datetime": "2019-06-19T14:04:54+0000", "trending_datetime": null, "external_media": null, "import_type": null, "user": {"id": 10129111, "username": "angryduck", "avatar_url": "https://media.giphy.com/avatars/angryduck/Jl5GHJc20yF1.gif", "display_name": "Angry Duck", "user_type": "artist", "twitter": "", "is_public": true, "is_verified": true, "is_freelance": true, "is_community": false, "suppress_chrome": false, "website_url": "https://argaankan.com/characters.html", "twitter_url": null, "facebook_url": "https://www.facebook.com/argaankan/", "instagram_url": "https://instagram.com/argaankan", "tumblr_url": "https://argaankan.tumblr.com", "tiktok_url": "https://tiktok.com/@angryduckworld", "youtube_url": "https://www.youtube.com/c/ArgaAnkanAngryDuck", "attribution_display_name": "Angry Duck", "disable_freelance_popup": false, "name": "Angry Duck", "about_bio": "Angry Duck is an anarchist who is only nice to whose who deserve it. He has his own rules for dealing with douches. He sometimes wears ladies shoes and he doesn't care what anyone thinks of him. He is surrounded by other characters that often makes life harder, so he needs to sort them out. Get to know them all! Angry Duck is a registered trademark ;)", "description": "Angry Duck is an anarchist who is only nice to whose who deserve it. He has his own rules for dealing with douches. He sometimes wears ladies shoes and he doesn't care what anyone thinks of him. He is surrounded by other characters that often makes life harder, so he needs to sort them out. Get to know them all! Angry Duck is a registered trademark ;)", "profile_url": "/angryduck", "website_display_url": "argaankan.com"}},
+                giphyUrl: 'https://giphy.com/',
+                renditionFilename: 'source.gif',
+                trackingQueryString: 'utm_source=media-link&utm_medium=landing&utm_campaign=Media%20Links&utm_term='
+            });
+        }
+    </script>
+  </body>
+</html>

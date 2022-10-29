@@ -24,10 +24,38 @@ from fastai.layers import *
 ```
 #|hide
 from nbdev.showdoc import *
+from fastdebug.utils import *
 ```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+```
+import fastai.losses as fl
+```
+
+
+```
+whatinside(fl)
+```
+
+    fastai.losses has: 
+    11 items in its __all__, and 
+    334 user defined functions, 
+    178 classes or class objects, 
+    4 builtin funcs and methods, and
+    535 callables.
+    
+    None
+
 
 # Loss Functions
 > Custom fastai loss functions
+
+### ```BaseLoss()```
+Same as `loss_cls`, but flattens input and target.
 
 
 ```
@@ -533,7 +561,7 @@ plt.imshow(target);
 
 
     
-![png](src_fastai_001a_losses_files/src_fastai_001a_losses_35_0.png)
+![png](src_fastai_001a_losses_files/src_fastai_001a_losses_38_0.png)
     
 
 

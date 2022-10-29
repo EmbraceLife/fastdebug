@@ -20,6 +20,150 @@ jupyter:
 #| default_exp utils
 ```
 
+```python
+#| export
+from __future__ import annotations
+annotations = annotations
+```
+
+## Plotting
+basic plotting [lines](https://www.geeksforgeeks.org/graph-plotting-python-set-3/), [animation](https://www.geeksforgeeks.org/graph-plotting-python-set-3/)
+
+
+### single_func plot
+
+```python
+#| export
+def plot_func(x, y, label_x=None, label_y=None, title=None):
+    import matplotlib.pyplot as plt
+    plt.plot(x, y)
+
+    # naming the x axis
+    plt.xlabel(label_x)
+    # naming the y axis
+    plt.ylabel(label_y)
+
+    # giving a title to my graph
+    plt.title(title)
+
+    # function to show the plot
+    plt.show()
+
+```
+
+```python
+plot_func(x, y, 'x - axis', 'y - axis', 'My first graph!')
+```
+
+### multiple-line plot
+
+```python
+#| export
+# @snoop
+def plot_funcs(*lines, # eg., (x1,y1, "line1"),(x2,y2, "line2"), (y1, y2, "line3")
+               label_x=None, 
+               label_y=None, 
+               title=None, 
+               ax_center=False):
+    import matplotlib.pyplot as plt
+
+    if ax_center:
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        ax.spines['left'].set_position('center') 
+        ax.spines['bottom'].set_position('center') 
+    #     ax.spines['right'].set_position('center') # has no y ticks, so no use for us
+    #     ax.spines['top'].set_position('center') # has no x ticks, so no use for us
+        ax.spines['right'].set_color('none') # make the right side line (of the box) disappear
+        ax.spines['top'].set_color('none') # make the left side line (of the box) disappear
+    
+        ax.xaxis.set_ticks_position('bottom')
+        ax.yaxis.set_ticks_position('left')
+    
+    plt.xlabel(label_x, loc='right')
+    plt.ylabel(label_y, loc='bottom')
+    
+    xys_lst = [(l[0], l[1], l[2]) for l in lines]
+    for idx, xys in enumerate(xys_lst):
+        plt.plot(xys[0], xys[1], label=xys[2])
+
+    plt.title(title)
+    plt.legend()
+    plt.show()
+#     # add color and other features
+#     plt.plot(x, y, color='green', linestyle='dashed', linewidth = 3,
+#          marker='o', markerfacecolor='blue', markersize=12)
+```
+
+```python
+x1 = [1,2,3]
+y1 = [2,4,1]
+x2 = [1,2,3]
+y2 = [4,1,3]
+plot_funcs((x1,y1, "line1"),(x2,y2, "line2"), (y1, y2, "line3"), label_x='x - axis', label_y='y - axis', title='My first graph!')
+plot_funcs((x1,y1, "line1"),(x2,y2, "line2"), (y1, y2, "line3"), label_x='x - axis', label_y='y - axis', title='My first graph!', ax_center=True)
+```
+
+```python
+len((1,2))
+```
+
+```python
+#| export
+# @snoop
+def plot_fns(*funcs, # eg., (func1, ), (func2, ) or (func2, 'x**2'), (func1, 'log(x)')
+               label_x=None, 
+               label_y=None, 
+               title=None, 
+               ax_center=False):
+    import matplotlib.pyplot as plt
+
+    if ax_center:
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        ax.spines['left'].set_position('center') 
+        ax.spines['bottom'].set_position('center') 
+        ax.spines['right'].set_color('none') # make the right side line (of the box) disappear
+        ax.spines['top'].set_color('none') # make the left side line (of the box) disappear
+    
+        ax.xaxis.set_ticks_position('bottom')
+        ax.yaxis.set_ticks_position('left')
+
+    plt.xlabel(label_x, loc='right')
+    plt.ylabel(label_y, loc='bottom')
+    
+    fnlb_lst = [(f[0], f[1]) if len(f) > 1 else (f[0],) for f in funcs ]
+    
+    import torch, numpy as np
+    for fnlb in fnlb_lst:
+        if "np" in inspect.getsource(fnlb[0] ):
+            x = np.linspace(-np.pi,np.pi,100)
+        elif "torch" in inspect.getsource(fnlb[0] ):
+            x = torch.linspace(-torch.pi, torch.pi, 100)
+
+    from fastai.torch_core import ifnone
+    for idx, fnlb in enumerate(fnlb_lst):
+        plt.plot(x, fnlb[0](x), label=fnlb[1] if len(fnlb)>1 else "line {}".format(idx))
+
+    plt.title(title)
+    plt.legend() # plt.legend(loc='upper left')
+    plt.show()
+#     # add color and other features
+#     plt.plot(x, y, color='green', linestyle='dashed', linewidth = 3,
+#          marker='o', markerfacecolor='blue', markersize=12)
+```
+
+```python
+inspect.getsource(func2)
+```
+
+```python
+func1 = lambda x: x**2
+func2 = lambda x: torch.log(x) # torch.log(x)
+plot_fns((func1, "x**2"), (func2, "log(x)"), label_x='x - axis', label_y='y - axis', title='My first graph!', ax_center=True)
+plot_fns((func1, ), (func2, ), label_x='x - axis', label_y='y - axis', title='My first graph!', ax_center=True)
+```
+
 ## doc from fastai.torch_core
 
 ```python
@@ -152,7 +296,7 @@ ic(x2)
 ic = ic
 ```
 
-## snoop: pp, pp.deep, @snoop, %%snoop, watches
+## snoop: pp, @snoop, doc_sig, pp.deep,%%snoop, watches
 
 ```python
 #| export
@@ -163,6 +307,50 @@ from snoop import snoop, pp
 #| export
 snoop = snoop
 pp = pp
+```
+
+```python
+from fastcore.foundation import L
+from fastai.torch_core import tensor
+```
+
+```python
+tensor(1,2,3).__len__()
+L([1,2,3]).__len__()
+```
+
+```python
+#| export
+def chk(obj):
+    tp = type(obj)
+    length = obj.__len__() if hasattr(obj, '__len__') else "no length"
+    shape = obj.shape if hasattr(obj, 'shape') else "no shape"
+    return tp, length, shape
+```
+
+```python
+#| export
+def doc_sig(func):
+    import inspect
+    sig = inspect.signature(func) if callable(func) else "no signature"
+    doc = inspect.getdoc(func) if inspect.getdoc(func) != None else "no doc"
+    return  getattr(func, '__mro__', "no mro"), doc, sig
+```
+
+```python
+#| export
+def doc_sig_complex(func):
+    import inspect        
+    if not inspect.isfunction(func) or not inspect.ismethod(func):
+        func = getattr(func, '__class__', None)
+        if func == None: 
+            info = 'not a func, method, nor a class'
+        else: 
+            info = "it's a class"
+    doc = inspect.getdoc(func) if hasattr(func, '__doc__') else "no doc"
+    sig = inspect.signature(func) if callable(func) else "no signature"
+    mro = getattr(func, '__mro__', "no mro")
+    return info, doc, sig, mro
 ```
 
 ```python
@@ -210,7 +398,8 @@ def snoop_onoff(on=True):
     "activate or deactivate @snoop, pp, but not %%snoop in a cell which is activated by %load_ext snoop"
     import snoop
     from snoop.configuration import len_shape_watch
-    snoop.install(replace_watch_extras=[type_watch, len_shape_watch, sig_watch, stats_watch])
+#     snoop.install(replace_watch_extras=[type_watch, len_shape_watch, sig_watch, stats_watch])
+    snoop.install(replace_watch_extras=[]) # this is much simpler to read
 
 ```
 
@@ -1327,7 +1516,7 @@ def openNB(name, folder='nbs/demos/', db=False):
 ```
 
 ```python
-#| export
+
 def openNB(name, db=False):
     "Get a link to the notebook at by searching keyword or notebook name"
     _, _, ipynbs, _, _, _= get_all_nbs()
@@ -1353,7 +1542,34 @@ def openNB(name, db=False):
 ```
 
 ```python
+#| export
+def openNB(name, heading=None, db=False):
+    "Get a link to the notebook at by searching keyword or notebook name"
+    _, _, ipynbs, _, _, _= get_all_nbs()
+    name = name.split(".md")[0]
+    root = getrootport()[1]
+    nb_path = ""
+    for f in ipynbs:
+        if name in f:
+            nb_path = f
+            name = f.split("/")[-1].split(".")[0]
+            if db: print(f'nb_path:{nb_path}, name: {name}')
+    root_server = getrootport()[0]
+    folder_mid = nb_path.split(root)[1].split(name)[0]
+    if db: print(f'root: {root}, root_server: {root_server}, name: {name}, folder_mid: {folder_mid}')
+    path = root + folder_mid
+    path_server = root_server[:-1] + folder_mid
+    if db: print(f'path: {path}, path_server: {path_server}')
+    for f in os.listdir(path):  
+        if f.endswith(".ipynb"):
+            if name in f: 
+                file_name = path_server + f + "#" + heading if bool(heading) else path_server + f
+                jn_link(name, file_name)
+```
 
+```python
+bool(None)
+bool("head")
 ```
 
 ```python
@@ -1808,8 +2024,10 @@ fastnbs() can use keywords to search learning points (a section title and a sect
 
 ```python
 #| export
+# @snoop
 def fastnbs(question:str, # query in string
             filter_folder="all", # options: all, fastai, part2, src
+            strict=False, # loose search keyword, not as the first query word
             output=False, # True for nice print of cell output
             accu:float=0.8, 
             nb=True, 
@@ -1839,29 +2057,58 @@ use fastnbs() display the entire learning points section including notes and cod
                 if l.startswith("## ") or l.startswith("### ") or l.startswith("#### "):
                     truelst = [q.lower() in l.lower() for q in questlst]
                     pct = sum(truelst)/len(truelst)
-                    if pct >= accu:
-                        if db: 
-                            head1 = f"keyword match is {pct}, Found a section: in {file_name}"
-                            head1 = highlight(str(pct), head1)
-                            head1 = highlight(file_name, head1)
-                            display_md(head1)
-                            highlighted_line = highlight(question, l, db=db)                        
-    #                         print()
-                        display_block(l, file_fullname, output=output, keywords=question)
-                        if nb: 
-                            openNB(file_name, db=db)
-                            openNBKaggle(file_name, db=db)
+                    ctn = l.split("# ```")[1] if "# ```" in l else l.split("# ")[1] 
+                    if strict:
+                        if pct >= accu and ctn.startswith(questlst[0]): # make sure the heading start with the exact quest word
+                            if db: 
+                                head1 = f"keyword match is {pct}, Found a section: in {file_name}"
+                                head1 = highlight(str(pct), head1)
+                                head1 = highlight(file_name, head1)
+                                display_md(head1)
+                                highlighted_line = highlight(question, l, db=db)                        
+        #                         print()
+                            display_block(l, file_fullname, output=output, keywords=question)
+                            if nb: # to link a notebook with specific heading
+                                if "# ```" in l: openNB(file_name, l.split("```")[1].replace(" ", "-"), db=db)
+                                else: openNB(file_name, l.split("# ")[1].replace(" ", "-"), db=db)
+
+                                openNBKaggle(file_name, db=db)
+                    else: 
+                        if pct >= accu: # make sure the heading start with the exact quest word
+                            if db: 
+                                head1 = f"keyword match is {pct}, Found a section: in {file_name}"
+                                head1 = highlight(str(pct), head1)
+                                head1 = highlight(file_name, head1)
+                                display_md(head1)
+                                highlighted_line = highlight(question, l, db=db)                        
+        #                         print()
+                            display_block(l, file_fullname, output=output, keywords=question)
+                            if nb: # to link a notebook with specific heading
+                                if "# ```" in l: openNB(file_name, l.split("```")[1].replace(" ", "-"), db=db)
+                                else: openNB(file_name, l.split("# ")[1].replace(" ", "-"), db=db)
+
+                                openNBKaggle(file_name, db=db)
+```
+
+```python
+"# this is me".split("# ")[1].replace(" ", "-")
+"# thisisme".split("# ")[1].replace(" ", "-")
 ```
 
 ```python
 # fastnbs("Snoop them together in one go", output=True)
 # fastnbs("how matrix multiplication")
 # fastnbs("how matrix multiplication", folder="fastai")
-fastnbs("how matrix multiplication", filter_folder="fastai")
+# fastnbs("show_image", "src")
+# fastnbs("module", "src")
+# fastnbs("module", "src", False)
+# fastnbs("module")
+# fastnbs("apply")
+# fastnbs("get all nbs")
 ```
 
 ```python
-
+"### ```show_image(b, a, c)```".split("```")[1].replace(" ", "-")
 ```
 
 ## fastcodes
@@ -2412,11 +2659,11 @@ Then run `fastnbs(...)` on the cell above `fastlistnbs()` to have a better view
 Run `fastnbs(query, output=True)` to view the output with input together for notebooks on srcodes
 
 ```python
-fastnbs("snoop: from _funcs_kwargs to funcs_kwargs", output=True)
+# fastnbs("snoop: from _funcs_kwargs to funcs_kwargs", output=True)
 ```
 
 ```python
-fastlistnbs()
+# fastlistnbs()
 ```
 
 **When I just want to have a quick look of the commented source code**

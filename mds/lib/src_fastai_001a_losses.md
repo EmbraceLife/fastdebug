@@ -36,10 +36,22 @@ from fastai.layers import *
 ```python
 #|hide
 from nbdev.showdoc import *
+from fastdebug.utils import *
+```
+
+```python
+import fastai.losses as fl
+```
+
+```python
+whatinside(fl)
 ```
 
 # Loss Functions
 > Custom fastai loss functions
+
+### ```BaseLoss()```
+Same as `loss_cls`, but flattens input and target.
 
 ```python
 #|export

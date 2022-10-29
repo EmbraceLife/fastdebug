@@ -20,7 +20,7 @@ jupyter:
 ```
 
 ```python
-#|default_exp layers
+#|default_exp todeletelayers
 #|default_cls_lvl 3
 ```
 
@@ -1815,6 +1815,7 @@ def SEModule(ch, reduction, act_cls=defaults.activation):
 ### ```ResBlock(Module)```
 official: Resnet block from `ni` to `nh` with `stride`
 
+How ResBlock is initialized
 - user inputs without default: `expansion`, `ni`, `nf`
 - `norm2` is to choose between `BatchZero`, `InstanceZero`, or other `norm_type`
 - `nh1` and `nh2` are defined by `nf`
@@ -1822,14 +1823,20 @@ official: Resnet block from `ni` to `nh` with `stride`
 - `k0`, `k1` are two dicts of norm_type, act_cls, ndim, and `**kwargs`
 - `convpath`: a list of ConvLayers; if expansion == 1, 2 ConvLayers; otherwise, 3 ConvLayers
 - if reduction, then add SEModule layer block
-- if sa: 
+- if sa: add SimpleSelfAttention 
+- self.convpath: take all the layers above into a single Sequential
+- self.idpath: create a Sequential block in which there may or may be be a AvgPool and ConvLayer (position can switch too)
+- self.act: default.activation or act_cls()
+
+How ResBlock transforms input in `forward`
+- self.act(self.convpath(x) + self.idpath(x))
 
 
 ```python
 #|export
 class ResBlock(Module):
     "Resnet block from `ni` to `nh` with `stride`"
-    @snoop
+#     @snoop
     @delegates(ConvLayer.__init__)
     def __init__(self, expansion, ni, nf, stride=1, groups=1, reduction=None, nh1=None, nh2=None, dw=False, g2=1,
                  sa=False, sym=False, norm_type=NormType.Batch, act_cls=defaults.activation, ndim=2, ks=3,
@@ -1859,6 +1866,10 @@ class ResBlock(Module):
     def forward(self, x): return self.act(self.convpath(x) + self.idpath(x))
 ```
 
+```python
+
+```
+
 This is a resnet block (normal or bottleneck depending on `expansion`, 1 for the normal block and 4 for the traditional bottleneck) that implements the tweaks from [Bag of Tricks for Image Classification with Convolutional Neural Networks](https://arxiv.org/abs/1812.01187). In particular, the last batchnorm layer (if that is the selected `norm_type`) is initialized with a weight (or gamma) of zero to facilitate the flow from the beginning to the end of the network. It also implements optional [Squeeze and Excitation](https://arxiv.org/abs/1709.01507) and grouped convs for [ResNeXT](https://arxiv.org/abs/1611.05431) and similar models (use `dw=True` for depthwise convs).
 
 The `kwargs` are passed to `ConvLayer` along with `norm_type`.
@@ -1867,11 +1878,15 @@ The `kwargs` are passed to `ConvLayer` along with `norm_type`.
 ResBlock(1, 4, 2)
 ```
 
+### ```SEBlock(expansion, ni, nf, groups=1, reduction=16, stride=1, **kwargs)```
+
 ```python
 #|export
 def SEBlock(expansion, ni, nf, groups=1, reduction=16, stride=1, **kwargs):
     return ResBlock(expansion, ni, nf, stride=stride, groups=groups, reduction=reduction, nh1=nf*2, nh2=nf*expansion, **kwargs)
 ```
+
+### ```SEResNeXtBlock(expansion, ni, nf, groups=32, reduction=16, stride=1, base_width=4, **kwargs)```
 
 ```python
 #|export
@@ -1880,10 +1895,16 @@ def SEResNeXtBlock(expansion, ni, nf, groups=32, reduction=16, stride=1, base_wi
     return ResBlock(expansion, ni, nf, stride=stride, groups=groups, reduction=reduction, nh2=w, **kwargs)
 ```
 
+### ```SeparableBlock(expansion, ni, nf, reduction=16, stride=1, base_width=4, **kwargs)```
+
 ```python
 #|export
 def SeparableBlock(expansion, ni, nf, reduction=16, stride=1, base_width=4, **kwargs):
     return ResBlock(expansion, ni, nf, stride=stride, reduction=reduction, nh2=nf*2, dw=True, **kwargs)
+```
+
+```python
+# fastnbs("AvgPool(")
 ```
 
 ## Time Distributed Layer
@@ -1891,12 +1912,32 @@ def SeparableBlock(expansion, ni, nf, reduction=16, stride=1, base_width=4, **kw
 
 Equivalent to Keras `TimeDistributed` Layer, enables computing pytorch `Module` over an axis.
 
+### ```_stack_tups(tuples, stack_dim=1)```
+official: Stack tuple of tensors along `stack_dim`
+
 ```python
 #|export
+# @snoop
 def _stack_tups(tuples, stack_dim=1):
     "Stack tuple of tensors along `stack_dim`"
     return tuple(torch.stack([t[i] for t in tuples], dim=stack_dim) for i in range_of(tuples[0]))
+#     lst = []
+#     res = []
+#     pp(range_of(tuples[0]))
+#     for i in range_of(tuples[0]):
+#         for t in tuples:
+#             lst.append(t[i])
+#         res.append(torch.stack(lst, dim=stack_dim))
+#     return tuple(res)
+
 ```
+
+### ```TimeDistributed(Module)```
+official: Applies `module` over `tdim` identically for each step, use `low_mem` to compute one at a time.
+
+- apply on individual layer: `tconv = TimeDistributed(nn.Conv2d(3,4,1))`
+- on a user defined layer: `TimeDistributed(Mod())`
+- how to use low_memory: out = tmod(x,y)，tmod.low_mem=True， out_low_mem = tmod(x,y)
 
 ```python
 #|export
@@ -1940,6 +1981,7 @@ class TimeDistributed(Module):
 ```python
 bs, seq_len = 2, 5
 x, y = torch.rand(bs,seq_len,3,2,2), torch.rand(bs,seq_len,3,2,2)
+x.shape, y.shape
 ```
 
 ```python
@@ -1987,7 +2029,7 @@ test_eq(out, out_low_mem)
 ```
 
 ```python
-show_doc(TimeDistributed)
+# show_doc(TimeDistributed)
 ```
 
 This module is equivalent to [Keras TimeDistributed Layer](https://keras.io/api/layers/recurrent_layers/time_distributed/). This wrapper allows to apply a layer to every temporal slice of an input. By default it is assumed the time axis (`tdim`) is the 1st one (the one after the batch size). A typical usage would be to encode a sequence of images using an image encoder.
@@ -1997,11 +2039,16 @@ The `forward` function of `TimeDistributed` supports `*args` and `**kkwargs` but
 > This module is heavy on memory, as it will try to pass mutiple timesteps at the same time on the batch dimension, if you get out of memorey errors, try first reducing your batch size by the number of timesteps.
 
 ```python
+create_body??
+```
+
+```python
 from fastai.vision.all import *
 ```
 
 ```python
 encoder = create_body(resnet18())
+encoder
 ```
 
 A resnet18 will encode a feature map of 512 channels. Height and Width will be divided by 32.
@@ -2028,6 +2075,9 @@ time_resnet.low_mem_forward(image_sequence).shape
 ```
 
 ## Swish and Mish
+autograd in fastai
+
+### ```script, _swish_ji_fwd, _SwishJitAutoFn, swish, Swish, _mish_jit_fwd```
 
 ```python
 #|export
@@ -2116,6 +2166,9 @@ for o in swish,Swish,mish,Mish: o.__default_init__ = kaiming_uniform_
 
 It's easy to get the list of all parameters of a given model. For when you want all submodules (like linear/conv layers) without forgetting lone parameters, the following class wraps those in fake modules.
 
+### ```ParameterModule(Module)```
+Register a lone parameter `p` in a module.
+
 ```python
 #|export
 class ParameterModule(Module):
@@ -2124,14 +2177,25 @@ class ParameterModule(Module):
     def forward(self, x): return x
 ```
 
+### ```children_and_parameters(m)```
+Return the children of `m` and its direct parameters not registered in modules.
+
+The direct parameters are those not inside those parameters of `m.children()`
+
+```python
+sum([[1],[2]],[])
+```
+
 ```python
 #|export
+# @snoop
 def children_and_parameters(m):
     "Return the children of `m` and its direct parameters not registered in modules."
     children = list(m.children())
     children_p = sum([[id(p) for p in c.parameters()] for c in m.children()],[])
     for p in m.parameters():
-        if id(p) not in children_p: children.append(ParameterModule(p))
+        if id(p) not in children_p: 
+            children.append(ParameterModule(p))
     return children
 ```
 
@@ -2141,11 +2205,17 @@ class TstModule(Module):
 
 tst = TstModule()
 children = children_and_parameters(tst)
+```
+
+```python
 test_eq(len(children), 2)
 test_eq(children[0], tst.lin)
 assert isinstance(children[1], ParameterModule)
 test_eq(children[1].val, tst.a)
 ```
+
+### ```has_children(m)```
+Whether a model has children layers
 
 ```python
 #|export
@@ -2170,11 +2240,21 @@ def flatten_model(m):
 
 ```python
 tst = nn.Sequential(TstModule(), TstModule())
+tst
 children = flatten_model(tst)
+children
+```
+
+```python
 test_eq(len(children), 4)
 assert isinstance(children[1], ParameterModule)
 assert isinstance(children[3], ParameterModule)
 ```
+
+### ```NoneReduce()```
+A context manager to evaluate `loss_func` with none reduce.
+
+within this context, the `loss_func.reduction` is set to None or its `reduction` arg is set to None, before applying data to the `loss_func`
 
 ```python
 #|export
@@ -2196,24 +2276,52 @@ class NoneReduce():
 ```python
 x,y = torch.randn(5),torch.randn(5)
 loss_fn = nn.MSELoss()
+test_eq("reduction" in str(inspect.signature(loss_fn)), False)
+test_eq(loss_fn.reduction, 'mean')
+```
+
+```python
 with NoneReduce(loss_fn) as loss_func:
     loss = loss_func(x,y)
 test_eq(loss.shape, [5])
 test_eq(loss_fn.reduction, 'mean')
+```
 
+```python
 loss_fn = F.mse_loss
+test_eq("reduction" in str(inspect.signature(loss_fn)), True)
+```
+
+```python
 with NoneReduce(loss_fn) as loss_func:
     loss = loss_func(x,y)
 test_eq(loss.shape, [5])
 test_eq(loss_fn, F.mse_loss)
 ```
 
+### ```in_channels(m)```
+Return the shape of the first weight layer in `m`.
+
 ```python
 #|export
+# @snoop
 def in_channels(m):
     "Return the shape of the first weight layer in `m`."
+#     pp.deep(lambda: next(l.weight.shape[1] for l in flatten_model(m) if nested_attr(l,'weight.ndim',-1)==4))
     try: return next(l.weight.shape[1] for l in flatten_model(m) if nested_attr(l,'weight.ndim',-1)==4)
     except StopIteration as e: e.args = ["No weight layer"]; raise
+```
+
+```python
+nn.Conv2d(5,4,3).weight.ndim
+```
+
+```python
+# help(nested_attr)
+```
+
+```python
+in_channels(nn.Sequential(nn.Conv2d(5,4,3)))
 ```
 
 ```python

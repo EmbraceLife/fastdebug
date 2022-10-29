@@ -36,10 +36,6 @@ from fastdebug.core import *
 ```
 
 
-<style>.container { width:100% !important; }</style>
-
-
-
 ```
 #|hide
 from nbdev.showdoc import *
@@ -58,20 +54,6 @@ import fastai.torch_imports as fti
 fi
 fti
 ```
-
-
-
-
-    <module 'fastai.imports' from '/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastai/imports.py'>
-
-
-
-
-
-
-    <module 'fastai.torch_imports' from '/Users/Natsume/mambaforge/lib/python3.9/site-packages/fastai/torch_imports.py'>
-
-
 
 
 ```
@@ -96,13 +78,6 @@ import fastai.torch_core as ft
 ```
 ft._all_
 ```
-
-
-
-
-    ['progress_bar', 'master_bar']
-
-
 
 
 ```
@@ -219,13 +194,6 @@ plt.close()
 ```
 
 
-
-
-    [1, 1, 2, 3, 4, 5, 5, 5, 5, 5]
-
-
-
-
 ```
 #|export
 # @snoop
@@ -332,28 +300,6 @@ im = Image.open(TEST_IMAGE_BW)
 ax = show_image(im, cmap="Greys")
 ```
 
-    22:21:46.31 >>> Call to <module> in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/3922523890.py", line 2
-    22:21:46.31 ...... TEST_IMAGE_BW = 'images/mnist3.png'
-    22:21:46.31 ...... type(TEST_IMAGE_BW) = <class 'str'>
-    22:21:46.31 ...... show_image = <function show_image>
-    22:21:46.31 ...... type(show_image) = <class 'function'>
-    22:21:46.31 ...... sig(show_image) = <Signature (im, ax=None, figsize=None, title=Non...0, resample=None, url=None, data=None, **kwargs)>
-    22:21:46.31    2 | im = Image.open(TEST_IMAGE_BW)
-    22:21:46.31    2 | im = Image.open(TEST_IMAGE_BW)
-    22:21:46.32 ...... im = <PIL.PngImagePlugin.PngImageFile image mode=L size=28x28>
-    22:21:46.32 ...... type(im) = <class 'PIL.PngImagePlugin.PngImageFile'>
-    22:21:46.32    5 | ax = show_image(im, cmap="Greys")
-    22:21:46.34 ...... ax = <AxesSubplot:>
-    22:21:46.34 ...... type(ax) = <class 'matplotlib.axes._subplots.AxesSubplot'>
-    22:21:46.34 <<< Return value from <module>: None
-
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_45_1.png)
-    
-
-
 ...and color images with standard `CHW` dim order...
 
 
@@ -365,19 +311,6 @@ im2.shape
 ax = show_image(im2, figsize=(5,5))
 ```
 
-
-
-
-    (803, 1200, 3)
-
-
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_47_1.png)
-    
-
-
 ...and color images with `HWC` dim order...
 
 
@@ -387,26 +320,6 @@ im3 = torch.as_tensor(im2).permute(2,0,1) # how to turn an array to a tensor and
 im3.shape
 ax = show_image(im3, figsize=(2,2))
 ```
-
-
-
-
-    torch.Size([803, 1200, 3])
-
-
-
-
-
-
-    torch.Size([3, 803, 1200])
-
-
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_49_2.png)
-    
-
 
 
 ```
@@ -447,12 +360,6 @@ def show_titled_image(o, **kwargs):
 # %%snoop
 show_titled_image((im3,'A puppy'), figsize=(2,2))
 ```
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_55_0.png)
-    
-
 
 ### `show_images(ims, nrows, ncols, ...)`
 - to display multiple images with/wihtout titles in rows and cols; 
@@ -506,12 +413,6 @@ def show_images(ims, nrows=1, ncols=None, titles=None, **kwargs):
 # %%snoop
 show_images((im,im3),titles=('number','puppy'),suptitle='Number Puppy',  imsize=3)
 ```
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_62_0.png)
-    
-
 
 ### ArrayBase, ArrayImageBase, ArrayImage, ArrayImageBW, ArrayMask
 `ArrayImage`, `ArrayImageBW` and `ArrayMask` are subclasses of `ndarray`, through which images can be turned arrays and get displayed.
@@ -582,12 +483,6 @@ ax = im_t.show(figsize=(2,2))
 ```
 
 
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_71_0.png)
-    
-
-
-
 ```
 # fastview(show_image)
 # fastnotes("use cast")
@@ -617,19 +512,9 @@ assert tensor(100) == tensor([100])
 ```
 
 
-
-
-    0
-
-
-
-
 ```
 if tensor([True]): print("yes") # tensor([True]) is equivalent to True
 ```
-
-    yes
-
 
 
 ```
@@ -727,10 +612,6 @@ test_eq(torch.tensor([1,2,3]) is torch.tensor([1,2,3]).clone().detach(), False)
 test_eq(tensor(torch.tensor([1,2,3])) is torch.tensor([1,2,3]), False)
 ```
 
-    /var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/232156416.py:2: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-      test_eq(torch.tensor([1,2,3]) is torch.tensor(torch.tensor([1,2,3])), False) # being False, meaning they are copies not reference
-
-
 
 ```
 # both fastai.tensor and torch.tensor can turn an array or a list into a tensor like below
@@ -748,9 +629,6 @@ except:
     print("torch.tensor can't handle (1,2,3)")
 test_eq(tensor(1,2,3), torch.tensor([1,2,3]))
 ```
-
-    torch.tensor can't handle (1,2,3)
-
 
 
 ```
@@ -805,10 +683,6 @@ b3 = random.random()
 print('a\'s: {0:3.3f} {1:3.3f} {2:3.3f}'.format(a1,a2,a3))
 print('b\'s: {0:3.3f} {1:3.3f} {2:3.3f}'.format(b1,b2,b3))
 ```
-
-    a's: 0.154 0.466 0.475
-    b's: 0.154 0.466 0.475
-
 
 
 ```
@@ -869,11 +743,6 @@ print('news:    {0:3.3f} {1:3.3f} {2:3.3f}'.format(*news))
 print('rewinds: {0:3.3f} {1:3.3f} {2:3.3f}'.format(*rewinds))
 ```
 
-    olds:    0.657 0.740 0.233
-    news:    0.666 0.263 0.453
-    rewinds: 0.657 0.740 0.233
-
-
 
 ```
 test_ne(olds,news)
@@ -928,14 +797,6 @@ print('seeded2: {0:3.3f} {1:3.3f} {2:3.3f}'.format(*seeded2))
 print('rewinds: {0:3.3f} {1:3.3f} {2:3.3f}'.format(*rewinds))
 ```
 
-    olds:    0.666 0.263 0.453
-    new1:    0.639 0.375 0.882
-    new2:    0.639 0.375 0.882
-    seeded1: 0.146 0.543 0.112
-    seeded2: 0.146 0.543 0.112
-    rewinds: 0.666 0.263 0.453
-
-
 Notice that olds, and rewinds are also both equal to each other. From this  we can see that everything in the ```with``` blocks did not update the state outside of the block. Inside of the block, the state is reset for any particular seed, so for the same seed you should get the same random number generator results.  
 
 Note: It is important to remember that classes like ``` Dataloader``` have internal random number generators, and ```no_random``` will have no effect on those random number generators.
@@ -989,13 +850,6 @@ unsqueeze_(t, n=2)
 test_eq(t, tensor([1]).view(1,1,1))
 ```
 
-
-
-
-    tensor([[[1]]])
-
-
-
 ### ```_fa_rebuild_tensor``` and ```_fa_rebuild_qtensor```
 not used in this notebook
 
@@ -1039,61 +893,12 @@ type(slice(1,3))(1,2,3) # is equivalent to slice(1,2,3)
 ```
 
 
-
-
-    [1, 2, 3]
-
-
-
-
-
-
-    slice(1, 2, 3)
-
-
-
-
-
-
-    [0, 2, 4, 6]
-
-
-
-
 ```
 apply(lambda x: x + 1, [1,2,3])
 apply(lambda x: x + 1, (1,2,3))
 apply(lambda x: x + 1, L(1,2,3))
 apply(lambda x: x + 1, {'a':1, 'b':2,'c':3})
 ```
-
-
-
-
-    [2, 3, 4]
-
-
-
-
-
-
-    (2, 3, 4)
-
-
-
-
-
-
-    (#3) [2,3,4]
-
-
-
-
-
-
-    {'a': 2, 'b': 3, 'c': 4}
-
-
 
 ### ```maybe_gather(x, axis=0)```
 Gather copies of `x` on `axis` (if training is distributed). used in ```to_detach```
@@ -1167,73 +972,6 @@ test_eq(lstold[0].requires_grad, True)
 lstnew = to_detach([tensor(1,2), tensor([3,4])])
 test_eq(lstnew[0].requires_grad, False)
 ```
-
-    22:21:48.14 >>> Call to to_detach in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/2902278324.py", line 3
-    22:21:48.14 ...... b = [tensor([1, 2]), tensor([3, 4])]
-    22:21:48.14 ...... type(b) = <class 'list'>
-    22:21:48.14 ...... len(b) = 2
-    22:21:48.14 ...... cpu = True
-    22:21:48.14 ...... type(cpu) = <class 'bool'>
-    22:21:48.14 ...... gather = True
-    22:21:48.14 ...... type(gather) = <class 'bool'>
-    22:21:48.14    3 | def to_detach(b, cpu=True, gather=True):
-    22:21:48.14    5 |     @snoop
-    22:21:48.14    6 |     def _inner(x, cpu=True, gather=True):
-    22:21:48.15 .......... _inner = <function to_detach.<locals>._inner>
-    22:21:48.15 .......... type(_inner) = <class 'function'>
-    22:21:48.15 .......... sig(_inner) = <Signature (x, cpu=True, gather=True)>
-    22:21:48.15   11 |     return apply(_inner, b, cpu=cpu, gather=gather)
-        22:21:48.15 >>> Call to to_detach.<locals>._inner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/2902278324.py", line 6
-        22:21:48.15 .......... x = tensor([1, 2])
-        22:21:48.15 .......... type(x) = <class 'torch.Tensor'>
-        22:21:48.15 .......... x.shape = (2,)
-        22:21:48.15 .......... cpu = True
-        22:21:48.15 .......... type(cpu) = <class 'bool'>
-        22:21:48.15 .......... gather = True
-        22:21:48.15 .......... type(gather) = <class 'bool'>
-        22:21:48.15    6 |     def _inner(x, cpu=True, gather=True):
-        22:21:48.15    7 |         if not isinstance(x,Tensor): return x
-        22:21:48.15    8 |         x = x.detach()
-        22:21:48.15    9 |         if gather: x = maybe_gather(x)
-            22:21:48.15 >>> Call to maybe_gather in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/2315103875.py", line 3
-            22:21:48.15 ...... x = tensor([1, 2])
-            22:21:48.15 ...... type(x) = <class 'torch.Tensor'>
-            22:21:48.15 ...... x.shape = (2,)
-            22:21:48.15 ...... axis = 0
-            22:21:48.15 ...... type(axis) = <class 'int'>
-            22:21:48.15    3 | def maybe_gather(x, axis=0):
-            22:21:48.15    5 |     if num_distrib()<=1: return x
-            22:21:48.15 <<< Return value from maybe_gather: tensor([1, 2])
-        22:21:48.15    9 |         if gather: x = maybe_gather(x)
-        22:21:48.15   10 |         return x.cpu() if cpu else x
-        22:21:48.15 <<< Return value from to_detach.<locals>._inner: tensor([1, 2])
-        22:21:48.15 >>> Call to to_detach.<locals>._inner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/2902278324.py", line 6
-        22:21:48.15 .......... x = tensor([3, 4])
-        22:21:48.15 .......... type(x) = <class 'torch.Tensor'>
-        22:21:48.15 .......... x.shape = (2,)
-        22:21:48.15 .......... cpu = True
-        22:21:48.15 .......... type(cpu) = <class 'bool'>
-        22:21:48.15 .......... gather = True
-        22:21:48.15 .......... type(gather) = <class 'bool'>
-        22:21:48.15    6 |     def _inner(x, cpu=True, gather=True):
-        22:21:48.15    7 |         if not isinstance(x,Tensor): return x
-        22:21:48.15    8 |         x = x.detach()
-        22:21:48.15    9 |         if gather: x = maybe_gather(x)
-            22:21:48.15 >>> Call to maybe_gather in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_99343/2315103875.py", line 3
-            22:21:48.15 ...... x = tensor([3, 4])
-            22:21:48.15 ...... type(x) = <class 'torch.Tensor'>
-            22:21:48.15 ...... x.shape = (2,)
-            22:21:48.15 ...... axis = 0
-            22:21:48.15 ...... type(axis) = <class 'int'>
-            22:21:48.15    3 | def maybe_gather(x, axis=0):
-            22:21:48.15    5 |     if num_distrib()<=1: return x
-            22:21:48.16 <<< Return value from maybe_gather: tensor([3, 4])
-        22:21:48.16    9 |         if gather: x = maybe_gather(x)
-        22:21:48.16   10 |         return x.cpu() if cpu else x
-        22:21:48.16 <<< Return value from to_detach.<locals>._inner: tensor([3, 4])
-    22:21:48.16   11 |     return apply(_inner, b, cpu=cpu, gather=gather)
-    22:21:48.16 <<< Return value from to_detach: [tensor([1, 2]), tensor([3, 4])]
-
 
 ### ```to_half(b)```
 Recursively map lists of tensors in `b ` to FP16, if b is not floating point then return unchanged.
@@ -1399,13 +1137,6 @@ defaults.use_cuda
 ```
 
 
-
-
-    True
-
-
-
-
 ```
 t = to_device((3,(tensor(3),tensor(2))))
 t1,(t2,t3) = t
@@ -1423,9 +1154,6 @@ if torch.cuda.is_available():
 else: 
     print("cuda is not available")
 ```
-
-    cuda is not available
-
 
 ### ```to_cpu(b)```
 Recursively map lists of tensors in `b ` to the cpu exclusively.
@@ -1470,9 +1198,6 @@ except AttributeError:
     print('array has no attr: cpu')
 ```
 
-    array has no attr: cpu
-
-
 
 ```
 t3 = to_np(t3)
@@ -1484,13 +1209,6 @@ test_eq(t3, 2)
 ```
 to_np([tensor(1), tensor([2,3])])
 ```
-
-
-
-
-    [array(1), array([2, 3])]
-
-
 
 
 ```
@@ -1517,41 +1235,11 @@ All indices of collection `a`, if `a` is a collection, otherwise `range`
 check(range_of)
 ```
 
-    signature: (a, b=None, step=None)
-    __class__: <class 'function'>
-    __repr__: <function range_of>
-    
-    __module__: fastcore.basics
-    __doc__:
-    All indices of collection `a`, if `a` is a collection, otherwise `range`
-    __dict__: 
-    {}
-    metaclass: False
-    class: False
-    decorator: False
-    function: True
-    method: False
-
-
 
 ```
 range_of(tensor([[1,2]]))
 range_of(tensor([[1,2],[3,4]]))
 ```
-
-
-
-
-    [0]
-
-
-
-
-
-
-    [0, 1]
-
-
 
 ### sum
 
@@ -1560,26 +1248,6 @@ range_of(tensor([[1,2],[3,4]]))
 check(sum)
 ```
 
-    signature: None
-    __class__: <class 'builtin_function_or_method'>
-    __repr__: <built-in function sum>
-    
-    __module__: builtins
-    __doc__:
-    Return the sum of a 'start' value (default: 0) plus an iterable of numbers
-    
-    When the iterable is empty, return the start value.
-    This function is intended specifically for use with numeric values and may
-    reject non-numeric types.
-    __dict__: not exist 
-    
-    metaclass: False
-    class: False
-    decorator: False
-    function: False
-    method: False
-
-
 
 ```
 L(1,2,3)
@@ -1587,34 +1255,6 @@ sum([1,2,3], L())
 sum([[1],[2],[3]], L())
 sum([[1],[2],[3]], list())
 ```
-
-
-
-
-    (#3) [1,2,3]
-
-
-
-
-
-
-    (#3) [1,2,3]
-
-
-
-
-
-
-    (#3) [1,2,3]
-
-
-
-
-
-
-    [1, 2, 3]
-
-
 
 ### ```to_concat(xs, dim=0)```
 Concat the element in `xs` (recursively if they are tuples/lists of tensors)
@@ -1650,13 +1290,6 @@ retain_type
 ```
 
 
-
-
-    <function fastcore.dispatch.retain_type(new, old=None, typ=None, as_copy=False)>
-
-
-
-
 ```
 test_eq(tensor([1,2]).shape, torch.Size([2]))
 test_eq(tensor([1,2]).dim(), 1)
@@ -1679,50 +1312,12 @@ to_concat([(tensor([[1,2]]), tensor([[3,4]])), (tensor([[3,4]]), tensor([[5,6]])
 ```
 
 
-
-
-    (tensor([1, 2, 3, 4]), tensor([3, 4, 5, 6]))
-
-
-
-
-
-
-    (tensor([1, 2, 3, 4]), tensor([3, 4, 5, 6]))
-
-
-
-
-
-
-    (tensor([[1, 2],
-             [3, 4]]),
-     tensor([[3, 4],
-             [5, 6]]))
-
-
-
-
-
-
-    (tensor([[1, 2, 3, 4]]), tensor([[3, 4, 5, 6]]))
-
-
-
-
 ```
 # when tensors have different dims, meaning can't concat, then sum(L(...)) get run to squeeze them out, and put into a L list
 # tensor([3,4]) is squeezed into tensor(3), tensor(4)
 # tensor([[5,6]]) is squeezed into tensor([5,6])
 to_concat([tensor([3,4]), tensor([[5,6]])]) 
 ```
-
-
-
-
-    (#3) [tensor(3),tensor(4),tensor([5, 6])]
-
-
 
 
 ```
@@ -1734,32 +1329,9 @@ to_concat([[tensor([3,4]), tensor([[5,6]])], [tensor([7,8]), tensor([[9,10]])]],
 ```
 
 
-
-
-    [tensor([3, 4, 7, 8]),
-     tensor([[ 5,  6],
-             [ 9, 10]])]
-
-
-
-
-
-
-    [tensor([3, 4, 7, 8]), tensor([[ 5,  6,  9, 10]])]
-
-
-
-
 ```
 to_concat([(tensor([1,2]),), (tensor([3,4]),)])
 ```
-
-
-
-
-    (tensor([1, 2, 3, 4]),)
-
-
 
 
 ```
@@ -1770,27 +1342,10 @@ to_concat([tensor([[1,2]]), tensor([[3,4], [5,6]])], dim=0) # concat on rows, ok
 ```
 
 
-
-
-    tensor([[1, 2],
-            [3, 4],
-            [5, 6]])
-
-
-
-
 ```
 # to concat tensors on cols, require they having same num of rows, as this example below
 to_concat([tensor([[1,2],[7,8]]), tensor([[3,4], [5,6]])], dim=1)
 ```
-
-
-
-
-    tensor([[1, 2, 3, 4],
-            [7, 8, 5, 6]])
-
-
 
 
 ```
@@ -1801,25 +1356,9 @@ to_concat([tensor([[1,2]]), tensor([[3,4], [5,6]])], dim=1)
 ```
 
 
-
-
-    (#3) [tensor([1]),tensor([3, 5]),tensor([4, 6])]
-
-
-
-
 ```
 to_concat([tensor([[1,2]]), tensor([[3,4], [5,6]])], dim=0)
 ```
-
-
-
-
-    tensor([[1, 2],
-            [3, 4],
-            [5, 6]])
-
-
 
 
 ```
@@ -1830,40 +1369,10 @@ to_concat([(tensor([[1,2]]), tensor([[3,4]])), (tensor([3,4]), tensor([[5,6]]))]
 ```
 
 
-
-
-    ((#3) [tensor([1, 2]),tensor(3),tensor(4)],
-     tensor([[3, 4],
-             [5, 6]]))
-
-
-
-
-
-
-    ((#3) [tensor([1]),tensor(3),tensor(4)], tensor([[3, 4, 5, 6]]))
-
-
-
-
 ```
 dict(foo=tensor([1,2]), bar=tensor(3,4))
 to_concat([dict(foo=tensor([1,2]), bar=tensor(3,4))])
 ```
-
-
-
-
-    {'foo': tensor([1, 2]), 'bar': tensor([3, 4])}
-
-
-
-
-
-
-    {'foo': tensor([1, 2]), 'bar': tensor([3, 4])}
-
-
 
 
 ```
@@ -1883,20 +1392,6 @@ tensor([[1,2]]).dim()
 ```
 
 
-
-
-    torch.Size([1, 2])
-
-
-
-
-
-
-    2
-
-
-
-
 ```
 tensor([[1,2],[3,4]]).index_select(1, tensor(0))
 tensor([[1,2],[3,4]]).index_select(1, tensor(1))
@@ -1904,43 +1399,6 @@ tensor([[1,2],[3,4]]).index_select(0, tensor(0))
 tensor([[1,2]]).index_select(1, tensor(0))
 tensor([[1,2]]).index_select(1, tensor(1))
 ```
-
-
-
-
-    tensor([[1],
-            [3]])
-
-
-
-
-
-
-    tensor([[2],
-            [4]])
-
-
-
-
-
-
-    tensor([[1, 2]])
-
-
-
-
-
-
-    tensor([[1]])
-
-
-
-
-
-
-    tensor([[2]])
-
-
 
 ## Tensor subtypes
 
@@ -2189,13 +1647,6 @@ class TensorBase(Tensor):
 TensorBase(1).__repr__()
 ```
 
-
-
-
-    'TensorBase(1)'
-
-
-
 ### ```TensorBase.__reduce_ex__(self, proto)```
 handling pickle.dump and pickle.loads, but no idea how this method get triggered (question)
 
@@ -2352,17 +1803,6 @@ TensorBase.debug=True
 # a + 1
 ```
 
-    <method 'add' of 'torch._C._TensorBase' objects> (<class '__main__.TensorBase'>,) (TensorBase(1), 1) None
-    <function Tensor.__rdiv__> (<class '__main__.TensorBase'>,) (TensorBase(2), 1) {}
-
-
-
-
-
-    TensorBase(0.5000)
-
-
-
 #### ```default_collate(listy)```
 to prepare a batch of data or tensors
 
@@ -2393,13 +1833,6 @@ test_eq(default_collate([(0, 1), (2, 3)]), [tensor([0, 2]), tensor([1, 3])])
 test_eq(default_collate([[0, 1], [2, 3]]), [tensor([0, 2]), tensor([1, 3])])
 ```
 
-
-
-
-    {'A': tensor([  0, 100]), 'B': tensor([  1, 100])}
-
-
-
 ### ```TensorBase.new_tensor(size, dtype=None, device=None, requires_grad=False)```
 - `t.new_tensor(1)`
 - first, use `tensor.new_tensor` to create a new tensor with data 1, then use `as_subclass` to make the new tensor of the same class as t
@@ -2414,13 +1847,6 @@ test_eq(default_collate([[0, 1], [2, 3]]), [tensor([0, 2]), tensor([1, 3])])
 ```
 tensor(1).new_tensor((1))
 ```
-
-
-
-
-    tensor(1)
-
-
 
 
 ```
@@ -2501,14 +1927,6 @@ t1.new_ones((2, 3))
 ```
 
 
-
-
-    tensor([[1, 1, 1],
-            [1, 1, 1]], dtype=torch.int32)
-
-
-
-
 ```
 #|export
 class TensorBase(Tensor):
@@ -2564,32 +1982,10 @@ t
 ```
 
 
-
-
-    _T([0, 1, 2, 3, 4])
-
-
-
-
 ```
 t.new_ones(3)
 t.new_ones((2,3))
 ```
-
-
-
-
-    _T([1, 1, 1])
-
-
-
-
-
-
-    _T([[1, 1, 1],
-        [1, 1, 1]])
-
-
 
 
 ```
@@ -2608,25 +2004,11 @@ t2.new()
 ```
 
 
-
-
-    tensor([])
-
-
-
-
 ```
 t3 = t2.new((2,3))
 getattr(t3, "__dict__")
 # help(t2.new)
 ```
-
-
-
-
-    {}
-
-
 
 
 ```
@@ -2701,13 +2083,6 @@ t1.__class__
 ```
 
 
-
-
-    __main__.T
-
-
-
-
 ```
 # help(tensor)
 # tensor??
@@ -2724,23 +2099,9 @@ T(1).new((1,2))
 ```
 
 
-
-
-    T([1, 2])
-
-
-
-
 ```
 T(1.).new((1.,2.))
 ```
-
-
-
-
-    T([1., 2.])
-
-
 
 ### ```TensorBase.requires_grad_(self, requires_grad=True)```
 - set a tensor's `requires_grad` to be True or False
@@ -2839,13 +2200,6 @@ t2+t1
 ```
 
 
-
-
-    _TImage2([2.])
-
-
-
-
 ```
 class _T(TensorBase): pass
 
@@ -2933,12 +2287,6 @@ ax = im_t.show(figsize=(2,2))
 ```
 
 
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_298_0.png)
-    
-
-
-
 ```
 test_fig_exists(ax)
 ```
@@ -3022,13 +2370,6 @@ TensorImage.register_func(F.grid_sample, TensorImageBase, TensorFlowField)
 ```
 TensorImage._opt[F.grid_sample]
 ```
-
-
-
-
-    [(__main__.TensorImageBase, __main__.TensorFlowField)]
-
-
 
 
 ```
@@ -3321,13 +2662,6 @@ docs
 ```
 
 
-
-
-    (#6) [['a', 'b', 'c'],['d', 'e', 'f', 'g'],['h'],['i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'],['q', 'r', 's', 't', 'u', 'v', 'w', 'x'],['y', 'z']]
-
-
-
-
 ```
 b = Chunks(docs) # merge a list of lists into an iterable (like a long list)
 ```
@@ -3355,23 +2689,9 @@ np.searchsorted([1,2,3,4,5],-10)
 ```
 
 
-
-
-    0
-
-
-
-
 ```
 np.searchsorted([1,2,3,4,5], [-10, 10, 12, 13])
 ```
-
-
-
-
-    array([0, 5, 5, 5])
-
-
 
 
 ```
@@ -3457,13 +2777,6 @@ test_eq([b[ o] for o in range(0,1)], ['a'])
 ```
 
 
-
-
-    (#6) [['a', 'b', 'c'],['d', 'e', 'f', 'g'],['h'],['i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'],['q', 'r', 's', 't', 'u', 'v', 'w', 'x'],['y', 'z']]
-
-
-
-
 ```
 # depth=2
 docs = L(list(string.ascii_lowercase[a:b]) for a,b in ((0,3),(3,7),(7,8),(8,16),(16,24),(24,26)))
@@ -3471,13 +2784,6 @@ docs
 b = Chunks(docs)
 test_eq([b[ o] for o in range(0,1)], ['a'])
 ```
-
-
-
-
-    (#6) [['a', 'b', 'c'],['d', 'e', 'f', 'g'],['h'],['i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'],['q', 'r', 's', 't', 'u', 'v', 'w', 'x'],['y', 'z']]
-
-
 
 
 ```
@@ -3528,13 +2834,6 @@ test_eq(list(b), list(t))
 ```
 
 
-
-
-    [tensor(25), tensor(24), tensor(23), tensor(22), tensor(21)]
-
-
-
-
 ```
 test_eq([b[ o] for o in range(0,5)], [tensor(0), tensor(1), tensor(2), tensor(3), tensor(4)])
 test_eq([b[ o] for o in range(0,5)], range(0,5))
@@ -3555,13 +2854,6 @@ test_eq(b[:2], torch.arange(2))
 docs = L(TensorBase(t[a:b]) for a,b in ((0,3),(3,7),(7,8),(8,16),(16,24),(24,26)))
 docs
 ```
-
-
-
-
-    (#6) [TensorBase([0, 1, 2]),TensorBase([3, 4, 5, 6]),TensorBase([7]),TensorBase([ 8,  9, 10, 11, 12, 13, 14, 15]),TensorBase([16, 17, 18, 19, 20, 21, 22, 23]),TensorBase([24, 25])]
-
-
 
 
 ```
@@ -3615,9 +2907,6 @@ def show_title(o, ax=None, ctx=None, label=None, color='black', **kwargs):
 show_title("title")
 ```
 
-    title
-
-
 
 ```
 test_stdout(lambda: show_title("title"), "title")
@@ -3629,40 +2918,14 @@ pd.Series(dict(a=1))
 ```
 
 
-
-
-    a    1
-    dtype: int64
-
-
-
-
 ```
 show_title("title", ctx=pd.Series(dict(a=1)), label='a')
 ```
 
 
-
-
-    a         1
-    a_    title
-    dtype: object
-
-
-
-
 ```
 pd.Series(dict(a=1,a_='title'))
 ```
-
-
-
-
-    a         1
-    a_    title
-    dtype: object
-
-
 
 
 ```
@@ -3732,65 +2995,12 @@ df
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>2</th>
-    </tr>
-    <tr>
-      <th>3</th>
-    </tr>
-    <tr>
-      <th>4</th>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
 ```
 TitledStr('s').show()
 TitledStr('s').show("title")
 TitledInt(1).show()
 TitledFloat(1.).show()
 ```
-
-    s
-
-
-
-
-
-    'title'
-
-
-
-    1
-    1.0
-
 
 
 ```
@@ -3811,16 +3021,6 @@ TitledFloat(1.).show()
 ```
 
 
-
-
-    1.0
-
-
-
-    1.0
-
-
-
 ```
 # show_doc(TitledTuple, title_level=3)
 ```
@@ -3838,35 +3038,9 @@ x2show
 ```
 
 
-
-
-    lbl    2.56
-    dtype: object
-
-
-
-
-
-
-    lbl    3
-    dtype: object
-
-
-
-
 ```
 x1show, type(x1show), x1show.lbl
 ```
-
-
-
-
-    (lbl    2.56
-     dtype: object,
-     pandas.core.series.Series,
-     '2.56')
-
-
 
 ### ```truncate(self:TitledStr, n)```
 - why need ```TitledStr.truncate(n)```?
@@ -3887,20 +3061,6 @@ def truncate(self:TitledStr, n):
 TitledStr("this is me")
 TitledStr("this is me").truncate(1)
 ```
-
-
-
-
-    'this is me'
-
-
-
-
-
-
-    'this'
-
-
 
 
 ```
@@ -3936,91 +3096,6 @@ to_np(tensor(1,2))
 pd.DataFrame(tensor(1,2))
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-
-
-    array([1, 2])
-
-
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
 ### ```get_empty_df(n)```
 - Return `n` empty rows of a dataframe
 
@@ -4037,15 +3112,6 @@ def get_empty_df(n):
 ```
 get_empty_df(3)
 ```
-
-
-
-
-    [Series([], Name: 0, dtype: float64),
-     Series([], Name: 1, dtype: float64),
-     Series([], Name: 2, dtype: float64)]
-
-
 
 ### ```display_df(df)```
 - print out in HTML of a dataframe or just print
@@ -4064,27 +3130,6 @@ def display_df(df):
 ```
 display_df(pd.DataFrame(tensor(1,2)))
 ```
-
-
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2</td>
-    </tr>
-  </tbody>
-</table>
-
 
 ### ```get_first(c)```
 - Get the first element of c (anything listy), even if c is a dataframe
@@ -4106,49 +3151,6 @@ get_first(array([1,2,3]))
 get_first(tensor([1,2,3]))
 get_first(pd.DataFrame(tensor(1,2)))
 ```
-
-
-
-
-    1
-
-
-
-
-
-
-    1
-
-
-
-
-
-
-    0
-
-
-
-
-
-
-    1
-
-
-
-
-
-
-    tensor(1)
-
-
-
-
-
-
-    0    1
-    Name: 0, dtype: int64
-
-
 
 ### ```one_param(m)```
 - get the first parameter of a model object
@@ -4185,23 +3187,9 @@ item_find({'a':[1,2,9], 'b':[3,4,8], 'c':[5,6,7]}, idx=2)
 ```
 
 
-
-
-    5
-
-
-
-
 ```
 item_find([[1,2,9], [3,4,8],[5,6,7]], idx=1)
 ```
-
-
-
-
-    3
-
-
 
 ### ```find_device(b)```
 Recursively search the device of `b`. the first of the first device
@@ -4226,53 +3214,11 @@ dev
 ```
 
 
-
-
-    tensor(1, device='mps:0')
-
-
-
-
-
-
-    tensor(0, device='mps:0')
-
-
-
-
-
-
-    device(type='mps')
-
-
-
-
 ```
 find_device(t2)
 find_device([t1,t2])
 find_device({'a':t1,'b':t2})
 ```
-
-
-
-
-    device(type='mps', index=0)
-
-
-
-
-
-
-    device(type='mps', index=0)
-
-
-
-
-
-
-    device(type='mps', index=0)
-
-
 
 ### ```finds_bs(b)```
 - Recursively search the batch size of `b`.
@@ -4382,13 +3328,6 @@ t = _T()
 t(tensor([1.]))
 ```
 
-
-
-
-    tensor([-0.1482], grad_fn=<AddBackward0>)
-
-
-
 ### ```get_model(model)```
 Return the model even when the model is wrapped inside `model` through `model.module` and `model` is an instance of ```DistributedDataParallel, nn.DataParallel```
 
@@ -4437,27 +3376,6 @@ tensor([[2,3],[3,4]]).numel()
 ```
 
 
-
-
-    1
-
-
-
-
-
-
-    2
-
-
-
-
-
-
-    4
-
-
-
-
 ```
 one_hot([1,2], 5)
 one_hot([1,4,3,0,0,0], 6)
@@ -4466,44 +3384,9 @@ one_hot(tensor(2,3,4), 5)
 ```
 
 
-
-
-    tensor([0, 1, 1, 0, 0], dtype=torch.uint8)
-
-
-
-
-
-
-    tensor([1, 1, 0, 1, 1, 0], dtype=torch.uint8)
-
-
-
-
-
-
-    tensor([1, 0, 0, 0, 0], dtype=torch.uint8)
-
-
-
-
-
-
-    tensor([0, 0, 1, 1, 1], dtype=torch.uint8)
-
-
-
-
 ```
 tensor(0,1,0,0,1).byte()
 ```
-
-
-
-
-    tensor([0, 1, 0, 0, 1], dtype=torch.uint8)
-
-
 
 
 ```
@@ -4533,13 +3416,6 @@ test_eq(one_hot_decode(tensor(0,0,1,0,0)), [2  ])
 ```
 one_hot_decode(tensor(0,1,0,0,1), vocab=['a', 'b', 'c', 'd', 'e'])
 ```
-
-
-
-
-    (#2) ['b','e']
-
-
 
 ### ```params(m)```
 - return a list of parameters in a model `m`
@@ -4571,9 +3447,6 @@ output = m(input)
 print(output.size())
 ```
 
-    torch.Size([128, 30])
-
-
 
 ```
 m = nn.Linear(4,5)
@@ -4581,18 +3454,6 @@ test_eq(trainable_params(m), [m.weight, m.bias])
 m.weight.requires_grad_(False)
 test_eq(trainable_params(m), [m.bias])
 ```
-
-
-
-
-    Parameter containing:
-    tensor([[-0.3910, -0.2063,  0.1080,  0.4927],
-            [ 0.2911, -0.1194, -0.4741,  0.0905],
-            [-0.4546,  0.3977, -0.4361, -0.4012],
-            [-0.3717, -0.3067,  0.2818,  0.2976],
-            [-0.2562, -0.1199, -0.4604, -0.2900]])
-
-
 
 ### ```norm_types``` 
 - have all normalization functions stored inside a tuple
@@ -4626,20 +3487,6 @@ m.bias.shape
 ```
 
 
-
-
-    torch.Size([20, 10])
-
-
-
-
-
-
-    torch.Size([20])
-
-
-
-
 ```
 model = nn.Sequential(nn.Linear(10,20), nn.BatchNorm1d(20), nn.Conv1d(3,4, 3))
 model
@@ -4652,55 +3499,9 @@ model[2].bias.shape
 ```
 
 
-
-
-    Sequential(
-      (0): Linear(in_features=10, out_features=20, bias=True)
-      (1): BatchNorm1d(20, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-      (2): Conv1d(3, 4, kernel_size=(3,), stride=(1,))
-    )
-
-
-
-
-
-
-    torch.Size([20])
-
-
-
-
-
-
-    torch.Size([20])
-
-
-
-
-
-
-    torch.Size([20])
-
-
-
-
-
-
-    torch.Size([4])
-
-
-
-
 ```
 [i.shape for i in norm_bias_params(model)]
 ```
-
-
-
-
-    [torch.Size([20]), torch.Size([20]), torch.Size([20]), torch.Size([4])]
-
-
 
 
 ```
@@ -4737,13 +3538,6 @@ batch_to_samples(tensor(1,2,3), 2)
 ```
 
 
-
-
-    [tensor(1), tensor(2)]
-
-
-
-
 ```
 t = tensor([1,2,3])
 [t,t+1]
@@ -4751,30 +3545,9 @@ batch_to_samples([t,t+1], max_n=2)
 ```
 
 
-
-
-    [tensor([1, 2, 3]), tensor([2, 3, 4])]
-
-
-
-
-
-
-    (#2) [(tensor(1), tensor(2)),(tensor(2), tensor(3))]
-
-
-
-
 ```
 batch_to_samples([tensor([1,2,3]), tensor([4,5,6])], 10)
 ```
-
-
-
-
-    (#3) [(tensor(1), tensor(4)),(tensor(2), tensor(5)),(tensor(3), tensor(6))]
-
-
 
 
 ```
@@ -4797,13 +3570,6 @@ test_eq(batch_to_samples([tensor([1,2,3]), [tensor([4,5,6]),tensor([7,8,9])]], 2
 t = fastuple(tensor([1,2,3]),TensorBase([2,3,4]))
 t
 ```
-
-
-
-
-    (tensor([1, 2, 3]), TensorBase([2, 3, 4]))
-
-
 
 
 ```
@@ -4856,24 +3622,11 @@ test_close(preds.numpy(), np.interp(pts.numpy(), brks.numpy(), ys.numpy()))
 ```
 
 
-
-
-    tensor([0.0400, 0.1000, 0.1600, 0.5000, 0.6500, 0.9964])
-
-
-
-
 ```
 plt.scatter(brks,ys)
 plt.scatter(pts,preds)
 plt.legend(['breaks','preds']);
 ```
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_491_0.png)
-    
-
 
 ### ```pca(x:Tensor, k=2)```
 
@@ -4906,20 +3659,6 @@ logit(tensor(1e-18))
 logit(tensor(1-1e-8))
 ```
 
-
-
-
-    tensor(-16.1181)
-
-
-
-
-
-
-    tensor(15.9424)
-
-
-
 ### ```num_distrib()```
 - Return the number of processes in distributed training (if applicable).
 
@@ -4936,13 +3675,6 @@ def num_distrib():
 num_distrib()
 ```
 
-
-
-
-    0
-
-
-
 ### ```rank_distrib()```
 Return the distributed rank of this process (if applicable).
 
@@ -4958,13 +3690,6 @@ def rank_distrib():
 ```
 rank_distrib()
 ```
-
-
-
-
-    0
-
-
 
 ### ```distrib_barrier()```
 Place a synchronization barrier in distributed training
@@ -5069,36 +3794,15 @@ nested_reorder(x, idxs)
 ```
 
 
-
-
-    tensor([2, 5, 1, 0, 3, 4])
-
-
-
-
 ```
 nested_reorder([[x], x], idxs)
 test_eq_type(nested_reorder(([x], x), idxs), ([idxs], idxs))
 ```
 
 
-
-
-    [[tensor([2, 5, 1, 0, 3, 4])], tensor([2, 5, 1, 0, 3, 4])]
-
-
-
-
 ```
 tensor(1).item()
 ```
-
-
-
-
-    1
-
-
 
 
 ```
@@ -5108,13 +3812,6 @@ z = L(i.item() for i in idxs)
 nested_reorder((y, x), idxs)
 test_eq_type(nested_reorder((y, x), idxs), (z,idxs))
 ```
-
-
-
-
-    ((#6) [2,5,1,0,3,4], tensor([2, 5, 1, 0, 3, 4]))
-
-
 
 ### ```flatten_check(inp, targ)```
 - Check that `inp` and `targ` have the same number of elements and flatten them into a single row or 1d data
@@ -5170,39 +3867,14 @@ plt.imshow(make_cross_image()) # imshow's cmap default is with color
 ```
 
 
-
-
-    <matplotlib.image.AxesImage>
-
-
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_529_1.png)
-    
-
-
-
 ```
 plt.imshow(make_cross_image(), cmap="Greys");
 ```
 
 
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_530_0.png)
-    
-
-
-
 ```
 plt.imshow(make_cross_image(False).permute(1,2,0));
 ```
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_531_0.png)
-    
-
 
 ### ```show_image_batch(b, show=show_titled_image, items=9, cols=3, figsize=None, **kwargs)```
 - Display batch `b` in a grid of size `items` with `cols` width
@@ -5233,24 +3905,9 @@ to_cpu(([Image.open(TEST_IMAGE_BW),Image.open(TEST_IMAGE)],['bw','color']))
 ```
 
 
-
-
-    ([<PIL.PngImagePlugin.PngImageFile image mode=L size=28x28>,
-      <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1200x803>],
-     ['bw', 'color'])
-
-
-
-
 ```
 show_image_batch(([Image.open(TEST_IMAGE_BW),Image.open(TEST_IMAGE)],['bw','color']), items=2)
 ```
-
-
-    
-![png](src_fastai_000_torch_core_files/src_fastai_000_torch_core_536_0.png)
-    
-
 
 ## Model init
 
@@ -5276,13 +3933,6 @@ assert requires_grad(tst)
 ```
 
 
-
-
-    True
-
-
-
-
 ```
 # fastnbs("requires_grad_")
 ```
@@ -5292,26 +3942,6 @@ assert requires_grad(tst)
 for p in tst.parameters(): p.requires_grad_(False)
 assert not requires_grad(tst)
 ```
-
-
-
-
-    Parameter containing:
-    tensor([[ 4.4120e-01,  3.4470e-01,  2.9548e-01, -1.4258e-01],
-            [-1.8221e-04, -2.7301e-01,  1.5419e-01, -3.9706e-01],
-            [ 4.1367e-01, -3.7189e-01,  1.9104e-02,  1.9271e-01],
-            [-3.6554e-01,  3.6430e-01, -4.4612e-01, -3.3471e-01],
-            [ 1.1128e-01, -3.5243e-02, -2.6971e-01, -3.8887e-02]])
-
-
-
-
-
-
-    Parameter containing:
-    tensor([ 0.0543, -0.2563,  0.2105,  0.0902, -0.0938])
-
-
 
 ### ```init_default(m, func=nn.init.kaiming_normal_)```
 - Initialize `m` weights with `func` and set `bias` to 0.
@@ -5335,46 +3965,10 @@ tst.weight.data.uniform_(-1,1)
 ```
 
 
-
-
-    tensor([[-0.0095,  0.0070, -0.2772, -0.3292],
-            [-0.1613,  0.1548,  0.1702,  0.4081],
-            [-0.1261, -0.4718,  0.4416, -0.3217],
-            [ 0.1468, -0.0882, -0.2151,  0.1999],
-            [-0.1668,  0.0645,  0.1543,  0.0799]])
-
-
-
-
-
-
-    tensor([[ 0.7235, -0.2019,  0.7836, -0.5412],
-            [ 0.1940,  0.0356, -0.2875,  0.4810],
-            [ 0.8678,  0.1957,  0.9521, -0.0210],
-            [ 0.6293, -0.4421, -0.2445,  0.0396],
-            [-0.2243,  0.5162, -0.7565,  0.7576]])
-
-
-
-
 ```
 tst.bias.data
 tst.bias.data.uniform_(-1,1)
 ```
-
-
-
-
-    tensor([ 0.1235, -0.4675,  0.0362, -0.1601, -0.4447])
-
-
-
-
-
-
-    tensor([-0.9772, -0.9947, -0.0934, -0.4716,  0.5859])
-
-
 
 
 ```
@@ -5382,24 +3976,6 @@ tst = init_default(tst, func = lambda x: x.data.fill_(1.))
 tst.weight.data
 tst.bias.data
 ```
-
-
-
-
-    tensor([[1., 1., 1., 1.],
-            [1., 1., 1., 1.],
-            [1., 1., 1., 1.],
-            [1., 1., 1., 1.],
-            [1., 1., 1., 1.]])
-
-
-
-
-
-
-    tensor([0., 0., 0., 0., 0.])
-
-
 
 
 ```
@@ -5425,23 +4001,6 @@ norm_types
 ```
 
 
-<style>.container { width:100% !important; }</style>
-
-
-
-
-
-    (torch.nn.modules.batchnorm.BatchNorm1d,
-     torch.nn.modules.batchnorm.BatchNorm2d,
-     torch.nn.modules.batchnorm.BatchNorm3d,
-     torch.nn.modules.instancenorm.InstanceNorm1d,
-     torch.nn.modules.instancenorm.InstanceNorm2d,
-     torch.nn.modules.instancenorm.InstanceNorm3d,
-     torch.nn.modules.normalization.LayerNorm)
-
-
-
-
 ```
 tst = nn.Linear(4,5)
 tst.weight.data.uniform_(-1,1)
@@ -5450,24 +4009,6 @@ cond_init(tst, func = lambda x: x.data.fill_(1.))
 test_eq(tst.weight, torch.ones(5,4))
 test_eq(tst.bias, torch.zeros(5))
 ```
-
-
-
-
-    tensor([[-0.5553, -0.7698,  0.6734, -0.3296],
-            [-0.1207,  0.5504,  0.4411, -0.9057],
-            [ 0.4188, -0.2044, -0.1616, -0.3007],
-            [ 0.7291,  0.9034, -0.5751,  0.2195],
-            [ 0.5748,  0.3230,  0.3982, -0.1674]])
-
-
-
-
-
-
-    tensor([-0.6805, -0.3261,  0.8352,  0.7603,  0.2669])
-
-
 
 
 ```
@@ -5498,27 +4039,9 @@ tst[0].weight.shape
 ```
 
 
-
-
-    torch.Size([5, 4])
-
-
-
-
 ```
 list(tst.children())
 ```
-
-
-
-
-    [Linear(in_features=4, out_features=5, bias=True),
-     Sequential(
-       (0): Linear(in_features=4, out_features=5, bias=True)
-       (1): Linear(in_features=4, out_features=5, bias=True)
-     )]
-
-
 
 
 ```
@@ -5528,11 +4051,6 @@ for l in [tst[0], *tst[1]]:
     test_eq(l.weight, torch.ones(5,4))
 for l in [tst[0], *tst[1]]: test_eq(l.bias,   torch.zeros(5))
 ```
-
-    l.weight.shape: torch.Size([5, 4])
-    l.weight.shape: torch.Size([5, 4])
-    l.weight.shape: torch.Size([5, 4])
-
 
 ### ```apply_init(m, func=nn.init.kaiming_normal_)```
 - Initialize all non-batchnorm layers of `m` with `func`.
