@@ -210,7 +210,7 @@ def _fig_bounds(x):
 # fastview("_fig_bounds")
 ```
 
-### `show_image(im, ax...)`
+### ```show_image(im, ax...)```
 - im can be a pytorch tensor, np.array or pure a PIL image object which will then be turned into np.array; 
 - if im is a pytorch tensor and 1st dim is < 5, meaning if color channel is not the last dim, then the dims will be permuted; 
 - if im has only one channel, remove the dim for the channel; 

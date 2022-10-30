@@ -1,8 +1,8 @@
-.JPG
-.jpg!d
-.png
-.jpg
-.jpeg
+*.JPG
+*.jpg!d
+*.png
+*.jpg
+*.jpeg
 _docs/
 data/
 *.bak

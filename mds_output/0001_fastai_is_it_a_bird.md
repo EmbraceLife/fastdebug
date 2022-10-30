@@ -2,6 +2,11 @@
 ---
 skip_exec: true
 ---
+
+```
+#| default_exp delete_bird
+```
+
 ## Useful Course sites
 
 **Official course site**:  for lesson [1](https://course.fast.ai/Lessons/lesson1.html)    
@@ -397,25 +402,25 @@ def to_thumb(self:Image.Image, h, w=None):
 im.to_thumb(256,256)
 ```
 
-    22:38:39.68 >>> Call to to_thumb in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/1866859134.py", line 3
-    22:38:39.68 ...... self = <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1600x1200>
-    22:38:39.68 ...... h = 256
-    22:38:39.68 ...... w = 256
-    22:38:39.68    3 | def to_thumb(self:Image.Image, h, w=None):
-    22:38:39.68    5 |     if w is None: 
-    22:38:39.69    7 |     im = self.copy()
-    22:38:39.70 .......... im = <PIL.Image.Image image mode=RGB size=1600x1200>
-    22:38:39.70    8 |     im.thumbnail((w,h))
-    22:38:39.70 .......... im = <PIL.Image.Image image mode=RGB size=256x192>
-    22:38:39.70    9 |     return im
-    22:38:39.70 <<< Return value from to_thumb: <PIL.Image.Image image mode=RGB size=256x192>
+    23:34:42.20 >>> Call to to_thumb in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/1866859134.py", line 3
+    23:34:42.20 ...... self = <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1600x1200>
+    23:34:42.20 ...... h = 256
+    23:34:42.20 ...... w = 256
+    23:34:42.20    3 | def to_thumb(self:Image.Image, h, w=None):
+    23:34:42.20    5 |     if w is None: 
+    23:34:42.20    7 |     im = self.copy()
+    23:34:42.22 .......... im = <PIL.Image.Image image mode=RGB size=1600x1200>
+    23:34:42.22    8 |     im.thumbnail((w,h))
+    23:34:42.22 .......... im = <PIL.Image.Image image mode=RGB size=256x192>
+    23:34:42.22    9 |     return im
+    23:34:42.22 <<< Return value from to_thumb: <PIL.Image.Image image mode=RGB size=256x192>
 
 
 
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_38_1.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_39_1.png)
     
 
 
@@ -452,7 +457,7 @@ Image.open('forest.jpg').to_thumb(256,256)
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_40_2.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_41_2.png)
     
 
 
@@ -516,32 +521,32 @@ res = PILBase.create('forest.jpg')
 res
 ```
 
-    22:38:43.91 >>> Call to PILBase.create in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/1026981879.py", line 7
-    22:38:43.91 .......... cls = <class '__main__.PILBase'>
-    22:38:43.91 .......... fn = 'forest.jpg'
-    22:38:43.91 .......... kwargs = {}
-    22:38:43.91    7 |     def create(cls, fn:Path|str|Tensor|ndarray|bytes, **kwargs)->None:
-    22:38:43.91    9 |         if isinstance(fn,TensorImage): 
-    22:38:43.91   11 |         if isinstance(fn, TensorMask): 
-    22:38:43.91   13 |         if isinstance(fn,Tensor): 
-    22:38:43.91   15 |         if isinstance(fn,ndarray): 
-    22:38:43.91   17 |         if isinstance(fn,bytes): 
-    22:38:43.91   19 |         pp(cls._open_args, kwargs, merge(cls._open_args, kwargs))
-    22:38:43.91 LOG:
-    22:38:44.21 .... cls._open_args = {'mode': 'RGB'}
-    22:38:44.22 .... kwargs = {}
-    22:38:44.22 .... merge(cls._open_args, kwargs) = {'mode': 'RGB'}
-    22:38:44.22   20 |         res = cls(load_image(fn, **merge(cls._open_args, kwargs)))
-    22:38:44.23 .............. res = PILBase mode=RGB size=1920x1080
-    22:38:44.23   21 |         return res
-    22:38:44.23 <<< Return value from PILBase.create: PILBase mode=RGB size=1920x1080
+    23:34:46.39 >>> Call to PILBase.create in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/1026981879.py", line 7
+    23:34:46.39 .......... cls = <class '__main__.PILBase'>
+    23:34:46.39 .......... fn = 'forest.jpg'
+    23:34:46.39 .......... kwargs = {}
+    23:34:46.39    7 |     def create(cls, fn:Path|str|Tensor|ndarray|bytes, **kwargs)->None:
+    23:34:46.39    9 |         if isinstance(fn,TensorImage): 
+    23:34:46.39   11 |         if isinstance(fn, TensorMask): 
+    23:34:46.39   13 |         if isinstance(fn,Tensor): 
+    23:34:46.39   15 |         if isinstance(fn,ndarray): 
+    23:34:46.39   17 |         if isinstance(fn,bytes): 
+    23:34:46.39   19 |         pp(cls._open_args, kwargs, merge(cls._open_args, kwargs))
+    23:34:46.39 LOG:
+    23:34:46.69 .... cls._open_args = {'mode': 'RGB'}
+    23:34:46.69 .... kwargs = {}
+    23:34:46.69 .... merge(cls._open_args, kwargs) = {'mode': 'RGB'}
+    23:34:46.69   20 |         res = cls(load_image(fn, **merge(cls._open_args, kwargs)))
+    23:34:46.71 .............. res = PILBase mode=RGB size=1920x1080
+    23:34:46.71   21 |         return res
+    23:34:46.71 <<< Return value from PILBase.create: PILBase mode=RGB size=1920x1080
 
 
 
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_45_1.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_46_1.png)
     
 
 
@@ -720,145 +725,145 @@ test_eq(im.shape[1],400)
 # (dest/file).unlink()
 ```
 
-    22:38:44.81 >>> Call to resize_image in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/4048456158.py", line 2
-    22:38:44.81 ...... file = 'bird.jpg'
-    22:38:44.81 ...... dest = Path('resized')
-    22:38:44.81 ...... src = Path('.')
-    22:38:44.81 ...... max_size = 400
-    22:38:44.81 ...... n_channels = 3
-    22:38:44.81 ...... ext = None
-    22:38:44.81 ...... img_format = None
-    22:38:44.81 ...... resample = <Resampling.BILINEAR: 2>
-    22:38:44.81 ...... resume = False
-    22:38:44.81 ...... kwargs = {}
-    22:38:44.81    2 | def resize_image(file, # str for image filename
-    22:38:44.81    9 |     dest = Path(dest)
-    22:38:44.81   11 |     dest_fname = dest/file
-    22:38:44.81 .......... dest_fname = Path('resized/bird.jpg')
-    22:38:44.81   12 |     dest_fname.parent.mkdir(exist_ok=True, parents=True)
-    22:38:44.82   13 |     file = Path(src)/file
-    22:38:44.82 .......... file = Path('bird.jpg')
-    22:38:44.82   14 |     if resume and dest_fname.exists(): return
-    22:38:44.82   15 |     if not verify_image(file): return
-    22:38:44.82   17 |     img = Image.open(file)
-    22:38:44.82 .......... img = <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1920x1080>
-    22:38:44.82   18 |     imgarr = np.array(img)
-    22:38:44.84 .......... imgarr = array([[[37, 39, 28],
-    22:38:44.84                             [36, 38, 27],
-    22:38:44.84                             ...,
-    22:38:44.84                             [33, 35, 24],
-    22:38:44.84                             [34, 36, 25]],
-    22:38:44.84                     
-    22:38:44.84                            [[37, 39, 28],
-    22:38:44.84                             [35, 37, 26],
-    22:38:44.84                             ...,
-    22:38:44.84                             [34, 36, 25],
-    22:38:44.84                             [34, 36, 25]],
-    22:38:44.84                     
-    22:38:44.84                            ...,
-    22:38:44.84                     
-    22:38:44.84                            [[ 7,  7,  7],
-    22:38:44.84                             [ 7,  7,  7],
-    22:38:44.84                             ...,
-    22:38:44.84                             [ 6,  6,  6],
-    22:38:44.84                             [ 6,  6,  6]],
-    22:38:44.84                     
-    22:38:44.84                            [[ 7,  7,  7],
-    22:38:44.84                             [ 7,  7,  7],
-    22:38:44.84                             ...,
-    22:38:44.84                             [ 6,  6,  6],
-    22:38:44.84                             [ 6,  6,  6]]], dtype=uint8)
-    22:38:44.84   19 |     img_channels = 1 if len(imgarr.shape) == 2 else imgarr.shape[2]
-    22:38:44.84 .......... img_channels = 3
-    22:38:44.84   20 |     if ext is not None: dest_fname=dest_fname.with_suffix(ext) # specify file extensions
-    22:38:44.84   21 |     if (max_size is not None and (img.height > max_size or img.width > max_size)) or img_channels != n_channels:
-    22:38:44.84   22 |         if max_size is not None:
-    22:38:44.84   23 |             pp(doc_sig(resize_to))
-    22:38:44.84 LOG:
-    22:38:44.86 .... doc_sig(resize_to) = ('no mro',
-    22:38:44.86                            'Size to resize to, to hit `targ_sz` at same aspect ratio, in PIL coords (i.e '
-    22:38:44.86                            'w*h)',
-    22:38:44.86                            <Signature (img, targ_sz, use_min=False)>)
-    22:38:44.86   24 |             pp(img.height, img.width)
-    22:38:44.87 LOG:
-    22:38:44.87 .... img.height = 1080
-    22:38:44.87 .... img.width = 1920
-    22:38:44.87   25 |             new_sz = resize_to(img, max_size) # keep the ratio
-    22:38:44.87 .................. new_sz = (400, 225)
-    22:38:44.87   26 |             pp(doc_sig(img.resize))
-    22:38:44.87 LOG:
-    22:38:44.88 .... doc_sig(img.resize) = ('no mro',
-    22:38:44.88                             'Returns a resized copy of this image.\n'
-    22:38:44.88                             '\n'
-    22:38:44.88                             ':param size: The requested size in pixels, as a 2-tuple:\n'
-    22:38:44.88                             '   (width, height).\n'
-    22:38:44.88                             ':param resample: An optional resampling filter.  This can be\n'
-    22:38:44.88                             '   one of :py:data:`PIL.Image.Resampling.NEAREST`,\n'
-    22:38:44.88                             '   :py:data:`PIL.Image.Resampling.BOX`,\n'
-    22:38:44.88                             '   :py:data:`PIL.Image.Resampling.BILINEAR`,\n'
-    22:38:44.88                             '   :py:data:`PIL.Image.Resampling.HAMMING`,\n'
-    22:38:44.88                             '   :py:data:`PIL.Image.Resampling.BICUBIC` or\n'
-    22:38:44.88                             '   :py:data:`PIL.Image.Resampling.LANCZOS`.\n'
-    22:38:44.88                             '   If the image has mode "1" or "P", it is always set to\n'
-    22:38:44.88                             '   :py:data:`PIL.Image.Resampling.NEAREST`.\n'
-    22:38:44.88                             '   If the image mode specifies a number of bits, such as "I;16", then the\n'
-    22:38:44.88                             '   default filter is :py:data:`PIL.Image.Resampling.NEAREST`.\n'
-    22:38:44.88                             '   Otherwise, the default filter is\n'
-    22:38:44.88                             '   :py:data:`PIL.Image.Resampling.BICUBIC`. See: :ref:`concept-filters`.\n'
-    22:38:44.88                             ':param box: An optional 4-tuple of floats providing\n'
-    22:38:44.88                             '   the source image region to be scaled.\n'
-    22:38:44.88                             '   The values must be within (0, 0, width, height) rectangle.\n'
-    22:38:44.88                             '   If omitted or None, the entire source is used.\n'
-    22:38:44.88                             ':param reducing_gap: Apply optimization by resizing the image\n'
-    22:38:44.88                             '   in two steps. First, reducing the image by integer times\n'
-    22:38:44.88                             '   using :py:meth:`~PIL.Image.Image.reduce`.\n'
-    22:38:44.88                             '   Second, resizing using regular resampling. The last step\n'
-    22:38:44.88                             '   changes size no less than by ``reducing_gap`` times.\n'
-    22:38:44.88                             '   ``reducing_gap`` may be None (no first step is performed)\n'
-    22:38:44.88                             '   or should be greater than 1.0. The bigger ``reducing_gap``,\n'
-    22:38:44.88                             '   the closer the result to the fair resampling.\n'
-    22:38:44.88                             '   The smaller ``reducing_gap``, the faster resizing.\n'
-    22:38:44.88                             '   With ``reducing_gap`` greater or equal to 3.0, the result is\n'
-    22:38:44.88                             '   indistinguishable from fair resampling in most cases.\n'
-    22:38:44.88                             '   The default value is None (no optimization).\n'
-    22:38:44.88                             ':returns: An :py:class:`~PIL.Image.Image` object.',
-    22:38:44.88                             <Signature (size, resample=None, box=None, reducing_gap=None)>)
-    22:38:44.88   27 |             img = img.resize(new_sz, resample=resample)
-    22:38:44.89 .................. img = <PIL.Image.Image image mode=RGB size=400x225>
-    22:38:44.89   28 |         if n_channels == 3: 
-    22:38:44.89   29 |             img = img.convert("RGB")
-    22:38:44.89   30 |         pp(doc_sig(img.save))
-    22:38:44.89 LOG:
-    22:38:44.90 .... doc_sig(img.save) = ('no mro',
-    22:38:44.90                           'Saves this image under the given filename.  If no format is\n'
-    22:38:44.90                           'specified, the format to use is determined from the filename\n'
-    22:38:44.90                           'extension, if possible.\n'
-    22:38:44.90                           '\n'
-    22:38:44.90                           'Keyword options can be used to provide additional instructions\n'
-    22:38:44.90                           "to the writer. If a writer doesn't recognise an option, it is\n"
-    22:38:44.90                           'silently ignored. The available options are described in the\n'
-    22:38:44.90                           ':doc:`image format documentation\n'
-    22:38:44.90                           '<../handbook/image-file-formats>` for each writer.\n'
-    22:38:44.90                           '\n'
-    22:38:44.90                           'You can use a file object instead of a filename. In this case,\n'
-    22:38:44.90                           'you must always specify the format. The file object must\n'
-    22:38:44.90                           'implement the ``seek``, ``tell``, and ``write``\n'
-    22:38:44.90                           'methods, and be opened in binary mode.\n'
-    22:38:44.90                           '\n'
-    22:38:44.90                           ':param fp: A filename (string), pathlib.Path object or file object.\n'
-    22:38:44.90                           ':param format: Optional format override.  If omitted, the\n'
-    22:38:44.90                           '   format to use is determined from the filename extension.\n'
-    22:38:44.90                           '   If a file object was used instead of a filename, this\n'
-    22:38:44.90                           '   parameter should always be used.\n'
-    22:38:44.90                           ':param params: Extra parameters to the image writer.\n'
-    22:38:44.90                           ':returns: None\n'
-    22:38:44.90                           ':exception ValueError: If the output format could not be determined\n'
-    22:38:44.90                           '   from the file name.  Use the format option to solve this.\n'
-    22:38:44.90                           ':exception OSError: If the file could not be written.  The file\n'
-    22:38:44.90                           '   may have been created, and may contain partial data.',
-    22:38:44.90                           <Signature (fp, format=None, **params)>)
-    22:38:44.90   31 |         img.save(dest_fname, img_format, **kwargs)
-    22:38:44.90 <<< Return value from resize_image: None
+    23:34:47.30 >>> Call to resize_image in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/4048456158.py", line 2
+    23:34:47.30 ...... file = 'bird.jpg'
+    23:34:47.30 ...... dest = Path('resized')
+    23:34:47.30 ...... src = Path('.')
+    23:34:47.30 ...... max_size = 400
+    23:34:47.30 ...... n_channels = 3
+    23:34:47.30 ...... ext = None
+    23:34:47.30 ...... img_format = None
+    23:34:47.30 ...... resample = <Resampling.BILINEAR: 2>
+    23:34:47.30 ...... resume = False
+    23:34:47.30 ...... kwargs = {}
+    23:34:47.30    2 | def resize_image(file, # str for image filename
+    23:34:47.30    9 |     dest = Path(dest)
+    23:34:47.30   11 |     dest_fname = dest/file
+    23:34:47.30 .......... dest_fname = Path('resized/bird.jpg')
+    23:34:47.30   12 |     dest_fname.parent.mkdir(exist_ok=True, parents=True)
+    23:34:47.30   13 |     file = Path(src)/file
+    23:34:47.30 .......... file = Path('bird.jpg')
+    23:34:47.30   14 |     if resume and dest_fname.exists(): return
+    23:34:47.30   15 |     if not verify_image(file): return
+    23:34:47.31   17 |     img = Image.open(file)
+    23:34:47.32 .......... img = <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1920x1080>
+    23:34:47.32   18 |     imgarr = np.array(img)
+    23:34:47.33 .......... imgarr = array([[[37, 39, 28],
+    23:34:47.33                             [36, 38, 27],
+    23:34:47.33                             ...,
+    23:34:47.33                             [33, 35, 24],
+    23:34:47.33                             [34, 36, 25]],
+    23:34:47.33                     
+    23:34:47.33                            [[37, 39, 28],
+    23:34:47.33                             [35, 37, 26],
+    23:34:47.33                             ...,
+    23:34:47.33                             [34, 36, 25],
+    23:34:47.33                             [34, 36, 25]],
+    23:34:47.33                     
+    23:34:47.33                            ...,
+    23:34:47.33                     
+    23:34:47.33                            [[ 7,  7,  7],
+    23:34:47.33                             [ 7,  7,  7],
+    23:34:47.33                             ...,
+    23:34:47.33                             [ 6,  6,  6],
+    23:34:47.33                             [ 6,  6,  6]],
+    23:34:47.33                     
+    23:34:47.33                            [[ 7,  7,  7],
+    23:34:47.33                             [ 7,  7,  7],
+    23:34:47.33                             ...,
+    23:34:47.33                             [ 6,  6,  6],
+    23:34:47.33                             [ 6,  6,  6]]], dtype=uint8)
+    23:34:47.33   19 |     img_channels = 1 if len(imgarr.shape) == 2 else imgarr.shape[2]
+    23:34:47.34 .......... img_channels = 3
+    23:34:47.34   20 |     if ext is not None: dest_fname=dest_fname.with_suffix(ext) # specify file extensions
+    23:34:47.34   21 |     if (max_size is not None and (img.height > max_size or img.width > max_size)) or img_channels != n_channels:
+    23:34:47.34   22 |         if max_size is not None:
+    23:34:47.34   23 |             pp(doc_sig(resize_to))
+    23:34:47.34 LOG:
+    23:34:47.36 .... doc_sig(resize_to) = ('no mro',
+    23:34:47.36                            'Size to resize to, to hit `targ_sz` at same aspect ratio, in PIL coords (i.e '
+    23:34:47.36                            'w*h)',
+    23:34:47.36                            <Signature (img, targ_sz, use_min=False)>)
+    23:34:47.36   24 |             pp(img.height, img.width)
+    23:34:47.36 LOG:
+    23:34:47.37 .... img.height = 1080
+    23:34:47.37 .... img.width = 1920
+    23:34:47.37   25 |             new_sz = resize_to(img, max_size) # keep the ratio
+    23:34:47.37 .................. new_sz = (400, 225)
+    23:34:47.37   26 |             pp(doc_sig(img.resize))
+    23:34:47.37 LOG:
+    23:34:47.38 .... doc_sig(img.resize) = ('no mro',
+    23:34:47.38                             'Returns a resized copy of this image.\n'
+    23:34:47.38                             '\n'
+    23:34:47.38                             ':param size: The requested size in pixels, as a 2-tuple:\n'
+    23:34:47.38                             '   (width, height).\n'
+    23:34:47.38                             ':param resample: An optional resampling filter.  This can be\n'
+    23:34:47.38                             '   one of :py:data:`PIL.Image.Resampling.NEAREST`,\n'
+    23:34:47.38                             '   :py:data:`PIL.Image.Resampling.BOX`,\n'
+    23:34:47.38                             '   :py:data:`PIL.Image.Resampling.BILINEAR`,\n'
+    23:34:47.38                             '   :py:data:`PIL.Image.Resampling.HAMMING`,\n'
+    23:34:47.38                             '   :py:data:`PIL.Image.Resampling.BICUBIC` or\n'
+    23:34:47.38                             '   :py:data:`PIL.Image.Resampling.LANCZOS`.\n'
+    23:34:47.38                             '   If the image has mode "1" or "P", it is always set to\n'
+    23:34:47.38                             '   :py:data:`PIL.Image.Resampling.NEAREST`.\n'
+    23:34:47.38                             '   If the image mode specifies a number of bits, such as "I;16", then the\n'
+    23:34:47.38                             '   default filter is :py:data:`PIL.Image.Resampling.NEAREST`.\n'
+    23:34:47.38                             '   Otherwise, the default filter is\n'
+    23:34:47.38                             '   :py:data:`PIL.Image.Resampling.BICUBIC`. See: :ref:`concept-filters`.\n'
+    23:34:47.38                             ':param box: An optional 4-tuple of floats providing\n'
+    23:34:47.38                             '   the source image region to be scaled.\n'
+    23:34:47.38                             '   The values must be within (0, 0, width, height) rectangle.\n'
+    23:34:47.38                             '   If omitted or None, the entire source is used.\n'
+    23:34:47.38                             ':param reducing_gap: Apply optimization by resizing the image\n'
+    23:34:47.38                             '   in two steps. First, reducing the image by integer times\n'
+    23:34:47.38                             '   using :py:meth:`~PIL.Image.Image.reduce`.\n'
+    23:34:47.38                             '   Second, resizing using regular resampling. The last step\n'
+    23:34:47.38                             '   changes size no less than by ``reducing_gap`` times.\n'
+    23:34:47.38                             '   ``reducing_gap`` may be None (no first step is performed)\n'
+    23:34:47.38                             '   or should be greater than 1.0. The bigger ``reducing_gap``,\n'
+    23:34:47.38                             '   the closer the result to the fair resampling.\n'
+    23:34:47.38                             '   The smaller ``reducing_gap``, the faster resizing.\n'
+    23:34:47.38                             '   With ``reducing_gap`` greater or equal to 3.0, the result is\n'
+    23:34:47.38                             '   indistinguishable from fair resampling in most cases.\n'
+    23:34:47.38                             '   The default value is None (no optimization).\n'
+    23:34:47.38                             ':returns: An :py:class:`~PIL.Image.Image` object.',
+    23:34:47.38                             <Signature (size, resample=None, box=None, reducing_gap=None)>)
+    23:34:47.38   27 |             img = img.resize(new_sz, resample=resample)
+    23:34:47.38 .................. img = <PIL.Image.Image image mode=RGB size=400x225>
+    23:34:47.38   28 |         if n_channels == 3: 
+    23:34:47.38   29 |             img = img.convert("RGB")
+    23:34:47.39   30 |         pp(doc_sig(img.save))
+    23:34:47.39 LOG:
+    23:34:47.40 .... doc_sig(img.save) = ('no mro',
+    23:34:47.40                           'Saves this image under the given filename.  If no format is\n'
+    23:34:47.40                           'specified, the format to use is determined from the filename\n'
+    23:34:47.40                           'extension, if possible.\n'
+    23:34:47.40                           '\n'
+    23:34:47.40                           'Keyword options can be used to provide additional instructions\n'
+    23:34:47.40                           "to the writer. If a writer doesn't recognise an option, it is\n"
+    23:34:47.40                           'silently ignored. The available options are described in the\n'
+    23:34:47.40                           ':doc:`image format documentation\n'
+    23:34:47.40                           '<../handbook/image-file-formats>` for each writer.\n'
+    23:34:47.40                           '\n'
+    23:34:47.40                           'You can use a file object instead of a filename. In this case,\n'
+    23:34:47.40                           'you must always specify the format. The file object must\n'
+    23:34:47.40                           'implement the ``seek``, ``tell``, and ``write``\n'
+    23:34:47.40                           'methods, and be opened in binary mode.\n'
+    23:34:47.40                           '\n'
+    23:34:47.40                           ':param fp: A filename (string), pathlib.Path object or file object.\n'
+    23:34:47.40                           ':param format: Optional format override.  If omitted, the\n'
+    23:34:47.40                           '   format to use is determined from the filename extension.\n'
+    23:34:47.40                           '   If a file object was used instead of a filename, this\n'
+    23:34:47.40                           '   parameter should always be used.\n'
+    23:34:47.40                           ':param params: Extra parameters to the image writer.\n'
+    23:34:47.40                           ':returns: None\n'
+    23:34:47.40                           ':exception ValueError: If the output format could not be determined\n'
+    23:34:47.40                           '   from the file name.  Use the format option to solve this.\n'
+    23:34:47.40                           ':exception OSError: If the file could not be written.  The file\n'
+    23:34:47.40                           '   may have been created, and may contain partial data.',
+    23:34:47.40                           <Signature (fp, format=None, **params)>)
+    23:34:47.40   31 |         img.save(dest_fname, img_format, **kwargs)
+    23:34:47.40 <<< Return value from resize_image: None
 
 
 
@@ -871,61 +876,61 @@ im = Image.open(dest/file)
 test_eq(im.shape[1],1920)
 ```
 
-    22:38:44.92 >>> Call to resize_image in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/4048456158.py", line 2
-    22:38:44.92 ...... file = 'bird.jpg'
-    22:38:44.92 ...... dest = Path('resized')
-    22:38:44.92 ...... src = Path('.')
-    22:38:44.92 ...... max_size = None
-    22:38:44.92 ...... n_channels = 3
-    22:38:44.92 ...... ext = None
-    22:38:44.92 ...... img_format = None
-    22:38:44.92 ...... resample = <Resampling.BILINEAR: 2>
-    22:38:44.92 ...... resume = False
-    22:38:44.92 ...... kwargs = {}
-    22:38:44.92    2 | def resize_image(file, # str for image filename
-    22:38:44.92    9 |     dest = Path(dest)
-    22:38:44.92   11 |     dest_fname = dest/file
-    22:38:44.92 .......... dest_fname = Path('resized/bird.jpg')
-    22:38:44.92   12 |     dest_fname.parent.mkdir(exist_ok=True, parents=True)
-    22:38:44.92   13 |     file = Path(src)/file
-    22:38:44.93 .......... file = Path('bird.jpg')
-    22:38:44.93   14 |     if resume and dest_fname.exists(): return
-    22:38:44.93   15 |     if not verify_image(file): return
-    22:38:44.93   17 |     img = Image.open(file)
-    22:38:44.93 .......... img = <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1920x1080>
-    22:38:44.93   18 |     imgarr = np.array(img)
-    22:38:44.95 .......... imgarr = array([[[37, 39, 28],
-    22:38:44.95                             [36, 38, 27],
-    22:38:44.95                             ...,
-    22:38:44.95                             [33, 35, 24],
-    22:38:44.95                             [34, 36, 25]],
-    22:38:44.95                     
-    22:38:44.95                            [[37, 39, 28],
-    22:38:44.95                             [35, 37, 26],
-    22:38:44.95                             ...,
-    22:38:44.95                             [34, 36, 25],
-    22:38:44.95                             [34, 36, 25]],
-    22:38:44.95                     
-    22:38:44.95                            ...,
-    22:38:44.95                     
-    22:38:44.95                            [[ 7,  7,  7],
-    22:38:44.95                             [ 7,  7,  7],
-    22:38:44.95                             ...,
-    22:38:44.95                             [ 6,  6,  6],
-    22:38:44.95                             [ 6,  6,  6]],
-    22:38:44.95                     
-    22:38:44.95                            [[ 7,  7,  7],
-    22:38:44.95                             [ 7,  7,  7],
-    22:38:44.95                             ...,
-    22:38:44.95                             [ 6,  6,  6],
-    22:38:44.95                             [ 6,  6,  6]]], dtype=uint8)
-    22:38:44.95   19 |     img_channels = 1 if len(imgarr.shape) == 2 else imgarr.shape[2]
-    22:38:44.95 .......... img_channels = 3
-    22:38:44.95   20 |     if ext is not None: dest_fname=dest_fname.with_suffix(ext) # specify file extensions
-    22:38:44.95   21 |     if (max_size is not None and (img.height > max_size or img.width > max_size)) or img_channels != n_channels:
-    22:38:44.95   32 |     elif file != dest_fname : 
-    22:38:44.95   33 |         shutil.copy2(file, dest_fname)
-    22:38:44.96 <<< Return value from resize_image: None
+    23:34:47.42 >>> Call to resize_image in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/4048456158.py", line 2
+    23:34:47.42 ...... file = 'bird.jpg'
+    23:34:47.42 ...... dest = Path('resized')
+    23:34:47.42 ...... src = Path('.')
+    23:34:47.42 ...... max_size = None
+    23:34:47.42 ...... n_channels = 3
+    23:34:47.42 ...... ext = None
+    23:34:47.42 ...... img_format = None
+    23:34:47.42 ...... resample = <Resampling.BILINEAR: 2>
+    23:34:47.42 ...... resume = False
+    23:34:47.42 ...... kwargs = {}
+    23:34:47.42    2 | def resize_image(file, # str for image filename
+    23:34:47.42    9 |     dest = Path(dest)
+    23:34:47.42   11 |     dest_fname = dest/file
+    23:34:47.42 .......... dest_fname = Path('resized/bird.jpg')
+    23:34:47.42   12 |     dest_fname.parent.mkdir(exist_ok=True, parents=True)
+    23:34:47.42   13 |     file = Path(src)/file
+    23:34:47.42 .......... file = Path('bird.jpg')
+    23:34:47.42   14 |     if resume and dest_fname.exists(): return
+    23:34:47.42   15 |     if not verify_image(file): return
+    23:34:47.43   17 |     img = Image.open(file)
+    23:34:47.43 .......... img = <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1920x1080>
+    23:34:47.43   18 |     imgarr = np.array(img)
+    23:34:47.45 .......... imgarr = array([[[37, 39, 28],
+    23:34:47.45                             [36, 38, 27],
+    23:34:47.45                             ...,
+    23:34:47.45                             [33, 35, 24],
+    23:34:47.45                             [34, 36, 25]],
+    23:34:47.45                     
+    23:34:47.45                            [[37, 39, 28],
+    23:34:47.45                             [35, 37, 26],
+    23:34:47.45                             ...,
+    23:34:47.45                             [34, 36, 25],
+    23:34:47.45                             [34, 36, 25]],
+    23:34:47.45                     
+    23:34:47.45                            ...,
+    23:34:47.45                     
+    23:34:47.45                            [[ 7,  7,  7],
+    23:34:47.45                             [ 7,  7,  7],
+    23:34:47.45                             ...,
+    23:34:47.45                             [ 6,  6,  6],
+    23:34:47.45                             [ 6,  6,  6]],
+    23:34:47.45                     
+    23:34:47.45                            [[ 7,  7,  7],
+    23:34:47.45                             [ 7,  7,  7],
+    23:34:47.45                             ...,
+    23:34:47.45                             [ 6,  6,  6],
+    23:34:47.45                             [ 6,  6,  6]]], dtype=uint8)
+    23:34:47.45   19 |     img_channels = 1 if len(imgarr.shape) == 2 else imgarr.shape[2]
+    23:34:47.45 .......... img_channels = 3
+    23:34:47.45   20 |     if ext is not None: dest_fname=dest_fname.with_suffix(ext) # specify file extensions
+    23:34:47.45   21 |     if (max_size is not None and (img.height > max_size or img.width > max_size)) or img_channels != n_channels:
+    23:34:47.45   32 |     elif file != dest_fname : 
+    23:34:47.45   33 |         shutil.copy2(file, dest_fname)
+    23:34:47.45 <<< Return value from resize_image: None
 
 
 
@@ -986,42 +991,42 @@ dest = Path(".")/'try_resize_images'
 resize_images('bird_or_not', max_size=100, dest=dest, max_workers=0, recurse=True) # try recurse=True to check the difference
 ```
 
-    22:38:45.03 >>> Call to resize_images in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/1408674014.py", line 2
-    22:38:45.03 ...... path = 'bird_or_not'
-    22:38:45.03 ...... max_workers = 0
-    22:38:45.03 ...... max_size = 100
-    22:38:45.03 ...... recurse = True
-    22:38:45.03 ...... dest = Path('try_resize_images')
-    22:38:45.03 ...... n_channels = 3
-    22:38:45.03 ...... ext = None
-    22:38:45.03 ...... img_format = None
-    22:38:45.03 ...... resample = <Resampling.BILINEAR: 2>
-    22:38:45.03 ...... resume = None
-    22:38:45.03 ...... kwargs = {}
-    22:38:45.03    2 | def resize_images(path, max_workers=defaults.cpus, max_size=None, recurse=False,
-    22:38:45.03    6 |     path = Path(path)
-    22:38:45.03 .......... path = Path('bird_or_not')
-    22:38:45.03    7 |     if resume is None and dest != Path('.'): 
-    22:38:45.03    8 |         resume=False
-    22:38:45.03 .............. resume = False
-    22:38:45.03    9 |     os.makedirs(dest, exist_ok=True)
-    22:38:45.03   10 |     files = get_image_files(path, recurse=recurse)
-    22:38:45.03 .......... files = [Path('bird_or_not/0b8fcba5-91a5-4689-999c-008e1.../bird/003ca626-2352-4ddb-9ead-69041ec99473.jpg')]
-    22:38:45.03   11 |     files = [o.relative_to(path) for o in files]
-        22:38:45.03 List comprehension:
-        22:38:45.03   11 |     files = [o.relative_to(path) for o in files]
-        22:38:45.03 .......... Iterating over <list_iterator object>
-        22:38:45.03 .......... Values of path: Path('bird_or_not')
-        22:38:45.03 .......... Values of o: Path('bird_or_not/0b8fcba5-91a5-4689-999c-008e108828f1.jpg'), Path('bird_or_not/037e9e61-3731-4876-9745-98758ae21be3.jpg'), Path('bird_or_not/forest/02af1f04-3387-4bc8-a108-e209e2ae69cc.jpg'), Path('bird_or_not/bird/003ca626-2352-4ddb-9ead-69041ec99473.jpg')
-        22:38:45.03 Result: [Path('0b8fcba5-91a5-4689-999c-008e108828f1.jpg'), Path('037e9e61-3731-4876-9745-98758ae21be3.jpg'), Path('forest/02af1f04-3387-4bc8-a108-e209e2ae69cc.jpg'), Path('bird/003ca626-2352-4ddb-9ead-69041ec99473.jpg')]
-    22:38:45.03   11 |     files = [o.relative_to(path) for o in files]
-    22:38:45.04 .......... files = [Path('0b8fcba5-91a5-4689-999c-008e108828f1.jpg'), Path('037e9e61-3731-4876-9745-98758ae21be3.jpg'), Path('forest/02af1f04-3387-4bc8-a108-e209e2ae69cc.jpg'), Path('bird/003ca626-2352-4ddb-9ead-69041ec99473.jpg')]
-    22:38:45.04   12 |     parallel(resize_image, files, src=path, n_workers=max_workers, max_size=max_size, dest=dest, n_channels=n_channels, ext=ext,
-    22:38:45.04   13 |                    img_format=img_format, resample=resample, resume=resume, **kwargs)
-    22:38:45.04   12 |     parallel(resize_image, files, src=path, n_workers=max_workers, max_size=max_size, dest=dest, n_channels=n_channels, ext=ext,
-    22:38:45.04   13 |                    img_format=img_format, resample=resample, resume=resume, **kwargs)
-    22:38:45.04   12 |     parallel(resize_image, files, src=path, n_workers=max_workers, max_size=max_size, dest=dest, n_channels=n_channels, ext=ext,
-    22:38:45.05 <<< Return value from resize_images: None
+    23:34:47.53 >>> Call to resize_images in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/1408674014.py", line 2
+    23:34:47.53 ...... path = 'bird_or_not'
+    23:34:47.53 ...... max_workers = 0
+    23:34:47.53 ...... max_size = 100
+    23:34:47.53 ...... recurse = True
+    23:34:47.53 ...... dest = Path('try_resize_images')
+    23:34:47.53 ...... n_channels = 3
+    23:34:47.53 ...... ext = None
+    23:34:47.53 ...... img_format = None
+    23:34:47.53 ...... resample = <Resampling.BILINEAR: 2>
+    23:34:47.53 ...... resume = None
+    23:34:47.53 ...... kwargs = {}
+    23:34:47.53    2 | def resize_images(path, max_workers=defaults.cpus, max_size=None, recurse=False,
+    23:34:47.53    6 |     path = Path(path)
+    23:34:47.53 .......... path = Path('bird_or_not')
+    23:34:47.53    7 |     if resume is None and dest != Path('.'): 
+    23:34:47.53    8 |         resume=False
+    23:34:47.53 .............. resume = False
+    23:34:47.53    9 |     os.makedirs(dest, exist_ok=True)
+    23:34:47.53   10 |     files = get_image_files(path, recurse=recurse)
+    23:34:47.53 .......... files = [Path('bird_or_not/0b8fcba5-91a5-4689-999c-008e1.../bird/003ca626-2352-4ddb-9ead-69041ec99473.jpg')]
+    23:34:47.53   11 |     files = [o.relative_to(path) for o in files]
+        23:34:47.53 List comprehension:
+        23:34:47.53   11 |     files = [o.relative_to(path) for o in files]
+        23:34:47.53 .......... Iterating over <list_iterator object>
+        23:34:47.53 .......... Values of path: Path('bird_or_not')
+        23:34:47.53 .......... Values of o: Path('bird_or_not/0b8fcba5-91a5-4689-999c-008e108828f1.jpg'), Path('bird_or_not/037e9e61-3731-4876-9745-98758ae21be3.jpg'), Path('bird_or_not/forest/02af1f04-3387-4bc8-a108-e209e2ae69cc.jpg'), Path('bird_or_not/bird/003ca626-2352-4ddb-9ead-69041ec99473.jpg')
+        23:34:47.53 Result: [Path('0b8fcba5-91a5-4689-999c-008e108828f1.jpg'), Path('037e9e61-3731-4876-9745-98758ae21be3.jpg'), Path('forest/02af1f04-3387-4bc8-a108-e209e2ae69cc.jpg'), Path('bird/003ca626-2352-4ddb-9ead-69041ec99473.jpg')]
+    23:34:47.53   11 |     files = [o.relative_to(path) for o in files]
+    23:34:47.53 .......... files = [Path('0b8fcba5-91a5-4689-999c-008e108828f1.jpg'), Path('037e9e61-3731-4876-9745-98758ae21be3.jpg'), Path('forest/02af1f04-3387-4bc8-a108-e209e2ae69cc.jpg'), Path('bird/003ca626-2352-4ddb-9ead-69041ec99473.jpg')]
+    23:34:47.53   12 |     parallel(resize_image, files, src=path, n_workers=max_workers, max_size=max_size, dest=dest, n_channels=n_channels, ext=ext,
+    23:34:47.53   13 |                    img_format=img_format, resample=resample, resume=resume, **kwargs)
+    23:34:47.53   12 |     parallel(resize_image, files, src=path, n_workers=max_workers, max_size=max_size, dest=dest, n_channels=n_channels, ext=ext,
+    23:34:47.53   13 |                    img_format=img_format, resample=resample, resume=resume, **kwargs)
+    23:34:47.53   12 |     parallel(resize_image, files, src=path, n_workers=max_workers, max_size=max_size, dest=dest, n_channels=n_channels, ext=ext,
+    23:34:47.55 <<< Return value from resize_images: None
 
 
 
@@ -1060,7 +1065,6 @@ two type of things (images) will be downloaded into two folders "bird" and "fore
 
 
 ```
-#| export utils
 # @snoop
 def prepare_images_dataset_binary(*things, key1="sun", key2="shade"):
 # searches = 'forest','bird'
@@ -1094,8 +1098,8 @@ def prepare_images_dataset_binary(*things, key1="sun", key2="shade"):
 cry_dino = prepare_images_dataset_binary("T-rex", "Brachiosaurus", key1="crying cartoon", key2="sad doodle")
 ```
 
-    22:38:45.14 LOG:
-    22:38:45.14 .... Path(folder_name) = Path('T-rex_or_Brachiosaurus')
+    23:34:47.63 LOG:
+    23:34:47.64 .... Path(folder_name) = Path('T-rex_or_Brachiosaurus')
 
 
     T-rex_or_Brachiosaurus/T-rex
@@ -1109,8 +1113,8 @@ cry_dino = prepare_images_dataset_binary("T-rex", "Brachiosaurus", key1="crying 
 bird = prepare_images_dataset_binary("forest", "bird")
 ```
 
-    22:38:45.16 LOG:
-    22:38:45.17 .... Path(folder_name) = Path('forest_or_bird')
+    23:34:47.66 LOG:
+    23:34:47.66 .... Path(folder_name) = Path('forest_or_bird')
 
 
     forest_or_bird/forest
@@ -1124,8 +1128,8 @@ bird = prepare_images_dataset_binary("forest", "bird")
 dino = prepare_images_dataset_binary("T-rex", "Spinosaurus aegyptiacus")
 ```
 
-    22:38:45.19 LOG:
-    22:38:45.19 .... Path(folder_name) = Path('T-rex_or_Spinosaurus aegyptiacus')
+    23:34:47.68 LOG:
+    23:34:47.68 .... Path(folder_name) = Path('T-rex_or_Spinosaurus aegyptiacus')
 
 
     T-rex_or_Spinosaurus aegyptiacus/T-rex
@@ -1139,6 +1143,17 @@ to randomly display images in their path
 
 
 ```
+#| export utils
+from fastai.vision.core import *
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+```
+#| export utils
 # @snoop
 def randomdisplay(path, db=False):
 # https://www.geeksforgeeks.org/python-random-module/
@@ -1160,14 +1175,14 @@ bird.ls()
 
 
 
-    (#4) [Path('T-rex_or_Spinosaurus aegyptiacus/crying'),Path('T-rex_or_Spinosaurus aegyptiacus/Spinosaurus aegyptiacus'),Path('T-rex_or_Spinosaurus aegyptiacus/T-rex'),Path('T-rex_or_Spinosaurus aegyptiacus/fierce')]
+    (#5) [Path('T-rex_or_Spinosaurus aegyptiacus/.DS_Store'),Path('T-rex_or_Spinosaurus aegyptiacus/crying'),Path('T-rex_or_Spinosaurus aegyptiacus/Spinosaurus aegyptiacus'),Path('T-rex_or_Spinosaurus aegyptiacus/T-rex'),Path('T-rex_or_Spinosaurus aegyptiacus/fierce')]
 
 
 
 
 
 
-    (#2) [Path('forest_or_bird/forest'),Path('forest_or_bird/bird')]
+    (#3) [Path('forest_or_bird/forest'),Path('forest_or_bird/.DS_Store'),Path('forest_or_bird/bird')]
 
 
 
@@ -1180,7 +1195,7 @@ randomdisplay(bird/'forest')
 
 
 
-    (Path('forest_or_bird/bird/97afca4b-236b-4935-96f1-fc78345b1479.jpg'),
+    (Path('forest_or_bird/bird/43e17099-3e3c-4534-acbb-c4b59ba9e198.jpg'),
      PILImage mode=RGB size=400x300)
 
 
@@ -1188,8 +1203,8 @@ randomdisplay(bird/'forest')
 
 
 
-    (Path('forest_or_bird/forest/cfea9288-5ed3-490a-b933-b52a714cd915.jpg'),
-     PILImage mode=RGB size=1920x1200)
+    (Path('forest_or_bird/forest/4152bd41-4ce7-4b23-89c8-5bb5975be436.jpg'),
+     PILImage mode=RGB size=3840x3840)
 
 
 
@@ -1214,8 +1229,8 @@ randomdisplay(dino/"T-rex")
 
 
 
-    (Path('T-rex_or_Spinosaurus aegyptiacus/T-rex/db19c338-032f-45be-99f4-3431a407e54e.jpeg'),
-     PILImage mode=RGB size=400x225)
+    (Path('T-rex_or_Spinosaurus aegyptiacus/T-rex/53e887dc-7b6a-4552-af20-b1dd304b19fa.jpg'),
+     PILImage mode=RGB size=400x265)
 
 
 
@@ -1227,8 +1242,8 @@ randomdisplay(cry_dino/"T-rex")
 
 
 
-    (Path('T-rex_or_Brachiosaurus/T-rex/7a0d5b8f-bd8f-4362-afcf-c1cbcd3fa334.jpg'),
-     PILImage mode=RGB size=400x300)
+    (Path('T-rex_or_Brachiosaurus/T-rex/7c38481c-d9c1-4f6a-a37b-85b9ea349066.jpg'),
+     PILImage mode=RGB size=400x400)
 
 
 
@@ -1255,7 +1270,7 @@ dino.ls(file_type="binary")
 
 
 
-    (#4) [Path('T-rex_or_Spinosaurus aegyptiacus/crying'),Path('T-rex_or_Spinosaurus aegyptiacus/Spinosaurus aegyptiacus'),Path('T-rex_or_Spinosaurus aegyptiacus/T-rex'),Path('T-rex_or_Spinosaurus aegyptiacus/fierce')]
+    (#5) [Path('T-rex_or_Spinosaurus aegyptiacus/.DS_Store'),Path('T-rex_or_Spinosaurus aegyptiacus/crying'),Path('T-rex_or_Spinosaurus aegyptiacus/Spinosaurus aegyptiacus'),Path('T-rex_or_Spinosaurus aegyptiacus/T-rex'),Path('T-rex_or_Spinosaurus aegyptiacus/fierce')]
 
 
 
@@ -1294,6 +1309,7 @@ check all subfolders for images and print out the number of images they have rec
 
 
 ```
+#| export utils
 # @snoop
 def count_files_in_subfolders(path, db=False):
     from pathlib import Path
@@ -1558,8 +1574,8 @@ randomdisplay(cry_dino.ls()[0])
 
 
 
-    (Path('T-rex_or_Brachiosaurus/T-rex/38fdfbb4-0fc2-4bac-bba9-af838a87e2d5.jpg'),
-     PILImage mode=RGB size=400x225)
+    (Path('T-rex_or_Brachiosaurus/T-rex/230bcafc-b051-41b8-aaf0-cba82735d2bc.jpg'),
+     PILImage mode=RGB size=400x400)
 
 
 
@@ -1571,8 +1587,8 @@ randomdisplay(cry_dino.ls()[1])
 
 
 
-    (Path('T-rex_or_Brachiosaurus/Brachiosaurus/e2f548b8-c6cb-408d-9e2e-5997bca8170c.png'),
-     PILImage mode=RGB size=400x225)
+    (Path('T-rex_or_Brachiosaurus/Brachiosaurus/6b830f71-3ac3-4088-a018-c96724c08f3b.jpg'),
+     PILImage mode=RGB size=900x900)
 
 
 
@@ -1728,7 +1744,7 @@ Image.open(Path('forest_or_bird/bird/3b7a4112-9d77-4d8f-8b4c-a01e2ca1ecea.aspx')
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_119_0.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_121_0.png)
     
 
 
@@ -1746,15 +1762,8 @@ def parent_label(o):
 
 
 ```
-dino.ls()[0].ls()[0]
+# dino.ls()[0].ls()[0]
 ```
-
-
-
-
-    Path('T-rex_or_Spinosaurus aegyptiacus/crying/c4016dd8-bde7-4dd4-b2b0-a9a4514ac834.jpg')
-
-
 
 
 ```
@@ -1763,17 +1772,62 @@ parent_label(dino.ls()[1].ls()[0])
 ```
 
 
+    ---------------------------------------------------------------------------
+
+    NotADirectoryError                        Traceback (most recent call last)
+
+    Input In [84], in <cell line: 1>()
+    ----> 1 parent_label(dino.ls()[0].ls()[0])
+          2 parent_label(dino.ls()[1].ls()[0])
 
 
-    'crying'
+    File ~/mambaforge/lib/python3.9/site-packages/fastcore/xtras.py:305, in ls(self, n_max, file_type, file_exts)
+        303 res = (o for o in self.iterdir() if has_extns or o.suffix in extns)
+        304 if n_max is not None: res = itertools.islice(res, n_max)
+    --> 305 return L(res)
 
 
+    File ~/mambaforge/lib/python3.9/site-packages/fastcore/foundation.py:98, in _L_Meta.__call__(cls, x, *args, **kwargs)
+         96 def __call__(cls, x=None, *args, **kwargs):
+         97     if not args and not kwargs and x is not None and isinstance(x,cls): return x
+    ---> 98     return super().__call__(x, *args, **kwargs)
 
 
+    File ~/mambaforge/lib/python3.9/site-packages/fastcore/foundation.py:106, in L.__init__(self, items, use_list, match, *rest)
+        104 def __init__(self, items=None, *rest, use_list=False, match=None):
+        105     if (use_list is not None) or not is_array(items):
+    --> 106         items = listify(items, *rest, use_list=use_list, match=match)
+        107     super().__init__(items)
 
 
-    'Spinosaurus aegyptiacus'
+    File ~/mambaforge/lib/python3.9/site-packages/fastcore/basics.py:66, in listify(o, use_list, match, *rest)
+         64 elif isinstance(o, list): res = o
+         65 elif isinstance(o, str) or is_array(o): res = [o]
+    ---> 66 elif is_iter(o): res = list(o)
+         67 else: res = [o]
+         68 if match is not None:
 
+
+    File ~/mambaforge/lib/python3.9/site-packages/fastcore/xtras.py:303, in <genexpr>(.0)
+        301 if file_type: extns += L(k for k,v in mimetypes.types_map.items() if v.startswith(file_type+'/'))
+        302 has_extns = len(extns)==0
+    --> 303 res = (o for o in self.iterdir() if has_extns or o.suffix in extns)
+        304 if n_max is not None: res = itertools.islice(res, n_max)
+        305 return L(res)
+
+
+    File ~/mambaforge/lib/python3.9/pathlib.py:1160, in Path.iterdir(self)
+       1156 def iterdir(self):
+       1157     """Iterate over the files in this directory.  Does not yield any
+       1158     result for the special paths '.' and '..'.
+       1159     """
+    -> 1160     for name in self._accessor.listdir(self):
+       1161         if name in {'.', '..'}:
+       1162             # Yielding a path object for these makes little sense
+       1163             continue
+
+
+    NotADirectoryError: [Errno 20] Not a directory: 'T-rex_or_Spinosaurus aegyptiacus/.DS_Store'
 
 
 ### RandomSplitter(valid_pct=0.2, seed=None), torch.linspace(0,1,100)
@@ -1808,8 +1862,8 @@ rs(x)
 
 
 
-    ((#80) [60,80,75,33,1,91,35,15,93,58...],
-     (#20) [51,57,3,55,65,20,94,46,76,70...])
+    ((#80) [31,25,64,20,22,55,67,66,24,0...],
+     (#20) [96,36,51,99,11,12,76,7,74,40...])
 
 
 
@@ -1831,6 +1885,10 @@ rs(x)
 Resize image to `size` using `method` such as 'crop', 'squish' and 'pad'
 
 What does `crop`, `squish` and `pad` resize effects look like
+
+`rsz = Resize(256, method='crop')` returns a func and use it to actually resize image as below
+
+`rsz(img, split_idx=0)`
 
 
 ```
@@ -1920,7 +1978,7 @@ show_image(img)
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_134_1.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_136_1.png)
     
 
 
@@ -1934,7 +1992,7 @@ rsz(img, split_idx=0)
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_135_0.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_137_0.png)
     
 
 
@@ -1970,7 +2028,7 @@ for ax,method in zip(axs.flatten(), [ResizeMethod.Squish, ResizeMethod.Pad, Resi
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_136_3.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_138_3.png)
     
 
 
@@ -2005,7 +2063,7 @@ for ax,method in zip(axs.flatten(), [ResizeMethod.Squish, ResizeMethod.Pad, Resi
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_137_3.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_139_3.png)
     
 
 
@@ -2273,53 +2331,53 @@ class _TfmMeta(type):
 class Transform(metaclass=_TfmMeta):pass
 ```
 
-    22:38:47.92 >>> Call to _TfmMeta.__new__ in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/2173750754.py", line 3
-    22:38:47.92 .......... cls = <class '__main__._TfmMeta'>
-    22:38:47.92 .......... name = 'Transform'
-    22:38:47.92 .......... bases = ()
-    22:38:47.92 .......... dict = {'__module__': '__main__', '__qualname__': 'Transform'}
-    22:38:47.92 .......... __class__ = <class '__main__._TfmMeta'>
-    22:38:47.92    3 |     def __new__(cls, name, bases, dict):
-    22:38:47.92    4 |         res = super().__new__(cls, name, bases, dict)
-    22:38:47.92 .............. res = <class '__main__.Transform'>
-    22:38:47.92    5 |         for nm in _tfm_methods:
-    22:38:47.92 .............. nm = 'encodes'
-    22:38:47.92    6 |             base_td = [getattr(b,nm,None) for b in bases]
-        22:38:47.92 List comprehension:
-        22:38:47.92    6 |             base_td = [getattr(b,nm,None) for b in bases]
-        22:38:47.92 .................. Iterating over <tuple_iterator object>
-        22:38:47.92 .................. Values of nm: 'encodes'
-        22:38:47.92 Result: []
-    22:38:47.92    6 |             base_td = [getattr(b,nm,None) for b in bases]
-    22:38:47.92 .................. base_td = []
-    22:38:47.92    7 |             if nm in res.__dict__: getattr(res,nm).bases = base_td
-    22:38:47.92    8 |             else: setattr(res, nm, TypeDispatch(bases=base_td))
-    22:38:47.92    5 |         for nm in _tfm_methods:
-    22:38:47.92 .............. nm = 'decodes'
-    22:38:47.92    6 |             base_td = [getattr(b,nm,None) for b in bases]
-        22:38:47.92 List comprehension:
-        22:38:47.92    6 |             base_td = [getattr(b,nm,None) for b in bases]
-        22:38:47.92 .................. Iterating over <tuple_iterator object>
-        22:38:47.92 .................. Values of nm: 'decodes'
-        22:38:47.92 Result: []
-    22:38:47.92    6 |             base_td = [getattr(b,nm,None) for b in bases]
-    22:38:47.92    7 |             if nm in res.__dict__: getattr(res,nm).bases = base_td
-    22:38:47.92    8 |             else: setattr(res, nm, TypeDispatch(bases=base_td))
-    22:38:47.93    5 |         for nm in _tfm_methods:
-    22:38:47.93 .............. nm = 'setups'
-    22:38:47.93    6 |             base_td = [getattr(b,nm,None) for b in bases]
-        22:38:47.93 List comprehension:
-        22:38:47.93    6 |             base_td = [getattr(b,nm,None) for b in bases]
-        22:38:47.93 .................. Iterating over <tuple_iterator object>
-        22:38:47.93 .................. Values of nm: 'setups'
-        22:38:47.93 Result: []
-    22:38:47.93    6 |             base_td = [getattr(b,nm,None) for b in bases]
-    22:38:47.93    7 |             if nm in res.__dict__: getattr(res,nm).bases = base_td
-    22:38:47.93    8 |             else: setattr(res, nm, TypeDispatch(bases=base_td))
-    22:38:47.93    5 |         for nm in _tfm_methods:
-    22:38:47.93   10 |         res.__signature__ = inspect.signature(res.__init__)
-    22:38:47.93   11 |         return res
-    22:38:47.93 <<< Return value from _TfmMeta.__new__: <class '__main__.Transform'>
+    23:35:17.91 >>> Call to _TfmMeta.__new__ in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/2173750754.py", line 3
+    23:35:17.91 .......... cls = <class '__main__._TfmMeta'>
+    23:35:17.91 .......... name = 'Transform'
+    23:35:17.91 .......... bases = ()
+    23:35:17.91 .......... dict = {'__module__': '__main__', '__qualname__': 'Transform'}
+    23:35:17.91 .......... __class__ = <class '__main__._TfmMeta'>
+    23:35:17.91    3 |     def __new__(cls, name, bases, dict):
+    23:35:17.91    4 |         res = super().__new__(cls, name, bases, dict)
+    23:35:17.91 .............. res = <class '__main__.Transform'>
+    23:35:17.91    5 |         for nm in _tfm_methods:
+    23:35:17.91 .............. nm = 'encodes'
+    23:35:17.91    6 |             base_td = [getattr(b,nm,None) for b in bases]
+        23:35:17.91 List comprehension:
+        23:35:17.91    6 |             base_td = [getattr(b,nm,None) for b in bases]
+        23:35:17.91 .................. Iterating over <tuple_iterator object>
+        23:35:17.91 .................. Values of nm: 'encodes'
+        23:35:17.91 Result: []
+    23:35:17.91    6 |             base_td = [getattr(b,nm,None) for b in bases]
+    23:35:17.91 .................. base_td = []
+    23:35:17.91    7 |             if nm in res.__dict__: getattr(res,nm).bases = base_td
+    23:35:17.91    8 |             else: setattr(res, nm, TypeDispatch(bases=base_td))
+    23:35:17.91    5 |         for nm in _tfm_methods:
+    23:35:17.91 .............. nm = 'decodes'
+    23:35:17.91    6 |             base_td = [getattr(b,nm,None) for b in bases]
+        23:35:17.91 List comprehension:
+        23:35:17.91    6 |             base_td = [getattr(b,nm,None) for b in bases]
+        23:35:17.91 .................. Iterating over <tuple_iterator object>
+        23:35:17.91 .................. Values of nm: 'decodes'
+        23:35:17.91 Result: []
+    23:35:17.91    6 |             base_td = [getattr(b,nm,None) for b in bases]
+    23:35:17.91    7 |             if nm in res.__dict__: getattr(res,nm).bases = base_td
+    23:35:17.91    8 |             else: setattr(res, nm, TypeDispatch(bases=base_td))
+    23:35:17.91    5 |         for nm in _tfm_methods:
+    23:35:17.91 .............. nm = 'setups'
+    23:35:17.91    6 |             base_td = [getattr(b,nm,None) for b in bases]
+        23:35:17.91 List comprehension:
+        23:35:17.91    6 |             base_td = [getattr(b,nm,None) for b in bases]
+        23:35:17.91 .................. Iterating over <tuple_iterator object>
+        23:35:17.91 .................. Values of nm: 'setups'
+        23:35:17.91 Result: []
+    23:35:17.91    6 |             base_td = [getattr(b,nm,None) for b in bases]
+    23:35:17.91    7 |             if nm in res.__dict__: getattr(res,nm).bases = base_td
+    23:35:17.91    8 |             else: setattr(res, nm, TypeDispatch(bases=base_td))
+    23:35:17.91    5 |         for nm in _tfm_methods:
+    23:35:17.91   10 |         res.__signature__ = inspect.signature(res.__init__)
+    23:35:17.91   11 |         return res
+    23:35:17.92 <<< Return value from _TfmMeta.__new__: <class '__main__.Transform'>
 
 
 
@@ -2438,7 +2496,7 @@ def CategoryBlock(
 # Type:      function
 ```
 
-### DataBlock.```__init__```(blocks:list=None, dl_type:TfmdDL=None, getters:list=None, n_inp:int=None, item_tfms:list=None, batch_tfms:list=None, get_items=None, splitter=None, get_y=None, get_x=None)
+### DataBlock.__init__(blocks:list=None, dl_type:TfmdDL=None, getters:list=None, n_inp:int=None, item_tfms:list=None, batch_tfms:list=None, get_items=None, splitter=None, get_y=None, get_x=None)
 Prepare and organise all the funcs needed to split and transform x and getting y or labels
 
 
@@ -2592,115 +2650,115 @@ dls = DataBlock(
 ).dataloaders(bird)
 ```
 
-    22:38:48.17 >>> Call to DataBlock.__init__ in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/1228990494.py", line 13
-    22:38:48.17 .......... self = <__main__.DataBlock object>
-    22:38:48.17 .......... blocks = (<function ImageBlock>, <function CategoryBlock>)
-    22:38:48.17 .......... dl_type = None
-    22:38:48.17 .......... getters = None
-    22:38:48.17 .......... n_inp = None
-    22:38:48.17 .......... item_tfms = [Resize -- {'size': (192, 192), 'method': 'squish...encodes
-    22:38:48.17                        (TensorPoint,object) -> encodes
-    22:38:48.17                        decodes: ]
-    22:38:48.17 .......... batch_tfms = None
-    22:38:48.17 .......... kwargs = {}
-    22:38:48.17   13 |     def __init__(self, 
-    22:38:48.17   23 |         blocks = L(self.blocks if blocks is None else blocks)
-    22:38:48.17 .............. blocks = [<function ImageBlock>, <function CategoryBlock>]
-    22:38:48.17   24 |         pp(blocks)
-    22:38:48.17 LOG:
-    22:38:48.22 .... blocks = [<function ImageBlock>, <function CategoryBlock>]
-    22:38:48.22   25 |         blocks = L(b() if callable(b) else b for b in blocks)
-    22:38:48.22 .............. blocks = [<__main__.TransformBlock object>, <__main__.TransformBlock object>]
-    22:38:48.22   26 |         pp(blocks)        
-    22:38:48.22 LOG:
-    22:38:48.23 .... blocks = [<__main__.TransformBlock object>, <__main__.TransformBlock object>]
-    22:38:48.24   28 |         pp(inspect.getdoc(blocks.attrgot), inspect.signature(blocks.attrgot))
-    22:38:48.24 LOG:
-    22:38:48.25 .... inspect.getdoc(blocks.attrgot) = 'Create new `L` with attr `k` (or value `k` for dicts) of all `items`.'
-    22:38:48.25 .... inspect.signature(blocks.attrgot) = <Signature (k, default=None)>
-    22:38:48.25   29 |         pp(blocks.map(lambda x: x.__dict__))
-    22:38:48.25 LOG:
-    22:38:48.27 .... blocks.map(lambda x: x.__dict__) = [{'type_tfms': [<bound method PILBase.create of <class 'fastai.vision.core.PILImage'>>], 'item_tfms': [<class 'fastai.data.transforms.ToTensor'>], 'batch_tfms': [<class 'fastai.data.transforms.IntToFloatTensor'>], 'dl_type': None, 'dls_kwargs': {}}, {'type_tfms': [Categorize -- {'vocab': None, 'sort': True, 'add_na': False}:
-    22:38:48.27                                         encodes: (Tabular,object) -> encodes
-    22:38:48.27                                         (object,object) -> encodes
-    22:38:48.27                                         decodes: (Tabular,object) -> decodes
-    22:38:48.27                                         (object,object) -> decodes
-    22:38:48.27                                         ], 'item_tfms': [<class 'fastai.data.transforms.ToTensor'>], 'batch_tfms': [], 'dl_type': None, 'dls_kwargs': {}}]
-    22:38:48.27   30 |         self.type_tfms = blocks.attrgot('type_tfms', L())
-    22:38:48.27   32 |         pp(inspect.getdoc(_merge_tfms), inspect.signature(_merge_tfms))
-    22:38:48.27 LOG:
-    22:38:48.28 .... inspect.getdoc(_merge_tfms) = ('Group the `tfms` in a single list, removing duplicates (from the same class) '
-    22:38:48.28                                     'and instantiating')
-    22:38:48.28 .... inspect.signature(_merge_tfms) = <Signature (*tfms)>
-    22:38:48.28   33 |         self.default_item_tfms  = _merge_tfms(*blocks.attrgot('item_tfms',  L()))
-    22:38:48.28   34 |         pp(self.default_item_tfms)
-    22:38:48.28 LOG:
-    22:38:48.30 .... self.default_item_tfms = [ToTensor:
-    22:38:48.30                               encodes: (PILMask,object) -> encodes
-    22:38:48.30                               (PILBase,object) -> encodes
-    22:38:48.30                               decodes: ]
-    22:38:48.30   36 |         self.default_batch_tfms = _merge_tfms(*blocks.attrgot('batch_tfms', L()))
-    22:38:48.30   37 |         pp(self.default_batch_tfms)
-    22:38:48.30 LOG:
-    22:38:48.31 .... self.default_batch_tfms = [IntToFloatTensor -- {'div': 255.0, 'div_mask': 1}:
-    22:38:48.31                                encodes: (TensorImage,object) -> encodes
-    22:38:48.31                                (TensorMask,object) -> encodes
-    22:38:48.31                                decodes: (TensorImage,object) -> decodes
-    22:38:48.31                                ]
-    22:38:48.31   39 |         for b in blocks:
-    22:38:48.31 .............. b = <__main__.TransformBlock object>
-    22:38:48.31   40 |             if getattr(b, 'dl_type', None) is not None: 
-    22:38:48.31   39 |         for b in blocks:
-    22:38:48.31 .............. b = <__main__.TransformBlock object>
-    22:38:48.31   40 |             if getattr(b, 'dl_type', None) is not None: 
-    22:38:48.31   39 |         for b in blocks:
-    22:38:48.31   42 |         if dl_type is not None: 
-    22:38:48.31   44 |         pp(self.dl_type)
-    22:38:48.31 LOG:
-    22:38:48.32 .... self.dl_type = <class 'fastai.data.core.TfmdDL'>
-    22:38:48.32   46 |         self.dataloaders = delegates(self.dl_type.__init__)(self.dataloaders) # get kwargs from dl_type.__init__ to self.dataloaders
-    22:38:48.32   47 |         pp(self.dataloaders)
-    22:38:48.32 LOG:
-    22:38:48.33 .... self.dataloaders = <bound method DataBlock.dataloaders of <__main__.DataBlock object>>
-    22:38:48.33   49 |         self.dls_kwargs = merge(*blocks.attrgot('dls_kwargs', {}))
-    22:38:48.33   50 |         pp(self.dls_kwargs)
-    22:38:48.33 LOG:
-    22:38:48.34 .... self.dls_kwargs = {}
-    22:38:48.34   52 |         self.n_inp = ifnone(n_inp, max(1, len(blocks)-1)) # n_inp is dependent on the number of blocks
-    22:38:48.34   53 |         pp(self.n_inp)
-    22:38:48.34 LOG:
-    22:38:48.35 .... self.n_inp = 1
-    22:38:48.35   55 |         self.getters = ifnone(getters, [noop]*len(self.type_tfms))
-    22:38:48.35   56 |         pp(self.getters)
-    22:38:48.36 LOG:
-    22:38:48.37 .... self.getters = [<function noop>, <function noop>]
-    22:38:48.37   58 |         if self.get_x:
-    22:38:48.37   62 |         pp(self.get_x)
-    22:38:48.37 LOG:
-    22:38:48.38 .... self.get_x = None
-    22:38:48.38   64 |         if self.get_y:
-    22:38:48.38   65 |             n_targs = len(self.getters) - self.n_inp
-    22:38:48.38 .................. n_targs = 1
-    22:38:48.38   66 |             if len(L(self.get_y)) != n_targs:
-    22:38:48.38   68 |             self.getters[self.n_inp:] = L(self.get_y)
-    22:38:48.38   69 |         pp(self.getters)
-    22:38:48.38 LOG:
-    22:38:48.39 .... self.getters = [<function noop>, <function parent_label>]
-    22:38:48.39   71 |         if kwargs: 
-    22:38:48.39   74 |         pp(item_tfms, batch_tfms)
-    22:38:48.39 LOG:
-    22:38:48.40 .... item_tfms = [Resize -- {'size': (192, 192), 'method': 'squish', 'pad_mode': 'reflection', 'resamples': (<Resampling.BILINEAR: 2>, <Resampling.NEAREST: 0>), 'p': 1.0}:
-    22:38:48.40                  encodes: (Image,object) -> encodes
-    22:38:48.40                  (TensorBBox,object) -> encodes
-    22:38:48.40                  (TensorPoint,object) -> encodes
-    22:38:48.40                  decodes: ]
-    22:38:48.40 .... batch_tfms = None
-    22:38:48.40   75 |         pp(inspect.getdoc(self.new), inspect.signature(self.new))
-    22:38:48.40 LOG:
-    22:38:48.42 .... inspect.getdoc(self.new) = 'Create a new `DataBlock` with other `item_tfms` and `batch_tfms`'
-    22:38:48.42 .... inspect.signature(self.new) = <Signature (item_tfms: 'list' = None, batch_tfms: 'list' = None)>
-    22:38:48.42   76 |         self.new(item_tfms, batch_tfms)
-    22:38:48.42 <<< Return value from DataBlock.__init__: None
+    23:35:18.14 >>> Call to DataBlock.__init__ in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/1228990494.py", line 13
+    23:35:18.14 .......... self = <__main__.DataBlock object>
+    23:35:18.14 .......... blocks = (<function ImageBlock>, <function CategoryBlock>)
+    23:35:18.14 .......... dl_type = None
+    23:35:18.14 .......... getters = None
+    23:35:18.14 .......... n_inp = None
+    23:35:18.14 .......... item_tfms = [Resize -- {'size': (192, 192), 'method': 'squish...encodes
+    23:35:18.14                        (TensorPoint,object) -> encodes
+    23:35:18.14                        decodes: ]
+    23:35:18.14 .......... batch_tfms = None
+    23:35:18.14 .......... kwargs = {}
+    23:35:18.14   13 |     def __init__(self, 
+    23:35:18.14   23 |         blocks = L(self.blocks if blocks is None else blocks)
+    23:35:18.14 .............. blocks = [<function ImageBlock>, <function CategoryBlock>]
+    23:35:18.14   24 |         pp(blocks)
+    23:35:18.14 LOG:
+    23:35:18.20 .... blocks = [<function ImageBlock>, <function CategoryBlock>]
+    23:35:18.20   25 |         blocks = L(b() if callable(b) else b for b in blocks)
+    23:35:18.20 .............. blocks = [<__main__.TransformBlock object>, <__main__.TransformBlock object>]
+    23:35:18.20   26 |         pp(blocks)        
+    23:35:18.20 LOG:
+    23:35:18.21 .... blocks = [<__main__.TransformBlock object>, <__main__.TransformBlock object>]
+    23:35:18.21   28 |         pp(inspect.getdoc(blocks.attrgot), inspect.signature(blocks.attrgot))
+    23:35:18.21 LOG:
+    23:35:18.23 .... inspect.getdoc(blocks.attrgot) = 'Create new `L` with attr `k` (or value `k` for dicts) of all `items`.'
+    23:35:18.23 .... inspect.signature(blocks.attrgot) = <Signature (k, default=None)>
+    23:35:18.23   29 |         pp(blocks.map(lambda x: x.__dict__))
+    23:35:18.23 LOG:
+    23:35:18.25 .... blocks.map(lambda x: x.__dict__) = [{'type_tfms': [<bound method PILBase.create of <class 'fastai.vision.core.PILImage'>>], 'item_tfms': [<class 'fastai.data.transforms.ToTensor'>], 'batch_tfms': [<class 'fastai.data.transforms.IntToFloatTensor'>], 'dl_type': None, 'dls_kwargs': {}}, {'type_tfms': [Categorize -- {'vocab': None, 'sort': True, 'add_na': False}:
+    23:35:18.25                                         encodes: (Tabular,object) -> encodes
+    23:35:18.25                                         (object,object) -> encodes
+    23:35:18.25                                         decodes: (Tabular,object) -> decodes
+    23:35:18.25                                         (object,object) -> decodes
+    23:35:18.25                                         ], 'item_tfms': [<class 'fastai.data.transforms.ToTensor'>], 'batch_tfms': [], 'dl_type': None, 'dls_kwargs': {}}]
+    23:35:18.25   30 |         self.type_tfms = blocks.attrgot('type_tfms', L())
+    23:35:18.25   32 |         pp(inspect.getdoc(_merge_tfms), inspect.signature(_merge_tfms))
+    23:35:18.25 LOG:
+    23:35:18.26 .... inspect.getdoc(_merge_tfms) = ('Group the `tfms` in a single list, removing duplicates (from the same class) '
+    23:35:18.26                                     'and instantiating')
+    23:35:18.26 .... inspect.signature(_merge_tfms) = <Signature (*tfms)>
+    23:35:18.26   33 |         self.default_item_tfms  = _merge_tfms(*blocks.attrgot('item_tfms',  L()))
+    23:35:18.27   34 |         pp(self.default_item_tfms)
+    23:35:18.27 LOG:
+    23:35:18.28 .... self.default_item_tfms = [ToTensor:
+    23:35:18.28                               encodes: (PILMask,object) -> encodes
+    23:35:18.28                               (PILBase,object) -> encodes
+    23:35:18.28                               decodes: ]
+    23:35:18.28   36 |         self.default_batch_tfms = _merge_tfms(*blocks.attrgot('batch_tfms', L()))
+    23:35:18.28   37 |         pp(self.default_batch_tfms)
+    23:35:18.28 LOG:
+    23:35:18.29 .... self.default_batch_tfms = [IntToFloatTensor -- {'div': 255.0, 'div_mask': 1}:
+    23:35:18.29                                encodes: (TensorImage,object) -> encodes
+    23:35:18.29                                (TensorMask,object) -> encodes
+    23:35:18.29                                decodes: (TensorImage,object) -> decodes
+    23:35:18.29                                ]
+    23:35:18.29   39 |         for b in blocks:
+    23:35:18.29 .............. b = <__main__.TransformBlock object>
+    23:35:18.29   40 |             if getattr(b, 'dl_type', None) is not None: 
+    23:35:18.29   39 |         for b in blocks:
+    23:35:18.29 .............. b = <__main__.TransformBlock object>
+    23:35:18.29   40 |             if getattr(b, 'dl_type', None) is not None: 
+    23:35:18.29   39 |         for b in blocks:
+    23:35:18.29   42 |         if dl_type is not None: 
+    23:35:18.29   44 |         pp(self.dl_type)
+    23:35:18.29 LOG:
+    23:35:18.30 .... self.dl_type = <class 'fastai.data.core.TfmdDL'>
+    23:35:18.30   46 |         self.dataloaders = delegates(self.dl_type.__init__)(self.dataloaders) # get kwargs from dl_type.__init__ to self.dataloaders
+    23:35:18.30   47 |         pp(self.dataloaders)
+    23:35:18.30 LOG:
+    23:35:18.31 .... self.dataloaders = <bound method DataBlock.dataloaders of <__main__.DataBlock object>>
+    23:35:18.31   49 |         self.dls_kwargs = merge(*blocks.attrgot('dls_kwargs', {}))
+    23:35:18.32   50 |         pp(self.dls_kwargs)
+    23:35:18.32 LOG:
+    23:35:18.33 .... self.dls_kwargs = {}
+    23:35:18.33   52 |         self.n_inp = ifnone(n_inp, max(1, len(blocks)-1)) # n_inp is dependent on the number of blocks
+    23:35:18.33   53 |         pp(self.n_inp)
+    23:35:18.33 LOG:
+    23:35:18.34 .... self.n_inp = 1
+    23:35:18.34   55 |         self.getters = ifnone(getters, [noop]*len(self.type_tfms))
+    23:35:18.34   56 |         pp(self.getters)
+    23:35:18.34 LOG:
+    23:35:18.35 .... self.getters = [<function noop>, <function noop>]
+    23:35:18.35   58 |         if self.get_x:
+    23:35:18.35   62 |         pp(self.get_x)
+    23:35:18.35 LOG:
+    23:35:18.36 .... self.get_x = None
+    23:35:18.36   64 |         if self.get_y:
+    23:35:18.37   65 |             n_targs = len(self.getters) - self.n_inp
+    23:35:18.37 .................. n_targs = 1
+    23:35:18.37   66 |             if len(L(self.get_y)) != n_targs:
+    23:35:18.37   68 |             self.getters[self.n_inp:] = L(self.get_y)
+    23:35:18.37   69 |         pp(self.getters)
+    23:35:18.37 LOG:
+    23:35:18.38 .... self.getters = [<function noop>, <function parent_label>]
+    23:35:18.38   71 |         if kwargs: 
+    23:35:18.38   74 |         pp(item_tfms, batch_tfms)
+    23:35:18.38 LOG:
+    23:35:18.39 .... item_tfms = [Resize -- {'size': (192, 192), 'method': 'squish', 'pad_mode': 'reflection', 'resamples': (<Resampling.BILINEAR: 2>, <Resampling.NEAREST: 0>), 'p': 1.0}:
+    23:35:18.39                  encodes: (Image,object) -> encodes
+    23:35:18.39                  (TensorBBox,object) -> encodes
+    23:35:18.39                  (TensorPoint,object) -> encodes
+    23:35:18.39                  decodes: ]
+    23:35:18.39 .... batch_tfms = None
+    23:35:18.39   75 |         pp(inspect.getdoc(self.new), inspect.signature(self.new))
+    23:35:18.39 LOG:
+    23:35:18.41 .... inspect.getdoc(self.new) = 'Create a new `DataBlock` with other `item_tfms` and `batch_tfms`'
+    23:35:18.41 .... inspect.signature(self.new) = <Signature (item_tfms: 'list' = None, batch_tfms: 'list' = None)>
+    23:35:18.41   76 |         self.new(item_tfms, batch_tfms)
+    23:35:18.41 <<< Return value from DataBlock.__init__: None
 
 
 ### DataBlock.datasets(source, verbose)
@@ -2760,56 +2818,56 @@ dls = DataBlock(
 ).datasets(bird, True)
 ```
 
-    22:38:48.97 >>> Call to datasets in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/3647961006.py", line 3
-    22:38:48.97 ...... self = <fastai.data.block.DataBlock object>
-    22:38:48.97 ...... source = Path('forest_or_bird')
-    22:38:48.97 ...... verbose = True
-    22:38:48.97    3 | def datasets(self:DataBlock, 
-    22:38:48.97    7 |         self.source = source 
-    22:38:48.97    9 |         pp(doc_sig(pv))
-    22:38:48.97 LOG:
-    22:38:48.98 .... doc_sig(pv) = ('no mro', 'no doc', <Signature (text, verbose)>)
-    22:38:48.98   10 |         pv(f"Collecting items from {source}", verbose)
-    22:38:48.98   11 |         pp(pv(f"Collecting items from {source}", verbose))
-    22:38:48.98 LOG:
-    22:38:48.99 .... pv(f"Collecting items from {source}", verbose) = None
-    22:38:48.99   13 |         pp((None or noop))
-    22:38:48.99 LOG:
-    22:38:48.99 .... None or noop = <function noop>
-    22:38:48.99   14 |         pp((self.get_items or noop))
-    22:38:48.99 LOG:
-    22:38:49.00 .... self.get_items or noop = <function get_image_files>
-    22:38:49.00   15 |         items = (self.get_items or noop)(source)
-    22:38:49.00 .............. items = [Path('forest_or_bird/forest/82e9179d-2dd6-4144-.../bird/0bc8d1a8-e443-40b7-a148-f043c158400f.jpg')]
-    22:38:49.00   16 |         pp(chk(items))  
-    22:38:49.00 LOG:
-    22:38:49.01 .... chk(items) = (<class 'fastcore.foundation.L'>, 251, 'no shape')
-    22:38:49.01   18 |         pv(f"Found {len(items)} items", verbose)
-    22:38:49.01   19 |         splits = (self.splitter or RandomSplitter())(items)
-    22:38:49.01 .............. splits = ([83, 160, 7, 134, 147, 94, 126, 237, 55, 95, 244...8, 200, 229, 213, 206, 115, 121, 66, 195, 1, 168], [128, 68, 120, 17, 177, 16, 221, 131, 102, 22, 6..., 4, 2, 203, 129, 218, 137, 118, 249, 93, 34, 36])
-    22:38:49.01   20 |         pp(chk(splits))
-    22:38:49.01 LOG:
-    22:38:49.02 .... chk(splits) = (<class 'tuple'>, 2, 'no shape')
-    22:38:49.02   21 |         pv(f"{len(splits)} datasets of sizes {','.join([str(len(s)) for s in splits])}", verbose)
-        22:38:49.02 List comprehension:
-        22:38:49.02   21 |         pv(f"{len(splits)} datasets of sizes {','.join([str(len(s)) for s in splits])}", verbose)
-        22:38:49.02 .............. Iterating over <tuple_iterator object>
-        22:38:49.02 .............. Values of s: [83, 160, 7, 134, 147, 94, 126, 237, 55, 95, 244...8, 200, 229, 213, 206, 115, 121, 66, 195, 1, 168], [128, 68, 120, 17, 177, 16, 221, 131, 102, 22, 6..., 4, 2, 203, 129, 218, 137, 118, 249, 93, 34, 36]
-        22:38:49.02 Result: ['201', '50']
-    22:38:49.02   21 |         pv(f"{len(splits)} datasets of sizes {','.join([str(len(s)) for s in splits])}", verbose)
-    22:38:49.02   23 |         pp(doc_sig(Datasets))
-    22:38:49.02 LOG:
-    22:38:49.03 .... doc_sig(Datasets) = ((<class 'fastai.data.core.Datasets'>,
-    22:38:49.03                            <class 'fastai.data.core.FilteredBase'>,
-    22:38:49.03                            <class 'object'>),
-    22:38:49.03                           'A dataset that creates a tuple from each `tfms`',
-    22:38:49.03                           <Signature (items: 'list' = None, tfms: 'list | Pipeline' = None, tls: 'TfmdLists' = None, n_inp: 'int' = None, dl_type=None, *, use_list: 'bool' = None, do_setup: 'bool' = True, split_idx: 'int' = None, train_setup: 'bool' = True, splits: 'list' = None, types=None, verbose: 'bool' = False)>)
-    22:38:49.03   24 |         pp(doc_sig(Datasets.__init__))
-    22:38:49.03 LOG:
-    22:38:49.03 .... doc_sig(Datasets.__init__) = ('no mro',
-    22:38:49.03                                    'Initialize self.  See help(type(self)) for accurate signature.',
-    22:38:49.03                                    <Signature (self, items: 'list' = None, tfms: 'list | Pipeline' = None, tls: 'TfmdLists' = None, n_inp: 'int' = None, dl_type=None, **kwargs)>)
-    22:38:49.04   25 |         res = Datasets(items, tfms=self._combine_type_tfms(), splits=splits, dl_type=self.dl_type, n_inp=self.n_inp, verbose=verbose)
+    23:35:19.01 >>> Call to datasets in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/3647961006.py", line 3
+    23:35:19.01 ...... self = <fastai.data.block.DataBlock object>
+    23:35:19.01 ...... source = Path('forest_or_bird')
+    23:35:19.01 ...... verbose = True
+    23:35:19.01    3 | def datasets(self:DataBlock, 
+    23:35:19.02    7 |         self.source = source 
+    23:35:19.02    9 |         pp(doc_sig(pv))
+    23:35:19.02 LOG:
+    23:35:19.03 .... doc_sig(pv) = ('no mro', 'no doc', <Signature (text, verbose)>)
+    23:35:19.03   10 |         pv(f"Collecting items from {source}", verbose)
+    23:35:19.03   11 |         pp(pv(f"Collecting items from {source}", verbose))
+    23:35:19.03 LOG:
+    23:35:19.04 .... pv(f"Collecting items from {source}", verbose) = None
+    23:35:19.04   13 |         pp((None or noop))
+    23:35:19.04 LOG:
+    23:35:19.04 .... None or noop = <function noop>
+    23:35:19.04   14 |         pp((self.get_items or noop))
+    23:35:19.04 LOG:
+    23:35:19.05 .... self.get_items or noop = <function get_image_files>
+    23:35:19.05   15 |         items = (self.get_items or noop)(source)
+    23:35:19.05 .............. items = [Path('forest_or_bird/forest/82e9179d-2dd6-4144-.../bird/0bc8d1a8-e443-40b7-a148-f043c158400f.jpg')]
+    23:35:19.05   16 |         pp(chk(items))  
+    23:35:19.05 LOG:
+    23:35:19.06 .... chk(items) = (<class 'fastcore.foundation.L'>, 251, 'no shape')
+    23:35:19.06   18 |         pv(f"Found {len(items)} items", verbose)
+    23:35:19.06   19 |         splits = (self.splitter or RandomSplitter())(items)
+    23:35:19.07 .............. splits = ([83, 160, 7, 134, 147, 94, 126, 237, 55, 95, 244...8, 200, 229, 213, 206, 115, 121, 66, 195, 1, 168], [128, 68, 120, 17, 177, 16, 221, 131, 102, 22, 6..., 4, 2, 203, 129, 218, 137, 118, 249, 93, 34, 36])
+    23:35:19.07   20 |         pp(chk(splits))
+    23:35:19.07 LOG:
+    23:35:19.07 .... chk(splits) = (<class 'tuple'>, 2, 'no shape')
+    23:35:19.07   21 |         pv(f"{len(splits)} datasets of sizes {','.join([str(len(s)) for s in splits])}", verbose)
+        23:35:19.07 List comprehension:
+        23:35:19.07   21 |         pv(f"{len(splits)} datasets of sizes {','.join([str(len(s)) for s in splits])}", verbose)
+        23:35:19.08 .............. Iterating over <tuple_iterator object>
+        23:35:19.08 .............. Values of s: [83, 160, 7, 134, 147, 94, 126, 237, 55, 95, 244...8, 200, 229, 213, 206, 115, 121, 66, 195, 1, 168], [128, 68, 120, 17, 177, 16, 221, 131, 102, 22, 6..., 4, 2, 203, 129, 218, 137, 118, 249, 93, 34, 36]
+        23:35:19.08 Result: ['201', '50']
+    23:35:19.08   21 |         pv(f"{len(splits)} datasets of sizes {','.join([str(len(s)) for s in splits])}", verbose)
+    23:35:19.08   23 |         pp(doc_sig(Datasets))
+    23:35:19.08 LOG:
+    23:35:19.08 .... doc_sig(Datasets) = ((<class 'fastai.data.core.Datasets'>,
+    23:35:19.08                            <class 'fastai.data.core.FilteredBase'>,
+    23:35:19.08                            <class 'object'>),
+    23:35:19.08                           'A dataset that creates a tuple from each `tfms`',
+    23:35:19.08                           <Signature (items: 'list' = None, tfms: 'list | Pipeline' = None, tls: 'TfmdLists' = None, n_inp: 'int' = None, dl_type=None, *, use_list: 'bool' = None, do_setup: 'bool' = True, split_idx: 'int' = None, train_setup: 'bool' = True, splits: 'list' = None, types=None, verbose: 'bool' = False)>)
+    23:35:19.08   24 |         pp(doc_sig(Datasets.__init__))
+    23:35:19.08 LOG:
+    23:35:19.09 .... doc_sig(Datasets.__init__) = ('no mro',
+    23:35:19.09                                    'Initialize self.  See help(type(self)) for accurate signature.',
+    23:35:19.09                                    <Signature (self, items: 'list' = None, tfms: 'list | Pipeline' = None, tls: 'TfmdLists' = None, n_inp: 'int' = None, dl_type=None, **kwargs)>)
+    23:35:19.09   25 |         res = Datasets(items, tfms=self._combine_type_tfms(), splits=splits, dl_type=self.dl_type, n_inp=self.n_inp, verbose=verbose)
 
 
     Collecting items from forest_or_bird
@@ -2819,14 +2877,14 @@ dls = DataBlock(
     Setting up Pipeline: PILBase.create
 
 
-    22:38:49.30 .............. res = (#251) [(PILImage mode=RGB size=400x250, TensorC...age mode=RGB size=400x400, TensorCategory(1))...]
-    22:38:49.30   26 |         return res
+    23:35:19.36 .............. res = (#251) [(PILImage mode=RGB size=400x250, TensorC...age mode=RGB size=400x400, TensorCategory(1))...]
+    23:35:19.36   26 |         return res
 
 
     Setting up Pipeline: parent_label -> Categorize -- {'vocab': None, 'sort': True, 'add_na': False}
 
 
-    22:38:49.45 <<< Return value from datasets: (#251) [(PILImage mode=RGB size=400x250, TensorC...age mode=RGB size=400x400, TensorCategory(1))...]
+    23:35:19.52 <<< Return value from datasets: (#251) [(PILImage mode=RGB size=400x250, TensorC...age mode=RGB size=400x400, TensorCategory(1))...]
 
 
 
@@ -2889,51 +2947,51 @@ dls = DataBlock(
 ).dataloaders(bird)
 ```
 
-    22:38:49.54 >>> Call to dataloaders in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/2346295921.py", line 3
-    22:38:49.54 ...... self = <fastai.data.block.DataBlock object>
-    22:38:49.54 ...... source = Path('forest_or_bird')
-    22:38:49.54 ...... path = '.'
-    22:38:49.54 ...... verbose = False
-    22:38:49.54 ...... kwargs = {}
-    22:38:49.54    3 | def dataloaders(self:DataBlock, 
-    22:38:49.54    9 |     pp(doc_sig(self.datasets))
-    22:38:49.54 LOG:
-    22:38:49.55 .... doc_sig(self.datasets) = ('no mro',
-    22:38:49.55                                'no doc',
-    22:38:49.55                                <Signature (source, verbose: 'bool' = False) -> 'Datasets'>)
-    22:38:49.55   11 |     dsets = self.datasets(source, verbose=verbose)
-    22:38:49.81 .......... dsets = (#251) [(PILImage mode=RGB size=400x250, TensorC...age mode=RGB size=400x400, TensorCategory(1))...]
-    22:38:49.81   12 |     pp(doc_sig(type(dsets)))
-    22:38:49.81 LOG:
-    22:38:49.81 .... doc_sig(type(dsets)) = ((<class 'fastai.data.core.Datasets'>,
-    22:38:49.81                               <class 'fastai.data.core.FilteredBase'>,
-    22:38:49.81                               <class 'object'>),
-    22:38:49.81                              'A dataset that creates a tuple from each `tfms`',
-    22:38:49.81                              <Signature (items: 'list' = None, tfms: 'list | Pipeline' = None, tls: 'TfmdLists' = None, n_inp: 'int' = None, dl_type=None, *, use_list: 'bool' = None, do_setup: 'bool' = True, split_idx: 'int' = None, train_setup: 'bool' = True, splits: 'list' = None, types=None, verbose: 'bool' = False)>)
-    22:38:49.89   15 |     kwargs = {**self.dls_kwargs, **kwargs, 'verbose': verbose}
-    22:38:49.96 .......... kwargs = {'verbose': False}
-    22:38:49.96   16 |     pp(kwargs)
-    22:38:49.96 LOG:
-    22:38:49.96 .... kwargs = {'verbose': False}
-    22:38:50.03   18 |     pp(doc_sig(dsets.dataloaders))
-    22:38:50.04 LOG:
-    22:38:50.04 .... doc_sig(dsets.dataloaders) = ('no mro',
-    22:38:50.04                                    'Get a `DataLoaders`',
-    22:38:50.04                                    <Signature (bs: 'int' = 64, shuffle_train: 'bool' = None, shuffle: 'bool' = True, val_shuffle: 'bool' = False, n: 'int' = None, path: 'str | Path' = '.', dl_type: 'TfmdDL' = None, dl_kwargs: 'list' = None, device: 'torch.device' = None, drop_last: 'bool' = None, val_bs: 'int' = None, *, num_workers: 'int' = None, verbose: 'bool' = False, do_setup: 'bool' = True, pin_memory=False, timeout=0, batch_size=None, indexed=None, persistent_workers=False, pin_memory_device='', wif=None, before_iter=None, after_item=None, before_batch=None, after_batch=None, after_iter=None, create_batches=None, create_item=None, create_batch=None, retain=None, get_idxs=None, sample=None, shuffle_fn=None, do_batch=None) -> 'DataLoaders'>)
-    22:38:50.11   19 |     res = dsets.dataloaders(path=path, after_item=self.item_tfms, after_batch=self.batch_tfms, **kwargs)
-    22:38:50.44 .......... res = <fastai.data.core.DataLoaders object>
-    22:38:50.44   20 |     pp(doc_sig(res))
-    22:38:50.45 LOG:
-    22:38:50.45 .... doc_sig(res) = ('no mro', 'Basic wrapper around several `DataLoader`s.', 'no signature')
-    22:38:50.53   21 |     pp(doc_sig(res.__class__))
-    22:38:50.53 LOG:
-    22:38:50.53 .... doc_sig(res.__class__) = ((<class 'fastai.data.core.DataLoaders'>,
-    22:38:50.53                                 <class 'fastcore.basics.GetAttr'>,
-    22:38:50.53                                 <class 'object'>),
-    22:38:50.53                                'Basic wrapper around several `DataLoader`s.',
-    22:38:50.53                                <Signature (*loaders, path: 'str | Path' = '.', device=None)>)
-    22:38:50.61   22 |     return res
-    22:38:50.68 <<< Return value from dataloaders: <fastai.data.core.DataLoaders object>
+    23:35:19.60 >>> Call to dataloaders in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/2346295921.py", line 3
+    23:35:19.60 ...... self = <fastai.data.block.DataBlock object>
+    23:35:19.60 ...... source = Path('forest_or_bird')
+    23:35:19.60 ...... path = '.'
+    23:35:19.60 ...... verbose = False
+    23:35:19.60 ...... kwargs = {}
+    23:35:19.60    3 | def dataloaders(self:DataBlock, 
+    23:35:19.60    9 |     pp(doc_sig(self.datasets))
+    23:35:19.60 LOG:
+    23:35:19.61 .... doc_sig(self.datasets) = ('no mro',
+    23:35:19.61                                'no doc',
+    23:35:19.61                                <Signature (source, verbose: 'bool' = False) -> 'Datasets'>)
+    23:35:19.61   11 |     dsets = self.datasets(source, verbose=verbose)
+    23:35:19.87 .......... dsets = (#251) [(PILImage mode=RGB size=400x250, TensorC...age mode=RGB size=400x400, TensorCategory(1))...]
+    23:35:19.87   12 |     pp(doc_sig(type(dsets)))
+    23:35:19.87 LOG:
+    23:35:19.88 .... doc_sig(type(dsets)) = ((<class 'fastai.data.core.Datasets'>,
+    23:35:19.88                               <class 'fastai.data.core.FilteredBase'>,
+    23:35:19.88                               <class 'object'>),
+    23:35:19.88                              'A dataset that creates a tuple from each `tfms`',
+    23:35:19.88                              <Signature (items: 'list' = None, tfms: 'list | Pipeline' = None, tls: 'TfmdLists' = None, n_inp: 'int' = None, dl_type=None, *, use_list: 'bool' = None, do_setup: 'bool' = True, split_idx: 'int' = None, train_setup: 'bool' = True, splits: 'list' = None, types=None, verbose: 'bool' = False)>)
+    23:35:19.95   15 |     kwargs = {**self.dls_kwargs, **kwargs, 'verbose': verbose}
+    23:35:20.02 .......... kwargs = {'verbose': False}
+    23:35:20.02   16 |     pp(kwargs)
+    23:35:20.02 LOG:
+    23:35:20.03 .... kwargs = {'verbose': False}
+    23:35:20.10   18 |     pp(doc_sig(dsets.dataloaders))
+    23:35:20.10 LOG:
+    23:35:20.10 .... doc_sig(dsets.dataloaders) = ('no mro',
+    23:35:20.10                                    'Get a `DataLoaders`',
+    23:35:20.10                                    <Signature (bs: 'int' = 64, shuffle_train: 'bool' = None, shuffle: 'bool' = True, val_shuffle: 'bool' = False, n: 'int' = None, path: 'str | Path' = '.', dl_type: 'TfmdDL' = None, dl_kwargs: 'list' = None, device: 'torch.device' = None, drop_last: 'bool' = None, val_bs: 'int' = None, *, num_workers: 'int' = None, verbose: 'bool' = False, do_setup: 'bool' = True, pin_memory=False, timeout=0, batch_size=None, indexed=None, persistent_workers=False, pin_memory_device='', wif=None, before_iter=None, after_item=None, before_batch=None, after_batch=None, after_iter=None, create_batches=None, create_item=None, create_batch=None, retain=None, get_idxs=None, sample=None, shuffle_fn=None, do_batch=None) -> 'DataLoaders'>)
+    23:35:20.18   19 |     res = dsets.dataloaders(path=path, after_item=self.item_tfms, after_batch=self.batch_tfms, **kwargs)
+    23:35:20.50 .......... res = <fastai.data.core.DataLoaders object>
+    23:35:20.50   20 |     pp(doc_sig(res))
+    23:35:20.50 LOG:
+    23:35:20.51 .... doc_sig(res) = ('no mro', 'Basic wrapper around several `DataLoader`s.', 'no signature')
+    23:35:20.58   21 |     pp(doc_sig(res.__class__))
+    23:35:20.58 LOG:
+    23:35:20.59 .... doc_sig(res.__class__) = ((<class 'fastai.data.core.DataLoaders'>,
+    23:35:20.59                                 <class 'fastcore.basics.GetAttr'>,
+    23:35:20.59                                 <class 'object'>),
+    23:35:20.59                                'Basic wrapper around several `DataLoader`s.',
+    23:35:20.59                                <Signature (*loaders, path: 'str | Path' = '.', device=None)>)
+    23:35:20.66   22 |     return res
+    23:35:20.74 <<< Return value from dataloaders: <fastai.data.core.DataLoaders object>
 
 
 
@@ -3023,355 +3081,355 @@ def vision_learner(dls, arch, normalize=True, n_out=None, pretrained=True,
 learn = vision_learner(dls, resnet18, metrics=error_rate)
 ```
 
-    22:38:50.77 >>> Call to vision_learner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/3098971962.py", line 3
-    22:38:50.77 ...... dls = <fastai.data.core.DataLoaders object>
-    22:38:50.77 ...... arch = <function resnet18>
-    22:38:50.77 ...... normalize = True
-    22:38:50.77 ...... n_out = None
-    22:38:50.77 ...... pretrained = True
-    22:38:50.77 ...... loss_func = None
-    22:38:50.77 ...... opt_func = <function Adam>
-    22:38:50.77 ...... lr = 0.001
-    22:38:50.77 ...... splitter = None
-    22:38:50.77 ...... cbs = None
-    22:38:50.77 ...... metrics = <function error_rate>
-    22:38:50.77 ...... path = None
-    22:38:50.77 ...... model_dir = 'models'
-    22:38:50.77 ...... wd = None
-    22:38:50.77 ...... wd_bn_bias = False
-    22:38:50.77 ...... train_bn = True
-    22:38:50.77 ...... moms = (0.95, 0.85, 0.95)
-    22:38:50.77 ...... cut = None
-    22:38:50.77 ...... init = <function kaiming_normal_>
-    22:38:50.77 ...... custom_head = None
-    22:38:50.77 ...... concat_pool = True
-    22:38:50.77 ...... pool = True
-    22:38:50.77 ...... lin_ftrs = None
-    22:38:50.77 ...... ps = 0.5
-    22:38:50.77 ...... first_bn = True
-    22:38:50.77 ...... bn_final = False
-    22:38:50.77 ...... lin_first = False
-    22:38:50.77 ...... y_range = None
-    22:38:50.77 ...... kwargs = {}
-    22:38:50.77    3 | def vision_learner(dls, arch, normalize=True, n_out=None, pretrained=True, 
-    22:38:50.77   11 |     pp(doc_sig(get_c))
-    22:38:50.77 LOG:
-    22:38:50.80 .... doc_sig(get_c) = ('no mro', 'no doc', <Signature (dls)>)
-    22:38:50.80   12 |     if n_out is None: 
-    22:38:50.80   13 |         n_out = get_c(dls)
-    22:38:50.80 .............. n_out = 2
-    22:38:50.80   14 |     assert n_out, "`n_out` is not defined, and could not be inferred from data, set `dls.c` or pass `n_out`"
-    22:38:50.80   15 |     pp(arch, _default_meta, model_meta, model_meta.get)
-    22:38:50.80 LOG:
-    22:38:50.81 .... arch = <function resnet18>
-    22:38:50.81 .... _default_meta = {'cut': None, 'split': <function default_split>}
-    22:38:50.81 .... model_meta = {<function alexnet>: {'cut': -2,
-    22:38:50.81                                                        'split': <function _alexnet_split>,
-    22:38:50.81                                                        'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                  [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function densenet121>: {'cut': -1,
-    22:38:50.81                                                            'split': <function _densenet_split>,
-    22:38:50.81                                                            'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                      [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function densenet161>: {'cut': -1,
-    22:38:50.81                                                            'split': <function _densenet_split>,
-    22:38:50.81                                                            'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                      [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function densenet169>: {'cut': -1,
-    22:38:50.81                                                            'split': <function _densenet_split>,
-    22:38:50.81                                                            'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                      [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function densenet201>: {'cut': -1,
-    22:38:50.81                                                            'split': <function _densenet_split>,
-    22:38:50.81                                                            'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                      [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function resnet18>: {'cut': -2,
-    22:38:50.81                                                         'split': <function _resnet_split>,
-    22:38:50.81                                                         'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                   [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function resnet34>: {'cut': -2,
-    22:38:50.81                                                         'split': <function _resnet_split>,
-    22:38:50.81                                                         'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                   [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function resnet50>: {'cut': -2,
-    22:38:50.81                                                         'split': <function _resnet_split>,
-    22:38:50.81                                                         'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                   [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function resnet101>: {'cut': -2,
-    22:38:50.81                                                          'split': <function _resnet_split>,
-    22:38:50.81                                                          'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                    [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function resnet152>: {'cut': -2,
-    22:38:50.81                                                          'split': <function _resnet_split>,
-    22:38:50.81                                                          'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                    [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function squeezenet1_0>: {'cut': -1,
-    22:38:50.81                                                              'split': <function _squeezenet_split>,
-    22:38:50.81                                                              'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                        [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function squeezenet1_1>: {'cut': -1,
-    22:38:50.81                                                              'split': <function _squeezenet_split>,
-    22:38:50.81                                                              'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                        [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function vgg11_bn>: {'cut': -2,
-    22:38:50.81                                                         'split': <function _vgg_split>,
-    22:38:50.81                                                         'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                   [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function vgg13_bn>: {'cut': -2,
-    22:38:50.81                                                         'split': <function _vgg_split>,
-    22:38:50.81                                                         'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                   [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function vgg16_bn>: {'cut': -2,
-    22:38:50.81                                                         'split': <function _vgg_split>,
-    22:38:50.81                                                         'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                   [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function vgg19_bn>: {'cut': -2,
-    22:38:50.81                                                         'split': <function _vgg_split>,
-    22:38:50.81                                                         'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                   [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function xresnet18>: {'cut': -4,
-    22:38:50.81                                                          'split': <function _xresnet_split>,
-    22:38:50.81                                                          'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                    [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function xresnet34>: {'cut': -4,
-    22:38:50.81                                                          'split': <function _xresnet_split>,
-    22:38:50.81                                                          'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                    [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function xresnet50>: {'cut': -4,
-    22:38:50.81                                                          'split': <function _xresnet_split>,
-    22:38:50.81                                                          'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                    [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function xresnet101>: {'cut': -4,
-    22:38:50.81                                                           'split': <function _xresnet_split>,
-    22:38:50.81                                                           'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                     [0.229, 0.224, 0.225])},
-    22:38:50.81                    <function xresnet152>: {'cut': -4,
-    22:38:50.81                                                           'split': <function _xresnet_split>,
-    22:38:50.81                                                           'stats': ([0.485, 0.456, 0.406],
-    22:38:50.81                                                                     [0.229, 0.224, 0.225])}}
-    22:38:50.81 .... model_meta.get = <built-in method get of dict object>
-    22:38:50.81   16 |     meta = model_meta.get(arch, _default_meta)
-    22:38:50.81 .......... meta = {'cut': -2, 'split': <function _resnet_split>, 'stats': ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])}
-    22:38:50.81   17 |     model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
-    22:38:50.82   18 |                       first_bn=first_bn, bn_final=bn_final, lin_first=lin_first, y_range=y_range, **kwargs)
-    22:38:50.82   17 |     model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
-    22:38:50.82   18 |                       first_bn=first_bn, bn_final=bn_final, lin_first=lin_first, y_range=y_range, **kwargs)
-    22:38:50.82   17 |     model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
-    22:38:50.82 .......... model_args = {'init': <function kaiming_normal_>, 'custom_head': None, 'concat_pool': True, 'pool': True, ...}
-    22:38:50.82   19 |     pp(model_args)
-    22:38:50.82 LOG:
-    22:38:50.82 .... model_args = {'bn_final': False,
-    22:38:50.82                    'concat_pool': True,
-    22:38:50.82                    'custom_head': None,
-    22:38:50.82                    'first_bn': True,
-    22:38:50.82                    'init': <function kaiming_normal_>,
-    22:38:50.82                    'lin_first': False,
-    22:38:50.82                    'lin_ftrs': None,
-    22:38:50.82                    'pool': True,
-    22:38:50.82                    'ps': 0.5,
-    22:38:50.82                    'y_range': None}
-    22:38:50.82   20 |     if isinstance(arch, str):
-    22:38:50.83   28 |         pp(dls, meta, pretrained)
-    22:38:50.83 LOG:
-    22:38:50.83 .... dls = <fastai.data.core.DataLoaders object>
-    22:38:50.83 .... meta = {'cut': -2,
-    22:38:50.83              'split': <function _resnet_split>,
-    22:38:50.83              'stats': ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])}
-    22:38:50.83 .... pretrained = True
-    22:38:50.83   29 |         pp(doc_sig(_add_norm))
-    22:38:50.84 LOG:
-    22:38:50.84 .... doc_sig(_add_norm) = ('no mro', 'no doc', <Signature (dls, meta, pretrained)>)
-    22:38:50.85   30 |         if normalize: 
-    22:38:50.85   31 |             _add_norm(dls, meta, pretrained)
-    22:38:50.85   32 |         pp(arch, n_out, pretrained, model_args)
-    22:38:50.85 LOG:
-    22:38:50.86 .... arch = <function resnet18>
-    22:38:50.86 .... n_out = 2
-    22:38:50.86 .... pretrained = True
-    22:38:50.86 .... model_args = {'bn_final': False,
-    22:38:50.86                    'concat_pool': True,
-    22:38:50.86                    'custom_head': None,
-    22:38:50.86                    'first_bn': True,
-    22:38:50.86                    'init': <function kaiming_normal_>,
-    22:38:50.86                    'lin_first': False,
-    22:38:50.86                    'lin_ftrs': None,
-    22:38:50.86                    'pool': True,
-    22:38:50.86                    'ps': 0.5,
-    22:38:50.86                    'y_range': None}
-    22:38:50.86   33 |         pp(doc_sig(create_vision_model))
-    22:38:50.86 LOG:
-    22:38:50.87 .... doc_sig(create_vision_model) = ('no mro',
-    22:38:50.87                                      'Create custom vision architecture',
-    22:38:50.87                                      <Signature (arch, n_out, pretrained=True, cut=None, n_in=3, init=<function kaiming_normal_>, custom_head=None, concat_pool=True, pool=True, lin_ftrs=None, ps=0.5, first_bn=True, bn_final=False, lin_first=False, y_range=None)>)
-    22:38:50.87   34 |         model = create_vision_model(arch, n_out, pretrained=pretrained, **model_args)
+    23:35:20.82 >>> Call to vision_learner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/3098971962.py", line 3
+    23:35:20.82 ...... dls = <fastai.data.core.DataLoaders object>
+    23:35:20.82 ...... arch = <function resnet18>
+    23:35:20.82 ...... normalize = True
+    23:35:20.82 ...... n_out = None
+    23:35:20.82 ...... pretrained = True
+    23:35:20.82 ...... loss_func = None
+    23:35:20.82 ...... opt_func = <function Adam>
+    23:35:20.82 ...... lr = 0.001
+    23:35:20.82 ...... splitter = None
+    23:35:20.82 ...... cbs = None
+    23:35:20.82 ...... metrics = <function error_rate>
+    23:35:20.82 ...... path = None
+    23:35:20.82 ...... model_dir = 'models'
+    23:35:20.82 ...... wd = None
+    23:35:20.82 ...... wd_bn_bias = False
+    23:35:20.82 ...... train_bn = True
+    23:35:20.82 ...... moms = (0.95, 0.85, 0.95)
+    23:35:20.82 ...... cut = None
+    23:35:20.82 ...... init = <function kaiming_normal_>
+    23:35:20.82 ...... custom_head = None
+    23:35:20.82 ...... concat_pool = True
+    23:35:20.82 ...... pool = True
+    23:35:20.82 ...... lin_ftrs = None
+    23:35:20.82 ...... ps = 0.5
+    23:35:20.82 ...... first_bn = True
+    23:35:20.82 ...... bn_final = False
+    23:35:20.82 ...... lin_first = False
+    23:35:20.82 ...... y_range = None
+    23:35:20.82 ...... kwargs = {}
+    23:35:20.82    3 | def vision_learner(dls, arch, normalize=True, n_out=None, pretrained=True, 
+    23:35:20.82   11 |     pp(doc_sig(get_c))
+    23:35:20.82 LOG:
+    23:35:20.86 .... doc_sig(get_c) = ('no mro', 'no doc', <Signature (dls)>)
+    23:35:20.86   12 |     if n_out is None: 
+    23:35:20.86   13 |         n_out = get_c(dls)
+    23:35:20.86 .............. n_out = 2
+    23:35:20.86   14 |     assert n_out, "`n_out` is not defined, and could not be inferred from data, set `dls.c` or pass `n_out`"
+    23:35:20.86   15 |     pp(arch, _default_meta, model_meta, model_meta.get)
+    23:35:20.86 LOG:
+    23:35:20.87 .... arch = <function resnet18>
+    23:35:20.87 .... _default_meta = {'cut': None, 'split': <function default_split>}
+    23:35:20.87 .... model_meta = {<function alexnet>: {'cut': -2,
+    23:35:20.87                                                        'split': <function _alexnet_split>,
+    23:35:20.87                                                        'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                  [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function densenet121>: {'cut': -1,
+    23:35:20.87                                                            'split': <function _densenet_split>,
+    23:35:20.87                                                            'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                      [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function densenet161>: {'cut': -1,
+    23:35:20.87                                                            'split': <function _densenet_split>,
+    23:35:20.87                                                            'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                      [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function densenet169>: {'cut': -1,
+    23:35:20.87                                                            'split': <function _densenet_split>,
+    23:35:20.87                                                            'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                      [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function densenet201>: {'cut': -1,
+    23:35:20.87                                                            'split': <function _densenet_split>,
+    23:35:20.87                                                            'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                      [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function resnet18>: {'cut': -2,
+    23:35:20.87                                                         'split': <function _resnet_split>,
+    23:35:20.87                                                         'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                   [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function resnet34>: {'cut': -2,
+    23:35:20.87                                                         'split': <function _resnet_split>,
+    23:35:20.87                                                         'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                   [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function resnet50>: {'cut': -2,
+    23:35:20.87                                                         'split': <function _resnet_split>,
+    23:35:20.87                                                         'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                   [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function resnet101>: {'cut': -2,
+    23:35:20.87                                                          'split': <function _resnet_split>,
+    23:35:20.87                                                          'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                    [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function resnet152>: {'cut': -2,
+    23:35:20.87                                                          'split': <function _resnet_split>,
+    23:35:20.87                                                          'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                    [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function squeezenet1_0>: {'cut': -1,
+    23:35:20.87                                                              'split': <function _squeezenet_split>,
+    23:35:20.87                                                              'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                        [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function squeezenet1_1>: {'cut': -1,
+    23:35:20.87                                                              'split': <function _squeezenet_split>,
+    23:35:20.87                                                              'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                        [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function vgg11_bn>: {'cut': -2,
+    23:35:20.87                                                         'split': <function _vgg_split>,
+    23:35:20.87                                                         'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                   [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function vgg13_bn>: {'cut': -2,
+    23:35:20.87                                                         'split': <function _vgg_split>,
+    23:35:20.87                                                         'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                   [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function vgg16_bn>: {'cut': -2,
+    23:35:20.87                                                         'split': <function _vgg_split>,
+    23:35:20.87                                                         'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                   [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function vgg19_bn>: {'cut': -2,
+    23:35:20.87                                                         'split': <function _vgg_split>,
+    23:35:20.87                                                         'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                   [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function xresnet18>: {'cut': -4,
+    23:35:20.87                                                          'split': <function _xresnet_split>,
+    23:35:20.87                                                          'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                    [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function xresnet34>: {'cut': -4,
+    23:35:20.87                                                          'split': <function _xresnet_split>,
+    23:35:20.87                                                          'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                    [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function xresnet50>: {'cut': -4,
+    23:35:20.87                                                          'split': <function _xresnet_split>,
+    23:35:20.87                                                          'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                    [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function xresnet101>: {'cut': -4,
+    23:35:20.87                                                           'split': <function _xresnet_split>,
+    23:35:20.87                                                           'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                     [0.229, 0.224, 0.225])},
+    23:35:20.87                    <function xresnet152>: {'cut': -4,
+    23:35:20.87                                                           'split': <function _xresnet_split>,
+    23:35:20.87                                                           'stats': ([0.485, 0.456, 0.406],
+    23:35:20.87                                                                     [0.229, 0.224, 0.225])}}
+    23:35:20.88 .... model_meta.get = <built-in method get of dict object>
+    23:35:20.88   16 |     meta = model_meta.get(arch, _default_meta)
+    23:35:20.88 .......... meta = {'cut': -2, 'split': <function _resnet_split>, 'stats': ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])}
+    23:35:20.88   17 |     model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
+    23:35:20.88   18 |                       first_bn=first_bn, bn_final=bn_final, lin_first=lin_first, y_range=y_range, **kwargs)
+    23:35:20.88   17 |     model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
+    23:35:20.88   18 |                       first_bn=first_bn, bn_final=bn_final, lin_first=lin_first, y_range=y_range, **kwargs)
+    23:35:20.88   17 |     model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
+    23:35:20.88 .......... model_args = {'init': <function kaiming_normal_>, 'custom_head': None, 'concat_pool': True, 'pool': True, ...}
+    23:35:20.88   19 |     pp(model_args)
+    23:35:20.88 LOG:
+    23:35:20.89 .... model_args = {'bn_final': False,
+    23:35:20.89                    'concat_pool': True,
+    23:35:20.89                    'custom_head': None,
+    23:35:20.89                    'first_bn': True,
+    23:35:20.89                    'init': <function kaiming_normal_>,
+    23:35:20.89                    'lin_first': False,
+    23:35:20.89                    'lin_ftrs': None,
+    23:35:20.89                    'pool': True,
+    23:35:20.89                    'ps': 0.5,
+    23:35:20.89                    'y_range': None}
+    23:35:20.89   20 |     if isinstance(arch, str):
+    23:35:20.89   28 |         pp(dls, meta, pretrained)
+    23:35:20.89 LOG:
+    23:35:20.90 .... dls = <fastai.data.core.DataLoaders object>
+    23:35:20.90 .... meta = {'cut': -2,
+    23:35:20.90              'split': <function _resnet_split>,
+    23:35:20.90              'stats': ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])}
+    23:35:20.90 .... pretrained = True
+    23:35:20.90   29 |         pp(doc_sig(_add_norm))
+    23:35:20.90 LOG:
+    23:35:20.91 .... doc_sig(_add_norm) = ('no mro', 'no doc', <Signature (dls, meta, pretrained)>)
+    23:35:20.91   30 |         if normalize: 
+    23:35:20.91   31 |             _add_norm(dls, meta, pretrained)
+    23:35:20.91   32 |         pp(arch, n_out, pretrained, model_args)
+    23:35:20.91 LOG:
+    23:35:20.92 .... arch = <function resnet18>
+    23:35:20.92 .... n_out = 2
+    23:35:20.92 .... pretrained = True
+    23:35:20.92 .... model_args = {'bn_final': False,
+    23:35:20.92                    'concat_pool': True,
+    23:35:20.92                    'custom_head': None,
+    23:35:20.92                    'first_bn': True,
+    23:35:20.92                    'init': <function kaiming_normal_>,
+    23:35:20.92                    'lin_first': False,
+    23:35:20.92                    'lin_ftrs': None,
+    23:35:20.92                    'pool': True,
+    23:35:20.92                    'ps': 0.5,
+    23:35:20.92                    'y_range': None}
+    23:35:20.92   33 |         pp(doc_sig(create_vision_model))
+    23:35:20.92 LOG:
+    23:35:20.93 .... doc_sig(create_vision_model) = ('no mro',
+    23:35:20.93                                      'Create custom vision architecture',
+    23:35:20.93                                      <Signature (arch, n_out, pretrained=True, cut=None, n_in=3, init=<function kaiming_normal_>, custom_head=None, concat_pool=True, pool=True, lin_ftrs=None, ps=0.5, first_bn=True, bn_final=False, lin_first=False, y_range=None)>)
+    23:35:20.94   34 |         model = create_vision_model(arch, n_out, pretrained=pretrained, **model_args)
     /Users/Natsume/mambaforge/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
       warnings.warn(
     /Users/Natsume/mambaforge/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
       warnings.warn(msg)
-    22:38:51.11 .............. model = Sequential(
-    22:38:51.11                          (0): Sequential(
-    22:38:51.11                            (0): Conv2d(3...n_features=512, out_features=2, bias=False)
-    22:38:51.11                          )
-    22:38:51.11                        )
-    22:38:51.11   35 |         pp(model)
-    22:38:51.11 LOG:
-    22:38:51.12 .... model = Sequential(
-    22:38:51.12                (0): Sequential(
-    22:38:51.12                  (0): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-    22:38:51.12                  (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                  (2): ReLU(inplace=True)
-    22:38:51.12                  (3): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
-    22:38:51.12                  (4): Sequential(
-    22:38:51.12                    (0): BasicBlock(
-    22:38:51.12                      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (relu): ReLU(inplace=True)
-    22:38:51.12                      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                    )
-    22:38:51.12                    (1): BasicBlock(
-    22:38:51.12                      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (relu): ReLU(inplace=True)
-    22:38:51.12                      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                    )
-    22:38:51.12                  )
-    22:38:51.12                  (5): Sequential(
-    22:38:51.12                    (0): BasicBlock(
-    22:38:51.12                      (conv1): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (relu): ReLU(inplace=True)
-    22:38:51.12                      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (downsample): Sequential(
-    22:38:51.12                        (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)
-    22:38:51.12                        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      )
-    22:38:51.12                    )
-    22:38:51.12                    (1): BasicBlock(
-    22:38:51.12                      (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (relu): ReLU(inplace=True)
-    22:38:51.12                      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                    )
-    22:38:51.12                  )
-    22:38:51.12                  (6): Sequential(
-    22:38:51.12                    (0): BasicBlock(
-    22:38:51.12                      (conv1): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (relu): ReLU(inplace=True)
-    22:38:51.12                      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (downsample): Sequential(
-    22:38:51.12                        (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False)
-    22:38:51.12                        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      )
-    22:38:51.12                    )
-    22:38:51.12                    (1): BasicBlock(
-    22:38:51.12                      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (relu): ReLU(inplace=True)
-    22:38:51.12                      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                    )
-    22:38:51.12                  )
-    22:38:51.12                  (7): Sequential(
-    22:38:51.12                    (0): BasicBlock(
-    22:38:51.12                      (conv1): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (relu): ReLU(inplace=True)
-    22:38:51.12                      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (downsample): Sequential(
-    22:38:51.12                        (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
-    22:38:51.12                        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      )
-    22:38:51.12                    )
-    22:38:51.12                    (1): BasicBlock(
-    22:38:51.12                      (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                      (relu): ReLU(inplace=True)
-    22:38:51.12                      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
-    22:38:51.12                      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                    )
-    22:38:51.12                  )
-    22:38:51.12                )
-    22:38:51.12                (1): Sequential(
-    22:38:51.12                  (0): AdaptiveConcatPool2d(
-    22:38:51.12                    (ap): AdaptiveAvgPool2d(output_size=1)
-    22:38:51.12                    (mp): AdaptiveMaxPool2d(output_size=1)
-    22:38:51.12                  )
-    22:38:51.12                  (1): fastai.layers.Flatten(full=False)
-    22:38:51.12                  (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                  (3): Dropout(p=0.25, inplace=False)
-    22:38:51.12                  (4): Linear(in_features=1024, out_features=512, bias=False)
-    22:38:51.12                  (5): ReLU(inplace=True)
-    22:38:51.12                  (6): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    22:38:51.12                  (7): Dropout(p=0.5, inplace=False)
-    22:38:51.12                  (8): Linear(in_features=512, out_features=2, bias=False)
-    22:38:51.12                )
-    22:38:51.12              )
-    22:38:51.12   36 |     pp.deep(lambda: ifnone(splitter, meta['split']))
-    22:38:51.12 LOG:
-    22:38:51.16 ........ ifnone = <function ifnone>
-    22:38:51.16 ........ splitter = None
-    22:38:51.16 ............ meta = {'cut': -2, 'split': <function _resnet_split>, 'stats': ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])}
-    22:38:51.16 ........ meta['split'] = <function _resnet_split>
-    22:38:51.16 .... ifnone(splitter, meta['split']) = <function _resnet_split>
-    22:38:51.16   37 |     splitter=ifnone(splitter, meta['split'])
-    22:38:51.16 .......... splitter = <function _resnet_split>
-    22:38:51.16   38 |     pp(dict(dls=dls, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
-    22:38:51.16   39 |                    metrics=metrics, path=path, model_dir=model_dir, wd=wd, wd_bn_bias=wd_bn_bias, train_bn=train_bn, moms=moms))
-    22:38:51.16   38 |     pp(dict(dls=dls, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
-    22:38:51.16 LOG:
-    22:38:51.18 .... dict(dls=dls, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
-    22:38:51.18                  metrics=metrics, path=path, model_dir=model_dir, wd=wd, wd_bn_bias=wd_bn_bias, train_bn=train_bn, moms=moms) = {'cbs': None,
-    22:38:51.18                                                                                                                                  'dls': <fastai.data.core.DataLoaders object>,
-    22:38:51.18                                                                                                                                  'loss_func': None,
-    22:38:51.18                                                                                                                                  'lr': 0.001,
-    22:38:51.18                                                                                                                                  'metrics': <function error_rate>,
-    22:38:51.18                                                                                                                                  'model_dir': 'models',
-    22:38:51.18                                                                                                                                  'moms': (0.95, 0.85, 0.95),
-    22:38:51.18                                                                                                                                  'opt_func': <function Adam>,
-    22:38:51.18                                                                                                                                  'path': None,
-    22:38:51.18                                                                                                                                  'splitter': <function _resnet_split>,
-    22:38:51.18                                                                                                                                  'train_bn': True,
-    22:38:51.18                                                                                                                                  'wd': None,
-    22:38:51.18                                                                                                                                  'wd_bn_bias': False}
-    22:38:51.18   40 |     pp(doc_sig(Learner))
-    22:38:51.18 LOG:
-    22:38:51.19 .... doc_sig(Learner) = ((<class 'fastai.learner.Learner'>,
-    22:38:51.19                           <class 'fastcore.basics.GetAttr'>,
-    22:38:51.19                           <class 'object'>),
-    22:38:51.19                          'Group together a `model`, some `dls` and a `loss_func` to handle training',
-    22:38:51.19                          <Signature (dls, model: 'callable', loss_func: 'callable | None' = None, opt_func=<function Adam>, lr=0.001, splitter: 'callable' = <function trainable_params>, cbs=None, metrics=None, path=None, model_dir='models', wd=None, wd_bn_bias=False, train_bn=True, moms=(0.95, 0.85, 0.95), default_cbs: 'bool' = True)>)
-    22:38:51.19   41 |     learn = Learner(dls=dls, model=model, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
-    22:38:51.19   42 |                    metrics=metrics, path=path, model_dir=model_dir, wd=wd, wd_bn_bias=wd_bn_bias, train_bn=train_bn, moms=moms)
-    22:38:51.19   41 |     learn = Learner(dls=dls, model=model, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
-    22:38:51.19 .......... learn = <fastai.learner.Learner object>
-    22:38:51.19   43 |     pp(doc_sig(learn.freeze))
-    22:38:51.19 LOG:
-    22:38:51.20 .... doc_sig(learn.freeze) = ('no mro', 'Freeze up to last parameter group', <Signature ()>)
-    22:38:51.20   44 |     if pretrained: 
-    22:38:51.20   45 |         learn.freeze()
-    22:38:51.21   47 |     pp(doc_sig(store_attr), kwargs)
-    22:38:51.21 LOG:
-    22:38:51.22 .... doc_sig(store_attr) = ('no mro',
-    22:38:51.22                             'Store params named in comma-separated `names` from calling context into '
-    22:38:51.22                             'attrs in `self`',
-    22:38:51.22                             <Signature (names=None, self=None, but='', cast=False, store_args=None, **attrs)>)
-    22:38:51.22 .... kwargs = {}
-    22:38:51.22   48 |     pp(learn.__dict__.keys())
-    22:38:51.22 LOG:
-    22:38:51.23 .... learn.__dict__.keys() = dict_keys(['dls', 'model', '__stored_args__', 'loss_func', 'opt_func', 'lr', 'splitter', '_metrics', 'path', 'model_dir', 'wd', 'wd_bn_bias', 'train_bn', 'moms', 'default_cbs', 'training', 'create_mbar', 'logger', 'opt', 'cbs', 'train_eval', 'recorder', 'cast_to_tensor', 'progress', 'lock', 'n_epoch'])
-    22:38:51.23   49 |     store_attr('arch,normalize,n_out,pretrained', self=learn, **kwargs)
-    22:38:51.23   50 |     pp(learn.__dict__.keys())
-    22:38:51.23 LOG:
-    22:38:51.24 .... learn.__dict__.keys() = dict_keys(['dls', 'model', '__stored_args__', 'loss_func', 'opt_func', 'lr', 'splitter', '_metrics', 'path', 'model_dir', 'wd', 'wd_bn_bias', 'train_bn', 'moms', 'default_cbs', 'training', 'create_mbar', 'logger', 'opt', 'cbs', 'train_eval', 'recorder', 'cast_to_tensor', 'progress', 'lock', 'n_epoch', 'arch', 'normalize', 'n_out', 'pretrained'])
-    22:38:51.25   51 |     return learn
-    22:38:51.25 <<< Return value from vision_learner: <fastai.learner.Learner object>
+    23:35:21.18 .............. model = Sequential(
+    23:35:21.18                          (0): Sequential(
+    23:35:21.18                            (0): Conv2d(3...n_features=512, out_features=2, bias=False)
+    23:35:21.18                          )
+    23:35:21.18                        )
+    23:35:21.18   35 |         pp(model)
+    23:35:21.18 LOG:
+    23:35:21.19 .... model = Sequential(
+    23:35:21.19                (0): Sequential(
+    23:35:21.19                  (0): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+    23:35:21.19                  (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                  (2): ReLU(inplace=True)
+    23:35:21.19                  (3): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+    23:35:21.19                  (4): Sequential(
+    23:35:21.19                    (0): BasicBlock(
+    23:35:21.19                      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (relu): ReLU(inplace=True)
+    23:35:21.19                      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                    )
+    23:35:21.19                    (1): BasicBlock(
+    23:35:21.19                      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (relu): ReLU(inplace=True)
+    23:35:21.19                      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                    )
+    23:35:21.19                  )
+    23:35:21.19                  (5): Sequential(
+    23:35:21.19                    (0): BasicBlock(
+    23:35:21.19                      (conv1): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (relu): ReLU(inplace=True)
+    23:35:21.19                      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (downsample): Sequential(
+    23:35:21.19                        (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)
+    23:35:21.19                        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      )
+    23:35:21.19                    )
+    23:35:21.19                    (1): BasicBlock(
+    23:35:21.19                      (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (relu): ReLU(inplace=True)
+    23:35:21.19                      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                    )
+    23:35:21.19                  )
+    23:35:21.19                  (6): Sequential(
+    23:35:21.19                    (0): BasicBlock(
+    23:35:21.19                      (conv1): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (relu): ReLU(inplace=True)
+    23:35:21.19                      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (downsample): Sequential(
+    23:35:21.19                        (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False)
+    23:35:21.19                        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      )
+    23:35:21.19                    )
+    23:35:21.19                    (1): BasicBlock(
+    23:35:21.19                      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (relu): ReLU(inplace=True)
+    23:35:21.19                      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                    )
+    23:35:21.19                  )
+    23:35:21.19                  (7): Sequential(
+    23:35:21.19                    (0): BasicBlock(
+    23:35:21.19                      (conv1): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (relu): ReLU(inplace=True)
+    23:35:21.19                      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (downsample): Sequential(
+    23:35:21.19                        (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
+    23:35:21.19                        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      )
+    23:35:21.19                    )
+    23:35:21.19                    (1): BasicBlock(
+    23:35:21.19                      (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                      (relu): ReLU(inplace=True)
+    23:35:21.19                      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    23:35:21.19                      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                    )
+    23:35:21.19                  )
+    23:35:21.19                )
+    23:35:21.19                (1): Sequential(
+    23:35:21.19                  (0): AdaptiveConcatPool2d(
+    23:35:21.19                    (ap): AdaptiveAvgPool2d(output_size=1)
+    23:35:21.19                    (mp): AdaptiveMaxPool2d(output_size=1)
+    23:35:21.19                  )
+    23:35:21.19                  (1): fastai.layers.Flatten(full=False)
+    23:35:21.19                  (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                  (3): Dropout(p=0.25, inplace=False)
+    23:35:21.19                  (4): Linear(in_features=1024, out_features=512, bias=False)
+    23:35:21.19                  (5): ReLU(inplace=True)
+    23:35:21.19                  (6): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    23:35:21.19                  (7): Dropout(p=0.5, inplace=False)
+    23:35:21.19                  (8): Linear(in_features=512, out_features=2, bias=False)
+    23:35:21.19                )
+    23:35:21.19              )
+    23:35:21.19   36 |     pp.deep(lambda: ifnone(splitter, meta['split']))
+    23:35:21.19 LOG:
+    23:35:21.23 ........ ifnone = <function ifnone>
+    23:35:21.23 ........ splitter = None
+    23:35:21.23 ............ meta = {'cut': -2, 'split': <function _resnet_split>, 'stats': ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])}
+    23:35:21.23 ........ meta['split'] = <function _resnet_split>
+    23:35:21.23 .... ifnone(splitter, meta['split']) = <function _resnet_split>
+    23:35:21.23   37 |     splitter=ifnone(splitter, meta['split'])
+    23:35:21.23 .......... splitter = <function _resnet_split>
+    23:35:21.23   38 |     pp(dict(dls=dls, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
+    23:35:21.23   39 |                    metrics=metrics, path=path, model_dir=model_dir, wd=wd, wd_bn_bias=wd_bn_bias, train_bn=train_bn, moms=moms))
+    23:35:21.23   38 |     pp(dict(dls=dls, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
+    23:35:21.23 LOG:
+    23:35:21.25 .... dict(dls=dls, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
+    23:35:21.25                  metrics=metrics, path=path, model_dir=model_dir, wd=wd, wd_bn_bias=wd_bn_bias, train_bn=train_bn, moms=moms) = {'cbs': None,
+    23:35:21.25                                                                                                                                  'dls': <fastai.data.core.DataLoaders object>,
+    23:35:21.25                                                                                                                                  'loss_func': None,
+    23:35:21.25                                                                                                                                  'lr': 0.001,
+    23:35:21.25                                                                                                                                  'metrics': <function error_rate>,
+    23:35:21.25                                                                                                                                  'model_dir': 'models',
+    23:35:21.25                                                                                                                                  'moms': (0.95, 0.85, 0.95),
+    23:35:21.25                                                                                                                                  'opt_func': <function Adam>,
+    23:35:21.25                                                                                                                                  'path': None,
+    23:35:21.25                                                                                                                                  'splitter': <function _resnet_split>,
+    23:35:21.25                                                                                                                                  'train_bn': True,
+    23:35:21.25                                                                                                                                  'wd': None,
+    23:35:21.25                                                                                                                                  'wd_bn_bias': False}
+    23:35:21.25   40 |     pp(doc_sig(Learner))
+    23:35:21.25 LOG:
+    23:35:21.26 .... doc_sig(Learner) = ((<class 'fastai.learner.Learner'>,
+    23:35:21.26                           <class 'fastcore.basics.GetAttr'>,
+    23:35:21.26                           <class 'object'>),
+    23:35:21.26                          'Group together a `model`, some `dls` and a `loss_func` to handle training',
+    23:35:21.26                          <Signature (dls, model: 'callable', loss_func: 'callable | None' = None, opt_func=<function Adam>, lr=0.001, splitter: 'callable' = <function trainable_params>, cbs=None, metrics=None, path=None, model_dir='models', wd=None, wd_bn_bias=False, train_bn=True, moms=(0.95, 0.85, 0.95), default_cbs: 'bool' = True)>)
+    23:35:21.26   41 |     learn = Learner(dls=dls, model=model, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
+    23:35:21.26   42 |                    metrics=metrics, path=path, model_dir=model_dir, wd=wd, wd_bn_bias=wd_bn_bias, train_bn=train_bn, moms=moms)
+    23:35:21.26   41 |     learn = Learner(dls=dls, model=model, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
+    23:35:21.26 .......... learn = <fastai.learner.Learner object>
+    23:35:21.26   43 |     pp(doc_sig(learn.freeze))
+    23:35:21.26 LOG:
+    23:35:21.27 .... doc_sig(learn.freeze) = ('no mro', 'Freeze up to last parameter group', <Signature ()>)
+    23:35:21.27   44 |     if pretrained: 
+    23:35:21.27   45 |         learn.freeze()
+    23:35:21.28   47 |     pp(doc_sig(store_attr), kwargs)
+    23:35:21.28 LOG:
+    23:35:21.30 .... doc_sig(store_attr) = ('no mro',
+    23:35:21.30                             'Store params named in comma-separated `names` from calling context into '
+    23:35:21.30                             'attrs in `self`',
+    23:35:21.30                             <Signature (names=None, self=None, but='', cast=False, store_args=None, **attrs)>)
+    23:35:21.30 .... kwargs = {}
+    23:35:21.30   48 |     pp(learn.__dict__.keys())
+    23:35:21.30 LOG:
+    23:35:21.31 .... learn.__dict__.keys() = dict_keys(['dls', 'model', '__stored_args__', 'loss_func', 'opt_func', 'lr', 'splitter', '_metrics', 'path', 'model_dir', 'wd', 'wd_bn_bias', 'train_bn', 'moms', 'default_cbs', 'training', 'create_mbar', 'logger', 'opt', 'cbs', 'train_eval', 'recorder', 'cast_to_tensor', 'progress', 'lock', 'n_epoch'])
+    23:35:21.31   49 |     store_attr('arch,normalize,n_out,pretrained', self=learn, **kwargs)
+    23:35:21.31   50 |     pp(learn.__dict__.keys())
+    23:35:21.31 LOG:
+    23:35:21.32 .... learn.__dict__.keys() = dict_keys(['dls', 'model', '__stored_args__', 'loss_func', 'opt_func', 'lr', 'splitter', '_metrics', 'path', 'model_dir', 'wd', 'wd_bn_bias', 'train_bn', 'moms', 'default_cbs', 'training', 'create_mbar', 'logger', 'opt', 'cbs', 'train_eval', 'recorder', 'cast_to_tensor', 'progress', 'lock', 'n_epoch', 'arch', 'normalize', 'n_out', 'pretrained'])
+    23:35:21.32   51 |     return learn
+    23:35:21.32 <<< Return value from vision_learner: <fastai.learner.Learner object>
 
 
 
@@ -3451,31 +3509,31 @@ def fine_tune(self:Learner, epochs, base_lr=2e-3, freeze_epochs=1, lr_mult=100,
 learn.fine_tune(1)
 ```
 
-    22:38:51.34 >>> Call to fine_tune in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/3127910192.py", line 4
-    22:38:51.34 ...... self = <fastai.learner.Learner object>
-    22:38:51.34 ...... epochs = 1
-    22:38:51.34 ...... base_lr = 0.002
-    22:38:51.34 ...... freeze_epochs = 1
-    22:38:51.34 ...... lr_mult = 100
-    22:38:51.34 ...... pct_start = 0.3
-    22:38:51.34 ...... div = 5.0
-    22:38:51.34 ...... kwargs = {}
-    22:38:51.34    4 | def fine_tune(self:Learner, epochs, base_lr=2e-3, freeze_epochs=1, lr_mult=100,
-    22:38:51.34    7 |     pp(doc_sig(self.freeze))
-    22:38:51.34 LOG:
-    22:38:51.35 .... doc_sig(self.freeze) = ('no mro', 'Freeze up to last parameter group', <Signature ()>)
-    22:38:51.35    8 |     self.freeze()
-    22:38:51.35    9 |     pp(doc_sig(self.fit_one_cycle))
-    22:38:51.35 LOG:
-    22:38:51.35 .... doc_sig(self.fit_one_cycle) = ('no mro',
-    22:38:51.35                                     'Fit `self.model` for `n_epoch` using the 1cycle policy.',
-    22:38:51.35                                     <Signature (n_epoch, lr_max=None, div=25.0, div_final=100000.0, pct_start=0.25, wd=None, moms=None, cbs=None, reset_opt=False, start_epoch=0)>)
-    22:38:51.35   10 |     pp(freeze_epochs, slice(base_lr), kwargs)
-    22:38:51.35 LOG:
-    22:38:51.36 .... freeze_epochs = 1
-    22:38:51.36 .... slice(base_lr) = slice(None, 0.002, None)
-    22:38:51.36 .... kwargs = {}
-    22:38:51.36   11 |     self.fit_one_cycle(freeze_epochs, slice(base_lr), pct_start=0.99, **kwargs)
+    23:35:21.42 >>> Call to fine_tune in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/3127910192.py", line 4
+    23:35:21.42 ...... self = <fastai.learner.Learner object>
+    23:35:21.42 ...... epochs = 1
+    23:35:21.42 ...... base_lr = 0.002
+    23:35:21.42 ...... freeze_epochs = 1
+    23:35:21.42 ...... lr_mult = 100
+    23:35:21.42 ...... pct_start = 0.3
+    23:35:21.42 ...... div = 5.0
+    23:35:21.42 ...... kwargs = {}
+    23:35:21.42    4 | def fine_tune(self:Learner, epochs, base_lr=2e-3, freeze_epochs=1, lr_mult=100,
+    23:35:21.42    7 |     pp(doc_sig(self.freeze))
+    23:35:21.42 LOG:
+    23:35:21.44 .... doc_sig(self.freeze) = ('no mro', 'Freeze up to last parameter group', <Signature ()>)
+    23:35:21.44    8 |     self.freeze()
+    23:35:21.44    9 |     pp(doc_sig(self.fit_one_cycle))
+    23:35:21.44 LOG:
+    23:35:21.44 .... doc_sig(self.fit_one_cycle) = ('no mro',
+    23:35:21.44                                     'Fit `self.model` for `n_epoch` using the 1cycle policy.',
+    23:35:21.44                                     <Signature (n_epoch, lr_max=None, div=25.0, div_final=100000.0, pct_start=0.25, wd=None, moms=None, cbs=None, reset_opt=False, start_epoch=0)>)
+    23:35:21.44   10 |     pp(freeze_epochs, slice(base_lr), kwargs)
+    23:35:21.44 LOG:
+    23:35:21.45 .... freeze_epochs = 1
+    23:35:21.45 .... slice(base_lr) = slice(None, 0.002, None)
+    23:35:21.45 .... kwargs = {}
+    23:35:21.45   11 |     self.fit_one_cycle(freeze_epochs, slice(base_lr), pct_start=0.99, **kwargs)
 
 
 
@@ -3512,8 +3570,8 @@ learn.fine_tune(1)
   <tbody>
     <tr>
       <td>0</td>
-      <td>0.691961</td>
-      <td>1.092685</td>
+      <td>0.879530</td>
+      <td>1.037303</td>
       <td>0.420000</td>
       <td>00:06</td>
     </tr>
@@ -3521,20 +3579,20 @@ learn.fine_tune(1)
 </table>
 
 
-    22:38:57.85   12 |     base_lr /= 2
-    22:38:57.85 .......... base_lr = 0.001
-    22:38:57.85   13 |     pp(doc_sig(self.unfreeze))
-    22:38:57.85 LOG:
-    22:38:57.85 .... doc_sig(self.unfreeze) = ('no mro', 'Unfreeze the entire model', <Signature ()>)
-    22:38:57.85   14 |     self.unfreeze()
-    22:38:57.86   15 |     pp(epochs, slice(base_lr/lr_mult, base_lr), pct_start, div, kwargs)
-    22:38:57.86 LOG:
-    22:38:57.86 .... epochs = 1
-    22:38:57.86 .... slice(base_lr/lr_mult, base_lr) = slice(1e-05, 0.001, None)
-    22:38:57.86 .... pct_start = 0.3
-    22:38:57.86 .... div = 5.0
-    22:38:57.86 .... kwargs = {}
-    22:38:57.86   16 |     self.fit_one_cycle(epochs, slice(base_lr/lr_mult, base_lr), pct_start=pct_start, div=div, **kwargs)
+    23:35:28.45   12 |     base_lr /= 2
+    23:35:28.45 .......... base_lr = 0.001
+    23:35:28.45   13 |     pp(doc_sig(self.unfreeze))
+    23:35:28.45 LOG:
+    23:35:28.46 .... doc_sig(self.unfreeze) = ('no mro', 'Unfreeze the entire model', <Signature ()>)
+    23:35:28.46   14 |     self.unfreeze()
+    23:35:28.46   15 |     pp(epochs, slice(base_lr/lr_mult, base_lr), pct_start, div, kwargs)
+    23:35:28.46 LOG:
+    23:35:28.46 .... epochs = 1
+    23:35:28.47 .... slice(base_lr/lr_mult, base_lr) = slice(1e-05, 0.001, None)
+    23:35:28.47 .... pct_start = 0.3
+    23:35:28.47 .... div = 5.0
+    23:35:28.47 .... kwargs = {}
+    23:35:28.47   16 |     self.fit_one_cycle(epochs, slice(base_lr/lr_mult, base_lr), pct_start=pct_start, div=div, **kwargs)
 
 
 
@@ -3571,16 +3629,16 @@ learn.fine_tune(1)
   <tbody>
     <tr>
       <td>0</td>
-      <td>0.247853</td>
-      <td>0.153514</td>
-      <td>0.060000</td>
+      <td>0.211929</td>
+      <td>0.265763</td>
+      <td>0.140000</td>
       <td>00:07</td>
     </tr>
   </tbody>
 </table>
 
 
-    22:39:05.01 <<< Return value from fine_tune: None
+    23:35:36.03 <<< Return value from fine_tune: None
 
 
 
@@ -3651,9 +3709,9 @@ learn.fine_tune(3)
   <tbody>
     <tr>
       <td>0</td>
-      <td>1.177711</td>
-      <td>0.171992</td>
-      <td>0.060000</td>
+      <td>1.158878</td>
+      <td>0.115195</td>
+      <td>0.040000</td>
       <td>00:06</td>
     </tr>
   </tbody>
@@ -3694,22 +3752,22 @@ learn.fine_tune(3)
   <tbody>
     <tr>
       <td>0</td>
-      <td>0.403473</td>
-      <td>0.052708</td>
+      <td>0.350916</td>
+      <td>0.077558</td>
       <td>0.020000</td>
       <td>00:07</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>0.276206</td>
-      <td>0.019374</td>
+      <td>0.222076</td>
+      <td>0.021369</td>
       <td>0.000000</td>
-      <td>00:07</td>
+      <td>00:06</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>0.187863</td>
-      <td>0.011193</td>
+      <td>0.153996</td>
+      <td>0.015964</td>
       <td>0.000000</td>
       <td>00:06</td>
     </tr>
@@ -3727,7 +3785,6 @@ use learner to predict on a single item, and return 3 things: target (eg., bird 
 
 
 ```
-#| export
 @patch
 @snoop
 def predict(self:Learner, item, rm_type_tfms=None, with_input=False):
@@ -3766,32 +3823,32 @@ print(f"Probability it's a bird: {probs[0]:.4f}")
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_191_0.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_193_0.png)
     
 
 
 
-    22:39:33.92 >>> Call to predict in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_93170/1656489701.py", line 4
-    22:39:33.92 ...... self = <fastai.learner.Learner object>
-    22:39:33.92 ...... item = PILImage mode=RGB size=400x300
-    22:39:33.92 ...... rm_type_tfms = None
-    22:39:33.92 ...... with_input = False
-    22:39:33.92    4 | def predict(self:Learner, item, rm_type_tfms=None, with_input=False):
-    22:39:33.92    5 |     pp(doc_sig(self.dls.test_dl))
-    22:39:33.92 LOG:
-    22:39:33.93 .... doc_sig(self.dls.test_dl) = ('no mro',
-    22:39:33.93                                   'Create a test dataloader from `test_items` using validation transforms of '
-    22:39:33.93                                   '`dls`',
-    22:39:33.93                                   <Signature (test_items, rm_type_tfms=None, with_labels: 'bool' = False, *, bs: 'int' = 64, shuffle: 'bool' = False, num_workers: 'int' = None, verbose: 'bool' = False, do_setup: 'bool' = True, pin_memory=False, timeout=0, batch_size=None, drop_last=False, indexed=None, n=None, device=None, persistent_workers=False, pin_memory_device='', wif=None, before_iter=None, after_item=None, before_batch=None, after_batch=None, after_iter=None, create_batches=None, create_item=None, create_batch=None, retain=None, get_idxs=None, sample=None, shuffle_fn=None, do_batch=None)>)
-    22:39:33.93    6 |     dl = self.dls.test_dl([item], rm_type_tfms=rm_type_tfms, num_workers=0)
-    22:39:33.94 .......... dl = <fastai.data.core.TfmdDL object>
-    22:39:33.94    7 |     pp(doc_sig(self.get_preds))
-    22:39:33.94 LOG:
-    22:39:33.94 .... doc_sig(self.get_preds) = ('no mro',
-    22:39:33.94                                 'Get the predictions and targets on the `ds_idx`-th dbunchset or `dl`, '
-    22:39:33.94                                 'optionally `with_input` and `with_loss`',
-    22:39:33.94                                 <Signature (ds_idx=1, dl=None, with_input=False, with_decoded=False, with_loss=False, act=None, inner=False, reorder=True, cbs=None, *, save_preds: 'Path' = None, save_targs: 'Path' = None, with_preds: 'bool' = True, with_targs: 'bool' = True, concat_dim: 'int' = 0, pickle_protocol: 'int' = 2)>)
-    22:39:33.94    8 |     inp,preds,_,dec_preds = self.get_preds(dl=dl, with_input=True, with_decoded=True)
+    23:36:03.40 >>> Call to predict in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_95185/3244647879.py", line 3
+    23:36:03.40 ...... self = <fastai.learner.Learner object>
+    23:36:03.40 ...... item = PILImage mode=RGB size=362x400
+    23:36:03.40 ...... rm_type_tfms = None
+    23:36:03.40 ...... with_input = False
+    23:36:03.40    3 | def predict(self:Learner, item, rm_type_tfms=None, with_input=False):
+    23:36:03.40    4 |     pp(doc_sig(self.dls.test_dl))
+    23:36:03.40 LOG:
+    23:36:03.42 .... doc_sig(self.dls.test_dl) = ('no mro',
+    23:36:03.42                                   'Create a test dataloader from `test_items` using validation transforms of '
+    23:36:03.42                                   '`dls`',
+    23:36:03.42                                   <Signature (test_items, rm_type_tfms=None, with_labels: 'bool' = False, *, bs: 'int' = 64, shuffle: 'bool' = False, num_workers: 'int' = None, verbose: 'bool' = False, do_setup: 'bool' = True, pin_memory=False, timeout=0, batch_size=None, drop_last=False, indexed=None, n=None, device=None, persistent_workers=False, pin_memory_device='', wif=None, before_iter=None, after_item=None, before_batch=None, after_batch=None, after_iter=None, create_batches=None, create_item=None, create_batch=None, retain=None, get_idxs=None, sample=None, shuffle_fn=None, do_batch=None)>)
+    23:36:03.42    5 |     dl = self.dls.test_dl([item], rm_type_tfms=rm_type_tfms, num_workers=0)
+    23:36:03.42 .......... dl = <fastai.data.core.TfmdDL object>
+    23:36:03.42    6 |     pp(doc_sig(self.get_preds))
+    23:36:03.42 LOG:
+    23:36:03.43 .... doc_sig(self.get_preds) = ('no mro',
+    23:36:03.43                                 'Get the predictions and targets on the `ds_idx`-th dbunchset or `dl`, '
+    23:36:03.43                                 'optionally `with_input` and `with_loss`',
+    23:36:03.43                                 <Signature (ds_idx=1, dl=None, with_input=False, with_decoded=False, with_loss=False, act=None, inner=False, reorder=True, cbs=None, *, save_preds: 'Path' = None, save_targs: 'Path' = None, with_preds: 'bool' = True, with_targs: 'bool' = True, concat_dim: 'int' = 0, pickle_protocol: 'int' = 2)>)
+    23:36:03.43    7 |     inp,preds,_,dec_preds = self.get_preds(dl=dl, with_input=True, with_decoded=True)
 
 
 
@@ -3818,34 +3875,34 @@ print(f"Probability it's a bird: {probs[0]:.4f}")
 
 
 
-    22:39:34.08 .......... inp = TensorImage([[[[ 1.0673,  0.7591,  0.2796,  ...,...15, -0.8284,  ..., -1.4559, -1.3861, -1.3861]]]])
-    22:39:34.08 .......... preds = TensorBase([[1.0000e+00, 3.9171e-08]])
-    22:39:34.08 .......... _ = None
-    22:39:34.08 .......... dec_preds = TensorBase([0])
-    22:39:34.08    9 |     i = getattr(self.dls, 'n_inp', -1)
-    22:39:34.08 .......... i = 1
-    22:39:34.08   10 |     if i==1:
-    22:39:34.08   11 |         inp = (inp,) 
-    22:39:34.08 .............. inp = (TensorImage([[[[ 1.0673,  0.7591,  0.2796,  ...,...15, -0.8284,  ..., -1.4559, -1.3861, -1.3861]]]]),)
-    22:39:34.08   14 |     pp(doc_sig(self.dls.decode_batch))
-    22:39:34.08 LOG:
-    22:39:34.09 .... doc_sig(self.dls.decode_batch) = ('no mro',
-    22:39:34.09                                        'Decode `b` entirely',
-    22:39:34.09                                        <Signature (b, max_n: 'int' = 9, full: 'bool' = True)>)
-    22:39:34.09   15 |     dec = self.dls.decode_batch(inp + tuplify(dec_preds))[0]
-    22:39:34.10 .......... dec = (TensorImage([[[186, 168, 140,  ...,  37,  67,  9...          [ 74,  65,  56,  ...,  19,  24,  24]]]), 'bird')
-    22:39:34.10   16 |     pp(doc_sig(tuplify), doc_sig(detuplify))
-    22:39:34.10 LOG:
-    22:39:34.10 .... doc_sig(tuplify) = ('no mro', 'Make `o` a tuple', <Signature (o, use_list=False, match=None)>)
-    22:39:34.11 .... doc_sig(detuplify) = ('no mro', 'If `x` is a tuple with one thing, extract it', <Signature (x)>)
-    22:39:34.11   17 |     dec_inp,dec_targ = map(detuplify, [dec[:i],dec[i:]])
-    22:39:34.11 .......... dec_inp = TensorImage([[[186, 168, 140,  ...,  37,  67,  9...          [ 74,  65,  56,  ...,  19,  24,  24]]])
-    22:39:34.11 .......... dec_targ = 'bird'
-    22:39:34.11   18 |     res = dec_targ,dec_preds[0],preds[0]
-    22:39:34.11 .......... res = ('bird', TensorBase(0), TensorBase([1.0000e+00, 3.9171e-08]))
-    22:39:34.11   19 |     if with_input: 
-    22:39:34.12   21 |     return res
-    22:39:34.12 <<< Return value from predict: ('bird', TensorBase(0), TensorBase([1.0000e+00, 3.9171e-08]))
+    23:36:03.56 .......... inp = TensorImage([[[[ 0.2111,  0.2111,  0.2111,  ...,...39, -1.4559,  ...,  2.5877,  2.6226,  2.6400]]]])
+    23:36:03.56 .......... preds = TensorBase([[1.0000e+00, 6.6738e-08]])
+    23:36:03.56 .......... _ = None
+    23:36:03.56 .......... dec_preds = TensorBase([0])
+    23:36:03.56    8 |     i = getattr(self.dls, 'n_inp', -1)
+    23:36:03.56 .......... i = 1
+    23:36:03.56    9 |     if i==1:
+    23:36:03.57   10 |         inp = (inp,) 
+    23:36:03.57 .............. inp = (TensorImage([[[[ 0.2111,  0.2111,  0.2111,  ...,...39, -1.4559,  ...,  2.5877,  2.6226,  2.6400]]]]),)
+    23:36:03.57   13 |     pp(doc_sig(self.dls.decode_batch))
+    23:36:03.57 LOG:
+    23:36:03.57 .... doc_sig(self.dls.decode_batch) = ('no mro',
+    23:36:03.57                                        'Decode `b` entirely',
+    23:36:03.57                                        <Signature (b, max_n: 'int' = 9, full: 'bool' = True)>)
+    23:36:03.58   14 |     dec = self.dls.decode_batch(inp + tuplify(dec_preds))[0]
+    23:36:03.58 .......... dec = (TensorImage([[[136, 136, 136,  ...,  35,  35,  3...          [ 37,  27,  19,  ..., 252, 254, 255]]]), 'bird')
+    23:36:03.58   15 |     pp(doc_sig(tuplify), doc_sig(detuplify))
+    23:36:03.58 LOG:
+    23:36:03.59 .... doc_sig(tuplify) = ('no mro', 'Make `o` a tuple', <Signature (o, use_list=False, match=None)>)
+    23:36:03.59 .... doc_sig(detuplify) = ('no mro', 'If `x` is a tuple with one thing, extract it', <Signature (x)>)
+    23:36:03.59   16 |     dec_inp,dec_targ = map(detuplify, [dec[:i],dec[i:]])
+    23:36:03.59 .......... dec_inp = TensorImage([[[136, 136, 136,  ...,  35,  35,  3...          [ 37,  27,  19,  ..., 252, 254, 255]]])
+    23:36:03.59 .......... dec_targ = 'bird'
+    23:36:03.59   17 |     res = dec_targ,dec_preds[0],preds[0]
+    23:36:03.60 .......... res = ('bird', TensorBase(0), TensorBase([1.0000e+00, 6.6738e-08]))
+    23:36:03.60   18 |     if with_input: 
+    23:36:03.60   20 |     return res
+    23:36:03.60 <<< Return value from predict: ('bird', TensorBase(0), TensorBase([1.0000e+00, 6.6738e-08]))
 
 
     This is a: bird.
@@ -3877,6 +3934,11 @@ def predict(self:Learner, item, rm_type_tfms=None, with_input=False):
 
 ```
 
+```
+
+
+```
+# fastnbs("DataBlock.", strict=True)
 ```
 
 

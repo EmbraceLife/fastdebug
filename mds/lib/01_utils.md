@@ -176,47 +176,6 @@ from fastai.torch_core import doc
 doc = doc
 ```
 
-## objprint
-
-```python
-#| export
-from objprint import op
-```
-
-```python
-#| export
-op = op
-```
-
-```python
-class Position:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-class Player():
-    def __init__(self):
-        self.name = "Alice"
-        self.age = 18
-        self.items = ["axe", "armor"]
-        self.coins = {"gold": 1, "silver": 33, "bronze": 57}
-        self.position = Position(3, 5)
-        self.x = 0
-        self.y = 0
-    
-    def move(self, a, b):
-        pos = Position(a, b)
-        self.x = pos.x
-        self.y = pos.y
-```
-
-```python
-op(Position(1,2))
-op(Player())
-p = Player()
-op(p.move(2,4))
-```
-
 ## ic from icecream 
 
 ```python
@@ -2045,7 +2004,7 @@ use fastnbs() display the entire learning points section including notes and cod
             file_fullname = file_path
         elif filter_folder == "part2" and "_fastai_pt2_" in file_path:
             file_fullname = file_path
-        elif filter_folder == "src" and "src_fast" in file_path:
+        elif filter_folder == "src" and "fast" in file_path:
             file_fullname = file_path            
         elif filter_folder == "all": 
             file_fullname = file_path

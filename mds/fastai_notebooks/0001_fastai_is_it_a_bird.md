@@ -20,6 +20,10 @@ skip_exec: true
 ---
 <!-- #endraw -->
 
+```python
+#| default_exp delete_bird
+```
+
 ## Useful Course sites
 
 
@@ -541,7 +545,6 @@ search and download images use query words using duckduckgo_search and fastdownl
 two type of things (images) will be downloaded into two folders "bird" and "forest" under the parent folder "bird_or_forest"
 
 ```python
-#| export utils
 # @snoop
 def prepare_images_dataset_binary(*things, key1="sun", key2="shade"):
 # searches = 'forest','bird'
@@ -586,6 +589,12 @@ dino = prepare_images_dataset_binary("T-rex", "Spinosaurus aegyptiacus")
 to randomly display images in their path
 
 ```python
+#| export utils
+from fastai.vision.core import *
+```
+
+```python
+#| export utils
 # @snoop
 def randomdisplay(path, db=False):
 # https://www.geeksforgeeks.org/python-random-module/
@@ -649,6 +658,7 @@ dino.ls(file_type="binary")
 check all subfolders for images and print out the number of images they have recursively
 
 ```python
+#| export utils
 # @snoop
 def count_files_in_subfolders(path, db=False):
     from pathlib import Path
@@ -899,7 +909,7 @@ def parent_label(o):
 ```
 
 ```python
-dino.ls()[0].ls()[0]
+# dino.ls()[0].ls()[0]
 ```
 
 ```python
@@ -942,6 +952,10 @@ rs(x)
 Resize image to `size` using `method` such as 'crop', 'squish' and 'pad'
 
 What does `crop`, `squish` and `pad` resize effects look like
+
+`rsz = Resize(256, method='crop')` returns a func and use it to actually resize image as below
+
+`rsz(img, split_idx=0)`
 
 ```python
 doc(Resize)
@@ -1292,7 +1306,7 @@ def CategoryBlock(
 # Type:      function
 ```
 
-### DataBlock.```__init__```(blocks:list=None, dl_type:TfmdDL=None, getters:list=None, n_inp:int=None, item_tfms:list=None, batch_tfms:list=None, get_items=None, splitter=None, get_y=None, get_x=None)
+### DataBlock.__init__(blocks:list=None, dl_type:TfmdDL=None, getters:list=None, n_inp:int=None, item_tfms:list=None, batch_tfms:list=None, get_items=None, splitter=None, get_y=None, get_x=None)
 Prepare and organise all the funcs needed to split and transform x and getting y or labels
 
 ```python
@@ -1740,7 +1754,6 @@ learn.fine_tune(3)
 use learner to predict on a single item, and return 3 things: target (eg., bird or forest), 0 or 1, prob of bird and prob of forest
 
 ```python
-#| export
 @patch
 @snoop
 def predict(self:Learner, item, rm_type_tfms=None, with_input=False):
@@ -1796,6 +1809,10 @@ def predict(self:Learner, item, rm_type_tfms=None, with_input=False):
 
 ```python
 
+```
+
+```python
+# fastnbs("DataBlock.", strict=True)
 ```
 
 ```python
