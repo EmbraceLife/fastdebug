@@ -594,7 +594,6 @@ from fastai.vision.core import *
 ```
 
 ```python
-#| export utils
 # @snoop
 def randomdisplay(path, db=False):
 # https://www.geeksforgeeks.org/python-random-module/
@@ -830,10 +829,6 @@ To train a model, we'll need DataLoaders:
 
 We can view sample images from it:
 
-
-### get_image_files, get_files, image_extensions
-to extract all image files recursively from all subfolders of a parent path
-
 ```python
 from fastai.data.transforms import _get_files
 ```
@@ -841,6 +836,9 @@ from fastai.data.transforms import _get_files
 ```python
 not None
 ```
+
+### src: _get_files(path, filenames,, extensions=None)
+get the fullnames for every file inside the list of filenames of a path
 
 ```python
 def _get_files(p, # path
@@ -853,6 +851,9 @@ def _get_files(p, # path
     return res
 # File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
 ```
+
+### src: get_files(path, extensions=None, recurse=True, folders=None, followlinks=True)
+Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
 
 ```python
 def get_files(path, extensions=None, recurse=True, folders=None, followlinks=True):
@@ -879,6 +880,9 @@ def get_files(path, extensions=None, recurse=True, folders=None, followlinks=Tru
 len(image_extensions)
 ".aspx" in image_extensions
 ```
+
+### src: get_image_files(path, recurse=True, folders=None)
+to extract all image files recursively from all subfolders of a parent path or only from `folders`, if specified.
 
 ```python
 def get_image_files(path, recurse=True, folders=None):

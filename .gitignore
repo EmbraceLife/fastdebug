@@ -1,3 +1,5 @@
+paddy-disease-classification/
+pytorch-image-models/
 *.pkl
 *.JPG
 *.jpg!d

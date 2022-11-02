@@ -14,6 +14,11 @@ jupyter:
 
 # 0002_fastai_saving_a_basic_fastai_model
 
+<!-- #raw -->
+---
+skip_exec: true
+---
+<!-- #endraw -->
 
 This is a minimal example showing how to train a fastai model on Kaggle, and save it so you can use it in your app.
 
@@ -47,6 +52,9 @@ import fastai.vision.all as fva
 ```
 
 ## Access fastai datasets and view images
+
+
+### URLs
 
 
 This is a dataset of cats and dogs
@@ -417,7 +425,7 @@ def show(self:PILImage, ctx=None, **kwargs):
 ## Build dataloaders
 
 
-## is_cat
+### is_cat
 get label based on Capital letter from a filename
 
 
@@ -452,6 +460,9 @@ _
 ```
 
 ## how to create dataloaders with `from_name_func`
+
+
+### DataLoaders
 
 
 Now we can create our `DataLoaders`:
@@ -897,7 +908,11 @@ class DataLoaders(GetAttr):
 # Subclasses:     ImageDataLoaders, SegmentationDataLoaders
 ```
 
-## vision_learner(dls, resnet18, metrics=error_rate)
+```python
+
+```
+
+### vision_learner(dls, resnet18, metrics=error_rate)
 
 
 ... and train our model, a resnet18 (to keep it small and fast):
@@ -950,7 +965,7 @@ learn.fine_tune(3)
 
 ```
 
-## learn.export('model.pkl')
+### learn.export('model.pkl')
 Export the content of `self` without the items and the optimizer state for inference
 
 Now we can export our trained `Learner`. This contains all the information needed to run the model:
@@ -1015,12 +1030,12 @@ Finally, open the Kaggle sidebar on the right if it's not already, and find the 
 ## how to convert ipynb to md
 
 ```python
-from fastdebug.utils import *
-import fastdebug.utils as fu
+# from fastdebug.utils import *
+# import fastdebug.utils as fu
 ```
 
 ```python
-ipy2md()
+# ipy2md()
 ```
 
 ```python

@@ -1,5 +1,7 @@
 # 0002_fastai_saving_a_basic_fastai_model
-
+---
+skip_exec: true
+---
 This is a minimal example showing how to train a fastai model on Kaggle, and save it so you can use it in your app.
 
 
@@ -39,6 +41,8 @@ import fastai.vision.all as fva
 ```
 
 ## Access fastai datasets and view images
+
+### URLs
 
 This is a dataset of cats and dogs
 
@@ -546,7 +550,7 @@ _ = pp(im, randf, im.shape, im.size)
 
 
     
-![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_30_0.png)
+![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_32_0.png)
     
 
 
@@ -584,7 +588,7 @@ randomdisplay(path)
 
 
     
-![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_32_1.png)
+![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_34_1.png)
     
 
 
@@ -603,7 +607,7 @@ im.show() # display it inline rather than in a separate window as im created by 
 
 
     
-![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_33_1.png)
+![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_35_1.png)
     
 
 
@@ -646,7 +650,7 @@ im.show()
 
 
     
-![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_36_2.png)
+![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_38_2.png)
     
 
 
@@ -662,7 +666,7 @@ def show(self:PILImage, ctx=None, **kwargs):
 
 ## Build dataloaders
 
-## is_cat
+### is_cat
 get label based on Capital letter from a filename
 
 We need a way to label our images as dogs or cats. In this dataset, pictures of cats are given a filename that starts with a capital letter:
@@ -683,7 +687,7 @@ randomdisplay(path)
 
 
     
-![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_41_1.png)
+![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_43_1.png)
     
 
 
@@ -756,12 +760,14 @@ _
 
 
     
-![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_45_1.png)
+![png](0002_fastai_saving_a_basic_fastai_model_files/0002_fastai_saving_a_basic_fastai_model_47_1.png)
     
 
 
 
 ## how to create dataloaders with `from_name_func`
+
+### DataLoaders
 
 Now we can create our `DataLoaders`:
 
@@ -1232,7 +1238,12 @@ class DataLoaders(GetAttr):
 # Subclasses:     ImageDataLoaders, SegmentationDataLoaders
 ```
 
-## vision_learner(dls, resnet18, metrics=error_rate)
+
+```
+
+```
+
+### vision_learner(dls, resnet18, metrics=error_rate)
 
 ... and train our model, a resnet18 (to keep it small and fast):
 
@@ -1402,7 +1413,7 @@ learn.fine_tune(3)
 
 ```
 
-## learn.export('model.pkl')
+### learn.export('model.pkl')
 Export the content of `self` without the items and the optimizer state for inference
 
 Now we can export our trained `Learner`. This contains all the information needed to run the model:
@@ -1528,31 +1539,14 @@ Finally, open the Kaggle sidebar on the right if it's not already, and find the 
 
 
 ```
-from fastdebug.utils import *
-import fastdebug.utils as fu
+# from fastdebug.utils import *
+# import fastdebug.utils as fu
 ```
 
 
-<style>.container { width:100% !important; }</style>
-
-
-
 ```
-ipy2md()
+# ipy2md()
 ```
-
-    [jupytext] Reading /Users/Natsume/Documents/fastdebug/nbs/2022part1/0002_fastai_Saving_Model_fastai.ipynb in format ipynb
-    [jupytext] Writing /Users/Natsume/Documents/fastdebug/nbs/2022part1/0002_fastai_Saving_Model_fastai.md
-    cp to : /Users/Natsume/Documents/divefastai/Debuggable/jupytext
-    move to : /Users/Natsume/Documents/fastdebug/mds/2022part1/
-
-
-    [NbConvertApp] Converting notebook /Users/Natsume/Documents/fastdebug/nbs/2022part1/0002_fastai_Saving_Model_fastai.ipynb to markdown
-    [NbConvertApp] Writing 4849 bytes to /Users/Natsume/Documents/fastdebug/nbs/2022part1/0002_fastai_Saving_Model_fastai.md
-
-
-    move to : /Users/Natsume/Documents/fastdebug/mds_output
-
 
 
 ```

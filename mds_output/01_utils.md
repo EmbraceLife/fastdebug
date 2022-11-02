@@ -14,6 +14,133 @@ from __future__ import annotations
 annotations = annotations
 ```
 
+## Data
+
+### L
+
+
+```
+#| export
+from fastcore.foundation import L
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+```
+#| export
+L = L
+```
+
+### Path
+
+
+```
+#| export
+from pathlib import *
+```
+
+
+```
+#| export
+Path = Path
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+### check_subfolders_img
+
+
+```
+#| export
+from fastai.vision.all import *
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+```
+#| export
+# @snoop
+def check_subfolders_img(path, db=False):
+    from pathlib import Path
+    for entry in path.iterdir():
+        if entry.is_file():
+            print(f'{str(entry.absolute())}')
+    for entry in path.iterdir():
+        if entry.is_dir() and not entry.name.startswith(".") and len(entry.ls(file_exts=image_extensions)) > 5:
+            print(f'{str(entry.parent.absolute())}: {len(entry.ls(file_exts=image_extensions))}  {entry.name}')
+#             print(entry.name, f': {len(entry.ls(file_exts=[".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]))}') # how to include both png and jpg
+            if db:
+                for e in entry.ls(): # check any image file which has a different suffix from those above
+                    if e.is_file() and not e.name.startswith(".") and e.suffix not in image_extensions and e.suffix not in [".ipynb", ".py"]:
+    #                 if e.suffix not in [".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]:
+                        pp(e.suffix, e)
+                        try:
+                            pp(Image.open(e).width)
+                        except:
+                            print(f"{e} can't be opened")
+    #                     pp(Image.open(e).width if e.suffix in image_extensions)
+        elif entry.is_dir() and not entry.name.startswith("."): 
+#             with snoop:
+            count_files_in_subfolders(entry)
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+### randomdisplay(path, db=False)
+
+
+```
+#| export
+from pathlib import *
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+```
+# #| export
+# # @snoop
+# def randomdisplay(path, db=False):
+# # https://www.geeksforgeeks.org/python-random-module/
+#     import random
+#     if type(path) == PosixPath:
+#         rand = random.randint(0,len(path.ls())-1) # choose a random int between 0 and len(T-rex)-1
+#         file = path.ls()[rand]
+#     elif type(path) == L:
+#         rand = random.randint(0,len(path)-1) # choose a random int between 0 and len(T-rex)-1
+#         file = path[rand]
+#     im = PILImage.create(file)
+#     if db: pp(im.width, im.height, file)
+#     pp(file)
+#     return im
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+```
+
+```
+
+
+```
+
+```
+
 ## Plotting
 basic plotting [lines](https://www.geeksforgeeks.org/graph-plotting-python-set-3/), [animation](https://www.geeksforgeeks.org/graph-plotting-python-set-3/)
 
@@ -183,96 +310,6 @@ from fastai.torch_core import doc
 ```
 #| export
 doc = doc
-```
-
-## ic from icecream 
-
-
-```
-#| export
-from icecream import ic, argumentToString
-import numpy as np
-from torch import Tensor
-from pandas import DataFrame, Series
-```
-
-
-```
-#| export
-# Register a function to summarize numpy array
-@argumentToString.register(np.ndarray)
-def _(obj):
-    return f"ndarray, shape={obj.shape}, dtype={obj.dtype}"
-```
-
-
-```
-x = np.zeros((1, 2))
-ic(x)
-```
-
-
-```
-#| export
-# Register a function to summarize numpy array
-@argumentToString.register(Tensor)
-def _(obj):
-    return f"class={type(obj)}, shape={obj.shape}, dtype={obj.dtype}"
-```
-
-
-```
-from fastai.torch_core import *
-```
-
-
-```
-x = Tensor((1,2,3))
-x = Tensor(([1],[2],[3]))
-x = tensor(1)
-x = TensorBase(1)
-ic(x)
-```
-
-
-```
-#| export
-# Register a function to summarize numpy array
-@argumentToString.register(DataFrame)
-def _(obj):
-    return f"class={type(obj)}, shape={obj.shape}"
-```
-
-
-```
-x1 = DataFrame([[1,2,3]])
-ic(x1)
-x1 = DataFrame([1,2,3])
-ic(x1)
-# x1 = DataFrame([[1],[2],[3]])
-# ic(x1)
-```
-
-
-```
-#| export
-# Register a function to summarize numpy array
-@argumentToString.register(Series)
-def _(obj):
-    return f"class={type(obj)}, shape={obj.shape}"
-```
-
-
-```
-x2 = Series([1,2,3])
-# x2 = Series([[1],[2],[3]])
-ic(x2)
-```
-
-
-```
-#| export
-ic = ic
 ```
 
 ## snoop: pp, @snoop, doc_sig, pp.deep,%%snoop, watches
@@ -3070,7 +3107,7 @@ use fastnbs() display the entire learning points section including notes and cod
                 if l.startswith("## ") or l.startswith("### ") or l.startswith("#### "):
                     truelst = [q.lower() in l.lower() for q in questlst]
                     pct = sum(truelst)/len(truelst)
-                    ctn = l.split("# ```")[1] if "# ```" in l else l.split("# ")[1] 
+                    ctn = l.split("# ```")[1] if "# ```" in l else l.split("# ")[1] if "# " in l else l.split("# `")
                     if strict:
                         if pct >= accu and ctn.startswith(questlst[0]): # make sure the heading start with the exact quest word
                             if db: 
@@ -3855,19 +3892,20 @@ def fastlistnbs(filter="fastai"):
 
 ```
 #| export
-def fastlistnbs(flt_fd="fastai"): # other options: "groundup", "part2", "all"
+def fastlistnbs(query="all", # howto, srcode, or all
+                flt_fd="src"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
 src_fastcore, all"
     nbs, folder, _, _, _, _ = get_all_nbs()
     nb_rt = ""
     for nb in nbs:
-        if flt_fd == "fastai" and "_fastai_" in nb and not "_fastai_pt2" in nb: 
+        if flt_fd == "fastai" and "_fastai_" in nb.split("/")[-1] and not "_fastai_pt2" in nb.split("/")[-1]: 
             nb_rt = nb
-        elif flt_fd == "part2" and "_fastai_pt2" in nb:
+        elif flt_fd == "part2" and "_fastai_pt2" in nb.split("/")[-1]:
             nb_rt = nb
-        elif flt_fd == "groundup" and "groundup_" in nb:            
+        elif flt_fd == "groundup" and "groundup_" in nb.split("/")[-1]:            
             nb_rt = nb
-        elif flt_fd == "src" and "src_" in nb:
+        elif flt_fd == "src" and "fast" in nb.split("/")[-1]:
             nb_rt = nb            
         elif flt_fd == "all": 
             nb_rt = nb
@@ -3878,7 +3916,12 @@ src_fastcore, all"
         with open(nb_rt, 'r') as file:
             for idx, l in enumerate(file):
                 if "##" in l:
-                    print(l, end="") # no extra new line between each line printed       
+                    if query == "howto" and "ht:" in l:
+                        print(l, end="") # no extra new line between each line printed    
+                    elif query == "srcode" and "src:" in l:
+                        print(l, end="") # no extra new line between each line printed    
+                    elif query == "all": 
+                        print(l, end="") # no extra new line between each line printed    
 ```
 
 

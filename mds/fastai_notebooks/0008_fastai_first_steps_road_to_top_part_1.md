@@ -20,7 +20,19 @@ skip_exec: true
 ---
 <!-- #endraw -->
 
-### how to install fastkaggle if not available
+```python
+#| default_exp delete_road_top1
+```
+
+```python
+from fastdebug.utils import *
+```
+
+```python
+# fastlistnbs("howto")
+```
+
+### ht: install fastkaggle if not available
 
 ```python
 # install fastkaggle if not available
@@ -31,7 +43,7 @@ except ModuleNotFoundError:
 from fastkaggle import *
 ```
 
-### how to iterate like a grandmaster
+### ht: iterate like a grandmaster
 
 
 In [Iterate Like a Grandmaster](https://www.kaggle.com/code/jhoward/iterate-like-a-grandmaster) I explained that when working on a Kaggle project:
@@ -61,25 +73,83 @@ As a special extra, I'm also opening up early a selection of "walkthru" videos t
 - [Walkthru 13](https://youtu.be/INrkhUGCXHg)
 
 
-## Getting set up
+## ht: download and access kaggle competition dataset
 
 
-### how to setup for fastkaggle; how to use fastkaggle to download dataset from kaggle; how to access the path
+### ht: set up before downloading
+go to kaggle.com, account, api, and click create a new api token
+
+then `cp kaggle.json ~/.kaggle/`
+
+go to the competition site and join the competition, and get the fullname of the competition for downloading the dataset
 
 
 First, we'll get the data. I've just created a new library called [fastkaggle](https://fastai.github.io/fastkaggle/) which has a few handy features, including getting the data for a competition correctly regardless of whether we're running on Kaggle or elsewhere. Note you'll need to first accept the competition rules and join the competition, and you'll need your kaggle API key file `kaggle.json` downloaded if you're running this somewhere other than on Kaggle. `setup_comp` is the function we use in `fastkaggle` to grab the data, and install or upgrade our needed python modules when we're running on Kaggle:
 
+
+### src: setup_comp(comp, install='fastai "timm>=0.6.2.dev0")
+Get a path to data for `competition`, downloading it if needed
+
+```python
+@snoop
+def setup_comp(competition, install=''):
+    "Get a path to data for `competition`, downloading it if needed"
+    if iskaggle:
+        if install:
+            os.system(f'pip install -Uqq {install}')
+        return Path('../input')/competition
+    else:
+        path = Path(competition)
+        api = import_kaggle()
+        if not path.exists():
+            import zipfile
+            api.competition_download_cli(str(competition))
+            zipfile.ZipFile(f'{competition}.zip').extractall(str(competition))
+        return path
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
+```
+
+```python
+"on kaggle" if iskaggle else "not on kaggle"
+```
+
+```python
+# api = import_kaggle()
+# lst_cmp=api.competitions_list()
+# lst_cmp[0].__dict__
+# lst_cmp
+```
+
 ```python
 comp = 'paddy-disease-classification'
-
 path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
 ```
 
 ```python
-path
+path.ls()
 ```
 
-### which fastai module to use for vision problem; how to check files inside the dataset path; why Jeremy recommend not to use seed in your own analysis;
+```python
+def setup_comp(competition, install=''):
+    "Get a path to data for `competition`, downloading it if needed"
+    if iskaggle:
+        if install:
+            os.system(f'pip install -Uqq {install}')
+        return Path('../input')/competition
+    else:
+        path = Path(competition)
+        api = import_kaggle()
+        if not path.exists():
+            import zipfile
+            api.competition_download_cli(str(competition))
+            zipfile.ZipFile(f'{competition}.zip').extractall(str(competition))
+        return path
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
+```
+
+### ht: reproducibility in training
 
 
 Now we can import the stuff we'll need from fastai, set a seed (for reproducibility -- just for the purposes of making this notebook easier to write; I don't recommend doing that in your own analysis however) and check what's in the data:
@@ -87,32 +157,110 @@ Now we can import the stuff we'll need from fastai, set a seed (for reproducibil
 ```python
 from fastai.vision.all import *
 set_seed(42)
+```
 
+## ht: data - access dataset
+
+
+### ht: data - map subfolders content
+use `path.ls()` and `check_subfolders_img(path)` to see what inside each subfolders
+
+```python
 path.ls()
 ```
 
-## Looking at the data
-
-
-### how to access a subfolder by name using path from `setup_comp`; how to extract all image files from a folder
-
-
-The images are in `train_images`, so let's grab a list of all of them:
+### src: check_subfolders_img(path, db=False)
 
 ```python
-trn_path = path/'train_images'
-files = get_image_files(trn_path)
+# @snoop
+def check_subfolders_img(path, db=False):
+    from pathlib import Path
+    for entry in path.iterdir():
+        if entry.is_file():
+            print(f'{str(entry.absolute())}')
+    for entry in path.iterdir():
+        if entry.is_dir() and not entry.name.startswith(".") and len(entry.ls(file_exts=image_extensions)) > 5:
+            print(f'{str(entry.parent.absolute())}: {len(entry.ls(file_exts=image_extensions))}  {entry.name}')
+#             print(entry.name, f': {len(entry.ls(file_exts=[".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]))}') # how to include both png and jpg
+            if db:
+                for e in entry.ls(): # check any image file which has a different suffix from those above
+                    if e.is_file() and not e.name.startswith(".") and e.suffix not in image_extensions and e.suffix not in [".ipynb", ".py"]:
+    #                 if e.suffix not in [".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]:
+                        pp(e.suffix, e)
+                        try:
+                            pp(Image.open(e).width)
+                        except:
+                            print(f"{e} can't be opened")
+    #                     pp(Image.open(e).width if e.suffix in image_extensions)
+        elif entry.is_dir() and not entry.name.startswith("."): 
+#             with snoop:
+            count_files_in_subfolders(entry)
+```
+
+```python
+check_subfolders_img(path)
+```
+
+### ht: data - extract all images for test and train 
+using `get_image_files(path)` for both test folder and train folder
+
+```python
+test_files = get_image_files(path/"test_images")
+train_files = get_image_files(path/"train_images")
+```
+
+```python
+test_files
+train_files
+```
+
+```python
+fastnbs("get_image_files")
 ```
 
 ...and take a look at one:
 
 
-### how to create an image from an image file; how to access the size of an image; how to display it with specified size for viewing
+### ht: data - display images from test_files or train_files
+use `randomdisplay(path, size, db=False)` to display images from a folder or a L list of images such as `test_files` or `train_files`
+
+
+### src: randomdisplay(path, size, db=False)
+display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
+    the image filename is printed as well
 
 ```python
-img = PILImage.create(files[0])
-print(img.size)
-img.to_thumb(128)
+import pathlib
+type(path) == pathlib.PosixPath
+type(train_files) == L
+```
+
+```python
+#| export utils
+# @snoop
+def randomdisplay(path, size, db=False):
+    "display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
+    the image filename is printed as well"
+# https://www.geeksforgeeks.org/python-random-module/
+    import random
+    import pathlib
+    from fastai.vision.all import PILImage
+    if type(path) == pathlib.PosixPath:
+        rand = random.randint(0,len(path.ls())-1) 
+        file = path.ls()[rand]
+    elif type(path) == L:
+        rand = random.randint(0,len(path)-1) 
+        file = path[rand]
+    im = PILImage.create(file)
+    if db: pp(im.width, im.height, file)
+    pp(file)
+    return im.to_thumb(size)
+```
+
+```python
+randomdisplay(test_files, 128)
+randomdisplay(train_files, 200)
+randomdisplay(path/"train_images/dead_heart", 128)
 ```
 
 ### how to use `fastcore.parallel` to quickly access size of all images; how to count the occurance of each unique value in a pandas 

@@ -1153,7 +1153,6 @@ from fastai.vision.core import *
 
 
 ```
-#| export utils
 # @snoop
 def randomdisplay(path, db=False):
 # https://www.geeksforgeeks.org/python-random-module/
@@ -1614,9 +1613,6 @@ To train a model, we'll need DataLoaders:
 
 We can view sample images from it:
 
-### get_image_files, get_files, image_extensions
-to extract all image files recursively from all subfolders of a parent path
-
 
 ```
 from fastai.data.transforms import _get_files
@@ -1634,6 +1630,9 @@ not None
 
 
 
+### src: _get_files(path, filenames,, extensions=None)
+get the fullnames for every file inside the list of filenames of a path
+
 
 ```
 def _get_files(p, # path
@@ -1646,6 +1645,9 @@ def _get_files(p, # path
     return res
 # File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
 ```
+
+### src: get_files(path, extensions=None, recurse=True, folders=None, followlinks=True)
+Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
 
 
 ```
@@ -1688,6 +1690,9 @@ len(image_extensions)
     False
 
 
+
+### src: get_image_files(path, recurse=True, folders=None)
+to extract all image files recursively from all subfolders of a parent path or only from `folders`, if specified.
 
 
 ```
@@ -1744,7 +1749,7 @@ Image.open(Path('forest_or_bird/bird/3b7a4112-9d77-4d8f-8b4c-a01e2ca1ecea.aspx')
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_121_0.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_123_0.png)
     
 
 
@@ -1978,7 +1983,7 @@ show_image(img)
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_136_1.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_138_1.png)
     
 
 
@@ -1992,7 +1997,7 @@ rsz(img, split_idx=0)
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_137_0.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_139_0.png)
     
 
 
@@ -2028,7 +2033,7 @@ for ax,method in zip(axs.flatten(), [ResizeMethod.Squish, ResizeMethod.Pad, Resi
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_138_3.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_140_3.png)
     
 
 
@@ -2063,7 +2068,7 @@ for ax,method in zip(axs.flatten(), [ResizeMethod.Squish, ResizeMethod.Pad, Resi
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_139_3.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_141_3.png)
     
 
 
@@ -3823,7 +3828,7 @@ print(f"Probability it's a bird: {probs[0]:.4f}")
 
 
     
-![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_193_0.png)
+![png](0001_fastai_is_it_a_bird_files/0001_fastai_is_it_a_bird_195_0.png)
     
 
 

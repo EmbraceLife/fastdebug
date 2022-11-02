@@ -2,7 +2,26 @@
 ---
 skip_exec: true
 ---
-### how to install fastkaggle if not available
+
+```
+#| default_exp delete_road_top1
+```
+
+
+```
+from fastdebug.utils import *
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+```
+# fastlistnbs("howto")
+```
+
+### ht: install fastkaggle if not available
 
 
 ```
@@ -14,7 +33,7 @@ except ModuleNotFoundError:
 from fastkaggle import *
 ```
 
-### how to iterate like a grandmaster
+### ht: iterate like a grandmaster
 
 In [Iterate Like a Grandmaster](https://www.kaggle.com/code/jhoward/iterate-like-a-grandmaster) I explained that when working on a Kaggle project:
 
@@ -40,32 +59,114 @@ As a special extra, I'm also opening up early a selection of "walkthru" videos t
 - [Walkthru 12](https://youtu.be/GuCkpjXHdTc)
 - [Walkthru 13](https://youtu.be/INrkhUGCXHg)
 
-## Getting set up
+## ht: download and access kaggle competition dataset
 
-### how to setup for fastkaggle; how to use fastkaggle to download dataset from kaggle; how to access the path
+### ht: set up before downloading
+go to kaggle.com, account, api, and click create a new api token
+
+then `cp kaggle.json ~/.kaggle/`
+
+go to the competition site and join the competition, and get the fullname of the competition for downloading the dataset
 
 First, we'll get the data. I've just created a new library called [fastkaggle](https://fastai.github.io/fastkaggle/) which has a few handy features, including getting the data for a competition correctly regardless of whether we're running on Kaggle or elsewhere. Note you'll need to first accept the competition rules and join the competition, and you'll need your kaggle API key file `kaggle.json` downloaded if you're running this somewhere other than on Kaggle. `setup_comp` is the function we use in `fastkaggle` to grab the data, and install or upgrade our needed python modules when we're running on Kaggle:
+
+### src: setup_comp(comp, install='fastai "timm>=0.6.2.dev0")
+Get a path to data for `competition`, downloading it if needed
+
+
+```
+@snoop
+def setup_comp(competition, install=''):
+    "Get a path to data for `competition`, downloading it if needed"
+    if iskaggle:
+        if install:
+            os.system(f'pip install -Uqq {install}')
+        return Path('../input')/competition
+    else:
+        path = Path(competition)
+        api = import_kaggle()
+        if not path.exists():
+            import zipfile
+            api.competition_download_cli(str(competition))
+            zipfile.ZipFile(f'{competition}.zip').extractall(str(competition))
+        return path
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
+```
+
+
+```
+"on kaggle" if iskaggle else "not on kaggle"
+```
+
+
+
+
+    'not on kaggle'
+
+
+
+
+```
+# api = import_kaggle()
+# lst_cmp=api.competitions_list()
+# lst_cmp[0].__dict__
+# lst_cmp
+```
 
 
 ```
 comp = 'paddy-disease-classification'
-
 path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
 ```
 
+    19:08:29.63 >>> Call to setup_comp in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_82945/1008324063.py", line 2
+    19:08:29.63 ...... competition = 'paddy-disease-classification'
+    19:08:29.63 ...... install = 'fastai "timm>=0.6.2.dev0"'
+    19:08:29.63    2 | def setup_comp(competition, install=''):
+    19:08:29.63    4 |     if iskaggle:
+    19:08:29.63    9 |         path = Path(competition)
+    19:08:29.63 .............. path = Path('paddy-disease-classification')
+    19:08:29.63   10 |         api = import_kaggle()
+    19:08:29.66 .............. api = <kaggle.api.kaggle_api_extended.KaggleApi object>
+    19:08:29.66   11 |         if not path.exists():
+    19:08:29.66   15 |         return path
+    19:08:29.66 <<< Return value from setup_comp: Path('paddy-disease-classification')
+
+
 
 ```
-path
+path.ls()
 ```
 
 
 
 
-    Path('paddy-disease-classification')
+    (#4) [Path('paddy-disease-classification/test_images'),Path('paddy-disease-classification/train.csv'),Path('paddy-disease-classification/train_images'),Path('paddy-disease-classification/sample_submission.csv')]
 
 
 
-### which fastai module to use for vision problem; how to check files inside the dataset path; why Jeremy recommend not to use seed in your own analysis;
+
+```
+def setup_comp(competition, install=''):
+    "Get a path to data for `competition`, downloading it if needed"
+    if iskaggle:
+        if install:
+            os.system(f'pip install -Uqq {install}')
+        return Path('../input')/competition
+    else:
+        path = Path(competition)
+        api = import_kaggle()
+        if not path.exists():
+            import zipfile
+            api.competition_download_cli(str(competition))
+            zipfile.ZipFile(f'{competition}.zip').extractall(str(competition))
+        return path
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
+```
+
+### ht: reproducibility in training
 
 Now we can import the stuff we'll need from fastai, set a seed (for reproducibility -- just for the purposes of making this notebook easier to write; I don't recommend doing that in your own analysis however) and check what's in the data:
 
@@ -73,48 +174,387 @@ Now we can import the stuff we'll need from fastai, set a seed (for reproducibil
 ```
 from fastai.vision.all import *
 set_seed(42)
+```
 
+## ht: data - access dataset
+
+### ht: data - map subfolders content
+use `path.ls()` and `check_subfolders_img(path)` to see what inside each subfolders
+
+
+```
 path.ls()
 ```
 
 
 
 
-    (#6) [Path('paddy-disease-classification/sample_submission.csv'),Path('paddy-disease-classification/test_images'),Path('paddy-disease-classification/subm.csv'),Path('paddy-disease-classification/train_images'),Path('paddy-disease-classification/train.csv'),Path('paddy-disease-classification/models')]
+    (#4) [Path('paddy-disease-classification/test_images'),Path('paddy-disease-classification/train.csv'),Path('paddy-disease-classification/train_images'),Path('paddy-disease-classification/sample_submission.csv')]
 
 
 
-## Looking at the data
-
-### how to access a subfolder by name using path from `setup_comp`; how to extract all image files from a folder
-
-The images are in `train_images`, so let's grab a list of all of them:
+### src: check_subfolders_img(path, db=False)
 
 
 ```
-trn_path = path/'train_images'
-files = get_image_files(trn_path)
+# @snoop
+def check_subfolders_img(path, db=False):
+    from pathlib import Path
+    for entry in path.iterdir():
+        if entry.is_file():
+            print(f'{str(entry.absolute())}')
+    for entry in path.iterdir():
+        if entry.is_dir() and not entry.name.startswith(".") and len(entry.ls(file_exts=image_extensions)) > 5:
+            print(f'{str(entry.parent.absolute())}: {len(entry.ls(file_exts=image_extensions))}  {entry.name}')
+#             print(entry.name, f': {len(entry.ls(file_exts=[".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]))}') # how to include both png and jpg
+            if db:
+                for e in entry.ls(): # check any image file which has a different suffix from those above
+                    if e.is_file() and not e.name.startswith(".") and e.suffix not in image_extensions and e.suffix not in [".ipynb", ".py"]:
+    #                 if e.suffix not in [".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]:
+                        pp(e.suffix, e)
+                        try:
+                            pp(Image.open(e).width)
+                        except:
+                            print(f"{e} can't be opened")
+    #                     pp(Image.open(e).width if e.suffix in image_extensions)
+        elif entry.is_dir() and not entry.name.startswith("."): 
+#             with snoop:
+            count_files_in_subfolders(entry)
 ```
+
+
+```
+check_subfolders_img(path)
+```
+
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train.csv
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/sample_submission.csv
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification: 3469  test_images
+    dead_heart : nbs/fastai_notebooks/paddy-disease-classification/train_images
+    dead_heart : 1442
+    bacterial_panicle_blight : nbs/fastai_notebooks/paddy-disease-classification/train_images
+    bacterial_panicle_blight : 337
+    bacterial_leaf_blight : nbs/fastai_notebooks/paddy-disease-classification/train_images
+    bacterial_leaf_blight : 479
+    brown_spot : nbs/fastai_notebooks/paddy-disease-classification/train_images
+    brown_spot : 965
+    hispa : nbs/fastai_notebooks/paddy-disease-classification/train_images
+    hispa : 1594
+    downy_mildew : nbs/fastai_notebooks/paddy-disease-classification/train_images
+    downy_mildew : 620
+    blast : nbs/fastai_notebooks/paddy-disease-classification/train_images
+    blast : 1738
+    normal : nbs/fastai_notebooks/paddy-disease-classification/train_images
+    normal : 1764
+    bacterial_leaf_streak : nbs/fastai_notebooks/paddy-disease-classification/train_images
+    bacterial_leaf_streak : 380
+    tungro : nbs/fastai_notebooks/paddy-disease-classification/train_images
+    tungro : 1088
+
+
+### ht: data - extract all images for test and train 
+using `get_image_files(path)` for both test folder and train folder
+
+
+```
+test_files = get_image_files(path/"test_images")
+train_files = get_image_files(path/"train_images")
+```
+
+
+```
+test_files
+train_files
+```
+
+
+
+
+    (#3469) [Path('paddy-disease-classification/test_images/202919.jpg'),Path('paddy-disease-classification/test_images/200868.jpg'),Path('paddy-disease-classification/test_images/200698.jpg'),Path('paddy-disease-classification/test_images/200840.jpg'),Path('paddy-disease-classification/test_images/201586.jpg'),Path('paddy-disease-classification/test_images/203391.jpg'),Path('paddy-disease-classification/test_images/202931.jpg'),Path('paddy-disease-classification/test_images/202925.jpg'),Path('paddy-disease-classification/test_images/203385.jpg'),Path('paddy-disease-classification/test_images/200854.jpg')...]
+
+
+
+
+
+
+    (#10407) [Path('paddy-disease-classification/train_images/dead_heart/110369.jpg'),Path('paddy-disease-classification/train_images/dead_heart/105002.jpg'),Path('paddy-disease-classification/train_images/dead_heart/106279.jpg'),Path('paddy-disease-classification/train_images/dead_heart/108254.jpg'),Path('paddy-disease-classification/train_images/dead_heart/104308.jpg'),Path('paddy-disease-classification/train_images/dead_heart/107629.jpg'),Path('paddy-disease-classification/train_images/dead_heart/110355.jpg'),Path('paddy-disease-classification/train_images/dead_heart/100146.jpg'),Path('paddy-disease-classification/train_images/dead_heart/103329.jpg'),Path('paddy-disease-classification/train_images/dead_heart/105980.jpg')...]
+
+
+
+
+```
+fastnbs("get_image_files")
+```
+
+
+### <mark style="background-color: #FFFF00">get_image_files</mark> 
+
+
+
+
+The current section is heading 3.
+
+
+```python
+
+```
+
+```python
+check(get_image_files)
+```
+
+```python
+files_train = get_image_files(path/"train")
+files_valid = get_image_files(path/"valid")
+files_test = get_image_files(path/"test")
+len(files_train), len(files_valid), len(files_test)
+```
+
+```python
+files_train[:5]
+```
+
+```python
+#| export
+def get_img_paths(query, train, valid, test):
+    from fastai.data.external import untar_data
+    from fastai.data.transforms import get_image_files
+    path = untar_data(search_data_url(query))
+    files_train = get_image_files(path/train)
+    files_valid = get_image_files(path/valid)
+    files_test = get_image_files(path/test)
+    print(f'train: {len(files_train)}, valid: {len(files_valid)}, test: {len(files_test)}')
+    return files_train, files_valid, files_test
+```
+
+```python
+files_train, files_valid, files_test = get_img_paths("mnist var", "train", "valid", "test")
+```
+
+```python
+
+```
+
+start of another heading 3
+### get_labels
+
+
+
+[Open `groundup_002_get_data_ready` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/lib/groundup_002_get_data_ready.ipynb#get_image_files
+)
+
+
+
+### <mark style="background-color: #FFFF00">get_image_files</mark> , get_files, image_extensions
+
+
+
+
+The current section is heading 3.
+
+to extract all image files recursively from all subfolders of a parent path
+
+```python
+from fastai.data.transforms import _get_files
+```
+
+```python
+not None
+```
+
+```python
+def _get_files(p, # path
+               fs, # list of filenames
+               extensions=None):
+    "get the fullnames for the list of filenames of a path"
+    p = Path(p)
+    res = [p/f for f in fs if not f.startswith('.')
+           and ((not extensions) or f'.{f.split(".")[-1].lower()}' in extensions)]
+    return res
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
+```
+
+```python
+def get_files(path, extensions=None, recurse=True, folders=None, followlinks=True):
+    "Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
+    path = Path(path)
+    folders=L(folders)
+    extensions = setify(extensions)
+    extensions = {e.lower() for e in extensions}
+    if recurse:
+        res = []
+        for i,(p,d,f) in enumerate(os.walk(path, followlinks=followlinks)): # returns (dirpath, dirnames, filenames)
+            if len(folders) !=0 and i==0: d[:] = [o for o in d if o in folders]
+            else:                         d[:] = [o for o in d if not o.startswith('.')]
+            if len(folders) !=0 and i==0 and '.' not in folders: continue
+            res += _get_files(p, f, extensions)
+    else:
+        f = [o.name for o in os.scandir(path) if o.is_file()]
+        res = _get_files(path, f, extensions)
+    return L(res)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
+```
+
+```python
+len(image_extensions)
+".aspx" in image_extensions
+```
+
+```python
+def get_image_files(path, recurse=True, folders=None):
+    "Get image files in `path` recursively, only in `folders`, if specified."
+    return get_files(path, extensions=image_extensions, recurse=recurse, folders=folders)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
+```
+
+```python
+count_files_in_subfolders(dino)
+get_image_files(dino)
+count_files_in_subfolders(bird)
+get_image_files(bird)
+```
+
+```python
+Image.open(Path('forest_or_bird/bird/3b7a4112-9d77-4d8f-8b4c-a01e2ca1ecea.aspx'))
+```
+
+start of another heading 3
+### parent_label(o)
+
+
+
+[Open `0001_fastai_is_it_a_bird` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb#get_image_files,-get_files,-image_extensions
+)
+
+
+
+[Open `0001_fastai_is_it_a_bird` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/is-it-a-bird-creating-a-model-from-your-own-data)
+
+
+
+### how to get the rice variety of each image with `df.loc` and the path from `get_image_files`
+
+
+
+
+The current section is heading 3.
+
+
+
+Our DataBlock will be using `get_image_files` to get the list of training images, which returns `Path` objects. Therefore, to look up an item to get its variety, we'll need to pass its `name`. Here's a function which does just that:
+
+```python
+def get_variety(p): return df.loc[p.name, 'variety']
+```
+
+start of another heading 3
+### how to use `DataBlock` to create dataloaders; what is DataBlock
+
+
+
+[Open `0011_fastai_multi_target_road_to_top_part_4` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0011_fastai_multi_target_road_to_top_part_4.ipynb#how-to-get-the-rice-variety-of-each-image-with-`df.loc`-and-the-path-from-`get_image_files`
+)
+
+
+
+[Open `0011_fastai_multi_target_road_to_top_part_4` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/multi-target-road-to-the-top-part-4)
+
 
 ...and take a look at one:
 
-### how to create an image from an image file; how to access the size of an image; how to display it with specified size for viewing
+### ht: data - display images from test_files or train_files
+use `randomdisplay(path, size, db=False)` to display images from a folder or a L list of images such as `test_files` or `train_files`
+
+### src: randomdisplay(path, size, db=False)
+display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
+    the image filename is printed as well
 
 
 ```
-img = PILImage.create(files[0])
-print(img.size)
-img.to_thumb(128)
+import pathlib
+type(path) == pathlib.PosixPath
+type(train_files) == L
 ```
 
-    (480, 640)
+
+
+
+    True
+
+
+
+
+
+
+    True
+
+
+
+
+```
+#| export utils
+# @snoop
+def randomdisplay(path, size, db=False):
+    "display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
+    the image filename is printed as well"
+# https://www.geeksforgeeks.org/python-random-module/
+    import random
+    import pathlib
+    from fastai.vision.all import PILImage
+    if type(path) == pathlib.PosixPath:
+        rand = random.randint(0,len(path.ls())-1) 
+        file = path.ls()[rand]
+    elif type(path) == L:
+        rand = random.randint(0,len(path)-1) 
+        file = path[rand]
+    im = PILImage.create(file)
+    if db: pp(im.width, im.height, file)
+    pp(file)
+    return im.to_thumb(size)
+```
+
+
+```
+randomdisplay(test_files, 128)
+randomdisplay(train_files, 200)
+randomdisplay(path/"train_images/dead_heart", 128)
+```
+
+    19:13:02.91 LOG:
+    19:13:02.91 .... file = Path('paddy-disease-classification/test_images/201589.jpg')
 
 
 
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_22_1.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_39_1.png)
+    
+
+
+
+    19:13:02.93 LOG:
+    19:13:02.93 .... file = Path('paddy-disease-classification/train_images/hispa/104841.jpg')
+
+
+
+
+
+    
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_39_3.png)
+    
+
+
+
+    19:13:02.95 LOG:
+    19:13:02.95 .... file = Path('paddy-disease-classification/train_images/dead_heart/108036.jpg')
+
+
+
+
+
+    
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_39_5.png)
     
 
 
@@ -156,7 +596,7 @@ dls.show_batch(max_n=6)
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_28_0.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_45_0.png)
     
 
 
@@ -210,7 +650,7 @@ learn.lr_find(suggest_funcs=(valley, slide))
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_35_3.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_52_3.png)
     
 
 

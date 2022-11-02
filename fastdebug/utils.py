@@ -5,9 +5,27 @@ from __future__ import annotations
 annotations = annotations
 
 # %% auto 0
-__all__ = ['annotations', 'doc', 'ic', 'snoop', 'pp', 'snoopon', 'test_eq', 'test_is', 'FunctionType', 'MethodType', 'kagglenbs', 'plot_func', 'plot_funcs', 'plot_fns', 'chk', 'doc_sig', 'doc_sig_complex', 'type_watch', 'sig_watch', 'view', 'stats_watch', 'snoop_onoff', 'nb_url', 'nb_path', 'nb_name', 'ipy2md', 'automagics', 'inspect_class', 'ismetaclass', 'isdecorator', 'whatinside', 'whichversion', 'fastview', 'fastsrcs', 'get_all_nbs', 'openNB', 'openNBKaggle', 'fastnbs', 'fastcodes', 'fastnotes', 'fastlistnbs', 'fastlistsrcs', 'idx_line', 'check', 'randomdisplay', 'count_files_in_subfolders']
+__all__ = ['annotations', 'L', 'Path', 'doc', 'show_doc', 'snoop', 'pp', 'snoopon', 'test_eq', 'test_is', 'FunctionType', 'MethodType', 'kagglenbs', 'fu', 'plot_func', 'plot_funcs', 'plot_fns', 'chk', 'doc_sig', 'doc_sig_complex', 'type_watch', 'sig_watch', 'view', 'stats_watch', 'snoop_onoff', 'nb_url', 'nb_path', 'nb_name', 'ipy2md', 'automagics', 'inspect_class', 'ismetaclass', 'isdecorator', 'whatinside', 'whichversion', 'fastview', 'fastsrcs', 'get_all_nbs', 'openNB', 'openNBKaggle', 'fastnbs', 'fastcodes', 'fastnotes', 'fastlistnbs', 'fastlistsrcs', 'idx_line', 'check', 'verify_images', 'remove_failed', 'check_subfolders_img', 'randomdisplay', 'f', 'check_sizes_img']
 
 # %% ../nbs/lib/01_utils.ipynb 5
+from fastcore.foundation import L
+
+# %% ../nbs/lib/01_utils.ipynb 6
+L = L
+
+# %% ../nbs/lib/01_utils.ipynb 8
+from pathlib import *
+
+# %% ../nbs/lib/01_utils.ipynb 9
+Path = Path
+
+# %% ../nbs/lib/01_utils.ipynb 11
+from fastai.vision.all import *
+
+# %% ../nbs/lib/01_utils.ipynb 14
+from pathlib import *
+
+# %% ../nbs/lib/01_utils.ipynb 20
 def plot_func(x, y, label_x=None, label_y=None, title=None):
     import matplotlib.pyplot as plt
     plt.plot(x, y)
@@ -24,7 +42,7 @@ def plot_func(x, y, label_x=None, label_y=None, title=None):
     plt.show()
 
 
-# %% ../nbs/lib/01_utils.ipynb 8
+# %% ../nbs/lib/01_utils.ipynb 23
 # @snoop
 def plot_funcs(*lines, # eg., (x1,y1, "line1"),(x2,y2, "line2"), (y1, y2, "line3")
                label_x=None, 
@@ -60,7 +78,7 @@ def plot_funcs(*lines, # eg., (x1,y1, "line1"),(x2,y2, "line2"), (y1, y2, "line3
 #     plt.plot(x, y, color='green', linestyle='dashed', linewidth = 3,
 #          marker='o', markerfacecolor='blue', markersize=12)
 
-# %% ../nbs/lib/01_utils.ipynb 11
+# %% ../nbs/lib/01_utils.ipynb 26
 # @snoop
 def plot_fns(*funcs, # eg., (func1, ), (func2, ) or (func2, 'x**2'), (func1, 'log(x)')
                label_x=None, 
@@ -103,67 +121,40 @@ def plot_fns(*funcs, # eg., (func1, ), (func2, ) or (func2, 'x**2'), (func1, 'lo
 #     plt.plot(x, y, color='green', linestyle='dashed', linewidth = 3,
 #          marker='o', markerfacecolor='blue', markersize=12)
 
-# %% ../nbs/lib/01_utils.ipynb 15
+# %% ../nbs/lib/01_utils.ipynb 30
 from fastai.torch_core import doc
 
-# %% ../nbs/lib/01_utils.ipynb 16
+# %% ../nbs/lib/01_utils.ipynb 31
 doc = doc
 
-# %% ../nbs/lib/01_utils.ipynb 18
-from icecream import ic, argumentToString
-import numpy as np
-from torch import Tensor
-from pandas import DataFrame, Series
+# %% ../nbs/lib/01_utils.ipynb 32
+from nbdev.showdoc import show_doc
 
-# %% ../nbs/lib/01_utils.ipynb 19
-# Register a function to summarize numpy array
-@argumentToString.register(np.ndarray)
-def _(obj):
-    return f"ndarray, shape={obj.shape}, dtype={obj.dtype}"
+# %% ../nbs/lib/01_utils.ipynb 33
+show_doc = show_doc
 
-# %% ../nbs/lib/01_utils.ipynb 21
-# Register a function to summarize numpy array
-@argumentToString.register(Tensor)
-def _(obj):
-    return f"class={type(obj)}, shape={obj.shape}, dtype={obj.dtype}"
-
-# %% ../nbs/lib/01_utils.ipynb 24
-# Register a function to summarize numpy array
-@argumentToString.register(DataFrame)
-def _(obj):
-    return f"class={type(obj)}, shape={obj.shape}"
-
-# %% ../nbs/lib/01_utils.ipynb 26
-# Register a function to summarize numpy array
-@argumentToString.register(Series)
-def _(obj):
-    return f"class={type(obj)}, shape={obj.shape}"
-
-# %% ../nbs/lib/01_utils.ipynb 28
-ic = ic
-
-# %% ../nbs/lib/01_utils.ipynb 30
+# %% ../nbs/lib/01_utils.ipynb 35
 from snoop import snoop, pp
 
-# %% ../nbs/lib/01_utils.ipynb 31
+# %% ../nbs/lib/01_utils.ipynb 36
 snoop = snoop
 pp = pp
 
-# %% ../nbs/lib/01_utils.ipynb 34
+# %% ../nbs/lib/01_utils.ipynb 39
 def chk(obj):
     tp = type(obj)
     length = obj.__len__() if hasattr(obj, '__len__') else "no length"
     shape = obj.shape if hasattr(obj, 'shape') else "no shape"
     return tp, length, shape
 
-# %% ../nbs/lib/01_utils.ipynb 35
+# %% ../nbs/lib/01_utils.ipynb 40
 def doc_sig(func):
     import inspect
     sig = inspect.signature(func) if callable(func) else "no signature"
     doc = inspect.getdoc(func) if inspect.getdoc(func) != None else "no doc"
     return  getattr(func, '__mro__', "no mro"), doc, sig
 
-# %% ../nbs/lib/01_utils.ipynb 36
+# %% ../nbs/lib/01_utils.ipynb 41
 def doc_sig_complex(func):
     import inspect        
     if not inspect.isfunction(func) or not inspect.ismethod(func):
@@ -177,25 +168,25 @@ def doc_sig_complex(func):
     mro = getattr(func, '__mro__', "no mro")
     return info, doc, sig, mro
 
-# %% ../nbs/lib/01_utils.ipynb 37
+# %% ../nbs/lib/01_utils.ipynb 42
 def type_watch(source, value):
     if value != None:
         return 'type({})'.format(source), type(value)
 
-# %% ../nbs/lib/01_utils.ipynb 38
+# %% ../nbs/lib/01_utils.ipynb 43
 def sig_watch(source, value):
     if inspect.isfunction(value):
         return 'sig({})'.format(source), inspect.signature(value)
 
-# %% ../nbs/lib/01_utils.ipynb 39
+# %% ../nbs/lib/01_utils.ipynb 44
 def view(data): return (data.mean(), data.std())
 
-# %% ../nbs/lib/01_utils.ipynb 42
+# %% ../nbs/lib/01_utils.ipynb 47
 def stats_watch(source, value):
     if (isinstance(value, np.ndarray) or isinstance(value, torch.Tensor)): 
         return '{} stats: '.format(source), view(value)
 
-# %% ../nbs/lib/01_utils.ipynb 44
+# %% ../nbs/lib/01_utils.ipynb 49
 def snoop_onoff(on=True):
     "activate or deactivate @snoop, pp, but not %%snoop in a cell which is activated by %load_ext snoop"
     import snoop
@@ -204,39 +195,39 @@ def snoop_onoff(on=True):
     snoop.install(replace_watch_extras=[]) # this is much simpler to read
 
 
-# %% ../nbs/lib/01_utils.ipynb 45
+# %% ../nbs/lib/01_utils.ipynb 50
 snoopon = snoop_onoff() # # no import or config for using snoop now
 
-# %% ../nbs/lib/01_utils.ipynb 48
+# %% ../nbs/lib/01_utils.ipynb 53
 import os
 
-# %% ../nbs/lib/01_utils.ipynb 49
+# %% ../nbs/lib/01_utils.ipynb 54
 def multi_output():
     from IPython.core.interactiveshell import InteractiveShell
     InteractiveShell.ast_node_interactivity = "all"
 
-# %% ../nbs/lib/01_utils.ipynb 50
+# %% ../nbs/lib/01_utils.ipynb 55
 multioutput = multi_output()
 
-# %% ../nbs/lib/01_utils.ipynb 54
+# %% ../nbs/lib/01_utils.ipynb 59
 def nb_url():
     "run this func to get nb_url of this current notebook"
     import ipyparams
     return eval("ipyparams.raw_url")
 
-# %% ../nbs/lib/01_utils.ipynb 56
+# %% ../nbs/lib/01_utils.ipynb 61
 def nb_path():
     "run this func to get nb_path of this current notebook"
     import ipyparams
     return eval("os.path.join(os.getcwd(), ipyparams.notebook_name)")
 
-# %% ../nbs/lib/01_utils.ipynb 58
+# %% ../nbs/lib/01_utils.ipynb 63
 def nb_name():
     "run this func to get nb_path of this current notebook"
     import ipyparams
     return eval("ipyparams.notebook_name")
 
-# %% ../nbs/lib/01_utils.ipynb 61
+# %% ../nbs/lib/01_utils.ipynb 66
 def ipy2md(db=True):
     "convert the current notebook to md"
     import ipyparams
@@ -261,7 +252,7 @@ def ipy2md(db=True):
     if db: print(f'copy to : {mds_output}')
     if db: print(f'move to : {obs_output_path}')        
 
-# %% ../nbs/lib/01_utils.ipynb 69
+# %% ../nbs/lib/01_utils.ipynb 74
 def automagics():
     from IPython.core.interactiveshell import InteractiveShell
     get_ipython().run_line_magic(magic_name="load_ext", line = "autoreload")
@@ -269,30 +260,30 @@ def automagics():
     get_ipython().run_line_magic(magic_name="matplotlib", line = "inline")
     get_ipython().run_line_magic(magic_name="load_ext", line = "snoop")
 
-# %% ../nbs/lib/01_utils.ipynb 72
+# %% ../nbs/lib/01_utils.ipynb 77
 def expandcell():
     "expand cells of the current notebook to its full width"
     from IPython.display import display, HTML 
     display(HTML("<style>.container { width:100% !important; }</style>"))
 
-# %% ../nbs/lib/01_utils.ipynb 73
+# %% ../nbs/lib/01_utils.ipynb 78
 expand = expandcell()
 
-# %% ../nbs/lib/01_utils.ipynb 75
+# %% ../nbs/lib/01_utils.ipynb 80
 from fastcore.test import * # so that it automated
 
-# %% ../nbs/lib/01_utils.ipynb 76
+# %% ../nbs/lib/01_utils.ipynb 81
 test_eq = test_eq
 test_is = test_is
 
-# %% ../nbs/lib/01_utils.ipynb 77
+# %% ../nbs/lib/01_utils.ipynb 82
 from fastcore.imports import FunctionType, MethodType
 
-# %% ../nbs/lib/01_utils.ipynb 78
+# %% ../nbs/lib/01_utils.ipynb 83
 FunctionType = FunctionType
 MethodType = MethodType
 
-# %% ../nbs/lib/01_utils.ipynb 83
+# %% ../nbs/lib/01_utils.ipynb 88
 def inspect_class(c, src=False):
     "examine the details of a class"
     if src:
@@ -349,14 +340,14 @@ def inspect_class(c, src=False):
     print(f'{c.__name__}\'s namespace are:')
     pprint(c.__dict__)
 
-# %% ../nbs/lib/01_utils.ipynb 86
+# %% ../nbs/lib/01_utils.ipynb 91
 def ismetaclass(mc): 
     "check whether a class is a metaclass or not"
     if inspect.isclass(mc):
         return type in mc.__mro__ 
     else: return False
 
-# %% ../nbs/lib/01_utils.ipynb 93
+# %% ../nbs/lib/01_utils.ipynb 98
 def isdecorator(obj):
     "check whether a function is a decorator"
     if inspect.isfunction(obj):
@@ -385,14 +376,14 @@ def isdecorator(obj):
     else: return False
 
 
-# %% ../nbs/lib/01_utils.ipynb 97
+# %% ../nbs/lib/01_utils.ipynb 102
 # from inspect import getmembers, isfunction, isclass, isbuiltin, getsource
 import os.path, pkgutil
 from pprint import pprint
 import inspect
 
 
-# %% ../nbs/lib/01_utils.ipynb 104
+# %% ../nbs/lib/01_utils.ipynb 109
 def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
                dun:bool=False, # print all items in __all__
                func:bool=False, # print all user defined functions
@@ -474,11 +465,11 @@ def whatinside(mo, # module, e.g., `import fastcore.all as fa`, use `fa` here
         print(f'The library has {len(modules)} modules')
         pprint(modules)
 
-# %% ../nbs/lib/01_utils.ipynb 109
+# %% ../nbs/lib/01_utils.ipynb 114
 from importlib.metadata import version, metadata, distribution
 from platform import python_version 
 
-# %% ../nbs/lib/01_utils.ipynb 110
+# %% ../nbs/lib/01_utils.ipynb 115
 def whichversion(libname:str, # library name not string
                 req:bool=False, # print lib requirements 
                 file:bool=False): # print all lib files
@@ -499,7 +490,7 @@ def whichversion(libname:str, # library name not string
         pprint(distribution(libname).files)
     
 
-# %% ../nbs/lib/01_utils.ipynb 120
+# %% ../nbs/lib/01_utils.ipynb 125
 def fastview(name, # can be both object itself or str, e.g., delegates, FixSigMeta
             nb=False # add a link to the notebook where comments are added
             ): 
@@ -516,10 +507,10 @@ def fastview(name, # can be both object itself or str, e.g., delegates, FixSigMe
     if nb:
         openNB(name)    
 
-# %% ../nbs/lib/01_utils.ipynb 122
+# %% ../nbs/lib/01_utils.ipynb 127
 import os
 
-# %% ../nbs/lib/01_utils.ipynb 126
+# %% ../nbs/lib/01_utils.ipynb 131
 def fastsrcs():
     "to list all commented src files"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
@@ -528,7 +519,7 @@ def fastsrcs():
             # Prints only text file present in My Folder
             print(f)
 
-# %% ../nbs/lib/01_utils.ipynb 130
+# %% ../nbs/lib/01_utils.ipynb 135
 def getrootport():
     "get the local port and notebook dir"
     from notebook import notebookapp
@@ -540,16 +531,16 @@ def getrootport():
             root_dir = note['notebook_dir']
     return (root_server, root_dir)
 
-# %% ../nbs/lib/01_utils.ipynb 134
+# %% ../nbs/lib/01_utils.ipynb 139
 def jn_link(name, file_path, where="locally"):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(f'[Open `{name}` in Jupyter Notebook {where}]({file_path})'))                
 
-# %% ../nbs/lib/01_utils.ipynb 144
+# %% ../nbs/lib/01_utils.ipynb 149
 from pathlib import *
 
-# %% ../nbs/lib/01_utils.ipynb 148
+# %% ../nbs/lib/01_utils.ipynb 153
 def get_all_nbs():
     "return paths for all nbs both in md and ipynb format into lists"
 #     md_folder = '/Users/Natsume/Documents/divefastai/Debuggable/jupytext/'
@@ -573,7 +564,7 @@ def get_all_nbs():
             
     return (md_nbs, md_folder, ipy_nbs, ipy_folder, md_output_nbs, md_output_folder)
 
-# %% ../nbs/lib/01_utils.ipynb 156
+# %% ../nbs/lib/01_utils.ipynb 161
 def openNB(name, heading=None, db=False):
     "Get a link to the notebook at by searching keyword or notebook name"
     _, _, ipynbs, _, _, _= get_all_nbs()
@@ -597,7 +588,7 @@ def openNB(name, heading=None, db=False):
                 file_name = path_server + f + "#" + heading if bool(heading) else path_server + f
                 jn_link(name, file_name)
 
-# %% ../nbs/lib/01_utils.ipynb 161
+# %% ../nbs/lib/01_utils.ipynb 166
 kagglenbs = [
     "https://www.kaggle.com/code/jhoward/how-does-a-neural-net-really-work",
     "https://www.kaggle.com/code/jhoward/is-it-a-bird-creating-a-model-from-your-own-data",
@@ -628,7 +619,7 @@ kagglenbs = [
     "https://www.kaggle.com/code/jhoward/improved-lstm-baseline-glove-dropout"
 ]
 
-# %% ../nbs/lib/01_utils.ipynb 163
+# %% ../nbs/lib/01_utils.ipynb 168
 def openNBKaggle(filename_full, db=False):
     if 'fastai' in filename_full:
         # split by 'fastai' and take the later
@@ -646,7 +637,7 @@ def openNBKaggle(filename_full, db=False):
                 if db: print(f'pct is {pct}')
                 jn_link(filename_full.split(".md")[0], f, where="on Kaggle") 
 
-# %% ../nbs/lib/01_utils.ipynb 171
+# %% ../nbs/lib/01_utils.ipynb 176
 def highlight(question:str, line:str, db=False):
     "highlight a string with yellow background"
     questlst = question.split(' ')
@@ -658,13 +649,13 @@ def highlight(question:str, line:str, db=False):
     if db: print(f'line: {line}')
     return line
 
-# %% ../nbs/lib/01_utils.ipynb 175
+# %% ../nbs/lib/01_utils.ipynb 180
 def display_md(text):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(text))                
 
-# %% ../nbs/lib/01_utils.ipynb 186
+# %% ../nbs/lib/01_utils.ipynb 191
 def display_block(line, file, output=False, keywords=""):
     "`line` is a section title, find all subsequent lines which belongs to the same section and display them together"
     from IPython.display import Markdown
@@ -693,7 +684,7 @@ def display_block(line, file, output=False, keywords=""):
     else: print(full_section)
 
 
-# %% ../nbs/lib/01_utils.ipynb 196
+# %% ../nbs/lib/01_utils.ipynb 201
 # @snoop
 def fastnbs(question:str, # query in string
             filter_folder="all", # options: all, fastai, part2, src
@@ -727,7 +718,7 @@ use fastnbs() display the entire learning points section including notes and cod
                 if l.startswith("## ") or l.startswith("### ") or l.startswith("#### "):
                     truelst = [q.lower() in l.lower() for q in questlst]
                     pct = sum(truelst)/len(truelst)
-                    ctn = l.split("# ```")[1] if "# ```" in l else l.split("# ")[1] 
+                    ctn = l.split("# ```")[1] if "# ```" in l else l.split("# ")[1] if "# " in l else l.split("# `")
                     if strict:
                         if pct >= accu and ctn.startswith(questlst[0]): # make sure the heading start with the exact quest word
                             if db: 
@@ -759,7 +750,7 @@ use fastnbs() display the entire learning points section including notes and cod
 
                                 openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/01_utils.ipynb 201
+# %% ../nbs/lib/01_utils.ipynb 206
 def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
     "using keywords to search learning points from commented sources files"
     questlst = question.split(' ')
@@ -790,7 +781,7 @@ def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/01_utils.ipynb 214
+# %% ../nbs/lib/01_utils.ipynb 219
 def fastnotes(question:str, 
               search_code:bool=False, # if search code, do check True for nicer printing
               accu:float=0.8, 
@@ -867,20 +858,21 @@ of surrounding lines."
                         openNB(file_name, db=db)
                         openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/01_utils.ipynb 224
-def fastlistnbs(flt_fd="fastai"): # other options: "groundup", "part2", "all"
+# %% ../nbs/lib/01_utils.ipynb 229
+def fastlistnbs(query="all", # howto, srcode, or all
+                flt_fd="src"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
 src_fastcore, all"
     nbs, folder, _, _, _, _ = get_all_nbs()
     nb_rt = ""
     for nb in nbs:
-        if flt_fd == "fastai" and "_fastai_" in nb and not "_fastai_pt2" in nb: 
+        if flt_fd == "fastai" and "_fastai_" in nb.split("/")[-1] and not "_fastai_pt2" in nb.split("/")[-1]: 
             nb_rt = nb
-        elif flt_fd == "part2" and "_fastai_pt2" in nb:
+        elif flt_fd == "part2" and "_fastai_pt2" in nb.split("/")[-1]:
             nb_rt = nb
-        elif flt_fd == "groundup" and "groundup_" in nb:            
+        elif flt_fd == "groundup" and "groundup_" in nb.split("/")[-1]:            
             nb_rt = nb
-        elif flt_fd == "src" and "src_" in nb:
+        elif flt_fd == "src" and "fast" in nb.split("/")[-1]:
             nb_rt = nb            
         elif flt_fd == "all": 
             nb_rt = nb
@@ -891,9 +883,17 @@ src_fastcore, all"
         with open(nb_rt, 'r') as file:
             for idx, l in enumerate(file):
                 if "##" in l:
-                    print(l, end="") # no extra new line between each line printed       
+                    if query == "howto" and "ht:" in l:
+                        if l.count("#") == 2: print()
+                        print(l, end="") # no extra new line between each line printed    
+                    elif query == "srcode" and "src:" in l:
+                        if l.count("#") == 2: print()                        
+                        print(l, end="") # no extra new line between each line printed    
+                    elif query == "all": 
+                        if l.count("#") == 2: print()                        
+                        print(l, end="") # no extra new line between each line printed    
 
-# %% ../nbs/lib/01_utils.ipynb 229
+# %% ../nbs/lib/01_utils.ipynb 234
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
@@ -906,6 +906,12 @@ def fastlistsrcs():
                         print(l.split("#")[1], end="")
 #                         print(l, end="") # no extra new line between each line printed
         
+
+# %% ../nbs/lib/01_utils.ipynb 251
+import fastdebug.utils as fu
+
+# %% ../nbs/lib/01_utils.ipynb 252
+fu = fu
 
 # %% ../nbs/lib/groundup_002_get_data_ready.ipynb 75
 def idx_line(lst):
@@ -948,25 +954,55 @@ def check(f, # function name, like PIL.Image.open
     print(f"method: {inspect.ismethod(f)}")
 
 # %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 77
-# @snoop
-def randomdisplay(path, db=False):
-# https://www.geeksforgeeks.org/python-random-module/
-    import random
-    rand = random.randint(0,len(path.ls())-1) # choose a random int between 0 and len(T-rex)-1
-    file = path.ls()[rand]
-    im = PILImage.create(file)
-    if db: pp(im.width, im.height, file)
-    return file, im
+from fastai.vision.core import *
 
-
-# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 89
+# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 98
 # @snoop
-def count_files_in_subfolders(path, db=False):
+def verify_images(fns):
+    "Find images in `fns` that can't be opened. using parallel, to applies `verify_image` in parallel to `fns`, using `n_workers=8`"
+#     return L(fns[i] for i,o in enumerate(parallel(verify_image, fns)) if not o)
+    lst = []
+    for i,o in enumerate(parallel(verify_image, fns)):
+        if not o:
+            lst.append(fns[i])
+    return L(lst)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/utils.py
+# Type:      function
+
+# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 99
+def verify_images(fns):
+    "Find images in `fns` that can't be opened"
+    return L(fns[i] for i,o in enumerate(parallel(verify_image, fns)) if not o)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/utils.py
+# Type:      function
+
+# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 103
+def remove_failed(path):
+    print("before running remove_failed:")
+    check_subfolders_img(path)
+    failed = verify_images(get_image_files(path))
+    print(f"total num: {len(get_image_files(path))}")
+    print(f"num offailed: {len(failed)}")
+    failed.map(Path.unlink)
+    print()
+    print("after running remove_failed:")
+    check_subfolders_img(path)
+
+# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 30
+from fastai.vision.all import *
+
+# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 31
+# @snoop
+def check_subfolders_img(path, db=False):
     from pathlib import Path
     for entry in path.iterdir():
+        if entry.is_file():
+            print(f'{str(entry.absolute())}')
+    addup = 0
+    for entry in path.iterdir():
         if entry.is_dir() and not entry.name.startswith(".") and len(entry.ls(file_exts=image_extensions)) > 5:
-            print(entry.name, f': {str(entry.parent.absolute()).split("/Users/Natsume/Documents/fastdebug/")[1]}')
-            print(entry.name, f': {len(entry.ls(file_exts=image_extensions))}')
+            addup += len(entry.ls(file_exts=image_extensions))
+            print(f'{str(entry.parent.absolute())}: {len(entry.ls(file_exts=image_extensions))}  {entry.name}')
 #             print(entry.name, f': {len(entry.ls(file_exts=[".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]))}') # how to include both png and jpg
             if db:
                 for e in entry.ls(): # check any image file which has a different suffix from those above
@@ -980,5 +1016,49 @@ def count_files_in_subfolders(path, db=False):
     #                     pp(Image.open(e).width if e.suffix in image_extensions)
         elif entry.is_dir() and not entry.name.startswith("."): 
 #             with snoop:
-            count_files_in_subfolders(entry)
-                    
+            check_subfolders_img(entry)
+    print(f"addup num: {addup}")
+
+# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 41
+# @snoop
+def randomdisplay(path, size=128, db=False):
+    "display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
+    the image filename is printed as well"
+# https://www.geeksforgeeks.org/python-random-module/
+    import random
+    import pathlib
+    from fastai.vision.all import PILImage
+    if type(path) == pathlib.PosixPath:
+        rand = random.randint(0,len(path.ls())-1) 
+        file = path.ls()[rand]
+    elif type(path) == L:
+        rand = random.randint(0,len(path)-1) 
+        file = path[rand]
+    im = PILImage.create(file)
+    if db: pp(im.width, im.height, file)
+    pp(file)
+    return im.to_thumb(size)
+
+# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 49
+def f(o, sz=None): 
+    im = None
+    if sz and PILImage.create(o).size == sz:
+        im = PILImage.create(o).to_thumb(500)
+    return PILImage.create(o).size, im
+
+# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 51
+@snoop
+@delegates(f)
+def check_sizes_img(files, **kwargs):
+    "use fastcore.parallel to quickly find out the different sizes of all images and their occurences. \
+    output images with specific sizes if specified in `sz`"
+    from fastcore.parallel import parallel
+    res = parallel(f, files, n_workers=8, **kwargs) # add sz as a keyword to parallel
+    sizes = [size for size, im in res]
+    imgs = [im for size, im in res if im != None]
+    pp(pd.Series(sizes).value_counts())  
+    pp(imgs)
+    if len(imgs):
+        for im in imgs:
+            im.to_thumb(125).show()
+    return imgs
