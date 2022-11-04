@@ -4,7 +4,7 @@ skip_exec: true
 ---
 
 ```
-#| default_exp delete_road_top1
+#| default_exp run_kaggle_001
 ```
 
 ### jn: help other is the best way forward
@@ -27,10 +27,42 @@ Why I am always trying to do something different? Why couldn't I just follow thi
 
 ## ht: imports - vision
 
+### ht: imports - fastkaggle 
+
 
 ```
-from fastdebug.utils import *
-from fastai.vision.all import *
+#| export
+# install fastkaggle if not available
+try: import fastkaggle
+except ModuleNotFoundError:
+    !pip install -Uq fastkaggle
+
+from fastkaggle import *
+```
+
+### imports for kaggle or local
+
+
+```
+#| export
+if iskaggle:
+    !pip install nbdev snoop
+```
+
+
+```
+#| export
+if iskaggle:
+    path = "../input/fastdebugutils0"
+    import sys
+    sys.path
+    sys.path.insert(1, path)
+    import utils as fu
+    from utils import *
+else: 
+    from fastdebug.utils import *
+    from fastai.vision.all import *
+    import fastdebug.utils as fu
 ```
 
 
@@ -64,24 +96,13 @@ from fastai.vision.all import *
 # fastnbs("src: check_siz")
 ```
 
-### ht: imports - fastkaggle 
+### ht: imports - upload and update mylib in kaggle
 
-
-```
-# install fastkaggle if not available
-try: import fastkaggle
-except ModuleNotFoundError:
-    !pip install -Uq fastkaggle
-
-from fastkaggle import *
-```
-
-### ht: imports - use mylib in kaggle
-- upload my fastdebug.utils module as a dataset to kaggle, to create a dataset
+- upload my fastdebug.utils module as a dataset to kaggle, to create a dataset like one [here](https://www.kaggle.com/datasets/danielliao/fastdebugutils0)
 
 - and in one kaggle notebook, go to the top right, under Data/Input/ find the dataset and copy file path, and run the cell below to import it
 
-- when updating the library, go to the dataset page, click top right `...` and click `update version` to upload the latest version of your script
+- when updating the library, go to the dataset [page](https://www.kaggle.com/datasets/danielliao/fastdebugutils0), click top right `...` and click `update version` to upload the latest version of your script
 
 
 ```
@@ -94,12 +115,12 @@ from fastkaggle import *
 # import utils as fu
 ```
 
-### ht: imports - fastkaggle - push libs to kaggle
+### ht: imports - fastkaggle - push libs to kaggle with `create_libs_datasets`
 
 
 ```
 # lib_path = Path('/root/kaggle_datasets') # not working
-# lib_path = Path('../input/kaggle_datasets') # it's working, but I can't find it in kaggle
+# lib_path = Path('../input/kaggle_datasets') # it's working, and created and stored locally
 # username = 'danielliao'
 ```
 
@@ -144,7 +165,7 @@ As a special extra, I'm also opening up early a selection of "walkthru" videos t
 
 ## ht: data_download - kaggle competition dataset
 
-### ht: data_download - join, `kaggle.json`, `setup_comp`
+### ht: data_download - join, `kaggle.json`, `setup_comp` for local use
 
 go to kaggle.com, go to 'account', 'api', and click 'create a new api token'
 
@@ -163,6 +184,24 @@ override `fastkaggle.core.setup_comp` for my use
 If on kaggle, download and install required libraries to work with, and return a path linking to the dataset
 
 If on local machine, download the dataset to the path based on local_folder if the path is not available and return the path
+
+
+```
+show_doc(setup_comp)
+```
+
+
+
+
+---
+
+### setup_comp
+
+>      setup_comp (competition, install='')
+
+Get a path to data for `competition`, downloading it if needed
+
+
 
 ```python
 @snoop
@@ -255,48 +294,34 @@ snoopon()
 
 
 ```
-@snoop
-def setup_comp(competition, local_folder='', install=''):
-    "Get a path to data for `competition`, downloading it if needed"
-    if iskaggle:
-        if install:
-            os.system(f'pip install -Uqq {install}')
-        return Path('../input')/competition
-    else:
-        path = Path(local_folder + competition)
-        api = import_kaggle()
-        if not path.exists():
-            import zipfile
-#             pp(doc_sig(api.competition_download_cli))
-#             return
-            api.competition_download_cli(str(competition), path=path)
-            zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
-        return path
-# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
-# Type:      function
+# @snoop
+# def setup_comp(competition, local_folder='', install=''):
+#     "Get a path to data for `competition`, downloading it if needed"
+#     if iskaggle:
+#         if install:
+#             os.system(f'pip install -Uqq {install}')
+#         return Path('../input')/competition
+#     else:
+#         path = Path(local_folder + competition)
+#         api = import_kaggle()
+#         if not path.exists():
+#             import zipfile
+# #             pp(doc_sig(api.competition_download_cli))
+# #             return
+#             api.competition_download_cli(str(competition), path=path)
+#             zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
+#         return path
+# # File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# # Type:      function
 ```
 
 
 ```
 comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
-local = "/Users/Natsume/Documents/"
-path = setup_comp(comp, local_folder=local, install='fastai "timm>=0.6.2.dev0"')
+# local = "/Users/Natsume/Documents/"
+# path = setup_comp(comp, local_folder=local, install='fastai "timm>=0.6.2.dev0"')
+path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
 ```
-
-    22:17:06.96 >>> Call to setup_comp in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_47000/1633869195.py", line 2
-    22:17:06.96 ...... competition = 'paddy-disease-classification'
-    22:17:06.96 ...... local_folder = '/Users/Natsume/Documents/'
-    22:17:06.96 ...... install = 'fastai "timm>=0.6.2.dev0"'
-    22:17:06.96    2 | def setup_comp(competition, local_folder='', install=''):
-    22:17:06.96    4 |     if iskaggle:
-    22:17:06.96    9 |         path = Path(local_folder + competition)
-    22:17:06.96 .............. path = Path('/Users/Natsume/Documents/paddy-disease-classification')
-    22:17:06.96   10 |         api = import_kaggle()
-    22:17:06.98 .............. api = <kaggle.api.kaggle_api_extended.KaggleApi object>
-    22:17:06.98   11 |         if not path.exists():
-    22:17:06.98   17 |         return path
-    22:17:06.98 <<< Return value from setup_comp: Path('/Users/Natsume/Documents/paddy-disease-classification')
-
 
 
 ```
@@ -311,7 +336,7 @@ path.ls()
 
 
 
-    (#4) [Path('/Users/Natsume/Documents/paddy-disease-classification/test_images'),Path('/Users/Natsume/Documents/paddy-disease-classification/train.csv'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images'),Path('/Users/Natsume/Documents/paddy-disease-classification/sample_submission.csv')]
+    (#4) [Path('paddy-disease-classification/test_images'),Path('paddy-disease-classification/train.csv'),Path('paddy-disease-classification/train_images'),Path('paddy-disease-classification/sample_submission.csv')]
 
 
 
@@ -343,7 +368,7 @@ path.ls()
 
 
 
-    (#4) [Path('/Users/Natsume/Documents/paddy-disease-classification/test_images'),Path('/Users/Natsume/Documents/paddy-disease-classification/train.csv'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images'),Path('/Users/Natsume/Documents/paddy-disease-classification/sample_submission.csv')]
+    (#4) [Path('paddy-disease-classification/test_images'),Path('paddy-disease-classification/train.csv'),Path('paddy-disease-classification/train_images'),Path('paddy-disease-classification/sample_submission.csv')]
 
 
 
@@ -391,19 +416,19 @@ def check_subfolders_img(path, db=False):
 check_subfolders_img(path)
 ```
 
-    /Users/Natsume/Documents/paddy-disease-classification/train.csv
-    /Users/Natsume/Documents/paddy-disease-classification/sample_submission.csv
-    /Users/Natsume/Documents/paddy-disease-classification: 3469  test_images
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1442  dead_heart
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 337  bacterial_panicle_blight
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 479  bacterial_leaf_blight
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 965  brown_spot
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1594  hispa
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 620  downy_mildew
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1738  blast
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1764  normal
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 380  bacterial_leaf_streak
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1088  tungro
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train.csv
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/sample_submission.csv
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification: 3469  test_images
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1442  dead_heart
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 337  bacterial_panicle_blight
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 479  bacterial_leaf_blight
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 965  brown_spot
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1594  hispa
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 620  downy_mildew
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1738  blast
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1764  normal
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 380  bacterial_leaf_streak
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1088  tungro
     addup num: 10407
     addup num: 3469
 
@@ -425,14 +450,14 @@ train_files
 
 
 
-    (#3469) [Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/202919.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/200868.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/200698.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/200840.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/201586.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/203391.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/202931.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/202925.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/203385.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/200854.jpg')...]
+    (#3469) [Path('paddy-disease-classification/test_images/202919.jpg'),Path('paddy-disease-classification/test_images/200868.jpg'),Path('paddy-disease-classification/test_images/200698.jpg'),Path('paddy-disease-classification/test_images/200840.jpg'),Path('paddy-disease-classification/test_images/201586.jpg'),Path('paddy-disease-classification/test_images/203391.jpg'),Path('paddy-disease-classification/test_images/202931.jpg'),Path('paddy-disease-classification/test_images/202925.jpg'),Path('paddy-disease-classification/test_images/203385.jpg'),Path('paddy-disease-classification/test_images/200854.jpg')...]
 
 
 
 
 
 
-    (#10407) [Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/110369.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/105002.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/106279.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/108254.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/104308.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/107629.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/110355.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/100146.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/103329.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/105980.jpg')...]
+    (#10407) [Path('paddy-disease-classification/train_images/dead_heart/110369.jpg'),Path('paddy-disease-classification/train_images/dead_heart/105002.jpg'),Path('paddy-disease-classification/train_images/dead_heart/106279.jpg'),Path('paddy-disease-classification/train_images/dead_heart/108254.jpg'),Path('paddy-disease-classification/train_images/dead_heart/104308.jpg'),Path('paddy-disease-classification/train_images/dead_heart/107629.jpg'),Path('paddy-disease-classification/train_images/dead_heart/110355.jpg'),Path('paddy-disease-classification/train_images/dead_heart/100146.jpg'),Path('paddy-disease-classification/train_images/dead_heart/103329.jpg'),Path('paddy-disease-classification/train_images/dead_heart/105980.jpg')...]
 
 
 
@@ -508,41 +533,41 @@ randomdisplay(train_files, 200)
 randomdisplay(path/"train_images/dead_heart", 128)
 ```
 
-    22:17:07.52 LOG:
-    22:17:07.67 .... file = Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/201216.jpg')
+    15:54:56.56 LOG:
+    15:54:56.70 .... file = Path('paddy-disease-classification/test_images/201216.jpg')
 
 
 
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_68_1.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_72_1.png)
     
 
 
 
-    22:17:07.67 LOG:
-    22:17:07.68 .... file = Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/bacterial_leaf_blight/104518.jpg')
-
-
-
-
-
-    
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_68_3.png)
-    
-
-
-
-    22:17:07.69 LOG:
-    22:17:07.69 .... file = Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/100966.jpg')
+    15:54:56.70 LOG:
+    15:54:56.70 .... file = Path('paddy-disease-classification/train_images/bacterial_leaf_blight/104518.jpg')
 
 
 
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_68_5.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_72_3.png)
+    
+
+
+
+    15:54:56.72 LOG:
+    15:54:56.72 .... file = Path('paddy-disease-classification/train_images/dead_heart/100966.jpg')
+
+
+
+
+
+    
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_72_5.png)
     
 
 
@@ -570,38 +595,38 @@ remove_failed(path)
 ```
 
     before running remove_failed:
-    /Users/Natsume/Documents/paddy-disease-classification/train.csv
-    /Users/Natsume/Documents/paddy-disease-classification/sample_submission.csv
-    /Users/Natsume/Documents/paddy-disease-classification: 3469  test_images
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1442  dead_heart
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 337  bacterial_panicle_blight
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 479  bacterial_leaf_blight
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 965  brown_spot
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1594  hispa
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 620  downy_mildew
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1738  blast
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1764  normal
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 380  bacterial_leaf_streak
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1088  tungro
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train.csv
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/sample_submission.csv
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification: 3469  test_images
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1442  dead_heart
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 337  bacterial_panicle_blight
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 479  bacterial_leaf_blight
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 965  brown_spot
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1594  hispa
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 620  downy_mildew
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1738  blast
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1764  normal
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 380  bacterial_leaf_streak
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1088  tungro
     addup num: 10407
     addup num: 3469
     total num: 13876
     num offailed: 0
     
     after running remove_failed:
-    /Users/Natsume/Documents/paddy-disease-classification/train.csv
-    /Users/Natsume/Documents/paddy-disease-classification/sample_submission.csv
-    /Users/Natsume/Documents/paddy-disease-classification: 3469  test_images
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1442  dead_heart
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 337  bacterial_panicle_blight
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 479  bacterial_leaf_blight
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 965  brown_spot
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1594  hispa
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 620  downy_mildew
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1738  blast
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1764  normal
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 380  bacterial_leaf_streak
-    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1088  tungro
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train.csv
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/sample_submission.csv
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification: 3469  test_images
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1442  dead_heart
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 337  bacterial_panicle_blight
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 479  bacterial_leaf_blight
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 965  brown_spot
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1594  hispa
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 620  downy_mildew
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1738  blast
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1764  normal
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 380  bacterial_leaf_streak
+    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1088  tungro
     addup num: 10407
     addup num: 3469
 
@@ -697,7 +722,7 @@ imgs[1]
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_86_0.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_90_0.png)
     
 
 
@@ -706,7 +731,7 @@ imgs[1]
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_86_1.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_90_1.png)
     
 
 
@@ -924,79 +949,229 @@ class ImageDataLoaders(DataLoaders):
 
 ```
 trn_path = path/"train_images"
-# path.ls()
+trn_path.ls()
+```
+
+
+
+
+    (#10) [Path('paddy-disease-classification/train_images/dead_heart'),Path('paddy-disease-classification/train_images/bacterial_panicle_blight'),Path('paddy-disease-classification/train_images/bacterial_leaf_blight'),Path('paddy-disease-classification/train_images/brown_spot'),Path('paddy-disease-classification/train_images/hispa'),Path('paddy-disease-classification/train_images/downy_mildew'),Path('paddy-disease-classification/train_images/blast'),Path('paddy-disease-classification/train_images/normal'),Path('paddy-disease-classification/train_images/bacterial_leaf_streak'),Path('paddy-disease-classification/train_images/tungro')]
+
+
+
+
+```
+train_files
+```
+
+
+
+
+    (#10407) [Path('paddy-disease-classification/train_images/dead_heart/110369.jpg'),Path('paddy-disease-classification/train_images/dead_heart/105002.jpg'),Path('paddy-disease-classification/train_images/dead_heart/106279.jpg'),Path('paddy-disease-classification/train_images/dead_heart/108254.jpg'),Path('paddy-disease-classification/train_images/dead_heart/104308.jpg'),Path('paddy-disease-classification/train_images/dead_heart/107629.jpg'),Path('paddy-disease-classification/train_images/dead_heart/110355.jpg'),Path('paddy-disease-classification/train_images/dead_heart/100146.jpg'),Path('paddy-disease-classification/train_images/dead_heart/103329.jpg'),Path('paddy-disease-classification/train_images/dead_heart/105980.jpg')...]
+
+
+
+
+```
+# fastnbs("get_image_files")
 ```
 
 
 ```
-dls = ImageDataLoaders.from_folder(trn_path, valid_pct=0.2, seed=42,
+# 'paddy-disease-classification/train_images/dead_heart/110369.jpg'.split('/')[-2]
+# parent_label('paddy-disease-classification/train_images/dead_heart/110369.jpg')
+```
+
+
+```
+# check_subfolders_img(path/"train_images")
+```
+
+### ht: data_access - select a subset from each subfolder with `get_image_files_subset`
+
+To experiment the code efficiently on a local machine without a gpu, requies to use a smaller dataset or a subset of a large dataset. As I am experimenting on Jeremy's Paddy competition [notebooks](https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1?scriptVersionId=98743415&cellId=18), I need to find a way to shrink the dataset which is 1 GB in size. 
+
+At first, I tried to shrink the training set and validation set after I got a dataloader `dls`. I managed to shrink the size by `dls.train_ds.items = dls.train_ds.items[:1000]` and validation set respectively. However, I can't run `learn.lr_find` nor `learn.fit` without error. It seems `dls` still uses some meta data produced when creating the `dls` from the full dataset.
+
+Instead of tweaking the source code related to `Datasets` and `DataLoaders` to take care of the meta data, it should be easier to shrink the dataset before creating the `dls`. 
+
+If using `ImageDataLoaders.from_folder`, from its signature we can tell that to have a shrinked dataset, we have to create a parent folder with 10 diseaese folders which are all shrinked in size. I don't have any code template to tweak in order to make it work.
+
+If using `ImageDataLoaders.from_path_func`, based on its signature, instead of a parent folder of folders (a shrinked version), I just need to provide a L list of image files which is a shrinked version of a full dataset. This approach seems more straightforward with a little tweaking on `get_image_files`. 
+
+
+```
+snoopon()
+```
+
+
+```
+def _get_files_subset(p, # path
+               fs, # list of filenames 
+               extensions=None,
+               ratio=0.1):
+    "get the fullnames for the list of filenames of a path"
+    p = Path(p)
+    res = [p/f for f in fs if not f.startswith('.')
+           and ((not extensions) or f'.{f.split(".")[-1].lower()}' in extensions)]
+    return res[:int(len(res)*ratio)]
+```
+
+
+```
+@delegates(_get_files_subset)
+def get_files_subset(path, recurse=True, folders=None, followlinks=True, **kwargs):
+    "Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
+    path = Path(path)
+    folders=L(folders)
+    extensions = kwargs['extensions']
+    ratio = kwargs['ratio']
+    extensions = setify(extensions)
+    extensions = {e.lower() for e in extensions}
+    if recurse:
+        res = []
+        for i,(p,d,f) in enumerate(os.walk(path, followlinks=followlinks)): # returns (dirpath, dirnames, filenames)
+            if len(folders) !=0 and i==0: d[:] = [o for o in d if o in folders]
+            else:                         d[:] = [o for o in d if not o.startswith('.')]
+            if len(folders) !=0 and i==0 and '.' not in folders: continue
+            res += _get_files(p, f, extensions, ratio=ratio)
+    else:
+        f = [o.name for o in os.scandir(path) if o.is_file()]
+        res = _get_files_subset(path, f, extensions, ratio=ratio)
+    return L(res)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
+# Type:      function
+```
+
+
+```
+get_files
+```
+
+
+
+
+    <function __main__.get_files(path, recurse=True, folders=None, followlinks=True, *, extensions=None, ratio=0.1)>
+
+
+
+
+```
+@delegates(get_files)
+def get_image_files_subset(path, ratio, **kwargs):
+    "Get image files in `path` recursively, only in `folders`, if specified."
+    return get_files_subset(path, ratio=ratio, extensions=image_extensions, **kwargs)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
+# Type:      function
+```
+
+
+```
+get_image_files_subset
+```
+
+
+
+
+    <function __main__.get_image_files_subset(path, ratio, *, recurse=True, folders=None, followlinks=True, extensions=None)>
+
+
+
+
+```
+train_reduced = get_image_files_subset(path/"train_images", 0.1)
+train_reduced
+```
+
+
+
+
+    (#1036) [Path('paddy-disease-classification/train_images/dead_heart/110369.jpg'),Path('paddy-disease-classification/train_images/dead_heart/105002.jpg'),Path('paddy-disease-classification/train_images/dead_heart/106279.jpg'),Path('paddy-disease-classification/train_images/dead_heart/108254.jpg'),Path('paddy-disease-classification/train_images/dead_heart/104308.jpg'),Path('paddy-disease-classification/train_images/dead_heart/107629.jpg'),Path('paddy-disease-classification/train_images/dead_heart/110355.jpg'),Path('paddy-disease-classification/train_images/dead_heart/100146.jpg'),Path('paddy-disease-classification/train_images/dead_heart/103329.jpg'),Path('paddy-disease-classification/train_images/dead_heart/105980.jpg')...]
+
+
+
+
+```
+len(train_files)
+len(train_reduced)
+train_reduced[100]
+train_reduced[200]
+train_reduced[300]
+```
+
+
+
+
+    10407
+
+
+
+
+
+
+    1036
+
+
+
+
+
+
+    Path('paddy-disease-classification/train_images/dead_heart/101271.jpg')
+
+
+
+
+
+
+    Path('paddy-disease-classification/train_images/bacterial_leaf_blight/101649.jpg')
+
+
+
+
+
+
+    Path('paddy-disease-classification/train_images/brown_spot/100780.jpg')
+
+
+
+
+```
+snoopoff()
+```
+
+
+```
+dls = ImageDataLoaders.from_path_func(".", train_reduced, valid_pct=0.2, seed=42,
+#     label_func = lambda x: str(x).split('/')[-2],
+    label_func = parent_label,
     item_tfms=Resize(480, method='squish'),
     batch_tfms=aug_transforms(size=128, min_scale=0.75))
 
 dls.show_batch(max_n=6)
+dls.train_ds
 ```
 
-    22:17:27.98 >>> Call to ImageDataLoaders.from_folder in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_47000/3243071519.py", line 6
-    22:17:27.98 .......... cls = <class '__main__.ImageDataLoaders'>
-    22:17:27.98 .......... path = Path('/Users/Natsume/Documents/paddy-disease-classification/train_images')
-    22:17:27.98 .......... train = 'train'
-    22:17:27.98 .......... valid = 'valid'
-    22:17:27.98 .......... valid_pct = 0.2
-    22:17:27.98 .......... seed = 42
-    22:17:27.98 .......... vocab = None
-    22:17:27.98 .......... item_tfms = Resize -- {'size': (480, 480), 'method': 'squish...encodes
-    22:17:27.98                        (TensorPoint,object) -> encodes
-    22:17:27.98                        decodes: 
-    22:17:27.98 .......... batch_tfms = [Flip -- {'size': None, 'mode': 'bilinear', 'pad_...encodes
-    22:17:27.98                         (TensorPoint,object) -> encodes
-    22:17:27.98                         decodes: , Brightness -- {'max_lighting': 0.2, 'p': 1.0, 'd...ncodes: (TensorImage,object) -> encodes
-    22:17:27.98                         decodes: , RandomResizedCropGPU -- {'size': (128, 128), 'mi... encodes
-    22:17:27.98                         (TensorMask,object) -> encodes
-    22:17:27.98                         decodes: ]
-    22:17:27.98 .......... len(batch_tfms) = 3
-    22:17:27.98 .......... kwargs = {}
-    22:17:27.98    6 |     def from_folder(cls, path, train='train', valid='valid', valid_pct=None, seed=None, vocab=None, item_tfms=None,
-    22:17:27.98    9 |         splitter = GrandparentSplitter(train_name=train, valid_name=valid) if valid_pct is None else RandomSplitter(valid_pct, seed=seed)
-    22:17:27.98 .............. splitter = <function RandomSplitter.<locals>._inner>
-    22:17:27.98   10 |         get_items = get_image_files if valid_pct else partial(get_image_files, folders=[train, valid])
-    22:17:27.98 .............. get_items = <function get_image_files>
-    22:17:27.98   11 |         dblock = DataBlock(blocks=(ImageBlock, CategoryBlock(vocab=vocab)),
-    22:17:27.98   12 |                            get_items=get_items,
-    22:17:27.98   13 |                            splitter=splitter,
-    22:17:27.98   14 |                            get_y=parent_label,
-    22:17:27.98   15 |                            item_tfms=item_tfms,
-    22:17:27.98   16 |                            batch_tfms=batch_tfms)
-    22:17:27.98   11 |         dblock = DataBlock(blocks=(ImageBlock, CategoryBlock(vocab=vocab)),
-    22:17:27.98 .............. dblock = <fastai.data.block.DataBlock object>
-    22:17:27.98   17 |         pp(doc_sig(cls.from_dblock))
-    22:17:27.98 LOG:
-    22:17:28.03 .... doc_sig(cls.from_dblock) = ('no mro',
-    22:17:28.03                                  'Create a dataloaders from a given `dblock`',
-    22:17:28.03                                  <Signature (dblock, source, path: 'str | Path' = '.', bs: 'int' = 64, val_bs: 'int' = None, shuffle: 'bool' = True, device=None, **kwargs)>)
-    22:17:28.03   18 |         pp(inspect.getsource(cls.from_dblock))
-    22:17:28.03 LOG:
-    22:17:28.03 .... inspect.getsource(cls.from_dblock) = ('    @classmethod\n'
-    22:17:28.03                                            '    def from_dblock(cls, \n'
-    22:17:28.03                                            '        dblock, # `DataBlock` object\n'
-    22:17:28.03                                            '        source, # Source of data. Can be `Path` to files\n'
-    22:17:28.03                                            "        path:str|Path='.', # Path to put in `DataLoaders`\n"
-    22:17:28.03                                            '        bs:int=64, # Size of batch\n'
-    22:17:28.03                                            '        val_bs:int=None, # Size of batch for validation `DataLoader`\n'
-    22:17:28.03                                            '        shuffle:bool=True, # Whether to shuffle data\n'
-    22:17:28.03                                            '        device=None, # Device to put `DataLoaders`\n'
-    22:17:28.03                                            '        **kwargs\n'
-    22:17:28.03                                            '    ):\n'
-    22:17:28.03                                            '        return dblock.dataloaders(source, path=path, bs=bs, val_bs=val_bs, '
-    22:17:28.03                                            'shuffle=shuffle, device=device, **kwargs)\n')
-    22:17:28.03   19 |         return cls.from_dblock(dblock, path, path=path, **kwargs)
-    22:17:29.06 <<< Return value from ImageDataLoaders.from_folder: <fastai.data.core.DataLoaders object>
+
+
+
+    (#829) [(PILImage mode=RGB size=480x640, TensorCategory(7)),(PILImage mode=RGB size=480x640, TensorCategory(7)),(PILImage mode=RGB size=480x640, TensorCategory(7)),(PILImage mode=RGB size=480x640, TensorCategory(6)),(PILImage mode=RGB size=480x640, TensorCategory(5)),(PILImage mode=RGB size=480x640, TensorCategory(0)),(PILImage mode=RGB size=480x640, TensorCategory(5)),(PILImage mode=RGB size=480x640, TensorCategory(3)),(PILImage mode=RGB size=480x640, TensorCategory(3)),(PILImage mode=RGB size=480x640, TensorCategory(9))...]
+
 
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_102_1.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_121_1.png)
     
 
+
+
+```
+# dls = ImageDataLoaders.from_folder(trn_path, valid_pct=0.2, seed=42,
+#     item_tfms=Resize(480, method='squish'),
+#     batch_tfms=aug_transforms(size=128, min_scale=0.75))
+
+# dls.show_batch(max_n=6)
+```
 
 
 ```
@@ -1142,7 +1317,7 @@ def aug_transforms(
         res.append(Brightness(max_lighting=max_lighting, p=p_lighting, batch=batch))
         res.append(Contrast(max_lighting=max_lighting, p=p_lighting, batch=batch))
     if min_scale!=1.: xtra_tfms = RandomResizedCropGPU(size, min_scale=min_scale, ratio=(1,1)) + L(xtra_tfms)
-    pp(res, L(xtra_tfms), doc_sig(setup_aug_tfms))
+#     pp(res, L(xtra_tfms), doc_sig(setup_aug_tfms))
     return setup_aug_tfms(res + L(xtra_tfms))
 # File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/augment.py
 # Type:      function
@@ -1153,46 +1328,46 @@ def aug_transforms(
 aug_transforms(size=128, min_scale=0.75)
 ```
 
-    22:17:30.03 LOG:
-    22:17:30.04 .... res = [Flip -- {'size': None, 'mode': 'bilinear', 'pad_mode': 'reflection', 'mode_mask': 'nearest', 'align_corners': True, 'p': 0.5}:
-    22:17:30.04            encodes: (TensorImage,object) -> encodes
-    22:17:30.04            (TensorMask,object) -> encodes
-    22:17:30.04            (TensorBBox,object) -> encodes
-    22:17:30.04            (TensorPoint,object) -> encodes
-    22:17:30.04            decodes: ,
-    22:17:30.04             Warp -- {'magnitude': 0.2, 'p': 1.0, 'draw_x': None, 'draw_y': None, 'size': None, 'mode': 'bilinear', 'pad_mode': 'reflection', 'batch': False, 'align_corners': True, 'mode_mask': 'nearest'}:
-    22:17:30.04            encodes: (TensorImage,object) -> encodes
-    22:17:30.04            (TensorMask,object) -> encodes
-    22:17:30.04            (TensorBBox,object) -> encodes
-    22:17:30.04            (TensorPoint,object) -> encodes
-    22:17:30.04            decodes: ,
-    22:17:30.04             Rotate -- {'size': None, 'mode': 'bilinear', 'pad_mode': 'reflection', 'mode_mask': 'nearest', 'align_corners': True, 'p': 1.0}:
-    22:17:30.04            encodes: (TensorImage,object) -> encodes
-    22:17:30.04            (TensorMask,object) -> encodes
-    22:17:30.04            (TensorBBox,object) -> encodes
-    22:17:30.04            (TensorPoint,object) -> encodes
-    22:17:30.04            decodes: ,
-    22:17:30.04             Zoom -- {'size': None, 'mode': 'bilinear', 'pad_mode': 'reflection', 'mode_mask': 'nearest', 'align_corners': True, 'p': 1.0}:
-    22:17:30.04            encodes: (TensorImage,object) -> encodes
-    22:17:30.04            (TensorMask,object) -> encodes
-    22:17:30.04            (TensorBBox,object) -> encodes
-    22:17:30.04            (TensorPoint,object) -> encodes
-    22:17:30.04            decodes: ,
-    22:17:30.04             Brightness -- {'max_lighting': 0.2, 'p': 1.0, 'draw': None, 'batch': False}:
-    22:17:30.04            encodes: (TensorImage,object) -> encodes
-    22:17:30.04            decodes: ,
-    22:17:30.04             Contrast -- {'max_lighting': 0.2, 'p': 1.0, 'draw': None, 'batch': False}:
-    22:17:30.04            encodes: (TensorImage,object) -> encodes
-    22:17:30.04            decodes: ]
-    22:17:30.04 .... L(xtra_tfms) = [RandomResizedCropGPU -- {'size': (128, 128), 'min_scale': 0.75, 'ratio': (1, 1), 'mode': 'bilinear', 'valid_scale': 1.0, 'max_scale': 1.0, 'mode_mask': 'nearest', 'p': 1.0}:
-    22:17:30.04                     encodes: (TensorImage,object) -> encodes
-    22:17:30.04                     (TensorBBox,object) -> encodes
-    22:17:30.04                     (TensorPoint,object) -> encodes
-    22:17:30.04                     (TensorMask,object) -> encodes
-    22:17:30.04                     decodes: ]
-    22:17:30.04 .... doc_sig(setup_aug_tfms) = ('no mro',
-    22:17:30.04                                 'Go through `tfms` and combines together affine/coord or lighting transforms',
-    22:17:30.04                                 <Signature (tfms)>)
+    16:07:25.22 LOG:
+    16:07:25.22 .... res = [Flip -- {'size': None, 'mode': 'bilinear', 'pad_mode': 'reflection', 'mode_mask': 'nearest', 'align_corners': True, 'p': 0.5}:
+    16:07:25.22            encodes: (TensorImage,object) -> encodes
+    16:07:25.22            (TensorMask,object) -> encodes
+    16:07:25.22            (TensorBBox,object) -> encodes
+    16:07:25.22            (TensorPoint,object) -> encodes
+    16:07:25.22            decodes: ,
+    16:07:25.22             Warp -- {'magnitude': 0.2, 'p': 1.0, 'draw_x': None, 'draw_y': None, 'size': None, 'mode': 'bilinear', 'pad_mode': 'reflection', 'batch': False, 'align_corners': True, 'mode_mask': 'nearest'}:
+    16:07:25.22            encodes: (TensorImage,object) -> encodes
+    16:07:25.22            (TensorMask,object) -> encodes
+    16:07:25.22            (TensorBBox,object) -> encodes
+    16:07:25.22            (TensorPoint,object) -> encodes
+    16:07:25.22            decodes: ,
+    16:07:25.22             Rotate -- {'size': None, 'mode': 'bilinear', 'pad_mode': 'reflection', 'mode_mask': 'nearest', 'align_corners': True, 'p': 1.0}:
+    16:07:25.22            encodes: (TensorImage,object) -> encodes
+    16:07:25.22            (TensorMask,object) -> encodes
+    16:07:25.22            (TensorBBox,object) -> encodes
+    16:07:25.22            (TensorPoint,object) -> encodes
+    16:07:25.22            decodes: ,
+    16:07:25.22             Zoom -- {'size': None, 'mode': 'bilinear', 'pad_mode': 'reflection', 'mode_mask': 'nearest', 'align_corners': True, 'p': 1.0}:
+    16:07:25.22            encodes: (TensorImage,object) -> encodes
+    16:07:25.22            (TensorMask,object) -> encodes
+    16:07:25.22            (TensorBBox,object) -> encodes
+    16:07:25.22            (TensorPoint,object) -> encodes
+    16:07:25.22            decodes: ,
+    16:07:25.22             Brightness -- {'max_lighting': 0.2, 'p': 1.0, 'draw': None, 'batch': False}:
+    16:07:25.22            encodes: (TensorImage,object) -> encodes
+    16:07:25.22            decodes: ,
+    16:07:25.22             Contrast -- {'max_lighting': 0.2, 'p': 1.0, 'draw': None, 'batch': False}:
+    16:07:25.22            encodes: (TensorImage,object) -> encodes
+    16:07:25.22            decodes: ]
+    16:07:25.22 .... L(xtra_tfms) = [RandomResizedCropGPU -- {'size': (128, 128), 'min_scale': 0.75, 'ratio': (1, 1), 'mode': 'bilinear', 'valid_scale': 1.0, 'max_scale': 1.0, 'mode_mask': 'nearest', 'p': 1.0}:
+    16:07:25.22                     encodes: (TensorImage,object) -> encodes
+    16:07:25.22                     (TensorBBox,object) -> encodes
+    16:07:25.22                     (TensorPoint,object) -> encodes
+    16:07:25.22                     (TensorMask,object) -> encodes
+    16:07:25.22                     decodes: ]
+    16:07:25.22 .... doc_sig(setup_aug_tfms) = ('no mro',
+    16:07:25.22                                 'Go through `tfms` and combines together affine/coord or lighting transforms',
+    16:07:25.22                                 <Signature (tfms)>)
 
 
 
@@ -1417,16 +1592,106 @@ def vision_learner(dls, arch, normalize=True, n_out=None, pretrained=True,
 
 
 ```
+len(dls.train_ds)
+```
+
+
+
+
+    800
+
+
+
+
+```
 learn = vision_learner(dls, 'resnet26d', metrics=error_rate, path='.')
 learn = learn.to_fp16()
 ```
+
+    16:07:25.61 >>> Call to vision_learner in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_64874/719979238.py", line 3
+    16:07:25.61 ...... dls = <fastai.data.core.DataLoaders object>
+    16:07:25.61 ...... len(dls) = 2
+    16:07:25.61 ...... arch = 'resnet26d'
+    16:07:25.61 ...... normalize = True
+    16:07:25.61 ...... n_out = None
+    16:07:25.61 ...... pretrained = True
+    16:07:25.61 ...... loss_func = None
+    16:07:25.61 ...... opt_func = <function Adam>
+    16:07:25.61 ...... lr = 0.001
+    16:07:25.61 ...... splitter = None
+    16:07:25.61 ...... cbs = None
+    16:07:25.61 ...... metrics = <function error_rate>
+    16:07:25.61 ...... path = '.'
+    16:07:25.61 ...... model_dir = 'models'
+    16:07:25.61 ...... wd = None
+    16:07:25.61 ...... wd_bn_bias = False
+    16:07:25.61 ...... train_bn = True
+    16:07:25.61 ...... moms = (0.95, 0.85, 0.95)
+    16:07:25.61 ...... len(moms) = 3
+    16:07:25.61 ...... cut = None
+    16:07:25.61 ...... init = <function kaiming_normal_>
+    16:07:25.61 ...... custom_head = None
+    16:07:25.61 ...... concat_pool = True
+    16:07:25.61 ...... pool = True
+    16:07:25.61 ...... lin_ftrs = None
+    16:07:25.61 ...... ps = 0.5
+    16:07:25.61 ...... first_bn = True
+    16:07:25.61 ...... bn_final = False
+    16:07:25.61 ...... lin_first = False
+    16:07:25.61 ...... y_range = None
+    16:07:25.61 ...... kwargs = {}
+    16:07:25.61    3 | def vision_learner(dls, arch, normalize=True, n_out=None, pretrained=True, 
+    16:07:25.61   13 |     if n_out is None: n_out = get_c(dls)
+    16:07:25.61 ...... n_out = 10
+    16:07:25.61   15 |     assert n_out, "`n_out` is not defined, and could not be inferred from data, set `dls.c` or pass `n_out`"
+    16:07:25.61   16 |     pp(arch, _default_meta, doc_sig(model_meta.get))
+    16:07:25.61 LOG:
+    16:07:25.63 .... arch = 'resnet26d'
+    16:07:25.63 .... _default_meta = {'cut': None, 'split': <function default_split>}
+    16:07:25.63 .... doc_sig(model_meta.get) = ('no mro',
+    16:07:25.63                                 'Return the value for key if key is in the dictionary, else default.',
+    16:07:25.63                                 <Signature (key, default=None, /)>)
+    16:07:25.63   18 |     meta = model_meta.get(arch, _default_meta)
+    16:07:25.63 .......... meta = {'cut': None, 'split': <function default_split>}
+    16:07:25.63 .......... len(meta) = 2
+    16:07:25.63   20 |     model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
+    16:07:25.64   21 |                       first_bn=first_bn, bn_final=bn_final, lin_first=lin_first, y_range=y_range, **kwargs)
+    16:07:25.64   20 |     model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
+    16:07:25.64   21 |                       first_bn=first_bn, bn_final=bn_final, lin_first=lin_first, y_range=y_range, **kwargs)
+    16:07:25.64   20 |     model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
+    16:07:25.64 .......... model_args = {'init': <function kaiming_normal_>, 'custom_head': None, 'concat_pool': True, 'pool': True, ...}
+    16:07:25.64 .......... len(model_args) = 10
+    16:07:25.64   23 |     n_in = kwargs['n_in'] if 'n_in' in kwargs else 3
+    16:07:25.64 .......... n_in = 3
+    16:07:25.64   25 |     if isinstance(arch, str):
+    16:07:25.64   28 |         model,cfg = create_timm_model(arch, n_out, default_split, pretrained, **model_args)
+    16:07:25.94 .............. model = Sequential(
+    16:07:25.94                          (0): TimmBody(
+    16:07:25.94                            (model): ResNet..._features=512, out_features=10, bias=False)
+    16:07:25.94                          )
+    16:07:25.94                        )
+    16:07:25.94 .............. len(model) = 2
+    16:07:25.94 .............. cfg = {'url': 'https://github.com/rwightman/pytorch-image-model...ases/download/v0.1-weights/resnet26d-69e92c46.pth', 'num_classes': 1000, 'input_size': (3, 224, 224), 'pool_size': (7, 7), ...}
+    16:07:25.94 .............. len(cfg) = 11
+    16:07:25.94   32 |         if normalize: _timm_norm(dls, cfg, pretrained, n_in)
+    16:07:25.94   37 |     splitter = ifnone(splitter, meta['split'])
+    16:07:25.94 .......... splitter = <function default_split>
+    16:07:25.94   40 |     learn = Learner(dls=dls, model=model, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
+    16:07:25.94   41 |                    metrics=metrics, path=path, model_dir=model_dir, wd=wd, wd_bn_bias=wd_bn_bias, train_bn=train_bn, moms=moms)
+    16:07:25.94   40 |     learn = Learner(dls=dls, model=model, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
+    16:07:25.95 .......... learn = <fastai.learner.Learner object>
+    16:07:25.95   45 |     if pretrained: learn.freeze()
+    16:07:25.96   47 |     store_attr('arch,normalize,n_out,pretrained', self=learn, **kwargs)
+    16:07:25.96   48 |     return learn
+    16:07:25.97 <<< Return value from vision_learner: <fastai.learner.Learner object>
+
 
 
 ```
 snoopoff()
 ```
 
-### ht: learner - find learning rate with `lr_find`
+### ht: learner - find learning rate with `learn.lr_find(suggest_funcs=(valley, slide))`
 
 Let's see what the learning rate finder shows:
 
@@ -1455,28 +1720,38 @@ Launch a mock training to find a good learning rate and return suggestions based
 @patch
 def lr_find(self:Learner, start_lr=1e-7, end_lr=10, num_it=100, stop_div=True, show_plot=True, suggest_funcs=(SuggestionMethod.Valley)):
     "Launch a mock training to find a good learning rate and return suggestions based on `suggest_funcs` as a named tuple"
+    # set num of epochs to run
     n_epoch = num_it//len(self.dls.train) + 1
+    # create a LRFinder callback func specifying its start_lr, end_lr, num_it, stop_div
     cb=LRFinder(start_lr=start_lr, end_lr=end_lr, num_it=num_it, stop_div=stop_div)
+    # fit the model n_epoch with the LRFinder callback attached
     with self.no_logging(): self.fit(n_epoch, cbs=cb)
+    # if suggest_funcs is given
     if suggest_funcs is not None:
+        # access lrs and losses from Learner.recorder
         lrs, losses = tensor(self.recorder.lrs[num_it//10:-5]), tensor(self.recorder.losses[num_it//10:-5])
+        # get idxs of nan from losses
         nan_idxs = torch.nonzero(torch.isnan(losses.view(-1)))
+        # only get lrs and losses without nan values
         if len(nan_idxs) > 0:
             drop_idx = min(nan_idxs)
             lrs = lrs[:drop_idx]
             losses = losses[:drop_idx]
-        _suggestions, nms = [], []
+        _suggestions, nms = [], [] # create empty lists for _suggestions, and namespaces
         for func in tuplify(suggest_funcs):
+            # put func names from suggest_funcs into nms list
             nms.append(func.__name__ if not isinstance(func, partial) else func.func.__name__) # deal with partials
+            # put resutls of running funcs from suggest_funcs into _suggestions
             _suggestions.append(func(lrs, losses, num_it))
-        
+        # create a collection named SuggestedLRs for nms
         SuggestedLRs = collections.namedtuple('SuggestedLRs', nms)
         lrs, pnts = [], []
-        for lr, pnt in _suggestions:
-            lrs.append(lr)
-            pnts.append(pnt)
+        for lr, pnt in _suggestions: # _suggestions is a list of tuples of results from running each func
+            lrs.append(lr) # store each lr into the list lrs
+            pnts.append(pnt) # store each pnt into the list pnts
+        # if required, plot the lr graph
         if show_plot: self.recorder.plot_lr_find(suggestions=pnts, nms=nms)
-        return SuggestedLRs(*lrs)
+        return SuggestedLRs(*lrs) # return the collection with all lrs inside
 
     elif show_plot: self.recorder.plot_lr_find()
 # File:      ~/mambaforge/lib/python3.9/site-packages/fastai/callback/schedule.py
@@ -1516,189 +1791,25 @@ learn.lr_find(suggest_funcs=(valley, slide))
 
 
 
-<div>
-  <progress value='0' class='' max='1' style='width:300px; height:20px; vertical-align: middle;'></progress>
-  0.00% [0/1 00:00&lt;?]
-</div>
-
-
-
-<div>
-  <progress value='4' class='' max='130' style='width:300px; height:20px; vertical-align: middle;'></progress>
-  3.08% [4/130 00:23&lt;12:32 3.8080]
-</div>
 
 
 
 
-    ---------------------------------------------------------------------------
 
-    KeyboardInterrupt                         Traceback (most recent call last)
-
-    Input In [96], in <cell line: 1>()
-    ----> 1 learn.lr_find(suggest_funcs=(valley, slide))
+    SuggestedLRs(valley=0.0005754399462603033, slide=0.005248074419796467)
 
 
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/callback/schedule.py:293, in lr_find(self, start_lr, end_lr, num_it, stop_div, show_plot, suggest_funcs)
-        291 n_epoch = num_it//len(self.dls.train) + 1
-        292 cb=LRFinder(start_lr=start_lr, end_lr=end_lr, num_it=num_it, stop_div=stop_div)
-    --> 293 with self.no_logging(): self.fit(n_epoch, cbs=cb)
-        294 if suggest_funcs is not None:
-        295     lrs, losses = tensor(self.recorder.lrs[num_it//10:-5]), tensor(self.recorder.losses[num_it//10:-5])
 
 
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:256, in Learner.fit(self, n_epoch, lr, wd, cbs, reset_opt, start_epoch)
-        254 self.opt.set_hypers(lr=self.lr if lr is None else lr)
-        255 self.n_epoch = n_epoch
-    --> 256 self._with_events(self._do_fit, 'fit', CancelFitException, self._end_cleanup)
+    
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_157_4.png)
+    
 
 
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:193, in Learner._with_events(self, f, event_type, ex, final)
-        192 def _with_events(self, f, event_type, ex, final=noop):
-    --> 193     try: self(f'before_{event_type}');  f()
-        194     except ex: self(f'after_cancel_{event_type}')
-        195     self(f'after_{event_type}');  final()
 
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:245, in Learner._do_fit(self)
-        243 for epoch in range(self.n_epoch):
-        244     self.epoch=epoch
-    --> 245     self._with_events(self._do_epoch, 'epoch', CancelEpochException)
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:193, in Learner._with_events(self, f, event_type, ex, final)
-        192 def _with_events(self, f, event_type, ex, final=noop):
-    --> 193     try: self(f'before_{event_type}');  f()
-        194     except ex: self(f'after_cancel_{event_type}')
-        195     self(f'after_{event_type}');  final()
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:239, in Learner._do_epoch(self)
-        238 def _do_epoch(self):
-    --> 239     self._do_epoch_train()
-        240     self._do_epoch_validate()
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:231, in Learner._do_epoch_train(self)
-        229 def _do_epoch_train(self):
-        230     self.dl = self.dls.train
-    --> 231     self._with_events(self.all_batches, 'train', CancelTrainException)
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:193, in Learner._with_events(self, f, event_type, ex, final)
-        192 def _with_events(self, f, event_type, ex, final=noop):
-    --> 193     try: self(f'before_{event_type}');  f()
-        194     except ex: self(f'after_cancel_{event_type}')
-        195     self(f'after_{event_type}');  final()
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:199, in Learner.all_batches(self)
-        197 def all_batches(self):
-        198     self.n_iter = len(self.dl)
-    --> 199     for o in enumerate(self.dl): self.one_batch(*o)
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:227, in Learner.one_batch(self, i, b)
-        225 b = self._set_device(b)
-        226 self._split(b)
-    --> 227 self._with_events(self._do_one_batch, 'batch', CancelBatchException)
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:193, in Learner._with_events(self, f, event_type, ex, final)
-        192 def _with_events(self, f, event_type, ex, final=noop):
-    --> 193     try: self(f'before_{event_type}');  f()
-        194     except ex: self(f'after_cancel_{event_type}')
-        195     self(f'after_{event_type}');  final()
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:212, in Learner._do_one_batch(self)
-        210 self('after_loss')
-        211 if not self.training or not len(self.yb): return
-    --> 212 self._with_events(self._backward, 'backward', CancelBackwardException)
-        213 self._with_events(self._step, 'step', CancelStepException)
-        214 self.opt.zero_grad()
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:193, in Learner._with_events(self, f, event_type, ex, final)
-        192 def _with_events(self, f, event_type, ex, final=noop):
-    --> 193     try: self(f'before_{event_type}');  f()
-        194     except ex: self(f'after_cancel_{event_type}')
-        195     self(f'after_{event_type}');  final()
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py:201, in Learner._backward(self)
-    --> 201 def _backward(self): self.loss_grad.backward()
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/torch/_tensor.py:388, in Tensor.backward(self, gradient, retain_graph, create_graph, inputs)
-        341 r"""Computes the gradient of current tensor w.r.t. graph leaves.
-        342 
-        343 The graph is differentiated using the chain rule. If the tensor is
-       (...)
-        385         used to compute the attr::tensors.
-        386 """
-        387 if has_torch_function_unary(self):
-    --> 388     return handle_torch_function(
-        389         Tensor.backward,
-        390         (self,),
-        391         self,
-        392         gradient=gradient,
-        393         retain_graph=retain_graph,
-        394         create_graph=create_graph,
-        395         inputs=inputs)
-        396 torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/torch/overrides.py:1498, in handle_torch_function(public_api, relevant_args, *args, **kwargs)
-       1492     warnings.warn("Defining your `__torch_function__ as a plain method is deprecated and "
-       1493                   "will be an error in future, please define it as a classmethod.",
-       1494                   DeprecationWarning)
-       1496 # Use `public_api` instead of `implementation` so __torch_function__
-       1497 # implementations can do equality/identity comparisons.
-    -> 1498 result = torch_func_method(public_api, types, args, kwargs)
-       1500 if result is not NotImplemented:
-       1501     return result
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/fastai/torch_core.py:378, in TensorBase.__torch_function__(cls, func, types, args, kwargs)
-        376 if cls.debug and func.__name__ not in ('__str__','__repr__'): print(func, types, args, kwargs)
-        377 if _torch_handled(args, cls._opt, func): types = (torch.Tensor,)
-    --> 378 res = super().__torch_function__(func, types, args, ifnone(kwargs, {}))
-        379 dict_objs = _find_args(args) if args else _find_args(list(kwargs.values()))
-        380 if issubclass(type(res),TensorBase) and dict_objs: res.set_meta(dict_objs[0],as_copy=True)
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/torch/_tensor.py:1121, in Tensor.__torch_function__(cls, func, types, args, kwargs)
-       1118     return NotImplemented
-       1120 with _C.DisableTorchFunction():
-    -> 1121     ret = func(*args, **kwargs)
-       1122     if func in get_default_nowrap_functions():
-       1123         return ret
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/torch/_tensor.py:396, in Tensor.backward(self, gradient, retain_graph, create_graph, inputs)
-        387 if has_torch_function_unary(self):
-        388     return handle_torch_function(
-        389         Tensor.backward,
-        390         (self,),
-       (...)
-        394         create_graph=create_graph,
-        395         inputs=inputs)
-    --> 396 torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
-
-
-    File ~/mambaforge/lib/python3.9/site-packages/torch/autograd/__init__.py:173, in backward(tensors, grad_tensors, retain_graph, create_graph, grad_variables, inputs)
-        168     retain_graph = create_graph
-        170 # The reason we repeat same the comment below is that
-        171 # some Python versions print out the first line of a multi-line function
-        172 # calls in the traceback and some print out the last line
-    --> 173 Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
-        174     tensors, grad_tensors_, retain_graph, create_graph, inputs,
-        175     allow_unreachable=True, accumulate_grad=True)
-
-
-    KeyboardInterrupt: 
-
+```
+# %debug
+```
 
 `lr_find` generally recommends rather conservative learning rates, to ensure that your model will train successfully. I generally like to push it a bit higher if I can. Let's train a few epochs and see how it looks:
 
@@ -1706,6 +1817,294 @@ learn.lr_find(suggest_funcs=(valley, slide))
 ```
 learn.fine_tune(3, 0.01)
 ```
+
+
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+
+
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>error_rate</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>2.696553</td>
+      <td>3.711585</td>
+      <td>0.680000</td>
+      <td>01:26</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+
+
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>error_rate</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1.803938</td>
+      <td>1.855994</td>
+      <td>0.460000</td>
+      <td>01:42</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>1.604452</td>
+      <td>1.686167</td>
+      <td>0.475000</td>
+      <td>01:43</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>1.489170</td>
+      <td>1.564310</td>
+      <td>0.435000</td>
+      <td>01:29</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+```
+learn.fine_tune(7, 0.01)
+```
+
+
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+
+
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>error_rate</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1.134716</td>
+      <td>1.749994</td>
+      <td>0.485000</td>
+      <td>01:22</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+
+
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>error_rate</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1.147326</td>
+      <td>1.477777</td>
+      <td>0.410000</td>
+      <td>01:47</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>1.032612</td>
+      <td>1.476066</td>
+      <td>0.430000</td>
+      <td>01:46</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>1.005085</td>
+      <td>1.342792</td>
+      <td>0.365000</td>
+      <td>01:52</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>0.911426</td>
+      <td>1.308911</td>
+      <td>0.370000</td>
+      <td>01:47</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0.838643</td>
+      <td>1.223818</td>
+      <td>0.320000</td>
+      <td>01:46</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>0.763917</td>
+      <td>1.181947</td>
+      <td>0.330000</td>
+      <td>01:49</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>0.703434</td>
+      <td>1.189888</td>
+      <td>0.335000</td>
+      <td>01:45</td>
+    </tr>
+  </tbody>
+</table>
+
+
+### qt: How many epochs should I train in general in this early stage with 10% dataset without gpu
+
+### The result with full dataset on Kaggle
+
+When given the full dataset for training on kaggle, we will have the following
+
+```
+epoch	train_loss	valid_loss	error_rate	time
+0	1.777575	1.239618	0.397886	01:43
+epoch	train_loss	valid_loss	error_rate	time
+0	1.161161	0.735699	0.253724	01:46
+1	0.774501	0.440555	0.151370	01:47
+2	0.543375	0.357847	0.113888	01:46
+```
+
+### qt: how to display video and embed webpage
+
+
+```
+from IPython.display import display, HTML, IFrame
+display(IFrame("https://www.youtube.com/embed/NnTvZWp5Q7o", width="100%", height=200))
+display(IFrame("https://www.kaggle.com/embed/jhoward/first-steps-road-to-the-top-part-1?cellIds=24&kernelSessionId=98743415", width="100%", height=200))
+display(HTML('<iframe src="https://www.kaggle.com/embed/jhoward/first-steps-road-to-the-top-part-1?cellIds=24&kernelSessionId=98743415" height="300" style="margin: 0 auto; width: 100%; max-width: 950px;" frameborder="0" scrolling="auto" title="First Steps: Road to the Top, Part 1"></iframe>'))
+```
+
+
+
+<iframe
+    width="100%"
+    height="200"
+    src="https://www.youtube.com/embed/NnTvZWp5Q7o"
+    frameborder="0"
+    allowfullscreen
+
+></iframe>
+
+
+
+
+
+<iframe
+    width="100%"
+    height="200"
+    src="https://www.kaggle.com/embed/jhoward/first-steps-road-to-the-top-part-1?cellIds=24&kernelSessionId=98743415"
+    frameborder="0"
+    allowfullscreen
+
+></iframe>
+
+
+
+
+<iframe src="https://www.kaggle.com/embed/jhoward/first-steps-road-to-the-top-part-1?cellIds=24&kernelSessionId=98743415" height="300" style="margin: 0 auto; width: 100%; max-width: 950px;" frameborder="0" scrolling="auto" title="First Steps: Road to the Top, Part 1"></iframe>
+
 
 We're now ready to build our first submission. Let's take a look at the sample Kaggle provided to see what it needs to look like:
 
@@ -1795,40 +2194,61 @@ If you found this notebook useful, please remember to click the little up-arrow 
 
 ## Addendum
 
-### how to quickly push your local notebook to become kaggle notebook online
+### ht: kaggle - push notebook
 
 `fastkaggle` also provides a function that pushes a notebook to Kaggle Notebooks. I wrote this notebook on my own machine, and pushed it to Kaggle from there -- here's the command I used:
-
-
-```
-if not iskaggle:
-    push_notebook('jhoward', 'first-steps-road-to-the-top-part-1',
-                  title='First Steps: Road to the Top, Part 1',
-                  file='first-steps-road-to-the-top-part-1.ipynb',
-                  competition=comp, private=False, gpu=True)
-```
-
-
-```
-
-```
-
-
-```
-from fastdebug.utils import *
-```
 
 
 ```
 nb_name()
 ```
 
+```python
+def nb_meta(user, id, title, file, competition=None, private=True, gpu=False, internet=True):
+    "Get the `dict` required for a kernel-metadata.json file"
+    d = {
+      "id": f"{user}/{id}",
+      "title": title,
+      "code_file": file,
+      "language": "python",
+      "kernel_type": "notebook",
+      "is_private": private,
+      "enable_gpu": gpu,
+      "enable_internet": internet,
+      "keywords": [],
+      "dataset_sources": [],
+      "kernel_sources": []
+    }
+    if competition: d["competition_sources"] = [f"competitions/{competition}"]
+    return d
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
+```
+
+```python
+def push_notebook(user, id, title, file, path='.', competition=None, private=True, gpu=False, internet=True):
+    "Push notebook `file` to Kaggle Notebooks"
+    meta = nb_meta(user, id, title, file=file, competition=competition, private=private, gpu=gpu, internet=internet)
+    path = Path(path)
+    nm = 'kernel-metadata.json'
+    path.mkdir(exist_ok=True, parents=True)
+    with open(path/nm, 'w') as f: json.dump(meta, f, indent=2)
+    api = import_kaggle()
+    api.kernels_push_cli(str(path))
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
+```
+
 
 ```
-ipy2md()
+if not iskaggle:
+    push_notebook('danielliao', '0008_fastai_first_steps_road_to_top_part_1',
+                  title='0008 fastai first steps 1 version 2',
+                  file='0008_fastai_first_steps_road_to_top_part_1.ipynb',
+                  competition=comp, private=False, gpu=True)
 ```
 
 
 ```
-fastnbs("push kaggle")
+
 ```

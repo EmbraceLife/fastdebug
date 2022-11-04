@@ -21,7 +21,7 @@ skip_exec: true
 <!-- #endraw -->
 
 ```python
-#| default_exp delete_road_top1
+#| default_exp run_kaggle_001
 ```
 
 ### jn: help other is the best way forward
@@ -46,9 +46,40 @@ Why I am always trying to do something different? Why couldn't I just follow thi
 
 ## ht: imports - vision
 
+
+### ht: imports - fastkaggle 
+
 ```python
-from fastdebug.utils import *
-from fastai.vision.all import *
+#| export
+# install fastkaggle if not available
+try: import fastkaggle
+except ModuleNotFoundError:
+    !pip install -Uq fastkaggle
+
+from fastkaggle import *
+```
+
+### imports for kaggle or local
+
+```python
+#| export
+if iskaggle:
+    !pip install nbdev snoop
+```
+
+```python
+#| export
+if iskaggle:
+    path = "../input/fastdebugutils0"
+    import sys
+    sys.path
+    sys.path.insert(1, path)
+    import utils as fu
+    from utils import *
+else: 
+    from fastdebug.utils import *
+    from fastai.vision.all import *
+    import fastdebug.utils as fu
 ```
 
 ### ht: fu - whatinside, show_doc, fastlistnbs, fastnbs
@@ -74,23 +105,14 @@ from fastai.vision.all import *
 # fastnbs("src: check_siz")
 ```
 
-### ht: imports - fastkaggle 
+### ht: imports - upload and update mylib in kaggle
 
-```python
-# install fastkaggle if not available
-try: import fastkaggle
-except ModuleNotFoundError:
-    !pip install -Uq fastkaggle
 
-from fastkaggle import *
-```
-
-### ht: imports - use mylib in kaggle
-- upload my fastdebug.utils module as a dataset to kaggle, to create a dataset
+- upload my fastdebug.utils module as a dataset to kaggle, to create a dataset like one [here](https://www.kaggle.com/datasets/danielliao/fastdebugutils0)
 
 - and in one kaggle notebook, go to the top right, under Data/Input/ find the dataset and copy file path, and run the cell below to import it
 
-- when updating the library, go to the dataset page, click top right `...` and click `update version` to upload the latest version of your script
+- when updating the library, go to the dataset [page](https://www.kaggle.com/datasets/danielliao/fastdebugutils0), click top right `...` and click `update version` to upload the latest version of your script
 
 ```python
 # !pip install nbdev snoop
@@ -102,11 +124,11 @@ from fastkaggle import *
 # import utils as fu
 ```
 
-### ht: imports - fastkaggle - push libs to kaggle
+### ht: imports - fastkaggle - push libs to kaggle with `create_libs_datasets`
 
 ```python
 # lib_path = Path('/root/kaggle_datasets') # not working
-# lib_path = Path('../input/kaggle_datasets') # it's working, but I can't find it in kaggle
+# lib_path = Path('../input/kaggle_datasets') # it's working, and created and stored locally
 # username = 'danielliao'
 ```
 
@@ -157,7 +179,7 @@ As a special extra, I'm also opening up early a selection of "walkthru" videos t
 ## ht: data_download - kaggle competition dataset
 
 
-### ht: data_download - join, `kaggle.json`, `setup_comp`
+### ht: data_download - join, `kaggle.json`, `setup_comp` for local use
 
 
 go to kaggle.com, go to 'account', 'api', and click 'create a new api token'
@@ -180,6 +202,10 @@ override `fastkaggle.core.setup_comp` for my use
 If on kaggle, download and install required libraries to work with, and return a path linking to the dataset
 
 If on local machine, download the dataset to the path based on local_folder if the path is not available and return the path
+
+```python
+show_doc(setup_comp)
+```
 
 <!-- #region -->
 ```python
@@ -232,31 +258,32 @@ snoopon()
 ```
 
 ```python
-@snoop
-def setup_comp(competition, local_folder='', install=''):
-    "Get a path to data for `competition`, downloading it if needed"
-    if iskaggle:
-        if install:
-            os.system(f'pip install -Uqq {install}')
-        return Path('../input')/competition
-    else:
-        path = Path(local_folder + competition)
-        api = import_kaggle()
-        if not path.exists():
-            import zipfile
-#             pp(doc_sig(api.competition_download_cli))
-#             return
-            api.competition_download_cli(str(competition), path=path)
-            zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
-        return path
-# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
-# Type:      function
+# @snoop
+# def setup_comp(competition, local_folder='', install=''):
+#     "Get a path to data for `competition`, downloading it if needed"
+#     if iskaggle:
+#         if install:
+#             os.system(f'pip install -Uqq {install}')
+#         return Path('../input')/competition
+#     else:
+#         path = Path(local_folder + competition)
+#         api = import_kaggle()
+#         if not path.exists():
+#             import zipfile
+# #             pp(doc_sig(api.competition_download_cli))
+# #             return
+#             api.competition_download_cli(str(competition), path=path)
+#             zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
+#         return path
+# # File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# # Type:      function
 ```
 
 ```python
 comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
-local = "/Users/Natsume/Documents/"
-path = setup_comp(comp, local_folder=local, install='fastai "timm>=0.6.2.dev0"')
+# local = "/Users/Natsume/Documents/"
+# path = setup_comp(comp, local_folder=local, install='fastai "timm>=0.6.2.dev0"')
+path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
 ```
 
 ```python
@@ -667,15 +694,131 @@ class ImageDataLoaders(DataLoaders):
 
 ```python
 trn_path = path/"train_images"
-# path.ls()
+trn_path.ls()
 ```
 
 ```python
-dls = ImageDataLoaders.from_folder(trn_path, valid_pct=0.2, seed=42,
+train_files
+```
+
+```python
+# fastnbs("get_image_files")
+```
+
+```python
+# 'paddy-disease-classification/train_images/dead_heart/110369.jpg'.split('/')[-2]
+# parent_label('paddy-disease-classification/train_images/dead_heart/110369.jpg')
+```
+
+```python
+# check_subfolders_img(path/"train_images")
+```
+
+### ht: data_access - select a subset from each subfolder with `get_image_files_subset`
+
+
+To experiment the code efficiently on a local machine without a gpu, requies to use a smaller dataset or a subset of a large dataset. As I am experimenting on Jeremy's Paddy competition [notebooks](https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1?scriptVersionId=98743415&cellId=18), I need to find a way to shrink the dataset which is 1 GB in size. 
+
+At first, I tried to shrink the training set and validation set after I got a dataloader `dls`. I managed to shrink the size by `dls.train_ds.items = dls.train_ds.items[:1000]` and validation set respectively. However, I can't run `learn.lr_find` nor `learn.fit` without error. It seems `dls` still uses some meta data produced when creating the `dls` from the full dataset.
+
+Instead of tweaking the source code related to `Datasets` and `DataLoaders` to take care of the meta data, it should be easier to shrink the dataset before creating the `dls`. 
+
+If using `ImageDataLoaders.from_folder`, from its signature we can tell that to have a shrinked dataset, we have to create a parent folder with 10 diseaese folders which are all shrinked in size. I don't have any code template to tweak in order to make it work.
+
+If using `ImageDataLoaders.from_path_func`, based on its signature, instead of a parent folder of folders (a shrinked version), I just need to provide a L list of image files which is a shrinked version of a full dataset. This approach seems more straightforward with a little tweaking on `get_image_files`. 
+
+```python
+snoopon()
+```
+
+```python
+def _get_files_subset(p, # path
+               fs, # list of filenames 
+               extensions=None,
+               ratio=0.1):
+    "get the fullnames for the list of filenames of a path"
+    p = Path(p)
+    res = [p/f for f in fs if not f.startswith('.')
+           and ((not extensions) or f'.{f.split(".")[-1].lower()}' in extensions)]
+    return res[:int(len(res)*ratio)]
+```
+
+```python
+@delegates(_get_files_subset)
+def get_files_subset(path, recurse=True, folders=None, followlinks=True, **kwargs):
+    "Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
+    path = Path(path)
+    folders=L(folders)
+    extensions = kwargs['extensions']
+    ratio = kwargs['ratio']
+    extensions = setify(extensions)
+    extensions = {e.lower() for e in extensions}
+    if recurse:
+        res = []
+        for i,(p,d,f) in enumerate(os.walk(path, followlinks=followlinks)): # returns (dirpath, dirnames, filenames)
+            if len(folders) !=0 and i==0: d[:] = [o for o in d if o in folders]
+            else:                         d[:] = [o for o in d if not o.startswith('.')]
+            if len(folders) !=0 and i==0 and '.' not in folders: continue
+            res += _get_files(p, f, extensions, ratio=ratio)
+    else:
+        f = [o.name for o in os.scandir(path) if o.is_file()]
+        res = _get_files_subset(path, f, extensions, ratio=ratio)
+    return L(res)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
+# Type:      function
+```
+
+```python
+get_files
+```
+
+```python
+@delegates(get_files)
+def get_image_files_subset(path, ratio, **kwargs):
+    "Get image files in `path` recursively, only in `folders`, if specified."
+    return get_files_subset(path, ratio=ratio, extensions=image_extensions, **kwargs)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
+# Type:      function
+```
+
+```python
+get_image_files_subset
+```
+
+```python
+train_reduced = get_image_files_subset(path/"train_images", 0.1)
+train_reduced
+```
+
+```python
+len(train_files)
+len(train_reduced)
+train_reduced[100]
+train_reduced[200]
+train_reduced[300]
+```
+
+```python
+snoopoff()
+```
+
+```python
+dls = ImageDataLoaders.from_path_func(".", train_reduced, valid_pct=0.2, seed=42,
+#     label_func = lambda x: str(x).split('/')[-2],
+    label_func = parent_label,
     item_tfms=Resize(480, method='squish'),
     batch_tfms=aug_transforms(size=128, min_scale=0.75))
 
 dls.show_batch(max_n=6)
+dls.train_ds
+```
+
+```python
+# dls = ImageDataLoaders.from_folder(trn_path, valid_pct=0.2, seed=42,
+#     item_tfms=Resize(480, method='squish'),
+#     batch_tfms=aug_transforms(size=128, min_scale=0.75))
+
+# dls.show_batch(max_n=6)
 ```
 
 ```python
@@ -746,7 +889,7 @@ def aug_transforms(
         res.append(Brightness(max_lighting=max_lighting, p=p_lighting, batch=batch))
         res.append(Contrast(max_lighting=max_lighting, p=p_lighting, batch=batch))
     if min_scale!=1.: xtra_tfms = RandomResizedCropGPU(size, min_scale=min_scale, ratio=(1,1)) + L(xtra_tfms)
-    pp(res, L(xtra_tfms), doc_sig(setup_aug_tfms))
+#     pp(res, L(xtra_tfms), doc_sig(setup_aug_tfms))
     return setup_aug_tfms(res + L(xtra_tfms))
 # File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/augment.py
 # Type:      function
@@ -901,6 +1044,10 @@ def vision_learner(dls, arch, normalize=True, n_out=None, pretrained=True,
 ```
 
 ```python
+len(dls.train_ds)
+```
+
+```python
 learn = vision_learner(dls, 'resnet26d', metrics=error_rate, path='.')
 learn = learn.to_fp16()
 ```
@@ -909,7 +1056,7 @@ learn = learn.to_fp16()
 snoopoff()
 ```
 
-### ht: learner - find learning rate with `lr_find`
+### ht: learner - find learning rate with `learn.lr_find(suggest_funcs=(valley, slide))`
 
 
 Let's see what the learning rate finder shows:
@@ -923,28 +1070,38 @@ show_doc(learn.lr_find)
 @patch
 def lr_find(self:Learner, start_lr=1e-7, end_lr=10, num_it=100, stop_div=True, show_plot=True, suggest_funcs=(SuggestionMethod.Valley)):
     "Launch a mock training to find a good learning rate and return suggestions based on `suggest_funcs` as a named tuple"
+    # set num of epochs to run
     n_epoch = num_it//len(self.dls.train) + 1
+    # create a LRFinder callback func specifying its start_lr, end_lr, num_it, stop_div
     cb=LRFinder(start_lr=start_lr, end_lr=end_lr, num_it=num_it, stop_div=stop_div)
+    # fit the model n_epoch with the LRFinder callback attached
     with self.no_logging(): self.fit(n_epoch, cbs=cb)
+    # if suggest_funcs is given
     if suggest_funcs is not None:
+        # access lrs and losses from Learner.recorder
         lrs, losses = tensor(self.recorder.lrs[num_it//10:-5]), tensor(self.recorder.losses[num_it//10:-5])
+        # get idxs of nan from losses
         nan_idxs = torch.nonzero(torch.isnan(losses.view(-1)))
+        # only get lrs and losses without nan values
         if len(nan_idxs) > 0:
             drop_idx = min(nan_idxs)
             lrs = lrs[:drop_idx]
             losses = losses[:drop_idx]
-        _suggestions, nms = [], []
+        _suggestions, nms = [], [] # create empty lists for _suggestions, and namespaces
         for func in tuplify(suggest_funcs):
+            # put func names from suggest_funcs into nms list
             nms.append(func.__name__ if not isinstance(func, partial) else func.func.__name__) # deal with partials
+            # put resutls of running funcs from suggest_funcs into _suggestions
             _suggestions.append(func(lrs, losses, num_it))
-        
+        # create a collection named SuggestedLRs for nms
         SuggestedLRs = collections.namedtuple('SuggestedLRs', nms)
         lrs, pnts = [], []
-        for lr, pnt in _suggestions:
-            lrs.append(lr)
-            pnts.append(pnt)
+        for lr, pnt in _suggestions: # _suggestions is a list of tuples of results from running each func
+            lrs.append(lr) # store each lr into the list lrs
+            pnts.append(pnt) # store each pnt into the list pnts
+        # if required, plot the lr graph
         if show_plot: self.recorder.plot_lr_find(suggestions=pnts, nms=nms)
-        return SuggestedLRs(*lrs)
+        return SuggestedLRs(*lrs) # return the collection with all lrs inside
 
     elif show_plot: self.recorder.plot_lr_find()
 # File:      ~/mambaforge/lib/python3.9/site-packages/fastai/callback/schedule.py
@@ -956,10 +1113,46 @@ def lr_find(self:Learner, start_lr=1e-7, end_lr=10, num_it=100, stop_div=True, s
 learn.lr_find(suggest_funcs=(valley, slide))
 ```
 
+```python
+# %debug
+```
+
 `lr_find` generally recommends rather conservative learning rates, to ensure that your model will train successfully. I generally like to push it a bit higher if I can. Let's train a few epochs and see how it looks:
 
 ```python
 learn.fine_tune(3, 0.01)
+```
+
+```python
+learn.fine_tune(7, 0.01)
+```
+
+### qt: How many epochs should I train in general in this early stage with 10% dataset without gpu
+
+
+### The result with full dataset on Kaggle
+
+
+When given the full dataset for training on kaggle, we will have the following
+
+
+```
+epoch	train_loss	valid_loss	error_rate	time
+0	1.777575	1.239618	0.397886	01:43
+epoch	train_loss	valid_loss	error_rate	time
+0	1.161161	0.735699	0.253724	01:46
+1	0.774501	0.440555	0.151370	01:47
+2	0.543375	0.357847	0.113888	01:46
+```
+
+
+### qt: how to display video and embed webpage
+
+```python
+from IPython.display import display, HTML, IFrame
+display(IFrame("https://www.youtube.com/embed/NnTvZWp5Q7o", width="100%", height=200))
+display(IFrame("https://www.kaggle.com/embed/jhoward/first-steps-road-to-the-top-part-1?cellIds=24&kernelSessionId=98743415", width="100%", height=200))
+display(HTML('<iframe src="https://www.kaggle.com/embed/jhoward/first-steps-road-to-the-top-part-1?cellIds=24&kernelSessionId=98743415" height="300" style="margin: 0 auto; width: 100%; max-width: 950px;" frameborder="0" scrolling="auto" title="First Steps: Road to the Top, Part 1"></iframe>'))
 ```
 
 We're now ready to build our first submission. Let's take a look at the sample Kaggle provided to see what it needs to look like:
@@ -1056,35 +1249,63 @@ If you found this notebook useful, please remember to click the little up-arrow 
 ## Addendum
 
 
-### how to quickly push your local notebook to become kaggle notebook online
+### ht: kaggle - push notebook
 
 
 `fastkaggle` also provides a function that pushes a notebook to Kaggle Notebooks. I wrote this notebook on my own machine, and pushed it to Kaggle from there -- here's the command I used:
 
 ```python
+nb_name()
+```
+
+<!-- #region -->
+```python
+def nb_meta(user, id, title, file, competition=None, private=True, gpu=False, internet=True):
+    "Get the `dict` required for a kernel-metadata.json file"
+    d = {
+      "id": f"{user}/{id}",
+      "title": title,
+      "code_file": file,
+      "language": "python",
+      "kernel_type": "notebook",
+      "is_private": private,
+      "enable_gpu": gpu,
+      "enable_internet": internet,
+      "keywords": [],
+      "dataset_sources": [],
+      "kernel_sources": []
+    }
+    if competition: d["competition_sources"] = [f"competitions/{competition}"]
+    return d
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
+```
+<!-- #endregion -->
+
+<!-- #region -->
+```python
+def push_notebook(user, id, title, file, path='.', competition=None, private=True, gpu=False, internet=True):
+    "Push notebook `file` to Kaggle Notebooks"
+    meta = nb_meta(user, id, title, file=file, competition=competition, private=private, gpu=gpu, internet=internet)
+    path = Path(path)
+    nm = 'kernel-metadata.json'
+    path.mkdir(exist_ok=True, parents=True)
+    with open(path/nm, 'w') as f: json.dump(meta, f, indent=2)
+    api = import_kaggle()
+    api.kernels_push_cli(str(path))
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
+```
+<!-- #endregion -->
+
+```python
 if not iskaggle:
-    push_notebook('jhoward', 'first-steps-road-to-the-top-part-1',
-                  title='First Steps: Road to the Top, Part 1',
-                  file='first-steps-road-to-the-top-part-1.ipynb',
+    push_notebook('danielliao', '0008_fastai_first_steps_road_to_top_part_1',
+                  title='0008 fastai first steps 1 version 2',
+                  file='0008_fastai_first_steps_road_to_top_part_1.ipynb',
                   competition=comp, private=False, gpu=True)
 ```
 
 ```python
 
-```
-
-```python
-from fastdebug.utils import *
-```
-
-```python
-nb_name()
-```
-
-```python
-ipy2md()
-```
-
-```python
-fastnbs("push kaggle")
 ```

@@ -17,6 +17,12 @@ jupyter:
 > little functions to tell you the basics of a module
 
 
+## imports
+
+```python
+from fastdebug.utils import *
+```
+
 Todos: do I need whichversion? and fu?
 
 ```python
@@ -28,6 +34,17 @@ Todos: do I need whichversion? and fu?
 from __future__ import annotations
 annotations = annotations
 import inspect, torch
+```
+
+## Jupyter theme
+
+```python
+# https://stackoverflow.com/questions/56044487/toolbar-not-visible-after-setting-jupyter-notebook-theme
+!jt -l
+```
+
+```python
+!jt -t solarizedd -T -N -kl
 ```
 
 ## Data
@@ -262,7 +279,7 @@ plot_fns((func1, "x**2"), (func2, "log(x)"), label_x='x - axis', label_y='y - ax
 plot_fns((func1, ), (func2, ), label_x='x - axis', label_y='y - axis', title='My first graph!', ax_center=True)
 ```
 
-## doc from fastai.torch_core
+## doc and show_doc
 
 ```python
 #| export
@@ -284,7 +301,7 @@ from nbdev.showdoc import show_doc
 show_doc = show_doc
 ```
 
-## snoop: pp, @snoop, doc_sig, pp.deep,%%snoop, watches
+## snoop: pp, @snoop, doc_sig, src, chk
 
 ```python
 #| export
@@ -560,7 +577,7 @@ def ipy2md(db=True):
 
 ```
 
-## Autoreload plus matplotlib inline for every notebook
+## automagic for autoreload and matplotlib inline
 
 <!-- #region -->
 As mentioned above, you need the autoreload extension. If you want it to automatically start every time you launch ipython, you need to add it to the ipython_config.py startup file:
@@ -2037,8 +2054,8 @@ fastnbs() can use keywords to search learning points (a section title and a sect
 ```python
 #| export
 # @snoop
-def fastnbs(question:str, # query options, "doc: ImageDataLoaders", "src: DataBlock", "ht: git", "jn: help others is the way"
-            filter_folder="all", # options: src, all,
+def fastnbs(question:str, # query options, "rd: adept practitioner", "doc: ImageDataLoaders", "src: DataBlock", "ht: git", "jn: help others is the way"
+            filter_folder="src", # options: src, all,
             strict=False, # loose search keyword, not as the first query word
             output=False, # True for nice print of cell output
             accu:float=0.8, 
@@ -2631,7 +2648,7 @@ hts
 
 ```python
 #| export
-def fastlistnbs(query="all", # howto, srcode, journey, question, doc, or all
+def fastlistnbs(query="all", # howto, srcode, journey, question, doc, radek, or all
                 flt_fd="src"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
 src_fastcore, all"
@@ -2675,6 +2692,10 @@ src_fastcore, all"
                             print(l, end="") # no extra new line between each line printed   
                             found = True
                         elif query == "question" and "qt:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") # no extra new line between each line printed   
+                            found = True
+                        elif query == "radek" and "rd:" in l:
                             if l.count("#") == 2: print()                        
                             print(l, end="") # no extra new line between each line printed   
                             found = True                            

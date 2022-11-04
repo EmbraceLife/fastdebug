@@ -2,6 +2,17 @@
 
 > little functions to tell you the basics of a module
 
+## imports
+
+
+```
+from fastdebug.utils import *
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
 Todos: do I need whichversion? and fu?
 
 
@@ -15,6 +26,35 @@ Todos: do I need whichversion? and fu?
 from __future__ import annotations
 annotations = annotations
 import inspect, torch
+```
+
+## Jupyter theme
+
+
+```
+# https://stackoverflow.com/questions/56044487/toolbar-not-visible-after-setting-jupyter-notebook-theme
+!jt -l
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+    Available Themes: 
+       chesterish
+       grade3
+       gruvboxd
+       gruvboxl
+       monokai
+       oceans16
+       onedork
+       solarizedd
+       solarizedl
+
+
+
+```
+!jt -t solarizedd -T -N -kl
 ```
 
 ## Data
@@ -203,13 +243,13 @@ plot_funcs((x1,y1, "line1"),(x2,y2, "line2"), (y1, y2, "line3"), label_x='x - ax
 
 
     
-![png](01_utils_files/01_utils_25_0.png)
+![png](01_utils_files/01_utils_30_0.png)
     
 
 
 
     
-![png](01_utils_files/01_utils_25_1.png)
+![png](01_utils_files/01_utils_30_1.png)
     
 
 
@@ -286,17 +326,17 @@ plot_fns((func1, ), (func2, ), label_x='x - axis', label_y='y - axis', title='My
 
 
     
-![png](01_utils_files/01_utils_29_0.png)
+![png](01_utils_files/01_utils_34_0.png)
     
 
 
 
     
-![png](01_utils_files/01_utils_29_1.png)
+![png](01_utils_files/01_utils_34_1.png)
     
 
 
-## doc from fastai.torch_core
+## doc and show_doc
 
 
 ```
@@ -322,7 +362,7 @@ from nbdev.showdoc import show_doc
 show_doc = show_doc
 ```
 
-## snoop: pp, @snoop, doc_sig, pp.deep,%%snoop, watches
+## snoop: pp, @snoop, doc_sig, src, chk
 
 
 ```
@@ -703,7 +743,7 @@ def ipy2md(db=True):
 
 ```
 
-## Autoreload plus matplotlib inline for every notebook
+## automagic for autoreload and matplotlib inline
 
 As mentioned above, you need the autoreload extension. If you want it to automatically start every time you launch ipython, you need to add it to the ipython_config.py startup file:
 
@@ -3255,8 +3295,8 @@ fastnbs() can use keywords to search learning points (a section title and a sect
 ```
 #| export
 # @snoop
-def fastnbs(question:str, # query options, "doc: ImageDataLoaders", "src: DataBlock", "ht: git", "jn: help others is the way"
-            filter_folder="all", # options: src, all,
+def fastnbs(question:str, # query options, "rd: adept practitioner", "doc: ImageDataLoaders", "src: DataBlock", "ht: git", "jn: help others is the way"
+            filter_folder="src", # options: src, all,
             strict=False, # loose search keyword, not as the first query word
             output=False, # True for nice print of cell output
             accu:float=0.8, 
@@ -4307,7 +4347,7 @@ hts
 
 ```
 #| export
-def fastlistnbs(query="all", # howto, srcode, journey, question, doc, or all
+def fastlistnbs(query="all", # howto, srcode, journey, question, doc, radek, or all
                 flt_fd="src"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
 src_fastcore, all"
@@ -4351,6 +4391,10 @@ src_fastcore, all"
                             print(l, end="") # no extra new line between each line printed   
                             found = True
                         elif query == "question" and "qt:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") # no extra new line between each line printed   
+                            found = True
+                        elif query == "radek" and "rd:" in l:
                             if l.count("#") == 2: print()                        
                             print(l, end="") # no extra new line between each line printed   
                             found = True                            

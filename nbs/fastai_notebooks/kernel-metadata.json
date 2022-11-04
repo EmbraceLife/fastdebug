@@ -1,0 +1,16 @@
+{
+  "id": "danielliao/0008_fastai_first_steps_road_to_top_part_1",
+  "title": "0008 fastai first steps 1 version 2",
+  "code_file": "0008_fastai_first_steps_road_to_top_part_1.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": false,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "keywords": [],
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "competition_sources": [
+    "competitions/paddy-disease-classification"
+  ]
+}

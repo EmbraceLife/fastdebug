@@ -32,7 +32,7 @@ display section headings of notebooks, filter options: fastai, part2, groundup, 
 
 |    | **Type** | **Default** | **Details** |
 | -- | -------- | ----------- | ----------- |
-| query | str | all | howto, srcode, journey, or all |
+| query | str | all | howto, srcode, journey, question, doc, radek, or all |
 | flt_fd | str | src | other options: "groundup", "part2", "all" |
 
 
@@ -56,15 +56,15 @@ show_doc(fastnbs)
 
 ### fastnbs
 
->      fastnbs (question:str, filter_folder='all', strict=False, output=False,
+>      fastnbs (question:str, filter_folder='src', strict=False, output=False,
 >               accu:float=0.8, nb=True, db=False)
 
 check with fastlistnbs() to skim through all the learning points as section titles; then use fastnotes() to find interesting lines which can be notes or codes, and finally use fastnbs() display the entire learning points section including notes and codes.
 
 |    | **Type** | **Default** | **Details** |
 | -- | -------- | ----------- | ----------- |
-| question | str |  | query options, "doc: ImageDataLoaders", "src: DataBlock", "ht: git", "jn: help others is the way" |
-| filter_folder | str | all | options: src, all, |
+| question | str |  | query options, "rd: adept practitioner", "doc: ImageDataLoaders", "src: DataBlock", "ht: git", "jn: help others is the way" |
+| filter_folder | str | src | options: src, all, |
 | strict | bool | False | loose search keyword, not as the first query word |
 | output | bool | False | True for nice print of cell output |
 | accu | float | 0.8 |  |
@@ -119,7 +119,7 @@ Why I am always trying to do something different? Why couldn't I just follow thi
 
 
 start of heading 2
-## ht: imports for vision
+## ht: imports - vision
 
 
 
@@ -142,7 +142,10 @@ fastlistnbs("doc")
     ### doc: DataBlock.dataloaders
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0001_fastai_is_it_a_bird.md
     
+    ### doc: setup_comp(comp, local_folder='', install='fastai "timm>=0.6.2.dev0")
     ### doc: ImageDataLoaders.from_folder
+    ### doc: aug_transforms(size=128, min_scale=0.75)
+    ### doc: vision_learner(dls, 'resnet26d', metrics=error_rate, path='.').to_fp16()
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     ### doc: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
@@ -192,11 +195,13 @@ fastlistnbs("srcode")
     ### src: DataBlock.dataloaders
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0001_fastai_is_it_a_bird.md
     
-    ### src: setup_comp(comp, install='fastai "timm>=0.6.2.dev0")
+    ### src: setup_compsetup_comp(comp, local_folder='', install='fastai "timm>=0.6.2.dev0")
     ### src: check_subfolders_img(path, db=False)
     ### src: randomdisplay(path, size, db=False)
     ### src: check_sizes_img(files)
     ### src: ImageDataLoaders.from_folder
+    ### src: aug_transforms(size=128, min_scale=0.75)
+    ### src: vision_learner(dls, 'resnet26d', metrics=error_rate, path='.').to_fp16()
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     ### src: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
@@ -581,6 +586,10 @@ start of another heading 3
 fastlistnbs("howto")
 ```
 
+
+<style>.container { width:100% !important; }</style>
+
+
     step 0: ht: imports==========================================================================================================================================
     
     ## ht: imports - vision
@@ -592,19 +601,41 @@ fastlistnbs("howto")
     step 1: ht: data_download====================================================================================================================================
     
     ## ht: data_download - kaggle competition dataset
-    ### ht: data_download - kaggle set up
+    ### ht: data_download - join, `kaggle.json`, `setup_comp`
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     step 2: ht: data_access======================================================================================================================================
+    ### ht: data_access - map subfolders content with `check_subfolders_img`
+    ### ht: data_access - extract all images for test and train with `get_image_files`
+    ### ht: data_access - display an image from test_files or train_files with `randomdisplay`
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
+    
     step 3: ht: data_prep========================================================================================================================================
+    ### ht: data_prep reproducibility in training a model
+    ### ht: data_prep - remove images that fail to open with `remove_failed(path)`
+    ### ht: data_prep - describe sizes of all images with `check_sizes_img`
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
+    
     step 4: ht: data_loaders=====================================================================================================================================
+    ### ht: data_loaders - create a dataloader from a folder with `ImageDataLoaders.from_folder`
+    ### ht: data_loaders - apply transformations to each image with `item_tfms = Resize(480, method='squish')`
+    ### ht: data_loaders - apply image augmentations to each batch of data with `batch_tfms = aug_transforms`
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
+    
     step 5: ht: cbs_tfms=========================================================================================================================================
     step 6: ht: learner==========================================================================================================================================
+    ### ht: learner - model arch - how to pick the first to try
+    ### ht: learner - vision_learner - build a learner for vision
+    ### ht: learner - find learning rate with `lr_find`
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
+    
     step 7: ht: fit==============================================================================================================================================
     step 8: ht: pred=============================================================================================================================================
     step 9: ht: fu===============================================================================================================================================
     ### ht: fu - whatinside, show_doc, fastlistnbs, fastnbs
     ### ht: fu - git - when a commit takes too long
+    ### ht: fu - debug every srcline without breaking
+    ### ht: fu - (de)activate snoop without commenting out using `snoopon()` and `snoopoff()`  
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
 
@@ -622,7 +653,8 @@ fastlistnbs("question")
 ```
 
     ### qt: how to display a list of images?
-    #### qt: why must all images have the same dimensions?
+    #### qt: why must all images have the same dimensions? how to resolve this problem?
+    #### qt: why should we start with small resized images
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
 
@@ -654,10 +686,21 @@ hts
 # fastnbs("ht: load")
 ```
 
+### Search Meta
+
 
 ```
-
+fastlistnbs("radek")
 ```
+
+    #### rd: What is The hidden game of machine learning? 
+    #### rd: What makes you an adept practitioner? 
+    #### rd: What makes you a great practitioner? 
+    #### rd: What can lead to a tragic consequence of your model? 
+    #### rd: How to gain a deeper understanding of the ability to generalize to unseen data?
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md
+    
+
 
 
 ```
