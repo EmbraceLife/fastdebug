@@ -82,7 +82,7 @@ fastlistnbs("howto")
 
 ```
 
-## Search notes as question 
+## Search questions (notes and Q&A on forum) 
 
 ```python
 fastlistnbs("question")

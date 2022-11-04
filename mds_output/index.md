@@ -614,41 +614,15 @@ fastlistnbs("howto")
 
 ```
 
-## Search notes as question 
+## Search questions (notes and Q&A on forum) 
 
 
 ```
 fastlistnbs("question")
 ```
 
-
-<style>.container { width:100% !important; }</style>
-
-
-    step 0: ht: imports==========================================================================================================================================
-    
-    ## ht: imports - vision
-    ### ht: imports - fastkaggle 
-    ### ht: imports - use mylib in kaggle
-    ### ht: imports - fastkaggle - push libs to kaggle
-    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
-    
-    step 1: ht: data_download====================================================================================================================================
-    
-    ## ht: data_download - kaggle competition dataset
-    ### ht: data_download - kaggle set up
-    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
-    
-    step 2: ht: data_access======================================================================================================================================
-    step 3: ht: data_prep========================================================================================================================================
-    step 4: ht: data_loaders=====================================================================================================================================
-    step 5: ht: cbs_tfms=========================================================================================================================================
-    step 6: ht: learner==========================================================================================================================================
-    step 7: ht: fit==============================================================================================================================================
-    step 8: ht: pred=============================================================================================================================================
-    step 9: ht: fu===============================================================================================================================================
-    ### ht: fu - whatinside, show_doc, fastlistnbs, fastnbs
-    ### ht: fu - git - when a commit takes too long
+    ### qt: how to display a list of images?
+    #### qt: why must all images have the same dimensions?
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
 

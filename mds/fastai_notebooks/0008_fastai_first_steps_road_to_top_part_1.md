@@ -492,12 +492,17 @@ imgs[1]
 ### ht: data_loaders - create a dataloader from a folder with `ImageDataLoaders.from_folder`
 
 
-#### qt: why must all images have the same dimensions?
+A dataloader prepares training and validation sets, transformations to each image, and batch transformations to each batch of images
+
+
+#### qt: why must all images have the same dimensions? how to resolve this problem?
 
 They're nearly all the same size, except for a few. Because of those few, however, we'll need to make sure we always resize each image to common dimensions first, otherwise fastai won't be able to create batches. 
 
 For now, we'll just squish them to 480x480 images, and then once they're in batches we do a random resized crop down to a smaller size, along with the other default fastai augmentations provided by `aug_transforms`. 
 
+
+#### qt: why should we start with small resized images
 We'll start out with small resized images, since we want to be able to iterate quickly:
 
 ```python
@@ -508,9 +513,9 @@ We'll start out with small resized images, since we want to be able to iterate q
 ### doc: ImageDataLoaders.from_folder
 
 
-To create a DataLoader obj from a folder. 
+To create a DataLoader obj from a folder, and a dataloader prepares functions for splitting training and validation sets, extracting images and labels, each item transformations, and batch transformations.
 
-eg., give it `trn_path` (folder has subfolders like train, test even valid), `valid_pct` (split a portion for validation set), `seed` (set a seed for reproducibility), `item_tfms` (do transforms to each item), and `batch_tfms` (do transformations on batches)
+eg., give it `trn_path` (folder has subfolders like train, test or even valid), `valid_pct` (split a portion from train to create validation set), `seed` (set a seed for reproducibility), `item_tfms` (do transforms to each item), and `batch_tfms` (do transformations on batches)
 
 <!-- #region -->
 ```python
@@ -554,7 +559,7 @@ show_doc(ImageDataLoaders.from_folder)
 ### src: ImageDataLoaders.from_folder
 
 ```python
-fu.snoopon()
+snoopon()
 ```
 
 ```python
@@ -674,25 +679,278 @@ dls.show_batch(max_n=6)
 ```
 
 ```python
-fu.snoopoff()
+snoopoff()
+```
+
+### ht: data_loaders - apply transformations to each image with `item_tfms = Resize(480, method='squish')`
+
+
+Besides gathering all the images, dataloaders need to prepare transformations eg., resize to each image. This is done with `item_tfms = Resize(480, method='squish')`
+
+
+### ht: data_loaders - apply image augmentations to each batch of data with `batch_tfms = aug_transforms`
+
+
+After transformations done to each image, we can apply image augmentations like flip, rotate, zoom, wrap, lighting to each batch of images
+
+
+### doc: aug_transforms(size=128, min_scale=0.75)
+
+
+to return a list of image augmentations (transformations) for doing custom flip, rotate, zoom, warp, lighting
+
+```python
+# The official doc is easy to understand and the explanation to each arg is very helpful.
+show_doc(aug_transforms)
+```
+
+```python
+src(aug_transforms)
+```
+
+### src: aug_transforms(size=128, min_scale=0.75)
+
+```python
+snoopon()
+```
+
+```python
+# @snoop
+def aug_transforms(
+    mult:float=1.0, # Multiplication applying to `max_rotate`,`max_lighting`,`max_warp`
+    do_flip:bool=True, # Random flipping
+    flip_vert:bool=False, # Flip vertically
+    max_rotate:float=10., # Maximum degree of rotation
+    min_zoom:float=1., # Minimum zoom 
+    max_zoom:float=1.1, # Maximum zoom 
+    max_lighting:float=0.2, # Maximum scale of changing brightness 
+    max_warp:float=0.2, # Maximum value of changing warp per
+    p_affine:float=0.75, # Probability of applying affine transformation
+    p_lighting:float=0.75, # Probability of changing brightnest and contrast 
+    xtra_tfms:list=None, # Custom Transformations
+    size:int|tuple=None, # Output size, duplicated if one value is specified
+    mode:str='bilinear', # PyTorch `F.grid_sample` interpolation
+    pad_mode=PadMode.Reflection, # A `PadMode`
+    align_corners=True, # PyTorch `F.grid_sample` align_corners
+    batch=False, # Apply identical transformation to entire batch
+    min_scale=1. # Minimum scale of the crop, in relation to image area
+):
+    "Utility func to easily create a list of flip, rotate, zoom, warp, lighting transforms."
+    res,tkw = [],dict(size=size if min_scale==1. else None, mode=mode, pad_mode=pad_mode, batch=batch, align_corners=align_corners)
+    max_rotate,max_lighting,max_warp = array([max_rotate,max_lighting,max_warp])*mult
+    if do_flip: res.append(Dihedral(p=0.5, **tkw) if flip_vert else Flip(p=0.5, **tkw))
+    if max_warp:   res.append(Warp(magnitude=max_warp, p=p_affine, **tkw))
+    if max_rotate: res.append(Rotate(max_deg=max_rotate, p=p_affine, **tkw))
+    if min_zoom<1 or max_zoom>1: res.append(Zoom(min_zoom=min_zoom, max_zoom=max_zoom, p=p_affine, **tkw))
+    if max_lighting:
+        res.append(Brightness(max_lighting=max_lighting, p=p_lighting, batch=batch))
+        res.append(Contrast(max_lighting=max_lighting, p=p_lighting, batch=batch))
+    if min_scale!=1.: xtra_tfms = RandomResizedCropGPU(size, min_scale=min_scale, ratio=(1,1)) + L(xtra_tfms)
+    pp(res, L(xtra_tfms), doc_sig(setup_aug_tfms))
+    return setup_aug_tfms(res + L(xtra_tfms))
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/augment.py
+# Type:      function
+```
+
+```python
+aug_transforms(size=128, min_scale=0.75)
+```
+
+```python
+snoopoff()
 ```
 
 ## Our first model
 
 
-### how to pick the first pretrained model for our model; how to build our model based on the selected pretrained model
+### ht: learner - model arch - how to pick the first to try
 
 
 Let's create a model. To pick an architecture, we should look at the options in [The best vision models for fine-tuning](https://www.kaggle.com/code/jhoward/the-best-vision-models-for-fine-tuning). I like the looks of `resnet26d`, which is the fastest resolution-independent model which gets into the top-15 lists there.
 
 ```python
-learn = vision_learner(dls, 'resnet26d', metrics=error_rate, path='.').to_fp16()
+# !pip install "timm>=0.6.2.dev0"
 ```
 
-### how to find the learning rate for our model
+### ht: learner - vision_learner - build a learner for vision
+
+
+### doc: vision_learner(dls, 'resnet26d', metrics=error_rate, path='.').to_fp16()
+
+
+Give `vision_learner` a dataloader and a model architecture string, it returns a learner which create the specified model object and put model, dls together for handling training for vision problems
+
+Besides dataloader and model arch, a learners prepares a lot of things like loss func, opt func, lr, splitter, cbs, metrics, weight_decay, batch_norm, etc.
+
+How to fill in the details description of the args of `vision_learner`? By exploring the source?
+
+```python
+show_doc(vision_learner)
+```
+
+<!-- #region -->
+```python
+@snoop
+@delegates(create_vision_model)
+def vision_learner(dls, arch, normalize=True, n_out=None, pretrained=True, 
+        # learner args
+        loss_func=None, opt_func=Adam, lr=defaults.lr, splitter=None, cbs=None, metrics=None, path=None,
+        model_dir='models', wd=None, wd_bn_bias=False, train_bn=True, moms=(0.95,0.85,0.95), # wd = weight_decay, bn = batch_norm, momentum
+        # model & head args
+        cut=None, init=nn.init.kaiming_normal_, custom_head=None, concat_pool=True, pool=True, # not sure about cut, lin_ftrs, ps
+        lin_ftrs=None, ps=0.5, first_bn=True, bn_final=False, lin_first=False, y_range=None, **kwargs):
+    "Build a vision learner from `dls` and `arch`"
+    # get the num of output from dls if not given
+    if n_out is None: n_out = get_c(dls)
+    # n_out should be extracted without error from dls.c or the dataset
+    assert n_out, "`n_out` is not defined, and could not be inferred from data, set `dls.c` or pass `n_out`"
+    # get arch's _default_meta info such as "cut" value and "split" function
+    meta = model_meta.get(arch, _default_meta)
+    # customize arg values for the model's instantiation and put them into a dict 
+    model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
+                      first_bn=first_bn, bn_final=bn_final, lin_first=lin_first, y_range=y_range, **kwargs)
+    # set n_in to be 3 if not given by kwargs
+    n_in = kwargs['n_in'] if 'n_in' in kwargs else 3
+    # if arch is a string, then create the model from timm, and normalize the dataset if specified
+    if isinstance(arch, str):
+        # use timm to customize a model, and return a model object and its config info in a dict
+        model,cfg = create_timm_model(arch, n_out, default_split, pretrained, **model_args)
+        # use model's cfg mean and std to normalize data as a tfm during after_batch
+        if normalize: _timm_norm(dls, cfg, pretrained, n_in)
+    else:
+        if normalize: _add_norm(dls, meta, pretrained, n_in)
+        model = create_vision_model(arch, n_out, pretrained=pretrained, **model_args)
+    # pick the splitter func to split train and validation set
+    splitter = ifnone(splitter, meta['split'])
+    # create a learner object which group dls, model, loss_func, opt_func, lr, splitter, cbs, metrics... to handle training
+    learn = Learner(dls=dls, model=model, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
+                   metrics=metrics, path=path, model_dir=model_dir, wd=wd, wd_bn_bias=wd_bn_bias, train_bn=train_bn, moms=moms)
+    # if the model is pretrained, freeze the model to the last parameter group
+    if pretrained: learn.freeze()
+    # keep track of args for loggers
+    store_attr('arch,normalize,n_out,pretrained', self=learn, **kwargs)
+    return learn
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/learner.py
+# Type:      function
+```
+<!-- #endregion -->
+
+### src: vision_learner(dls, 'resnet26d', metrics=error_rate, path='.').to_fp16()
+
+```python
+snoopon()
+```
+
+```python
+from fastai.vision.learner import *
+from fastai.vision.learner import  _default_meta, _add_norm, _timm_norm
+from fastai.callback.fp16 import to_fp16
+```
+
+```python
+@snoop
+@delegates(create_vision_model)
+def vision_learner(dls, arch, normalize=True, n_out=None, pretrained=True, 
+        # learner args
+        loss_func=None, opt_func=Adam, lr=defaults.lr, splitter=None, cbs=None, metrics=None, path=None,
+        model_dir='models', wd=None, wd_bn_bias=False, train_bn=True, moms=(0.95,0.85,0.95),
+        # model & head args
+        cut=None, init=nn.init.kaiming_normal_, custom_head=None, concat_pool=True, pool=True,
+        lin_ftrs=None, ps=0.5, first_bn=True, bn_final=False, lin_first=False, y_range=None, **kwargs):
+    "Build a vision learner from `dls` and `arch`"
+#     pp(src(get_c))
+    # get the num of output from dls if not given
+    if n_out is None: n_out = get_c(dls)
+    # n_out should be extracted without error from dls.c or the dataset
+    assert n_out, "`n_out` is not defined, and could not be inferred from data, set `dls.c` or pass `n_out`"
+    pp(arch, _default_meta, doc_sig(model_meta.get))
+    # get arch's _default_meta info such as "cut" value and "split" function
+    meta = model_meta.get(arch, _default_meta)
+    # customize arg values for the model's instantiation and put them into a dict 
+    model_args = dict(init=init, custom_head=custom_head, concat_pool=concat_pool, pool=pool, lin_ftrs=lin_ftrs, ps=ps,
+                      first_bn=first_bn, bn_final=bn_final, lin_first=lin_first, y_range=y_range, **kwargs)
+    # set n_in to be 3 if not given by kwargs
+    n_in = kwargs['n_in'] if 'n_in' in kwargs else 3
+    # if arch is a string, then create the model from timm, and normalize the dataset if specified
+    if isinstance(arch, str):
+#         pp(doc_sig(create_timm_model))
+        # use timm to customize a model, and return a model object and its config info in a dict
+        model,cfg = create_timm_model(arch, n_out, default_split, pretrained, **model_args)
+#         pp(doc_sig(_timm_norm))
+#         pp(src(_timm_norm))
+        # use model's cfg mean and std to normalize data as a tfm during after_batch
+        if normalize: _timm_norm(dls, cfg, pretrained, n_in)
+    else:
+        if normalize: _add_norm(dls, meta, pretrained, n_in)
+        model = create_vision_model(arch, n_out, pretrained=pretrained, **model_args)
+    # pick the splitter func to split train and validation set
+    splitter = ifnone(splitter, meta['split'])
+#     pp(doc_sig(Learner))
+    # create a learner object which group dls, model, loss_func, opt_func, lr, splitter, cbs, metrics... to handle training
+    learn = Learner(dls=dls, model=model, loss_func=loss_func, opt_func=opt_func, lr=lr, splitter=splitter, cbs=cbs,
+                   metrics=metrics, path=path, model_dir=model_dir, wd=wd, wd_bn_bias=wd_bn_bias, train_bn=train_bn, moms=moms)
+
+#     pp(doc_sig(learn.freeze))
+    # if the model is pretrained, freeze the model to the last parameter group
+    if pretrained: learn.freeze()
+    # keep track of args for loggers
+    store_attr('arch,normalize,n_out,pretrained', self=learn, **kwargs)
+    return learn
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/learner.py
+# Type:      function
+```
+
+```python
+learn = vision_learner(dls, 'resnet26d', metrics=error_rate, path='.')
+learn = learn.to_fp16()
+```
+
+```python
+snoopoff()
+```
+
+### ht: learner - find learning rate with `lr_find`
 
 
 Let's see what the learning rate finder shows:
+
+```python
+show_doc(learn.lr_find)
+```
+
+<!-- #region -->
+```python
+@patch
+def lr_find(self:Learner, start_lr=1e-7, end_lr=10, num_it=100, stop_div=True, show_plot=True, suggest_funcs=(SuggestionMethod.Valley)):
+    "Launch a mock training to find a good learning rate and return suggestions based on `suggest_funcs` as a named tuple"
+    n_epoch = num_it//len(self.dls.train) + 1
+    cb=LRFinder(start_lr=start_lr, end_lr=end_lr, num_it=num_it, stop_div=stop_div)
+    with self.no_logging(): self.fit(n_epoch, cbs=cb)
+    if suggest_funcs is not None:
+        lrs, losses = tensor(self.recorder.lrs[num_it//10:-5]), tensor(self.recorder.losses[num_it//10:-5])
+        nan_idxs = torch.nonzero(torch.isnan(losses.view(-1)))
+        if len(nan_idxs) > 0:
+            drop_idx = min(nan_idxs)
+            lrs = lrs[:drop_idx]
+            losses = losses[:drop_idx]
+        _suggestions, nms = [], []
+        for func in tuplify(suggest_funcs):
+            nms.append(func.__name__ if not isinstance(func, partial) else func.func.__name__) # deal with partials
+            _suggestions.append(func(lrs, losses, num_it))
+        
+        SuggestedLRs = collections.namedtuple('SuggestedLRs', nms)
+        lrs, pnts = [], []
+        for lr, pnt in _suggestions:
+            lrs.append(lr)
+            pnts.append(pnt)
+        if show_plot: self.recorder.plot_lr_find(suggestions=pnts, nms=nms)
+        return SuggestedLRs(*lrs)
+
+    elif show_plot: self.recorder.plot_lr_find()
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/callback/schedule.py
+# Type:      method
+```
+<!-- #endregion -->
 
 ```python
 learn.lr_find(suggest_funcs=(valley, slide))
