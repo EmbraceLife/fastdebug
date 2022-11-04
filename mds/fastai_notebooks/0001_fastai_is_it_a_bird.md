@@ -37,6 +37,11 @@ Official **Is it a bird** [notebook](https://www.kaggle.com/code/jhoward/is-it-a
 ```python
 from fastdebug.utils import *
 from __future__ import annotations
+from fastai.vision.all import *
+```
+
+```python
+DataLoaders??
 ```
 
 ## mamba update -q -y fastai; pip install -Uqq
@@ -106,7 +111,7 @@ from duckduckgo_search import ddg_images
 from fastcore.all import *
 ```
 
-### ```itemgot(self:L, *idxs)```
+### src: itemgot(self:L, *idxs)
 apply itemgetter(idx) to every item of self or L
 
 ```python
@@ -132,7 +137,7 @@ def itemgot(self:L, *idxs):
 # ~/mambaforge/lib/python3.9/site-packages/fastcore/foundation.py
 ```
 
-### ```itemgetter```
+### src: itemgetter
 After f = itemgetter(2), the call f(r) returns r[2].
 
 After g = itemgetter(2, 5, 3), the call g(r) returns (r[2], r[5], r[3])
@@ -461,7 +466,7 @@ src = Path('.')
 dest = src/"resized"
 resize_image(file, dest, src=src, max_size=None) # just copy not size changed
 im = Image.open(dest/file)
-test_eq(im.shape[1],1920)
+# test_eq(im.shape[1],1920)
 ```
 
 ```python
@@ -594,16 +599,7 @@ from fastai.vision.core import *
 ```
 
 ```python
-# @snoop
-def randomdisplay(path, db=False):
-# https://www.geeksforgeeks.org/python-random-module/
-    import random
-    rand = random.randint(0,len(path.ls())-1) # choose a random int between 0 and len(T-rex)-1
-    file = path.ls()[rand]
-    im = PILImage.create(file)
-    if db: pp(im.width, im.height, file)
-    return file, im
-
+fastnbs("src: randomdisplay")
 ```
 
 ```python
@@ -653,45 +649,23 @@ dino.ls(file_type="binary")
 
 ```
 
-### count_images_in_subfolders(path)
+### check_subfolders_img(path)
 check all subfolders for images and print out the number of images they have recursively
 
 ```python
-#| export utils
-# @snoop
-def count_files_in_subfolders(path, db=False):
-    from pathlib import Path
-    for entry in path.iterdir():
-        if entry.is_dir() and not entry.name.startswith(".") and len(entry.ls(file_exts=image_extensions)) > 5:
-            print(entry.name, f': {str(entry.parent.absolute()).split("/Users/Natsume/Documents/fastdebug/")[1]}')
-            print(entry.name, f': {len(entry.ls(file_exts=image_extensions))}')
-#             print(entry.name, f': {len(entry.ls(file_exts=[".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]))}') # how to include both png and jpg
-            if db:
-                for e in entry.ls(): # check any image file which has a different suffix from those above
-                    if e.is_file() and not e.name.startswith(".") and e.suffix not in image_extensions and e.suffix not in [".ipynb", ".py"]:
-    #                 if e.suffix not in [".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]:
-                        pp(e.suffix, e)
-                        try:
-                            pp(Image.open(e).width)
-                        except:
-                            print(f"{e} can't be opened")
-    #                     pp(Image.open(e).width if e.suffix in image_extensions)
-        elif entry.is_dir() and not entry.name.startswith("."): 
-#             with snoop:
-            count_files_in_subfolders(entry)
-                    
+
 ```
 
 ```python
-count_files_in_subfolders(dino)
-count_files_in_subfolders(bird)
-count_files_in_subfolders(cry_dino)
+check_subfolders_img(dino)
+check_subfolders_img(bird)
+check_subfolders_img(cry_dino)
 ```
 
 ```python
 # list(dino.parent.absolute().ls())
 dino.parent.absolute().parent
-count_files_in_subfolders(dino.parent.absolute().parent)
+check_subfolders_img(dino.parent.absolute().parent)
 ```
 
 ### verify_image(fn)
@@ -732,6 +706,7 @@ L(1,2,3), L([1,2,3])
 Find images in `fns` that can't be opened. using parallel, to applies `verify_image` in parallel to `fns`, using `n_workers=8`"
 
 ```python
+#| export utils
 # @snoop
 def verify_images(fns):
     "Find images in `fns` that can't be opened. using parallel, to applies `verify_image` in parallel to `fns`, using `n_workers=8`"
@@ -746,6 +721,7 @@ def verify_images(fns):
 ```
 
 ```python
+#| export utils
 def verify_images(fns):
     "Find images in `fns` that can't be opened"
     return L(fns[i] for i,o in enumerate(parallel(verify_image, fns)) if not o)
@@ -764,14 +740,23 @@ find all images inside a path which can't be opened and unlink them
 Some photos might not download correctly which could cause our model training to fail, so we'll remove them:
 
 ```python
+#| export utils 
+from fastai.vision.all import *
+```
+
+```python
+#| export utils
 def remove_failed(path):
+#     from fastai.vision.all import get_image_files, parallel
     print("before running remove_failed:")
-    count_files_in_subfolders(path)
-    failed = verify_images(get_image_files(dino))
+    check_subfolders_img(path)
+    failed = verify_images(get_image_files(path))
+    print(f"total num: {len(get_image_files(path))}")
+    print(f"num offailed: {len(failed)}")
     failed.map(Path.unlink)
     print()
     print("after running remove_failed:")
-    count_files_in_subfolders(path)
+    check_subfolders_img(path)
 ```
 
 ```python
@@ -800,11 +785,15 @@ remove_failed(cry_dino)
 ```
 
 ```python
-randomdisplay(cry_dino.ls()[0])
+cry_dino.ls()[0]
 ```
 
 ```python
 randomdisplay(cry_dino.ls()[1])
+```
+
+```python
+randomdisplay(cry_dino.ls()[2])
 ```
 
 ```python
@@ -829,6 +818,10 @@ To train a model, we'll need DataLoaders:
 
 We can view sample images from it:
 
+
+### get_image_files, get_files, image_extensions
+to extract all image files recursively from all subfolders of a parent path
+
 ```python
 from fastai.data.transforms import _get_files
 ```
@@ -836,9 +829,6 @@ from fastai.data.transforms import _get_files
 ```python
 not None
 ```
-
-### src: _get_files(path, filenames,, extensions=None)
-get the fullnames for every file inside the list of filenames of a path
 
 ```python
 def _get_files(p, # path
@@ -851,9 +841,6 @@ def _get_files(p, # path
     return res
 # File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
 ```
-
-### src: get_files(path, extensions=None, recurse=True, folders=None, followlinks=True)
-Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
 
 ```python
 def get_files(path, extensions=None, recurse=True, folders=None, followlinks=True):
@@ -877,12 +864,13 @@ def get_files(path, extensions=None, recurse=True, folders=None, followlinks=Tru
 ```
 
 ```python
+from fastai.vision.all import *
+```
+
+```python
 len(image_extensions)
 ".aspx" in image_extensions
 ```
-
-### src: get_image_files(path, recurse=True, folders=None)
-to extract all image files recursively from all subfolders of a parent path or only from `folders`, if specified.
 
 ```python
 def get_image_files(path, recurse=True, folders=None):
@@ -892,10 +880,16 @@ def get_image_files(path, recurse=True, folders=None):
 ```
 
 ```python
-count_files_in_subfolders(dino)
+check_subfolders_img(dino)
 get_image_files(dino)
-count_files_in_subfolders(bird)
+check_subfolders_img(bird)
 get_image_files(bird)
+```
+
+### check the sizes of all images
+
+```python
+check_sizes_img(get_image_files(dino))
 ```
 
 ```python
@@ -917,8 +911,8 @@ def parent_label(o):
 ```
 
 ```python
-parent_label(dino.ls()[0].ls()[0])
 parent_label(dino.ls()[1].ls()[0])
+parent_label(dino.ls()[2].ls()[0])
 ```
 
 ### RandomSplitter(valid_pct=0.2, seed=None), torch.linspace(0,1,100)
@@ -1460,8 +1454,11 @@ dls = DataBlock(
 ).dataloaders(bird)
 ```
 
-### DataBlock.datasets(source, verbose)
+### doc: DataBlock.datasets(source, verbose)
 get data items from the source, and split the items and use `fastai.data.core.Datasets` to create the datasets
+
+
+### src: DataBlock.datasets((source, verbose)
 
 ```python
 # DataBlock.dataloaders??
@@ -1526,8 +1523,11 @@ def datasets(self:DataBlock,
     return Datasets(items, tfms=self._combine_type_tfms(), splits=splits, dl_type=self.dl_type, n_inp=self.n_inp, verbose=verbose)
 ```
 
-### DataBlock.dataloaders
+### doc: DataBlock.dataloaders
 use `DataBlock.datasets(source, verbose=verbose)` to create a ```fastai.data.core.Datasets``` first and then use ```Datasets.dataloaders``` to create a ```fastai.data.core.DataLoaders```
+
+
+### src: DataBlock.dataloaders
 
 ```python
 from fastai.vision.all import DataBlock # so that @snoop and pp can remain inside the DataBlock.__init__ source code
@@ -1580,6 +1580,18 @@ def dataloaders(self:DataBlock,
     dsets = self.datasets(source, verbose=verbose)
     kwargs = {**self.dls_kwargs, **kwargs, 'verbose': verbose}
     return dsets.dataloaders(path=path, after_item=self.item_tfms, after_batch=self.batch_tfms, **kwargs)
+```
+
+```python
+
+```
+
+```python
+
+```
+
+```python
+
 ```
 
 ### vision_learner(dls, arch...)
@@ -1783,12 +1795,13 @@ def predict(self:Learner, item, rm_type_tfms=None, with_input=False):
 ```
 
 ```python
-file,im = randomdisplay(bird/"bird")
-im
-is_bird,_,probs = learn.predict(PILImage.create(file))
+randomdisplay(bird/"bird")
+```
+
+```python
+is_bird,_,probs = learn.predict(PILImage.create(Path('forest_or_bird/bird/fa32d017-01fc-4175-be53-16014ea7f683.jpg')))
 print(f"This is a: {is_bird}.")
 print(f"Probability it's a bird: {probs[0]:.4f}")
-
 ```
 
 ```python

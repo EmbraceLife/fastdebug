@@ -1,3 +1,6 @@
+models/
+nbs/input/
+_proc/input/
 paddy-disease-classification/
 pytorch-image-models/
 *.pkl

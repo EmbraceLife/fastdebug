@@ -6,22 +6,11 @@ website:
         contents:
           - Interesting_fastai/0001_The_origin_of_APL .ipynb
           - Interesting_fastai/Interesting_things_fastai.ipynb
-      - section: demos
+      - section: Math
         contents:
-          - demos/0000_Intro_fastdebug.ipynb
-          - demos/0000_tour.ipynb
-          - demos/0001_fastcore_meta_delegates.ipynb
-          - demos/0002_signature_from_callable.ipynb
-          - demos/0003_Explore_document_FixSigMeta_PrePostInitMeta_AutoInit.ipynb
-          - demos/0004_fastcore.meta._rm_self.ipynb
-          - demos/0005_fastcore.meta.test_sig.ipynb
-          - demos/0006_fastcore.meta.NewChkMeta.ipynb
-          - demos/0007_fastcore.meta.BypassNewMeta.ipynb
-          - demos/0008_use_kwargs_dict.ipynb
-          - demos/0009_funcs_kwargs.ipynb
-          - demos/0010_fastcore_meta_summary.ipynb
-          - demos/0011_Fastdb.ipynb
-          - demos/0012_fastcore_foundation_L.ipynb
+          - Math/math_0001_highschool.ipynb
+          - Math/math_0002_calculus.ipynb
+          - Math/sympy1.ipynb
       - section: fastai_notebooks
         contents:
           - fastai_notebooks/0001_fastai_is_it_a_bird.ipynb
@@ -46,14 +35,8 @@ website:
           - fastai_notebooks/0020_fastai_pt2_2019_source_explained.ipynb
           - fastai_notebooks/0021_fastai_pt2_2019_fully_connected.ipynb
           - fastai_notebooks/0022_fastai_pt2_2019_why_sqrt5.ipynb
+          - fastai_notebooks/regex.ipynb
       - section: lib
         contents:
           - lib/00_core.ipynb
           - lib/01_utils.ipynb
-          - lib/course22p2-0001-matmul.ipynb
-          - lib/groundup_001_exp.ipynb
-          - lib/groundup_002_get_data_ready.ipynb
-          - lib/groundup_003_matmul.ipynb
-      - section: questions
-        contents:
-          - questions/00_question_anno_dict.ipynb

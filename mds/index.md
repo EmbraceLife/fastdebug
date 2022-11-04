@@ -12,46 +12,92 @@ jupyter:
     name: python3
 ---
 
-# Learning fastai with joy
+# Make Learning Fastai Uncool
 
 ```python
 #| hide
 from fastdebug.utils import *
 ```
 
-## Search notes and notebooks
-
-
-### search notebooks
-The first step to learn fastai with joy is to make revision easier. I would like to be able to search learning points in fastai notebooks with ease.
-
-If I want to read or run the notebook, I could click the second link to run the notebook on Kaggle.
+## `fastlistnbs` to read menu, `fastnbs` to dive in
 
 ```python
-#| column: page
-fastnbs("how gradient accumulation work")
+show_doc(fastlistnbs)
 ```
 
-If `fastnbs` doesn't return anything to your query, it is because the search ability of `fastnbs` is minimum, I need to learn to improve it.  But don't worry the next function below `fastlistnbs` will assist you to continue searching. 
-
-
-### list all notebook learning points
-I would also like to view all the learning points (in the form of questions) of all the fastai notebooks I have studied. This is a long list, so press `cmd + f` and search keywords e.g., "ensemble" to find the relevant questions, and then use `fastnbs` to search and display the details like above.
-
-press `cmd + o` to view them all without scrolling inside a small window
-
 ```python
-#| column: page
-fastlistnbs() 
+# fastlistnbs??
 ```
 
-### Search notes
+```python
+show_doc(fastnbs)
+```
 
-
-I would also like to search my own fastai notes with ease. The `fastnotes` can search but very rough at the moment, and the notes need a lot of rewrite.
+## Search my Journey 
 
 ```python
-# fastnotes("how random forest work")
+fastlistnbs("journey")
+```
+
+```python
+fastnbs("jn: help")
+```
+
+## Search docs
+
+```python
+fastlistnbs("doc")
+```
+
+```python
+fastnbs("doc: DataBlock.datasets")
+```
+
+## Search source code
+
+```python
+fastlistnbs("srcode")
+```
+
+```python
+fastnbs("src: ImageDataLoaders.from_name")
+```
+
+```python
+
+```
+
+## Search howto
+
+```python
+# show_doc(fastnotes)
+# show_doc(fastlistsrcs)
+
+# how to do notes from now on? make them notebooks first for using fastlistnbs and fastnbs
+# make howto internal steps breakable?
+fastlistnbs("howto")
+```
+
+```python
+
+```
+
+## Search notes as question 
+
+```python
+fastlistnbs("question")
+```
+
+```python
+hts
+```
+
+```python
+# fastnbs("ht: load")
+```
+
+```python
+
 ```
 
 ```python

@@ -12,6 +12,22 @@ jupyter:
     name: python3
 ---
 
+```python
+from fastdebug.utils import *
+```
+
+```python
+fastlistnbs('howto')
+```
+
+```python
+
+```
+
+```python
+
+```
+
 ### regex jeremy for daniel
 
 ```python
@@ -52,14 +68,14 @@ def fix_imgs_with_hide(src, dst):
     return re.sub(r'(!\[[^|]+\|\S+\]\(\S+\)[\n]+)(\w|#)', add_hide_bottom_func, result_top_hide)
 
 
-src_txt = Path('src.txt').read_text()
-dst_txt = Path('dst.txt').read_text()
+# src_txt = Path('src.txt').read_text()
+# dst_txt = Path('dst.txt').read_text()
 
-print(fix_imgs_with_hide(src_txt, dst_txt))
+# print(fix_imgs_with_hide(src_txt, dst_txt))
 
 
 
-gr.Interface(fn=fix_imgs_with_hide, inputs=[gr.Textbox(lines=15),gr.Textbox(lines=15)], outputs=gr.Textbox(lines=15)).launch()
+# gr.Interface(fn=fix_imgs_with_hide, inputs=[gr.Textbox(lines=15),gr.Textbox(lines=15)], outputs=gr.Textbox(lines=15)).launch()
 ```
 
 ### regex \w, \d, [a-z], ?, +, *
@@ -85,3 +101,7 @@ gr.Interface(fn=fix_imgs_with_hide, inputs=[gr.Textbox(lines=15),gr.Textbox(line
 `d[a-z]?`: has 4 matches   https://regex101.com/r/Ii4LYs/1
 
 keep working https://www.youtube.com/watch?v=GyJtxd14DTc&loop=0
+
+```python
+
+```

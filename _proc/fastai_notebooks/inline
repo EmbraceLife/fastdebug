@@ -1,0 +1,288 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "b2826314",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#| default_exp delete_road_top1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "36836631",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from fastdebug.utils import *\n",
+    "from fastai.vision.all import *"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "b91e2db4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fastlistnbs(\"howto\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "4a871037",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fastlistnbs(\"howto\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "9141ed58",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fastnbs(\"ht: data - check\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "d1eaf6dd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fastlistnbs(\"src\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "c43627be",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fastlistnbs(\"srcode\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "ceec6eef",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# fastnbs(\"ht: data - check\")\n",
+    "fastnbs(\"src: check\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "169ba0ce",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# fastnbs(\"ht: data - check\")\n",
+    "fastnbs(\"src: check_siz\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "77330e8a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fastnbs(\"ht: data - check\")\n",
+    "# fastnbs(\"src: check_siz\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "51bfddd7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# fastnbs(\"ht: data - check\")\n",
+    "# fastnbs(\"src: check_siz\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "355449d9",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# fastlistnbs(\"srcode\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "5f00f1d3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "show_doc(fastlistnbs)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "38bc8080",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "show_doc(fastlistnbs)\n",
+    "show_doc(fastnbs)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "7095c4be",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# show_doc(fastlistnbs)\n",
+    "# show_doc(fastnbs)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "c37585bc",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%whos fu"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "2d023fd8",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%whos functions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "d34f156c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%whos function"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "53f0c7a3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "whatinside(fu, dun=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "df3fe231",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "whatinside(fu, dun=True) # see all functions defined in fastdebug.utils"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "a85b6cb9",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# whatinside(fu, dun=True) # see all functions defined in fastdebug.utils"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "a04ebbcf",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fastnbs(\"ImageDataLoaders\", output=True)\n",
+    "# ImageDataLoaders??"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "78ffc217",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fastnbs(\"src: ImageDataLoaders\", output=True)\n",
+    "# ImageDataLoaders??"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "e9fc5b49",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fastnbs(\"src: ImageDataLoaders\")\n",
+    "# ImageDataLoaders??"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "3621bfd2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# fastnbs(\"src: ImageDataLoaders\")\n",
+    "# ImageDataLoaders??"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "144506cf",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "show_doc(ImageDataLoaders.from_folder)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "104b0fc2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%notebook?"
+   ]
+  }
+ ],
+ "metadata": {},
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

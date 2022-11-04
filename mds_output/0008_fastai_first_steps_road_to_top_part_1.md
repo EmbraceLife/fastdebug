@@ -7,21 +7,64 @@ skip_exec: true
 #| default_exp delete_road_top1
 ```
 
+### jn: help other is the best way forward
+
+**Reflection on Radek's 1st newsletter**
+
+One way to summarize Radek's secret to success is the following: 
+
+> No matter which stage of journey in the deep learning or any subject, when you are doing your best to help others to learn what you learnt and what you are dying to find out, and if you persist, you will be happy and successful. 
+
+I have dreamed of such hypothesis many times when I motivated myself to share online, and Radek proved it to be solid and true! No time to waste now!
+
+Another extremely simple but shocking secret to Radek's success is, in his words (now I can recite):
+
+> I would suspend my disbelief and do exactly what Jeremy Howard told us to do in the lectures
+
+What Jeremy told us to do is loud and clear, the 4 steps (watch, experiment, reproduce, apply elsewhere). More importantly, they are true and working if one holds onto it like Radek did. 
+
+Why I am always trying to do something different? Why couldn't I just follow this great advice right from the start? I walked [a long way around it](https://twitter.com/shendusuipian/status/1587429658621988871?s=20&t=zjz1OlYRt7yJJ8HVBdsqoA) and luckily I get my sense back and move onto the second step now. 
+
+## ht: imports - vision
+
 
 ```
 from fastdebug.utils import *
+from fastai.vision.all import *
 ```
 
 
 <style>.container { width:100% !important; }</style>
 
 
+### ht: fu - whatinside, show_doc, fastlistnbs, fastnbs
+
 
 ```
+# whatinside(fu, dun=True) # see all functions defined in fastdebug.utils
+```
+
+
+```
+# show_doc(fastlistnbs)
+# show_doc(fastnbs)
+```
+
+
+```
+# fastlistnbs("srcode")
 # fastlistnbs("howto")
+# fastlistnbs("doc")
+
 ```
 
-### ht: install fastkaggle if not available
+
+```
+# fastnbs("ht: data - check")
+# fastnbs("src: check_siz")
+```
+
+### ht: imports - fastkaggle 
 
 
 ```
@@ -33,7 +76,49 @@ except ModuleNotFoundError:
 from fastkaggle import *
 ```
 
-### ht: iterate like a grandmaster
+### ht: imports - use mylib in kaggle
+- upload my fastdebug.utils module as a dataset to kaggle, to create a dataset
+
+- and in one kaggle notebook, go to the top right, under Data/Input/ find the dataset and copy file path, and run the cell below to import it
+
+- when updating the library, go to the dataset page, click top right `...` and click `update version` to upload the latest version of your script
+
+
+```
+# !pip install nbdev snoop
+
+# path = "../input/fastdebugutils0"
+# import sys
+# sys.path
+# sys.path.insert(1, path)
+# import utils as fu
+```
+
+### ht: imports - fastkaggle - push libs to kaggle
+
+
+```
+# lib_path = Path('/root/kaggle_datasets') # not working
+# lib_path = Path('../input/kaggle_datasets') # it's working, but I can't find it in kaggle
+# username = 'danielliao'
+```
+
+
+```
+# libs = ['fastcore','timm']
+# create_libs_datasets(libs,lib_path,username)
+```
+
+### ht: fu - git - when a commit takes too long
+
+1. cp repo (removed the large dataset) elsewhere in your file system
+2. git clone your-repo --depth 1
+3. cp everything in repo except .git folder to the latest repo just downloaded
+4. git push to update
+
+### jn: how to iterate or make one step forward at at time
+
+This is Jeremy showing us how to iterate, ie., increment learning one tiny step every time every day
 
 In [Iterate Like a Grandmaster](https://www.kaggle.com/code/jhoward/iterate-like-a-grandmaster) I explained that when working on a Kaggle project:
 
@@ -48,8 +133,6 @@ This notebook is the first in a series showing every step of the process. At the
 
 <img src="https://user-images.githubusercontent.com/346999/174389920-60d67ead-0f36-41d0-9649-e23b08720c8a.png" width="600"/>
 
-### what are the related walkthrus on paddy doctor competition
-
 As a special extra, I'm also opening up early a selection of "walkthru" videos that we've been preparing for the new upcoming fast.ai course. Each day I do a walkthru with fast.ai fellows and registered students, and we record those sessions. They'll all be released at the same time as the next course (probably August 2022), but I'm releasing the ones covering this competition right now! Here they are:
 
 - [Walkthru 8](https://www.youtube.com/watch?v=-Scs4gbwWXg)
@@ -59,36 +142,45 @@ As a special extra, I'm also opening up early a selection of "walkthru" videos t
 - [Walkthru 12](https://youtu.be/GuCkpjXHdTc)
 - [Walkthru 13](https://youtu.be/INrkhUGCXHg)
 
-## ht: download and access kaggle competition dataset
+## ht: data_download - kaggle competition dataset
 
-### ht: set up before downloading
-go to kaggle.com, account, api, and click create a new api token
+### ht: data_download - join, `kaggle.json`, `setup_comp`
+
+go to kaggle.com, go to 'account', 'api', and click 'create a new api token'
 
 then `cp kaggle.json ~/.kaggle/`
 
 go to the competition site and join the competition, and get the fullname of the competition for downloading the dataset
 
+running `setup_comp(comp, install='fastai "timm>=0.6.2.dev0")` to download the dataset
+
 First, we'll get the data. I've just created a new library called [fastkaggle](https://fastai.github.io/fastkaggle/) which has a few handy features, including getting the data for a competition correctly regardless of whether we're running on Kaggle or elsewhere. Note you'll need to first accept the competition rules and join the competition, and you'll need your kaggle API key file `kaggle.json` downloaded if you're running this somewhere other than on Kaggle. `setup_comp` is the function we use in `fastkaggle` to grab the data, and install or upgrade our needed python modules when we're running on Kaggle:
 
-### src: setup_comp(comp, install='fastai "timm>=0.6.2.dev0")
-Get a path to data for `competition`, downloading it if needed
+### doc: setup_comp(comp, local_folder='', install='fastai "timm>=0.6.2.dev0")
 
+override `fastkaggle.core.setup_comp` for my use
 
-```
+If on kaggle, download and install required libraries to work with, and return a path linking to the dataset
+
+If on local machine, download the dataset to the path based on local_folder if the path is not available and return the path
+
+```python
 @snoop
-def setup_comp(competition, install=''):
+def setup_comp(competition, local_folder='', install=''):
     "Get a path to data for `competition`, downloading it if needed"
     if iskaggle:
         if install:
             os.system(f'pip install -Uqq {install}')
         return Path('../input')/competition
     else:
-        path = Path(competition)
+        path = Path(local_folder + competition)
         api = import_kaggle()
         if not path.exists():
             import zipfile
-            api.competition_download_cli(str(competition))
-            zipfile.ZipFile(f'{competition}.zip').extractall(str(competition))
+#             pp(doc_sig(api.competition_download_cli))
+#             return
+            api.competition_download_cli(str(competition), path=path)
+            zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
         return path
 # File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
 # Type:      function
@@ -96,43 +188,120 @@ def setup_comp(competition, install=''):
 
 
 ```
-"on kaggle" if iskaggle else "not on kaggle"
+show_doc(fastkaggle.core.setup_comp)
 ```
 
 
 
 
-    'not on kaggle'
+---
+
+### setup_comp
+
+>      setup_comp (competition, install='')
+
+Get a path to data for `competition`, downloading it if needed
 
 
 
 
 ```
-# api = import_kaggle()
-# lst_cmp=api.competitions_list()
-# lst_cmp[0].__dict__
-# lst_cmp
+src(fastkaggle.core.setup_comp)
+```
+
+    def setup_comp(competition, install=''):
+        "Get a path to data for `competition`, downloading it if needed"
+        if iskaggle:
+            if install:
+                os.system(f'pip install -Uqq {install}')
+            return Path('../input')/competition
+        else:
+            path = Path(competition)
+            api = import_kaggle()
+            if not path.exists():
+                import zipfile
+                api.competition_download_cli(str(competition))
+                zipfile.ZipFile(f'{competition}.zip').extractall(str(competition))
+            return path
+    
+
+
+### ht: fu - debug every srcline without breaking
+
+withe magic of `return` we can use `@snoop`, `pp`, `doc_sig`, `chk`, `src` to do debug anything we want
+
+
+```
+src(chk)
+```
+
+    def chk(obj):
+        "return obj's type, length and type if available"
+        tp = type(obj)
+        length = obj.__len__() if hasattr(obj, '__len__') else "no length"
+        shape = obj.shape if hasattr(obj, 'shape') else "no shape"
+        return tp, length, shape
+    
+
+
+### ht: fu - (de)activate snoop without commenting out using `snoopon()` and `snoopoff()`  
+
+### src: setup_compsetup_comp(comp, local_folder='', install='fastai "timm>=0.6.2.dev0")
+
+
+```
+snoopon()
 ```
 
 
 ```
-comp = 'paddy-disease-classification'
-path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+@snoop
+def setup_comp(competition, local_folder='', install=''):
+    "Get a path to data for `competition`, downloading it if needed"
+    if iskaggle:
+        if install:
+            os.system(f'pip install -Uqq {install}')
+        return Path('../input')/competition
+    else:
+        path = Path(local_folder + competition)
+        api = import_kaggle()
+        if not path.exists():
+            import zipfile
+#             pp(doc_sig(api.competition_download_cli))
+#             return
+            api.competition_download_cli(str(competition), path=path)
+            zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
+        return path
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
 ```
 
-    19:08:29.63 >>> Call to setup_comp in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_82945/1008324063.py", line 2
-    19:08:29.63 ...... competition = 'paddy-disease-classification'
-    19:08:29.63 ...... install = 'fastai "timm>=0.6.2.dev0"'
-    19:08:29.63    2 | def setup_comp(competition, install=''):
-    19:08:29.63    4 |     if iskaggle:
-    19:08:29.63    9 |         path = Path(competition)
-    19:08:29.63 .............. path = Path('paddy-disease-classification')
-    19:08:29.63   10 |         api = import_kaggle()
-    19:08:29.66 .............. api = <kaggle.api.kaggle_api_extended.KaggleApi object>
-    19:08:29.66   11 |         if not path.exists():
-    19:08:29.66   15 |         return path
-    19:08:29.66 <<< Return value from setup_comp: Path('paddy-disease-classification')
 
+```
+comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
+local = "/Users/Natsume/Documents/"
+path = setup_comp(comp, local_folder=local, install='fastai "timm>=0.6.2.dev0"')
+```
+
+    14:44:39.03 >>> Call to setup_comp in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_39922/1633869195.py", line 2
+    14:44:39.03 ...... competition = 'paddy-disease-classification'
+    14:44:39.03 ...... local_folder = '/Users/Natsume/Documents/'
+    14:44:39.03 ...... install = 'fastai "timm>=0.6.2.dev0"'
+    14:44:39.03    2 | def setup_comp(competition, local_folder='', install=''):
+    14:44:39.03    4 |     if iskaggle:
+    14:44:39.03    9 |         path = Path(local_folder + competition)
+    14:44:39.03 .............. path = Path('/Users/Natsume/Documents/paddy-disease-classification')
+    14:44:39.03   10 |         api = import_kaggle()
+    14:44:39.05 .............. api = <kaggle.api.kaggle_api_extended.KaggleApi object>
+    14:44:39.05   11 |         if not path.exists():
+    14:44:39.05   17 |         return path
+    14:44:39.05 <<< Return value from setup_comp: Path('/Users/Natsume/Documents/paddy-disease-classification')
+
+
+
+```
+snoopoff()
+```
 
 
 ```
@@ -142,43 +311,28 @@ path.ls()
 
 
 
-    (#4) [Path('paddy-disease-classification/test_images'),Path('paddy-disease-classification/train.csv'),Path('paddy-disease-classification/train_images'),Path('paddy-disease-classification/sample_submission.csv')]
+    (#4) [Path('/Users/Natsume/Documents/paddy-disease-classification/test_images'),Path('/Users/Natsume/Documents/paddy-disease-classification/train.csv'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images'),Path('/Users/Natsume/Documents/paddy-disease-classification/sample_submission.csv')]
 
 
 
-
-```
-def setup_comp(competition, install=''):
-    "Get a path to data for `competition`, downloading it if needed"
-    if iskaggle:
-        if install:
-            os.system(f'pip install -Uqq {install}')
-        return Path('../input')/competition
-    else:
-        path = Path(competition)
-        api = import_kaggle()
-        if not path.exists():
-            import zipfile
-            api.competition_download_cli(str(competition))
-            zipfile.ZipFile(f'{competition}.zip').extractall(str(competition))
-        return path
-# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
-# Type:      function
-```
-
-### ht: reproducibility in training
+### ht: data_prep reproducibility in training a model
 
 Now we can import the stuff we'll need from fastai, set a seed (for reproducibility -- just for the purposes of making this notebook easier to write; I don't recommend doing that in your own analysis however) and check what's in the data:
 
 
 ```
-from fastai.vision.all import *
+# hts
+```
+
+
+```
 set_seed(42)
 ```
 
 ## ht: data - access dataset
 
-### ht: data - map subfolders content
+### ht: data_access - map subfolders content with `check_subfolders_img`
+
 use `path.ls()` and `check_subfolders_img(path)` to see what inside each subfolders
 
 
@@ -189,7 +343,7 @@ path.ls()
 
 
 
-    (#4) [Path('paddy-disease-classification/test_images'),Path('paddy-disease-classification/train.csv'),Path('paddy-disease-classification/train_images'),Path('paddy-disease-classification/sample_submission.csv')]
+    (#4) [Path('/Users/Natsume/Documents/paddy-disease-classification/test_images'),Path('/Users/Natsume/Documents/paddy-disease-classification/train.csv'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images'),Path('/Users/Natsume/Documents/paddy-disease-classification/sample_submission.csv')]
 
 
 
@@ -197,14 +351,23 @@ path.ls()
 
 
 ```
+#| export utils 
+from fastai.data.transforms import image_extensions
+```
+
+
+```
+#| export utils
 # @snoop
 def check_subfolders_img(path, db=False):
     from pathlib import Path
     for entry in path.iterdir():
         if entry.is_file():
             print(f'{str(entry.absolute())}')
+    addup = 0
     for entry in path.iterdir():
         if entry.is_dir() and not entry.name.startswith(".") and len(entry.ls(file_exts=image_extensions)) > 5:
+            addup += len(entry.ls(file_exts=image_extensions))
             print(f'{str(entry.parent.absolute())}: {len(entry.ls(file_exts=image_extensions))}  {entry.name}')
 #             print(entry.name, f': {len(entry.ls(file_exts=[".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]))}') # how to include both png and jpg
             if db:
@@ -219,7 +382,8 @@ def check_subfolders_img(path, db=False):
     #                     pp(Image.open(e).width if e.suffix in image_extensions)
         elif entry.is_dir() and not entry.name.startswith("."): 
 #             with snoop:
-            count_files_in_subfolders(entry)
+            check_subfolders_img(entry)
+    print(f"addup num: {addup}")
 ```
 
 
@@ -227,33 +391,24 @@ def check_subfolders_img(path, db=False):
 check_subfolders_img(path)
 ```
 
-    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train.csv
-    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/sample_submission.csv
-    /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification: 3469  test_images
-    dead_heart : nbs/fastai_notebooks/paddy-disease-classification/train_images
-    dead_heart : 1442
-    bacterial_panicle_blight : nbs/fastai_notebooks/paddy-disease-classification/train_images
-    bacterial_panicle_blight : 337
-    bacterial_leaf_blight : nbs/fastai_notebooks/paddy-disease-classification/train_images
-    bacterial_leaf_blight : 479
-    brown_spot : nbs/fastai_notebooks/paddy-disease-classification/train_images
-    brown_spot : 965
-    hispa : nbs/fastai_notebooks/paddy-disease-classification/train_images
-    hispa : 1594
-    downy_mildew : nbs/fastai_notebooks/paddy-disease-classification/train_images
-    downy_mildew : 620
-    blast : nbs/fastai_notebooks/paddy-disease-classification/train_images
-    blast : 1738
-    normal : nbs/fastai_notebooks/paddy-disease-classification/train_images
-    normal : 1764
-    bacterial_leaf_streak : nbs/fastai_notebooks/paddy-disease-classification/train_images
-    bacterial_leaf_streak : 380
-    tungro : nbs/fastai_notebooks/paddy-disease-classification/train_images
-    tungro : 1088
+    /Users/Natsume/Documents/paddy-disease-classification/train.csv
+    /Users/Natsume/Documents/paddy-disease-classification/sample_submission.csv
+    /Users/Natsume/Documents/paddy-disease-classification: 3469  test_images
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1442  dead_heart
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 337  bacterial_panicle_blight
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 479  bacterial_leaf_blight
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 965  brown_spot
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1594  hispa
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 620  downy_mildew
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1738  blast
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1764  normal
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 380  bacterial_leaf_streak
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1088  tungro
+    addup num: 10407
+    addup num: 3469
 
 
-### ht: data - extract all images for test and train 
-using `get_image_files(path)` for both test folder and train folder
+### ht: data_access - extract all images for test and train with `get_image_files`
 
 
 ```
@@ -270,202 +425,30 @@ train_files
 
 
 
-    (#3469) [Path('paddy-disease-classification/test_images/202919.jpg'),Path('paddy-disease-classification/test_images/200868.jpg'),Path('paddy-disease-classification/test_images/200698.jpg'),Path('paddy-disease-classification/test_images/200840.jpg'),Path('paddy-disease-classification/test_images/201586.jpg'),Path('paddy-disease-classification/test_images/203391.jpg'),Path('paddy-disease-classification/test_images/202931.jpg'),Path('paddy-disease-classification/test_images/202925.jpg'),Path('paddy-disease-classification/test_images/203385.jpg'),Path('paddy-disease-classification/test_images/200854.jpg')...]
+    (#3469) [Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/202919.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/200868.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/200698.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/200840.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/201586.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/203391.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/202931.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/202925.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/203385.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/test_images/200854.jpg')...]
 
 
 
 
 
 
-    (#10407) [Path('paddy-disease-classification/train_images/dead_heart/110369.jpg'),Path('paddy-disease-classification/train_images/dead_heart/105002.jpg'),Path('paddy-disease-classification/train_images/dead_heart/106279.jpg'),Path('paddy-disease-classification/train_images/dead_heart/108254.jpg'),Path('paddy-disease-classification/train_images/dead_heart/104308.jpg'),Path('paddy-disease-classification/train_images/dead_heart/107629.jpg'),Path('paddy-disease-classification/train_images/dead_heart/110355.jpg'),Path('paddy-disease-classification/train_images/dead_heart/100146.jpg'),Path('paddy-disease-classification/train_images/dead_heart/103329.jpg'),Path('paddy-disease-classification/train_images/dead_heart/105980.jpg')...]
+    (#10407) [Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/110369.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/105002.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/106279.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/108254.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/104308.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/107629.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/110355.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/100146.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/103329.jpg'),Path('/Users/Natsume/Documents/paddy-disease-classification/train_images/dead_heart/105980.jpg')...]
 
 
 
 
 ```
-fastnbs("get_image_files")
+# fastnbs("src: get_image_files")
 ```
-
-
-### <mark style="background-color: #FFFF00">get_image_files</mark> 
-
-
-
-
-The current section is heading 3.
-
-
-```python
-
-```
-
-```python
-check(get_image_files)
-```
-
-```python
-files_train = get_image_files(path/"train")
-files_valid = get_image_files(path/"valid")
-files_test = get_image_files(path/"test")
-len(files_train), len(files_valid), len(files_test)
-```
-
-```python
-files_train[:5]
-```
-
-```python
-#| export
-def get_img_paths(query, train, valid, test):
-    from fastai.data.external import untar_data
-    from fastai.data.transforms import get_image_files
-    path = untar_data(search_data_url(query))
-    files_train = get_image_files(path/train)
-    files_valid = get_image_files(path/valid)
-    files_test = get_image_files(path/test)
-    print(f'train: {len(files_train)}, valid: {len(files_valid)}, test: {len(files_test)}')
-    return files_train, files_valid, files_test
-```
-
-```python
-files_train, files_valid, files_test = get_img_paths("mnist var", "train", "valid", "test")
-```
-
-```python
-
-```
-
-start of another heading 3
-### get_labels
-
-
-
-[Open `groundup_002_get_data_ready` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/lib/groundup_002_get_data_ready.ipynb#get_image_files
-)
-
-
-
-### <mark style="background-color: #FFFF00">get_image_files</mark> , get_files, image_extensions
-
-
-
-
-The current section is heading 3.
-
-to extract all image files recursively from all subfolders of a parent path
-
-```python
-from fastai.data.transforms import _get_files
-```
-
-```python
-not None
-```
-
-```python
-def _get_files(p, # path
-               fs, # list of filenames
-               extensions=None):
-    "get the fullnames for the list of filenames of a path"
-    p = Path(p)
-    res = [p/f for f in fs if not f.startswith('.')
-           and ((not extensions) or f'.{f.split(".")[-1].lower()}' in extensions)]
-    return res
-# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
-```
-
-```python
-def get_files(path, extensions=None, recurse=True, folders=None, followlinks=True):
-    "Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
-    path = Path(path)
-    folders=L(folders)
-    extensions = setify(extensions)
-    extensions = {e.lower() for e in extensions}
-    if recurse:
-        res = []
-        for i,(p,d,f) in enumerate(os.walk(path, followlinks=followlinks)): # returns (dirpath, dirnames, filenames)
-            if len(folders) !=0 and i==0: d[:] = [o for o in d if o in folders]
-            else:                         d[:] = [o for o in d if not o.startswith('.')]
-            if len(folders) !=0 and i==0 and '.' not in folders: continue
-            res += _get_files(p, f, extensions)
-    else:
-        f = [o.name for o in os.scandir(path) if o.is_file()]
-        res = _get_files(path, f, extensions)
-    return L(res)
-# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
-```
-
-```python
-len(image_extensions)
-".aspx" in image_extensions
-```
-
-```python
-def get_image_files(path, recurse=True, folders=None):
-    "Get image files in `path` recursively, only in `folders`, if specified."
-    return get_files(path, extensions=image_extensions, recurse=recurse, folders=folders)
-# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/data/transforms.py
-```
-
-```python
-count_files_in_subfolders(dino)
-get_image_files(dino)
-count_files_in_subfolders(bird)
-get_image_files(bird)
-```
-
-```python
-Image.open(Path('forest_or_bird/bird/3b7a4112-9d77-4d8f-8b4c-a01e2ca1ecea.aspx'))
-```
-
-start of another heading 3
-### parent_label(o)
-
-
-
-[Open `0001_fastai_is_it_a_bird` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb#get_image_files,-get_files,-image_extensions
-)
-
-
-
-[Open `0001_fastai_is_it_a_bird` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/is-it-a-bird-creating-a-model-from-your-own-data)
-
-
-
-### how to get the rice variety of each image with `df.loc` and the path from `get_image_files`
-
-
-
-
-The current section is heading 3.
-
-
-
-Our DataBlock will be using `get_image_files` to get the list of training images, which returns `Path` objects. Therefore, to look up an item to get its variety, we'll need to pass its `name`. Here's a function which does just that:
-
-```python
-def get_variety(p): return df.loc[p.name, 'variety']
-```
-
-start of another heading 3
-### how to use `DataBlock` to create dataloaders; what is DataBlock
-
-
-
-[Open `0011_fastai_multi_target_road_to_top_part_4` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0011_fastai_multi_target_road_to_top_part_4.ipynb#how-to-get-the-rice-variety-of-each-image-with-`df.loc`-and-the-path-from-`get_image_files`
-)
-
-
-
-[Open `0011_fastai_multi_target_road_to_top_part_4` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/multi-target-road-to-the-top-part-4)
-
 
 ...and take a look at one:
 
-### ht: data - display images from test_files or train_files
+### ht: data_access - display an image from test_files or train_files with `randomdisplay`
+
 use `randomdisplay(path, size, db=False)` to display images from a folder or a L list of images such as `test_files` or `train_files`
 
 ### src: randomdisplay(path, size, db=False)
+
 display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
     the image filename is printed as well
 
@@ -492,9 +475,14 @@ type(train_files) == L
 
 
 ```
+snoopon()
+```
+
+
+```
 #| export utils
 # @snoop
-def randomdisplay(path, size, db=False):
+def randomdisplay(path, size=128, db=False):
     "display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
     the image filename is printed as well"
 # https://www.geeksforgeeks.org/python-random-module/
@@ -520,70 +508,347 @@ randomdisplay(train_files, 200)
 randomdisplay(path/"train_images/dead_heart", 128)
 ```
 
-    19:13:02.91 LOG:
-    19:13:02.91 .... file = Path('paddy-disease-classification/test_images/201589.jpg')
+
+
+
+    
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_68_0.png)
+    
+
 
 
 
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_39_1.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_68_1.png)
     
 
-
-
-    19:13:02.93 LOG:
-    19:13:02.93 .... file = Path('paddy-disease-classification/train_images/hispa/104841.jpg')
 
 
 
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_39_3.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_68_2.png)
     
 
 
 
-    19:13:02.95 LOG:
-    19:13:02.95 .... file = Path('paddy-disease-classification/train_images/dead_heart/108036.jpg')
+
+```
+snoopoff()
+```
+
+### ht: data_prep - remove images that fail to open with `remove_failed(path)`
+
+#### why must remove failed images
+
+images failed to open must be removed, otherwise it will cause errors during training.
 
 
+```
+# fastnbs("remove_failed")
+# verify_images??
+```
 
 
+```
+remove_failed(path)
+```
 
+    before running remove_failed:
+    /Users/Natsume/Documents/paddy-disease-classification/train.csv
+    /Users/Natsume/Documents/paddy-disease-classification/sample_submission.csv
+    /Users/Natsume/Documents/paddy-disease-classification: 3469  test_images
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1442  dead_heart
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 337  bacterial_panicle_blight
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 479  bacterial_leaf_blight
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 965  brown_spot
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1594  hispa
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 620  downy_mildew
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1738  blast
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1764  normal
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 380  bacterial_leaf_streak
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1088  tungro
+    addup num: 10407
+    addup num: 3469
+    total num: 13876
+    num offailed: 0
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_39_5.png)
-    
+    after running remove_failed:
+    /Users/Natsume/Documents/paddy-disease-classification/train.csv
+    /Users/Natsume/Documents/paddy-disease-classification/sample_submission.csv
+    /Users/Natsume/Documents/paddy-disease-classification: 3469  test_images
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1442  dead_heart
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 337  bacterial_panicle_blight
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 479  bacterial_leaf_blight
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 965  brown_spot
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1594  hispa
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 620  downy_mildew
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1738  blast
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1764  normal
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 380  bacterial_leaf_streak
+    /Users/Natsume/Documents/paddy-disease-classification/train_images: 1088  tungro
+    addup num: 10407
+    addup num: 3469
 
 
-
-### how to use `fastcore.parallel` to quickly access size of all images; how to count the occurance of each unique value in a pandas 
+### ht: data_prep - describe sizes of all images with `check_sizes_img`
 
 Looks like the images might be 480x640 -- let's check all their sizes. This is faster if we do it in parallel, so we'll use fastcore's `parallel` for this:
 
 
 ```
-from fastcore.parallel import *
-
-def f(o): return PILImage.create(o).size
-sizes = parallel(f, files, n_workers=8)
-pd.Series(sizes).value_counts()
+PILImage
 ```
 
 
 
 
-    (480, 640)    10403
-    (640, 480)        4
-    dtype: int64
+    fastai.vision.core.PILImage
 
 
 
-### how to create an image dataloaders; how to setup `item_tfms` and `batch_tfms` on image sizes; why to start with the smallest sizes first; how to display images in batch
+### src: check_sizes_img(files)
 
-They're nearly all the same size, except for a few. Because of those few, however, we'll need to make sure we always resize each image to common dimensions first, otherwise fastai won't be able to create batches. For now, we'll just squish them to 480x480 images, and then once they're in batches we do a random resized crop down to a smaller size, along with the other default fastai augmentations provided by `aug_transforms`. We'll start out with small resized images, since we want to be able to iterate quickly:
+
+
+```
+#| export utils
+def f(o, sz=None): 
+    im = None
+    if sz and PILImage.create(o).size == sz:
+        im = PILImage.create(o).to_thumb(500)
+    return PILImage.create(o).size, im
+```
+
+
+```
+# from fastcore.parallel import parallel
+# doc(parallel)
+```
+
+
+```
+#| export utils 
+from fastcore.meta import delegates
+```
+
+
+```
+#| export utils
+# @snoop
+@delegates(f)
+def check_sizes_img(files, **kwargs):
+    "use fastcore.parallel to quickly find out the different sizes of all images and their occurences. \
+    output images with specific sizes if specified in `sz`"
+    from fastcore.parallel import parallel
+    res = parallel(f, files, n_workers=8, **kwargs) # add sz as a keyword to parallel
+    sizes = [size for size, im in res]
+    imgs = [im for size, im in res if im != None]
+    pp(pd.Series(sizes).value_counts())  
+    pp(imgs)
+    if len(imgs):
+        for im in imgs:
+            im.to_thumb(125).show()
+    return imgs
+```
+
+
+```
+check_sizes_img(train_files)
+```
+
+
+```
+imgs = check_sizes_img(test_files, sz = (640, 480))
+```
+
+### qt: how to display a list of images?
+
+
+```
+imgs[0] 
+imgs[1]
+
+```
+
+### ht: data_loaders - create a dataloader from a folder with `ImageDataLoaders.from_folder`
+
+#### qt: why must all images have the same dimensions?
+
+They're nearly all the same size, except for a few. Because of those few, however, we'll need to make sure we always resize each image to common dimensions first, otherwise fastai won't be able to create batches. 
+
+For now, we'll just squish them to 480x480 images, and then once they're in batches we do a random resized crop down to a smaller size, along with the other default fastai augmentations provided by `aug_transforms`. 
+
+We'll start out with small resized images, since we want to be able to iterate quickly:
+
+
+```
+# fastnbs("src: ImageDataLoaders")
+# ImageDataLoaders??
+```
+
+### doc: ImageDataLoaders.from_folder
+
+To create a DataLoader obj from a folder. 
+
+eg., give it `trn_path` (folder has subfolders like train, test even valid), `valid_pct` (split a portion for validation set), `seed` (set a seed for reproducibility), `item_tfms` (do transforms to each item), and `batch_tfms` (do transformations on batches)
+
+```python
+dls = ImageDataLoaders.from_folder(trn_path, valid_pct=0.2, seed=42,
+    item_tfms=Resize(480, method='squish'),
+    batch_tfms=aug_transforms(size=128, min_scale=0.75))
+
+dls.show_batch(max_n=6)
+```
+
+```python
+@classmethod
+@delegates(DataLoaders.from_dblock)
+def from_folder(cls:ImageDataLoaders, path, train='train', valid='valid', valid_pct=None, seed=None, vocab=None, item_tfms=None,
+                batch_tfms=None, img_cls=PILImage, **kwargs):
+    "Create from imagenet style dataset in `path` with `train` and `valid` subfolders (or provide `valid_pct`)"
+    # get the splitter function to split training and validation sets
+    splitter = GrandparentSplitter(train_name=train, valid_name=valid) if valid_pct is None else RandomSplitter(valid_pct, seed=seed)
+    # get the function to extract image files from using get_image_files in different spices
+    get_items = get_image_files if valid_pct else partial(get_image_files, folders=[train, valid])
+    # create a DataBlock object to organise all the data processing functions or callbacks
+    dblock = DataBlock(blocks=(ImageBlock(img_cls), CategoryBlock(vocab=vocab)),
+                       get_items=get_items,
+                       splitter=splitter,
+                       get_y=parent_label,
+                       item_tfms=item_tfms,
+                       batch_tfms=batch_tfms)
+    # return a dataloaders created from the given DataBlock object above calling DataBlock.dataloaders
+    return cls.from_dblock(dblock, path, path=path, **kwargs)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/data.py
+# Type:      method
+```
+
+
+```
+show_doc(ImageDataLoaders.from_folder)
+```
+
+### src: ImageDataLoaders.from_folder
+
+
+```
+fu.snoopon()
+```
+
+
+```
+from __future__ import annotations # to ensure path:str|Path='.' can work
+```
+
+
+```
+class ImageDataLoaders(DataLoaders):
+    "Basic wrapper around several `DataLoader`s with factory methods for computer vision problems"
+    @classmethod
+    @snoop
+    @delegates(DataLoaders.from_dblock)
+    def from_folder(cls, path, train='train', valid='valid', valid_pct=None, seed=None, vocab=None, item_tfms=None,
+                    batch_tfms=None, **kwargs):
+        "Create from imagenet style dataset in `path` with `train` and `valid` subfolders (or provide `valid_pct`)"
+        splitter = GrandparentSplitter(train_name=train, valid_name=valid) if valid_pct is None else RandomSplitter(valid_pct, seed=seed)
+        get_items = get_image_files if valid_pct else partial(get_image_files, folders=[train, valid])
+        dblock = DataBlock(blocks=(ImageBlock, CategoryBlock(vocab=vocab)),
+                           get_items=get_items,
+                           splitter=splitter,
+                           get_y=parent_label,
+                           item_tfms=item_tfms,
+                           batch_tfms=batch_tfms)
+        pp(doc_sig(cls.from_dblock))
+        pp(inspect.getsource(cls.from_dblock))
+        return cls.from_dblock(dblock, path, path=path, **kwargs)
+
+    @classmethod
+    @delegates(DataLoaders.from_dblock)
+    def from_path_func(cls, path, fnames, label_func, valid_pct=0.2, seed=None, item_tfms=None, batch_tfms=None, **kwargs):
+        "Create from list of `fnames` in `path`s with `label_func`"
+        dblock = DataBlock(blocks=(ImageBlock, CategoryBlock),
+                           splitter=RandomSplitter(valid_pct, seed=seed),
+                           get_y=label_func,
+                           item_tfms=item_tfms,
+                           batch_tfms=batch_tfms)
+        return cls.from_dblock(dblock, fnames, path=path, **kwargs)
+
+    @classmethod
+    def from_name_func(cls,
+        path:str|Path, # Set the default path to a directory that a `Learner` can use to save files like models
+        fnames:list, # A list of `os.Pathlike`'s to individual image files
+        label_func:callable, # A function that receives a string (the file name) and outputs a label
+        **kwargs
+    ) -> DataLoaders:
+        "Create from the name attrs of `fnames` in `path`s with `label_func`"
+        if sys.platform == 'win32' and isinstance(label_func, types.LambdaType) and label_func.__name__ == '<lambda>':
+            # https://medium.com/@jwnx/multiprocessing-serialization-in-python-with-pickle-9844f6fa1812
+            raise ValueError("label_func couldn't be lambda function on Windows")
+        f = using_attr(label_func, 'name')
+        return cls.from_path_func(path, fnames, f, **kwargs)
+
+    @classmethod
+    def from_path_re(cls, path, fnames, pat, **kwargs):
+        "Create from list of `fnames` in `path`s with re expression `pat`"
+        return cls.from_path_func(path, fnames, RegexLabeller(pat), **kwargs)
+
+    @classmethod
+    @delegates(DataLoaders.from_dblock)
+    def from_name_re(cls, path, fnames, pat, **kwargs):
+        "Create from the name attrs of `fnames` in `path`s with re expression `pat`"
+        return cls.from_name_func(path, fnames, RegexLabeller(pat), **kwargs)
+
+    @classmethod
+    @delegates(DataLoaders.from_dblock)
+    def from_df(cls, df, path='.', valid_pct=0.2, seed=None, fn_col=0, folder=None, suff='', label_col=1, label_delim=None,
+                y_block=None, valid_col=None, item_tfms=None, batch_tfms=None, **kwargs):
+        "Create from `df` using `fn_col` and `label_col`"
+        pref = f'{Path(path) if folder is None else Path(path)/folder}{os.path.sep}'
+        if y_block is None:
+            is_multi = (is_listy(label_col) and len(label_col) > 1) or label_delim is not None
+            y_block = MultiCategoryBlock if is_multi else CategoryBlock
+        splitter = RandomSplitter(valid_pct, seed=seed) if valid_col is None else ColSplitter(valid_col)
+        dblock = DataBlock(blocks=(ImageBlock, y_block),
+                           get_x=ColReader(fn_col, pref=pref, suff=suff),
+                           get_y=ColReader(label_col, label_delim=label_delim),
+                           splitter=splitter,
+                           item_tfms=item_tfms,
+                           batch_tfms=batch_tfms)
+        return cls.from_dblock(dblock, df, path=path, **kwargs)
+
+    @classmethod
+    def from_csv(cls, path, csv_fname='labels.csv', header='infer', delimiter=None, **kwargs):
+        "Create from `path/csv_fname` using `fn_col` and `label_col`"
+        df = pd.read_csv(Path(path)/csv_fname, header=header, delimiter=delimiter)
+        return cls.from_df(df, path=path, **kwargs)
+
+    @classmethod
+    @delegates(DataLoaders.from_dblock)
+    def from_lists(cls, path, fnames, labels, valid_pct=0.2, seed:int=None, y_block=None, item_tfms=None, batch_tfms=None,
+                   **kwargs):
+        "Create from list of `fnames` and `labels` in `path`"
+        if y_block is None:
+            y_block = MultiCategoryBlock if is_listy(labels[0]) and len(labels[0]) > 1 else (
+                RegressionBlock if isinstance(labels[0], float) else CategoryBlock)
+        dblock = DataBlock.from_columns(blocks=(ImageBlock, y_block),
+                           splitter=RandomSplitter(valid_pct, seed=seed),
+                           item_tfms=item_tfms,
+                           batch_tfms=batch_tfms)
+        return cls.from_dblock(dblock, (fnames, labels), path=path, **kwargs)
+# File:           ~/mambaforge/lib/python3.9/site-packages/fastai/vision/data.py
+# Type:           type
+# Subclasses:     
+```
+
+
+```
+trn_path = path/"train_images"
+# path.ls()
+```
 
 
 ```
@@ -595,10 +860,9 @@ dls.show_batch(max_n=6)
 ```
 
 
-    
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_45_0.png)
-    
-
+```
+fu.snoopoff()
+```
 
 ## Our first model
 
@@ -620,140 +884,12 @@ Let's see what the learning rate finder shows:
 learn.lr_find(suggest_funcs=(valley, slide))
 ```
 
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-
-
-
-
-
-
-    SuggestedLRs(valley=0.0008317637839354575, slide=0.0030199517495930195)
-
-
-
-
-    
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_52_3.png)
-    
-
-
 `lr_find` generally recommends rather conservative learning rates, to ensure that your model will train successfully. I generally like to push it a bit higher if I can. Let's train a few epochs and see how it looks:
 
 
 ```
 learn.fine_tune(3, 0.01)
 ```
-
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: left;">
-      <th>epoch</th>
-      <th>train_loss</th>
-      <th>valid_loss</th>
-      <th>error_rate</th>
-      <th>time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td>1.805964</td>
-      <td>1.233453</td>
-      <td>0.403652</td>
-      <td>00:14</td>
-    </tr>
-  </tbody>
-</table>
-
-
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: left;">
-      <th>epoch</th>
-      <th>train_loss</th>
-      <th>valid_loss</th>
-      <th>error_rate</th>
-      <th>time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td>1.129876</td>
-      <td>0.785891</td>
-      <td>0.266218</td>
-      <td>00:15</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>0.777808</td>
-      <td>0.456637</td>
-      <td>0.143681</td>
-      <td>00:15</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>0.557498</td>
-      <td>0.407197</td>
-      <td>0.136473</td>
-      <td>00:15</td>
-    </tr>
-  </tbody>
-</table>
-
 
 We're now ready to build our first submission. Let's take a look at the sample Kaggle provided to see what it needs to look like:
 
@@ -766,94 +902,6 @@ We're now ready to build our first submission. Let's take a look at the sample K
 ss = pd.read_csv(path/'sample_submission.csv')
 ss
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>image_id</th>
-      <th>label</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>200001.jpg</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>200002.jpg</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>200003.jpg</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>200004.jpg</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>200005.jpg</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>3464</th>
-      <td>203465.jpg</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>3465</th>
-      <td>203466.jpg</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>3466</th>
-      <td>203467.jpg</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>3467</th>
-      <td>203468.jpg</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>3468</th>
-      <td>203469.jpg</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-<p>3469 rows × 2 columns</p>
-</div>
-
-
 
 ### how to sort the files in the test set in the alphabetical order; how to create dataloaders for the test set based on the dataloaders of the training set
 
@@ -875,34 +923,6 @@ probs,_,idxs = learn.get_preds(dl=tst_dl, with_decoded=True)
 idxs
 ```
 
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-
-
-
-
-
-
-    TensorBase([7, 8, 7,  ..., 8, 7, 5])
-
-
-
 ### how to access all the classes of labels with dataloaders
 
 These need to be mapped to the names of each of these diseases, these names are stored by fastai automatically in the `vocab`:
@@ -911,13 +931,6 @@ These need to be mapped to the names of each of these diseases, these names are 
 ```
 dls.vocab
 ```
-
-
-
-
-    ['bacterial_leaf_blight', 'bacterial_leaf_streak', 'bacterial_panicle_blight', 'blast', 'brown_spot', 'dead_heart', 'downy_mildew', 'hispa', 'normal', 'tungro']
-
-
 
 ### how to map classes to each idx from the predictions
 
@@ -930,24 +943,6 @@ results = pd.Series(idxs.numpy(), name="idxs").map(mapping)
 results
 ```
 
-
-
-
-    0            hispa
-    1           normal
-    2            hispa
-    3            blast
-    4            blast
-               ...    
-    3464    dead_heart
-    3465         hispa
-    3466        normal
-    3467         hispa
-    3468    dead_heart
-    Name: idxs, Length: 3469, dtype: object
-
-
-
 ### how to save result into csv file
 
 Kaggle expects the submission as a CSV file, so let's save it, and check the first few lines:
@@ -959,18 +954,6 @@ ss.to_csv('subm.csv', index=False)
 !head subm.csv
 ```
 
-    image_id,label
-    200001.jpg,hispa
-    200002.jpg,normal
-    200003.jpg,hispa
-    200004.jpg,blast
-    200005.jpg,blast
-    200006.jpg,brown_spot
-    200007.jpg,dead_heart
-    200008.jpg,brown_spot
-    200009.jpg,hispa
-
-
 ### how to submit to kaggle with fastkaggle api
 
 Let's submit this to kaggle. We can do it from the notebook if we're running on Kaggle, otherwise we can use the API:
@@ -981,16 +964,6 @@ if not iskaggle:
     from kaggle import api
     api.competition_submit_cli('subm.csv', 'initial rn26d 128px', comp)
 ```
-
-    100%|██████████████████████████████████████████| 70.0k/70.0k [00:05<00:00, 13.8kB/s]
-
-
-
-
-
-    Successfully submitted to Paddy Doctor: Paddy Disease Classification
-
-
 
 Success! We successfully created a submission.
 
@@ -1019,9 +992,6 @@ if not iskaggle:
                   competition=comp, private=False, gpu=True)
 ```
 
-    Kernel version 10 successfully pushed.  Please check progress at https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1
-
-
 
 ```
 
@@ -1033,99 +1003,16 @@ from fastdebug.utils import *
 ```
 
 
-<style>.container { width:100% !important; }</style>
-
-
-
 ```
 nb_name()
 ```
-
-
-
-
-    '0008_fastai_first_steps_road_to_top_part_1.ipynb'
-
-
 
 
 ```
 ipy2md()
 ```
 
-    [jupytext] Reading /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1.ipynb in format ipynb
-    [jupytext] Writing /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1.md
-    cp to : /Users/Natsume/Documents/divefastai/Debuggable/jupytext
-    move to : /Users/Natsume/Documents/fastdebug/mds/2022part1/
-
-
-    [NbConvertApp] Converting notebook /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1.ipynb to markdown
-
-
-    copy to : /Users/Natsume/Documents/fastdebug/mds_output
-    move to : /Users/Natsume/Documents/divefastai/Debuggable/nbconvert
-
-
-    [NbConvertApp] Support files will be in 0008_fastai_first_steps_road_to_top_part_1_files/
-    [NbConvertApp] Making directory /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1_files
-    [NbConvertApp] Making directory /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1_files
-    [NbConvertApp] Making directory /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1_files
-    [NbConvertApp] Writing 20191 bytes to /Users/Natsume/Documents/fastdebug/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1.md
-
-
 
 ```
 fastnbs("push kaggle")
 ```
-
-
-### how to quickly <mark style="background-color: #ffff00">push</mark>  your local notebook to become <mark style="background-color: #FFFF00">kaggle</mark>  notebook online
-
-
-
-
-
-
-`fastkaggle` also provides a function that pushes a notebook to Kaggle Notebooks. I wrote this notebook on my own machine, and pushed it to Kaggle from there -- here's the command I used:
-
-```python
-if not iskaggle:
-    push_notebook('jhoward', 'first-steps-road-to-the-top-part-1',
-                  title='First Steps: Road to the Top, Part 1',
-                  file='first-steps-road-to-the-top-part-1.ipynb',
-                  competition=comp, private=False, gpu=True)
-```
-
-```python
-
-```
-
-```python
-from fastdebug.utils import *
-```
-
-```python
-nb_name()
-```
-
-```python
-ipy2md()
-```
-
-```python
-fastnbs("push kaggle")
-```
-
-```python
-
-```
-
-
-
-
-[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/2022part1/0008_fastai_first_steps_road_to_top_part_1.ipynb)
-
-
-
-[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1)
-

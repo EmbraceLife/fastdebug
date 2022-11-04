@@ -1,3 +1,49 @@
+```
+from fastdebug.utils import *
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+```
+fastlistnbs('howto')
+```
+
+    
+    ## ht: imports for vision
+    ### ht: let fastdebug help
+    ### ht: install fastkaggle if not available else import it
+    ### ht: kaggle - add your own library
+    ### ht: kaggle - use fastkaggle to push a group of libs as a dataset to kaggle
+    ### ht: git - push too long due to a very large dataset how to reverse it
+    ### ht: iterate like a grandmaster
+    
+    ## ht: download and access kaggle competition dataset
+    ### ht: set up before downloading
+    ### ht: reproducibility in training
+    
+    ## ht: data - access dataset
+    ### ht: data - map subfolders content
+    ### ht: data - extract all images for test and train with `get_image_files`
+    ### ht: data - display an image from test_files or train_files
+    ### ht: data - clean - remove images that fail to open with `remove_failed(path)`
+    ### ht: data - describe sizes of all images with `check_sizes_img`
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
+    
+
+
+
+```
+
+```
+
+
+```
+
+```
+
 ### regex jeremy for daniel
 
 
@@ -39,14 +85,14 @@ def fix_imgs_with_hide(src, dst):
     return re.sub(r'(!\[[^|]+\|\S+\]\(\S+\)[\n]+)(\w|#)', add_hide_bottom_func, result_top_hide)
 
 
-src_txt = Path('src.txt').read_text()
-dst_txt = Path('dst.txt').read_text()
+# src_txt = Path('src.txt').read_text()
+# dst_txt = Path('dst.txt').read_text()
 
-print(fix_imgs_with_hide(src_txt, dst_txt))
+# print(fix_imgs_with_hide(src_txt, dst_txt))
 
 
 
-gr.Interface(fn=fix_imgs_with_hide, inputs=[gr.Textbox(lines=15),gr.Textbox(lines=15)], outputs=gr.Textbox(lines=15)).launch()
+# gr.Interface(fn=fix_imgs_with_hide, inputs=[gr.Textbox(lines=15),gr.Textbox(lines=15)], outputs=gr.Textbox(lines=15)).launch()
 ```
 
 ### regex \w, \d, [a-z], ?, +, *
@@ -72,3 +118,8 @@ gr.Interface(fn=fix_imgs_with_hide, inputs=[gr.Textbox(lines=15),gr.Textbox(line
 `d[a-z]?`: has 4 matches   https://regex101.com/r/Ii4LYs/1
 
 keep working https://www.youtube.com/watch?v=GyJtxd14DTc&loop=0
+
+
+```
+
+```

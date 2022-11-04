@@ -44,16 +44,13 @@ Ross regularly benchmarks new models as they are added to timm, and puts the res
 
 ```python
 #| eval: false
+# %cd ~/Documents
 # ! git clone --depth 1 https://github.com/rwightman/pytorch-image-models.git
 # ! git clone git@github.com:rwightman/pytorch-image-models.git --depth 1
 ```
 
 ```python
-%cd Documents/fastdebug/nbs/fastai_notebooks/
-```
-
-```python
-%cd pytorch-image-models/results
+%cd ~/Documents/pytorch-image-models/results
 %ls
 ```
 
@@ -72,7 +69,7 @@ df_results.head()
 ```
 
 ```python
-path = Path("/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/pytorch-image-models/results")
+path = Path("/Users/Natsume/Documents/pytorch-image-models/results")
 ```
 
 ```python
@@ -742,15 +739,15 @@ from fastdebug.utils import *
 ```
 
 ```python
-ipy2md()
+# fastnbs("export model")
 ```
 
 ```python
-fastnbs("export model")
+doc(fastlistnbs)
 ```
 
 ```python
-fastlistnbs()
+show_doc
 ```
 
 ```python

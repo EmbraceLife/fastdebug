@@ -16,6 +16,9 @@ jupyter:
 
 > little functions to tell you the basics of a module
 
+
+Todos: do I need whichversion? and fu?
+
 ```python
 #| default_exp utils
 ```
@@ -24,6 +27,7 @@ jupyter:
 #| export
 from __future__ import annotations
 annotations = annotations
+import inspect, torch
 ```
 
 ## Data
@@ -57,34 +61,34 @@ Path = Path
 
 ```python
 #| export
-from fastai.vision.all import *
+# from fastai.vision.all import *
 ```
 
 ```python
-#| export
-# @snoop
-def check_subfolders_img(path, db=False):
-    from pathlib import Path
-    for entry in path.iterdir():
-        if entry.is_file():
-            print(f'{str(entry.absolute())}')
-    for entry in path.iterdir():
-        if entry.is_dir() and not entry.name.startswith(".") and len(entry.ls(file_exts=image_extensions)) > 5:
-            print(f'{str(entry.parent.absolute())}: {len(entry.ls(file_exts=image_extensions))}  {entry.name}')
-#             print(entry.name, f': {len(entry.ls(file_exts=[".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]))}') # how to include both png and jpg
-            if db:
-                for e in entry.ls(): # check any image file which has a different suffix from those above
-                    if e.is_file() and not e.name.startswith(".") and e.suffix not in image_extensions and e.suffix not in [".ipynb", ".py"]:
-    #                 if e.suffix not in [".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]:
-                        pp(e.suffix, e)
-                        try:
-                            pp(Image.open(e).width)
-                        except:
-                            print(f"{e} can't be opened")
-    #                     pp(Image.open(e).width if e.suffix in image_extensions)
-        elif entry.is_dir() and not entry.name.startswith("."): 
-#             with snoop:
-            count_files_in_subfolders(entry)
+# #| export
+# # @snoop
+# def check_subfolders_img(path, db=False):
+#     from pathlib import Path
+#     for entry in path.iterdir():
+#         if entry.is_file():
+#             print(f'{str(entry.absolute())}')
+#     for entry in path.iterdir():
+#         if entry.is_dir() and not entry.name.startswith(".") and len(entry.ls(file_exts=image_extensions)) > 5:
+#             print(f'{str(entry.parent.absolute())}: {len(entry.ls(file_exts=image_extensions))}  {entry.name}')
+# #             print(entry.name, f': {len(entry.ls(file_exts=[".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]))}') # how to include both png and jpg
+#             if db:
+#                 for e in entry.ls(): # check any image file which has a different suffix from those above
+#                     if e.is_file() and not e.name.startswith(".") and e.suffix not in image_extensions and e.suffix not in [".ipynb", ".py"]:
+#     #                 if e.suffix not in [".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]:
+#                         pp(e.suffix, e)
+#                         try:
+#                             pp(Image.open(e).width)
+#                         except:
+#                             print(f"{e} can't be opened")
+#     #                     pp(Image.open(e).width if e.suffix in image_extensions)
+#         elif entry.is_dir() and not entry.name.startswith("."): 
+# #             with snoop:
+#             count_files_in_subfolders(entry)
 ```
 
 ### randomdisplay(path, db=False)
@@ -146,7 +150,7 @@ def plot_func(x, y, label_x=None, label_y=None, title=None):
 ```
 
 ```python
-plot_func(x, y, 'x - axis', 'y - axis', 'My first graph!')
+# plot_func(x, y, 'x - axis', 'y - axis', 'My first graph!')
 ```
 
 ### multiple-line plot
@@ -248,7 +252,7 @@ def plot_fns(*funcs, # eg., (func1, ), (func2, ) or (func2, 'x**2'), (func1, 'lo
 ```
 
 ```python
-inspect.getsource(func2)
+# inspect.getsource(func2)
 ```
 
 ```python
@@ -270,6 +274,16 @@ from fastai.torch_core import doc
 doc = doc
 ```
 
+```python
+#| export
+from nbdev.showdoc import show_doc
+```
+
+```python
+#| export
+show_doc = show_doc
+```
+
 ## snoop: pp, @snoop, doc_sig, pp.deep,%%snoop, watches
 
 ```python
@@ -281,6 +295,16 @@ from snoop import snoop, pp
 #| export
 snoop = snoop
 pp = pp
+```
+
+```python
+#| export 
+def snoopon(): snoop.install(enabled=True)
+```
+
+```python
+#| export
+def snoopoff(): snoop.install(enabled=False)
 ```
 
 ```python
@@ -296,6 +320,7 @@ L([1,2,3]).__len__()
 ```python
 #| export
 def chk(obj):
+    "return obj's type, length and type if available"
     tp = type(obj)
     length = obj.__len__() if hasattr(obj, '__len__') else "no length"
     shape = obj.shape if hasattr(obj, 'shape') else "no shape"
@@ -313,6 +338,19 @@ def doc_sig(func):
 
 ```python
 #| export
+def src(func):
+    try: 
+        print(inspect.getsource(func))
+    except: 
+        print(f"can't get srcode from inspect.getsource")
+```
+
+```python
+src(doc_sig)
+```
+
+```python
+#| exporti
 def doc_sig_complex(func):
     import inspect        
     if not inspect.isfunction(func) or not inspect.ismethod(func):
@@ -328,21 +366,21 @@ def doc_sig_complex(func):
 ```
 
 ```python
-#| export
+#| exporti
 def type_watch(source, value):
     if value != None:
         return 'type({})'.format(source), type(value)
 ```
 
 ```python
-#| export
+#| exporti
 def sig_watch(source, value):
     if inspect.isfunction(value):
         return 'sig({})'.format(source), inspect.signature(value)
 ```
 
 ```python
-#| export
+#| exporti
 def view(data): return (data.mean(), data.std())
 ```
 
@@ -356,7 +394,7 @@ isinstance(tensor([1,2,3]), torch.Tensor)
 ```
 
 ```python
-#| export
+#| exporti
 def stats_watch(source, value):
     if (isinstance(value, np.ndarray) or isinstance(value, torch.Tensor)): 
         return '{} stats: '.format(source), view(value)
@@ -367,7 +405,7 @@ def stats_watch(source, value):
 ```
 
 ```python
-#| export
+#| exporti
 def snoop_onoff(on=True):
     "activate or deactivate @snoop, pp, but not %%snoop in a cell which is activated by %load_ext snoop"
     import snoop
@@ -378,12 +416,12 @@ def snoop_onoff(on=True):
 ```
 
 ```python
-#| export 
-snoopon = snoop_onoff() # # no import or config for using snoop now
+#| exporti 
+snoop_no_config = snoop_onoff() # # no import or config for using snoop now
 ```
 
 ```python
-snoopon = """
+snoop_config = """
 # snoop_onoff()
 # snoop.install(watch_extras=[type_watch, stats_watch])
 from snoop.configuration import len_shape_watch
@@ -1136,76 +1174,76 @@ str(None)
 
 ```python
 #| export
-from importlib.metadata import version, metadata, distribution
-from platform import python_version 
+# from importlib.metadata import version, metadata, distribution
+# from platform import python_version 
 ```
 
 ```python
-#| export
-def whichversion(libname:str, # library name not string
-                req:bool=False, # print lib requirements 
-                file:bool=False): # print all lib files
-    "Give you library version and other basic info."
-    if libname == "python":
-        print(f"python: {python_version()}")
-    else: 
-        print(f"{metadata(libname)['Name']}: {version(libname)} \n{metadata(libname)['Summary']}\
-    \n{metadata(libname)['Author']} \n{metadata(libname)['Home-page']} \
-    \npython_version: {metadata(libname)['Requires-Python']} \
-    \n{distribution(libname).locate_file(libname)}")
+# #| export
+# def whichversion(libname:str, # library name not string
+#                 req:bool=False, # print lib requirements 
+#                 file:bool=False): # print all lib files
+#     "Give you library version and other basic info."
+#     if libname == "python":
+#         print(f"python: {python_version()}")
+#     else: 
+#         print(f"{metadata(libname)['Name']}: {version(libname)} \n{metadata(libname)['Summary']}\
+#     \n{metadata(libname)['Author']} \n{metadata(libname)['Home-page']} \
+#     \npython_version: {metadata(libname)['Requires-Python']} \
+#     \n{distribution(libname).locate_file(libname)}")
 
-    if req: 
-        print(f"\n{libname} requires: ")
-        pprint(distribution(libname).requires)
-    if file: 
-        print(f"\n{libname} has: ")
-        pprint(distribution(libname).files)
+#     if req: 
+#         print(f"\n{libname} requires: ")
+#         pprint(distribution(libname).requires)
+#     if file: 
+#         print(f"\n{libname} has: ")
+#         pprint(distribution(libname).files)
     
 ```
 
 ```python
-whichversion("python")
+# whichversion("python")
 ```
 
 ```python
-whichversion("fastcore")
+# whichversion("fastcore")
 ```
 
 ```python
-whichversion("fastai")
+# whichversion("fastai")
 ```
 
 ```python
-whichversion("snoop")
+# whichversion("snoop")
 ```
 
 ```python
-try:
-    whichversion("inspect")
-except: 
-    print("inspect won't work here")
+# try:
+#     whichversion("inspect")
+# except: 
+#     print("inspect won't work here")
 ```
 
 ```python
 
-def tstenv(outenv=globals()):
-    print(f'out global env has {len(outenv.keys())} vars')
-    print(f'inner global env has {len(globals().keys())} vars')
-    print(f'inner local env has {len(globals().keys())} vars')
-    lstout = list(outenv.keys())
-    lstin = list(globals().keys())
-    print(lstout[:10])
-    print(lstin[:10])
-    print(f"out env['__name__']: {outenv['__name__']}")
-    print(f"inner env['__name__']: {globals()['__name__']}")
+# def tstenv(outenv=globals()):
+#     print(f'out global env has {len(outenv.keys())} vars')
+#     print(f'inner global env has {len(globals().keys())} vars')
+#     print(f'inner local env has {len(globals().keys())} vars')
+#     lstout = list(outenv.keys())
+#     lstin = list(globals().keys())
+#     print(lstout[:10])
+#     print(lstin[:10])
+#     print(f"out env['__name__']: {outenv['__name__']}")
+#     print(f"inner env['__name__']: {globals()['__name__']}")
 ```
 
 ```python
-tstenv()
+# tstenv()
 ```
 
 ```python
-len(globals().keys())
+# len(globals().keys())
 ```
 
 ## fastview
@@ -1547,7 +1585,7 @@ bool("head")
 ```
 
 ```python
-openNB("FixSigMeta", db=True)
+# openNB("FixSigMeta", db=True)
 ```
 
 ## openNBKaggle
@@ -1999,8 +2037,8 @@ fastnbs() can use keywords to search learning points (a section title and a sect
 ```python
 #| export
 # @snoop
-def fastnbs(question:str, # query in string
-            filter_folder="all", # options: all, fastai, part2, src
+def fastnbs(question:str, # query options, "doc: ImageDataLoaders", "src: DataBlock", "ht: git", "jn: help others is the way"
+            filter_folder="all", # options: src, all,
             strict=False, # loose search keyword, not as the first query word
             output=False, # True for nice print of cell output
             accu:float=0.8, 
@@ -2526,8 +2564,8 @@ def fastlistnbs(filter="fastai"):
 ```
 
 ```python
-#| export
-def fastlistnbs(query="all", # howto, srcode, or all
+
+def fastlistnbs(query="all", # howto, srcode, journey, or all
                 flt_fd="src"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
 src_fastcore, all"
@@ -2547,24 +2585,130 @@ src_fastcore, all"
         else: 
             continue
             
-        print("\n"+nb_rt)
+#         print("\n"+nb_rt)
         with open(nb_rt, 'r') as file:
+            found = False
             for idx, l in enumerate(file):
                 if "##" in l:
                     if query == "howto" and "ht:" in l:
-                        print(l, end="") # no extra new line between each line printed    
+                        if l.count("#") == 2: print()
+                        print(l, end="") # no extra new line between each line printed   
+                        found = True
                     elif query == "srcode" and "src:" in l:
+                        if l.count("#") == 2: print()                        
                         print(l, end="") # no extra new line between each line printed    
+                        found = True
+                    elif query == "doc" and "doc:" in l:
+                        if l.count("#") == 2: print()                        
+                        print(l, end="") # no extra new line between each line printed    
+                        found = True                        
+                    elif query == "journey" and "jn:" in l:
+                        if l.count("#") == 2: print()                        
+                        print(l, end="") # no extra new line between each line printed   
+                        found = True                        
                     elif query == "all": 
-                        print(l, end="") # no extra new line between each line printed    
+                        if l.count("#") == 2: print()                        
+                        print(l, end="") # no extra new line between each line printed
+                        found = True                        
+            if found: print(nb_rt + "\n")
+```
+
+### make howto splittable
+
+```python
+#| export 
+import pandas as pd
 ```
 
 ```python
-
+#| export
+hts = pd.Series(list(map(lambda x: "ht: " + x, "imports, data_download, data_access, data_prep, data_loaders, cbs_tfms, learner, fit, pred, fu".split(", "))))
 ```
 
 ```python
-fastlistnbs(flt_fd="part2")
+hts
+```
+
+```python
+#| export
+def fastlistnbs(query="all", # howto, srcode, journey, question, doc, or all
+                flt_fd="src"): # other options: "groundup", "part2", "all"
+    "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
+src_fastcore, all"
+    nbs, folder, _, _, _, _ = get_all_nbs()
+    nb_rt = ""
+    nbs_fd = []
+    for nb in nbs:
+        if flt_fd == "fastai" and "_fastai_" in nb.split("/")[-1] and not "_fastai_pt2" in nb.split("/")[-1]: 
+            nbs_fd.append(nb)
+        elif flt_fd == "part2" and "_fastai_pt2" in nb.split("/")[-1]:
+            nbs_fd.append(nb)
+        elif flt_fd == "groundup" and "groundup_" in nb.split("/")[-1]:            
+            nbs_fd.append(nb)
+        elif flt_fd == "src" and "fast" in nb.split("/")[-1]:
+            nbs_fd.append(nb)
+        elif flt_fd == "all": 
+            nbs_fd.append(nb)
+        else: 
+            continue      
+
+    if query != "howto":
+        for nb_rt in nbs_fd:
+            with open(nb_rt, 'r') as file:
+                found = False
+                for idx, l in enumerate(file):
+                    if "##" in l:
+                        if query == "howto" and "ht:" in l:
+                            if l.count("#") == 2: print()
+                            print(l, end="") # no extra new line between each line printed   
+                            found = True
+                        elif query == "srcode" and "src:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") # no extra new line between each line printed    
+                            found = True
+                        elif query == "doc" and "doc:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") # no extra new line between each line printed    
+                            found = True                        
+                        elif query == "journey" and "jn:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") # no extra new line between each line printed   
+                            found = True
+                        elif query == "question" and "qt:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") # no extra new line between each line printed   
+                            found = True                            
+                        elif query == "all": 
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") # no extra new line between each line printed
+                            found = True                        
+                if found: print(nb_rt + "\n")
+    else:
+        for idx, o in enumerate(hts):
+            print('{:=<157}'.format(f"step {idx}: {o}"))
+            for nb_rt in nbs_fd:
+                with open(nb_rt, 'r') as file:
+                    found = False
+                    for idx, l in enumerate(file):
+                        if "##" in l:
+                            if o in l:
+                                if l.count("#") == 2: print()
+                                print(l, end="") # no extra new line between each line printed   
+                                found = True                   
+                    if found: print(nb_rt + "\n")
+```
+
+```python
+# for i, o in enumerate("imports, data-download, data-access, data-prep, data-loaders, cbs-tfms, learner, fit, pred".split(", ")):
+#     i, o
+```
+
+```python
+fastlistnbs("howto")
+# fastlistnbs("doc")
+# fastlistnbs("srcode")
+# fastlistnbs("journey")
+
 ```
 
 ## fastlistsrcs
@@ -2589,7 +2733,7 @@ def fastlistsrcs():
 ```
 
 ```python
-fastcodes("Test the signature", nb=True)
+# fastcodes("Test the signature", nb=True)
 ```
 
 ```python
@@ -2664,6 +2808,18 @@ fastview("test_sig")
 
 ```python
 fastsrcs()
+```
+
+### import fastdebug.utils as fu
+
+```python
+# #| export
+# import fastdebug.utils as fu
+```
+
+```python
+# #| export 
+# fu = fu
 ```
 
 #|hide

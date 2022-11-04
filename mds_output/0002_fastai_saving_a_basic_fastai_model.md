@@ -169,17 +169,17 @@ URLs.DOGS
 URLs.path(URLs.DOGS)
 ```
 
-    09:42:35.23 >>> Call to URLs.path in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_13513/3463182703.py", line 91
-    09:42:35.23 .......... url = 'https://s3.amazonaws.com/fast-ai-sample/dogscats.tgz'
-    09:42:35.23 .......... c_key = 'archive'
-    09:42:35.23   91 |     def path(
-    09:42:35.23   96 |         fname = url.split('/')[-1]
-    09:42:35.23 .............. fname = 'dogscats.tgz'
-    09:42:35.23   97 |         local_path = URLs.LOCAL_PATH/('models' if c_key=='model' else 'data')/fname
-    09:42:35.23 .............. local_path = Path('/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/data/dogscats.tgz')
-    09:42:35.23   98 |         if local_path.exists(): return local_path
-    09:42:35.23   99 |         return fastai_path(c_key)/fname
-    09:42:35.23 <<< Return value from URLs.path: Path('/Users/Natsume/.fastai/archive/dogscats.tgz')
+    13:08:35.04 >>> Call to URLs.path in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_5735/3463182703.py", line 91
+    13:08:35.04 .......... url = 'https://s3.amazonaws.com/fast-ai-sample/dogscats.tgz'
+    13:08:35.04 .......... c_key = 'archive'
+    13:08:35.04   91 |     def path(
+    13:08:35.04   96 |         fname = url.split('/')[-1]
+    13:08:35.04 .............. fname = 'dogscats.tgz'
+    13:08:35.04   97 |         local_path = URLs.LOCAL_PATH/('models' if c_key=='model' else 'data')/fname
+    13:08:35.04 .............. local_path = Path('/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/data/dogscats.tgz')
+    13:08:35.04   98 |         if local_path.exists(): return local_path
+    13:08:35.04   99 |         return fastai_path(c_key)/fname
+    13:08:35.04 <<< Return value from URLs.path: Path('/Users/Natsume/.fastai/archive/dogscats.tgz')
 
 
 
@@ -453,34 +453,34 @@ def untar_data(
 path = untar_data(URLs.PETS)/'images'
 ```
 
-    09:42:35.40 >>> Call to untar_data in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_13513/2680883389.py", line 2
-    09:42:35.40 ...... url = 'https://s3.amazonaws.com/fast-ai-imageclas/oxford-iiit-pet.tgz'
-    09:42:35.40 ...... archive = None
-    09:42:35.40 ...... data = None
-    09:42:35.40 ...... c_key = 'data'
-    09:42:35.40 ...... force_download = False
-    09:42:35.40 ...... base = '~/.fastai'
-    09:42:35.40    2 | def untar_data(
-    09:42:35.40   11 |     pp(doc_sig(FastDownload), doc_sig(fastai_cfg))
-    09:42:35.40 LOG:
-    09:42:35.68 .... doc_sig(FastDownload) = ((<class 'fastdownload.core.FastDownload'>, <class 'object'>),
-    09:42:35.68                               'no doc',
-    09:42:35.68                               <Signature (cfg=None, base='~/.fastdownload', archive=None, data=None, module=None)>)
-    09:42:35.68 .... doc_sig(fastai_cfg) = ('no mro',
-    09:42:35.68                             "`Config` object for fastai's `config.ini`",
-    09:42:35.68                             <Signature () -> 'Config'>)
-    09:42:35.68   13 |     d = FastDownload(fastai_cfg(), module=fastai.data, archive=archive, data=data, base=base)
-    09:42:35.68 .......... d = <fastdownload.core.FastDownload object>
-    09:42:35.68   14 |     pp(chk(d))
-    09:42:35.68 LOG:
-    09:42:35.68 .... chk(d) = (<class 'fastdownload.core.FastDownload'>, 'no length', 'no shape')
-    09:42:35.68   15 |     pp(doc_sig(d.get))
-    09:42:35.68 LOG:
-    09:42:35.68 .... doc_sig(d.get) = ('no mro',
-    09:42:35.68                        'Download and extract `url`, overwriting existing if `force`',
-    09:42:35.68                        <Signature (url, extract_key='data', force=False)>)
-    09:42:35.68   17 |     return d.get(url, force=force_download, extract_key=c_key)
-    09:42:35.68 <<< Return value from untar_data: Path('/Users/Natsume/.fastai/data/oxford-iiit-pet')
+    13:08:35.21 >>> Call to untar_data in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_5735/2680883389.py", line 2
+    13:08:35.21 ...... url = 'https://s3.amazonaws.com/fast-ai-imageclas/oxford-iiit-pet.tgz'
+    13:08:35.21 ...... archive = None
+    13:08:35.21 ...... data = None
+    13:08:35.21 ...... c_key = 'data'
+    13:08:35.21 ...... force_download = False
+    13:08:35.21 ...... base = '~/.fastai'
+    13:08:35.21    2 | def untar_data(
+    13:08:35.21   11 |     pp(doc_sig(FastDownload), doc_sig(fastai_cfg))
+    13:08:35.22 LOG:
+    13:08:35.51 .... doc_sig(FastDownload) = ((<class 'fastdownload.core.FastDownload'>, <class 'object'>),
+    13:08:35.51                               'no doc',
+    13:08:35.51                               <Signature (cfg=None, base='~/.fastdownload', archive=None, data=None, module=None)>)
+    13:08:35.51 .... doc_sig(fastai_cfg) = ('no mro',
+    13:08:35.51                             "`Config` object for fastai's `config.ini`",
+    13:08:35.51                             <Signature () -> 'Config'>)
+    13:08:35.51   13 |     d = FastDownload(fastai_cfg(), module=fastai.data, archive=archive, data=data, base=base)
+    13:08:35.51 .......... d = <fastdownload.core.FastDownload object>
+    13:08:35.51   14 |     pp(chk(d))
+    13:08:35.51 LOG:
+    13:08:35.51 .... chk(d) = (<class 'fastdownload.core.FastDownload'>, 'no length', 'no shape')
+    13:08:35.52   15 |     pp(doc_sig(d.get))
+    13:08:35.52 LOG:
+    13:08:35.52 .... doc_sig(d.get) = ('no mro',
+    13:08:35.52                        'Download and extract `url`, overwriting existing if `force`',
+    13:08:35.52                        <Signature (url, extract_key='data', force=False)>)
+    13:08:35.52   17 |     return d.get(url, force=force_download, extract_key=c_key)
+    13:08:35.52 <<< Return value from untar_data: Path('/Users/Natsume/.fastai/data/oxford-iiit-pet')
 
 
 
@@ -555,11 +555,11 @@ _ = pp(im, randf, im.shape, im.size)
 
 
 
-    09:42:35.91 LOG:
-    09:42:35.91 .... im = PILImage mode=RGB size=500x382
-    09:42:35.91 .... randf = Path('/Users/Natsume/.fastai/data/oxford-iiit-pet/images/British_Shorthair_87.jpg')
-    09:42:35.91 .... im.shape = (382, 500)
-    09:42:35.91 .... im.size = (500, 382)
+    13:08:35.77 LOG:
+    13:08:35.77 .... im = PILImage mode=RGB size=500x396
+    13:08:35.77 .... randf = Path('/Users/Natsume/.fastai/data/oxford-iiit-pet/images/Siamese_89.jpg')
+    13:08:35.77 .... im.shape = (396, 500)
+    13:08:35.77 .... im.size = (500, 396)
 
 
 
@@ -577,11 +577,11 @@ def randomdisplay(path):
 randomdisplay(path)
 ```
 
-    09:42:35.97 LOG:
-    09:42:35.98 .... im = PILImage mode=RGB size=500x375
-    09:42:35.98 .... randf = Path('/Users/Natsume/.fastai/data/oxford-iiit-pet/images/newfoundland_192.jpg')
-    09:42:35.98 .... im.shape = (375, 500)
-    09:42:35.98 .... im.size = (500, 375)
+    13:08:35.83 LOG:
+    13:08:35.84 .... im = PILImage mode=RGB size=500x375
+    13:08:35.84 .... randf = Path('/Users/Natsume/.fastai/data/oxford-iiit-pet/images/keeshond_135.jpg')
+    13:08:35.84 .... im.shape = (375, 500)
+    13:08:35.84 .... im.size = (500, 375)
 
 
 
@@ -632,13 +632,13 @@ def show(self:PILImage, ctx=None, **kwargs):
 im.show()
 ```
 
-    09:42:36.18 >>> Call to show in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_13513/1768377215.py", line 3
-    09:42:36.18 ...... self = PILImage mode=RGB size=500x382
-    09:42:36.18 ...... ctx = None
-    09:42:36.18 ...... kwargs = {}
-    09:42:36.18    3 | def show(self:PILImage, ctx=None, **kwargs):
-    09:42:36.19    5 |     return show_image(self, ctx=ctx, **merge(self._show_args, kwargs))
-    09:42:36.20 <<< Return value from show: <AxesSubplot:>
+    13:08:36.04 >>> Call to show in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_5735/1768377215.py", line 3
+    13:08:36.04 ...... self = PILImage mode=RGB size=500x396
+    13:08:36.04 ...... ctx = None
+    13:08:36.04 ...... kwargs = {}
+    13:08:36.04    3 | def show(self:PILImage, ctx=None, **kwargs):
+    13:08:36.04    5 |     return show_image(self, ctx=ctx, **merge(self._show_args, kwargs))
+    13:08:36.06 <<< Return value from show: <AxesSubplot:>
 
 
 
@@ -676,11 +676,11 @@ We need a way to label our images as dogs or cats. In this dataset, pictures of 
 randomdisplay(path)
 ```
 
-    09:42:36.34 LOG:
-    09:42:36.34 .... im = PILImage mode=RGB size=247x204
-    09:42:36.34 .... randf = Path('/Users/Natsume/.fastai/data/oxford-iiit-pet/images/Bengal_199.jpg')
-    09:42:36.34 .... im.shape = (204, 247)
-    09:42:36.34 .... im.size = (247, 204)
+    13:08:36.21 LOG:
+    13:08:36.21 .... im = PILImage mode=RGB size=500x333
+    13:08:36.21 .... randf = Path('/Users/Natsume/.fastai/data/oxford-iiit-pet/images/pug_47.jpg')
+    13:08:36.21 .... im.shape = (333, 500)
+    13:08:36.21 .... im.size = (500, 333)
 
 
 
@@ -748,12 +748,12 @@ f, _ = randomdisplay(path)
 _
 ```
 
-    09:42:36.46 LOG:
-    09:42:36.46 .... im = PILImage mode=RGB size=375x500
-    09:42:36.46 .... randf = Path('/Users/Natsume/.fastai/data/oxford-iiit-pet/images/Sphynx_47.jpg')
-    09:42:36.46 .... im.shape = (500, 375)
-    09:42:36.46 .... im.size = (375, 500)
-    09:42:36.46 .... is_cat(randf.name) = True
+    13:08:36.36 LOG:
+    13:08:36.36 .... im = PILImage mode=RGB size=500x335
+    13:08:36.36 .... randf = Path('/Users/Natsume/.fastai/data/oxford-iiit-pet/images/great_pyrenees_6.jpg')
+    13:08:36.36 .... im.shape = (335, 500)
+    13:08:36.36 .... im.size = (500, 335)
+    13:08:36.36 .... is_cat(randf.name) = False
 
 
 
@@ -881,7 +881,11 @@ class DataLoaders(GetAttr):
 # Subclasses:     ImageDataLoaders, SegmentationDataLoaders
 ```
 
-### ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
+### doc: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
+
+official: "Create from the name attrs of `fnames` in `path`s with `label_func`"
+
+use `using_attr(label_func, 'name')` as `f`, and pass `f` to `from_path_func` to create a DataLoaders (which later passed to a learner)
 
 from_name_func: because the label is inside the name of the image filename
 
@@ -895,6 +899,15 @@ fnames: all the image/data filenames to be used for the model, get_image_files(p
 
 
 ```
+# fastnbs("DataBlock.dataloaders")
+# fastnbs("DataBlock.datasets")
+# fastnbs("Datasets")
+```
+
+### src: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
+
+
+```
 doc_sig(ImageDataLoaders.from_name_func)
 doc_sig(get_image_files)
 ```
@@ -904,7 +917,7 @@ doc_sig(get_image_files)
 
     ('no mro',
      'Create from the name attrs of `fnames` in `path`s with `label_func`',
-     <Signature (path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'>)
+     <Signature (path: 'str | Path', fnames: 'list', label_func: 'callable', *, valid_pct=0.2, seed=None, item_tfms=None, batch_tfms=None, bs: 'int' = 64, val_bs: 'int' = None, shuffle: 'bool' = True, device=None) -> 'DataLoaders'>)
 
 
 
@@ -916,6 +929,16 @@ doc_sig(get_image_files)
      <Signature (path, recurse=True, folders=None)>)
 
 
+
+
+```
+from __future__ import annotations # to ensure path:str|Path='.' can work
+```
+
+
+```
+# DataLoaders.from_dblock??
+```
 
 
 ```
@@ -1035,6 +1058,32 @@ dls = ImageDataLoaders.from_name_func('.',
     label_func=is_cat,
     item_tfms=Resize(192))
 ```
+
+    13:08:36.62 >>> Call to ImageDataLoaders.from_name_func in File "/var/folders/gz/ch3n2mp51m9386sytqf97s6w0000gn/T/ipykernel_5735/3287806807.py", line 31
+    13:08:36.62 .......... cls = <class '__main__.ImageDataLoaders'>
+    13:08:36.62 .......... path = '.'
+    13:08:36.62 .......... fnames = [Path('/Users/Natsume/.fastai/data/oxford-iiit-p...i/data/oxford-iiit-pet/images/shiba_inu_66.jpg')]
+    13:08:36.62 .......... label_func = <function is_cat>
+    13:08:36.62 .......... kwargs = {'valid_pct': 0.2, 'seed': 42, 'item_tfms': Resize -- {'size': (192, 192), 'method': 'crop',...encodes
+    13:08:36.62                     (TensorPoint,object) -> encodes
+    13:08:36.62                     decodes: }
+    13:08:36.62   31 |     def from_name_func(cls,
+    13:08:36.62   38 |         if sys.platform == 'win32' and isinstance(label_func, types.LambdaType) and label_func.__name__ == '<lambda>':
+    13:08:36.63   41 |         f = using_attr(label_func, 'name')
+    13:08:36.63 .............. f = functools.partial(<function _using_attr>, <function is_cat>, 'name')
+    13:08:36.63   42 |         pp(doc_sig(using_attr), f)
+    13:08:36.64 LOG:
+    13:08:36.68 .... doc_sig(using_attr) = ('no mro',
+    13:08:36.68                             "Construct a function which applies `f` to the argument's attribute `attr`",
+    13:08:36.68                             <Signature (f, attr)>)
+    13:08:36.68 .... f = functools.partial(<function _using_attr>, <function is_cat>, 'name')
+    13:08:36.68   43 |         pp(f(fnames[0]), fnames[0].name) # no need to worry about getting the name out of the filename
+    13:08:36.68 LOG:
+    13:08:36.69 .... f(fnames[0]) = True
+    13:08:36.69 .... fnames[0].name = 'Egyptian_Mau_167.jpg'
+    13:08:36.69   44 |         return cls.from_path_func(path, fnames, f, **kwargs)
+    13:08:37.28 <<< Return value from ImageDataLoaders.from_name_func: <fastai.data.core.DataLoaders object>
+
 
 
 ```
@@ -1302,12 +1351,6 @@ def fit_one_cycle(self:Learner, n_epoch, lr_max=None, div=25., div_final=1e5, pc
 learn.fine_tune(3)
 ```
 
-    /Users/Natsume/mambaforge/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
-      warnings.warn(
-    /Users/Natsume/mambaforge/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
-      warnings.warn(msg)
-
-
 
 
 <style>
@@ -1342,10 +1385,10 @@ learn.fine_tune(3)
   <tbody>
     <tr>
       <td>0</td>
-      <td>0.218687</td>
-      <td>0.039915</td>
-      <td>0.013532</td>
-      <td>01:08</td>
+      <td>0.203274</td>
+      <td>0.046996</td>
+      <td>0.014885</td>
+      <td>01:01</td>
     </tr>
   </tbody>
 </table>
@@ -1385,24 +1428,24 @@ learn.fine_tune(3)
   <tbody>
     <tr>
       <td>0</td>
-      <td>0.063389</td>
-      <td>0.036891</td>
-      <td>0.010825</td>
-      <td>01:22</td>
+      <td>0.067705</td>
+      <td>0.037939</td>
+      <td>0.014885</td>
+      <td>01:20</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>0.040720</td>
-      <td>0.030380</td>
-      <td>0.009472</td>
-      <td>01:19</td>
+      <td>0.043460</td>
+      <td>0.020838</td>
+      <td>0.008119</td>
+      <td>01:21</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>0.016487</td>
-      <td>0.026274</td>
-      <td>0.010825</td>
-      <td>01:19</td>
+      <td>0.018615</td>
+      <td>0.019446</td>
+      <td>0.008119</td>
+      <td>01:23</td>
     </tr>
   </tbody>
 </table>
@@ -1453,62 +1496,114 @@ def export(self:Learner, fname='export.pkl', pickle_module=pickle, pickle_protoc
 learn.export('model.pkl')
 ```
 
-    10:50:15.68 LOG:
-    10:50:15.69 .... doc_sig(rank_distrib) = ('no mro',
-    10:50:15.69                               'Return the distributed rank of this process (if applicable).',
-    10:50:15.69                               <Signature ()>)
-    10:50:15.69 LOG:
-    10:50:15.69 .... doc_sig(self._end_cleanup) = ('no mro', 'no doc', <Signature ()>)
-    10:50:15.69 LOG:
-    10:50:15.69 .... doc_sig(self.dls.new_empty) = ('no mro',
-    10:50:15.69                                     'Create a new empty version of `self` with the same transforms',
-    10:50:15.69                                     <Signature ()>)
-    10:50:15.70 LOG:
-    10:50:15.70 .... doc_sig(self.opt.state_dict) = ('no mro', 'no doc', <Signature ()>)
-    10:50:15.70 LOG:
-    10:50:15.70 .... doc_sig(torch.save) = ('no mro',
-    10:50:15.70                             'save(obj, f, pickle_module=pickle, pickle_protocol=DEFAULT_PROTOCOL, '
-    10:50:15.70                             '_use_new_zipfile_serialization=True)\n'
-    10:50:15.70                             '\n'
-    10:50:15.70                             'Saves an object to a disk file.\n'
-    10:50:15.70                             '\n'
-    10:50:15.70                             'See also: :ref:`saving-loading-tensors`\n'
-    10:50:15.70                             '\n'
-    10:50:15.70                             'Args:\n'
-    10:50:15.70                             '    obj: saved object\n'
-    10:50:15.70                             '    f: a file-like object (has to implement write and flush) or a string or\n'
-    10:50:15.70                             '       os.PathLike object containing a file name\n'
-    10:50:15.70                             '    pickle_module: module used for pickling metadata and objects\n'
-    10:50:15.70                             '    pickle_protocol: can be specified to override the default protocol\n'
-    10:50:15.70                             '\n'
-    10:50:15.70                             '.. note::\n'
-    10:50:15.70                             '    A common PyTorch convention is to save tensors using .pt file '
-    10:50:15.70                             'extension.\n'
-    10:50:15.70                             '\n'
-    10:50:15.70                             '.. note::\n'
-    10:50:15.70                             '    PyTorch preserves storage sharing across serialization. See\n'
-    10:50:15.70                             '    :ref:`preserve-storage-sharing` for more details.\n'
-    10:50:15.70                             '\n'
-    10:50:15.70                             '.. note::\n'
-    10:50:15.70                             '    The 1.6 release of PyTorch switched ``torch.save`` to use a new\n'
-    10:50:15.70                             '    zipfile-based file format. ``torch.load`` still retains the ability to\n'
-    10:50:15.70                             '    load files in the old format. If for any reason you want ``torch.save``\n'
-    10:50:15.70                             '    to use the old format, pass the kwarg '
-    10:50:15.70                             '``_use_new_zipfile_serialization=False``.\n'
-    10:50:15.70                             '\n'
-    10:50:15.70                             'Example:\n'
-    10:50:15.70                             '    >>> # Save to file\n'
-    10:50:15.70                             '    >>> x = torch.tensor([0, 1, 2, 3, 4])\n'
-    10:50:15.70                             "    >>> torch.save(x, 'tensor.pt')\n"
-    10:50:15.70                             '    >>> # Save to io.BytesIO buffer\n'
-    10:50:15.70                             '    >>> buffer = io.BytesIO()\n'
-    10:50:15.70                             '    >>> torch.save(x, buffer)',
-    10:50:15.70                             <Signature (obj, f: Union[str, os.PathLike, BinaryIO, IO[bytes]], pickle_module=<module 'pickle' from '/Users/Natsume/mambaforge/lib/python3.9/pickle.py'>, pickle_protocol=2, _use_new_zipfile_serialization=True) -> None>)
-    10:50:15.70 .... (self.path/fname).absolute() = Path('/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/model.pkl')
-    10:50:15.74 LOG:
-    10:50:15.74 .... doc_sig(self.create_opt) = ('no mro', 'Create an optimizer with default hyper-parameters', <Signature ()>)
-    10:50:15.75 LOG:
-    10:50:15.75 .... doc_sig(self.opt.load_state_dict) = ('no mro', 'no doc', <Signature (sd: 'dict')>)
+    13:13:45.29 LOG:
+    13:13:45.30 .... doc_sig(rank_distrib) = ('no mro',
+    13:13:45.30                               'Return the distributed rank of this process (if applicable).',
+    13:13:45.30                               <Signature ()>)
+    13:13:45.30 LOG:
+    13:13:45.30 .... doc_sig(self._end_cleanup) = ('no mro', 'no doc', <Signature ()>)
+    13:13:45.30 LOG:
+    13:13:45.30 .... doc_sig(self.dls.new_empty) = ('no mro',
+    13:13:45.30                                     'Create a new empty version of `self` with the same transforms',
+    13:13:45.30                                     <Signature ()>)
+    13:13:45.31 LOG:
+    13:13:45.31 .... doc_sig(self.opt.state_dict) = ('no mro', 'no doc', <Signature ()>)
+    13:13:45.31 LOG:
+    13:13:45.32 .... doc_sig(torch.save) = ('no mro',
+    13:13:45.32                             'save(obj, f, pickle_module=pickle, pickle_protocol=DEFAULT_PROTOCOL, '
+    13:13:45.32                             '_use_new_zipfile_serialization=True)\n'
+    13:13:45.32                             '\n'
+    13:13:45.32                             'Saves an object to a disk file.\n'
+    13:13:45.32                             '\n'
+    13:13:45.32                             'See also: :ref:`saving-loading-tensors`\n'
+    13:13:45.32                             '\n'
+    13:13:45.32                             'Args:\n'
+    13:13:45.32                             '    obj: saved object\n'
+    13:13:45.32                             '    f: a file-like object (has to implement write and flush) or a string or\n'
+    13:13:45.32                             '       os.PathLike object containing a file name\n'
+    13:13:45.32                             '    pickle_module: module used for pickling metadata and objects\n'
+    13:13:45.32                             '    pickle_protocol: can be specified to override the default protocol\n'
+    13:13:45.32                             '\n'
+    13:13:45.32                             '.. note::\n'
+    13:13:45.32                             '    A common PyTorch convention is to save tensors using .pt file '
+    13:13:45.32                             'extension.\n'
+    13:13:45.32                             '\n'
+    13:13:45.32                             '.. note::\n'
+    13:13:45.32                             '    PyTorch preserves storage sharing across serialization. See\n'
+    13:13:45.32                             '    :ref:`preserve-storage-sharing` for more details.\n'
+    13:13:45.32                             '\n'
+    13:13:45.32                             '.. note::\n'
+    13:13:45.32                             '    The 1.6 release of PyTorch switched ``torch.save`` to use a new\n'
+    13:13:45.32                             '    zipfile-based file format. ``torch.load`` still retains the ability to\n'
+    13:13:45.32                             '    load files in the old format. If for any reason you want ``torch.save``\n'
+    13:13:45.32                             '    to use the old format, pass the kwarg '
+    13:13:45.32                             '``_use_new_zipfile_serialization=False``.\n'
+    13:13:45.32                             '\n'
+    13:13:45.32                             'Example:\n'
+    13:13:45.32                             '    >>> # Save to file\n'
+    13:13:45.32                             '    >>> x = torch.tensor([0, 1, 2, 3, 4])\n'
+    13:13:45.32                             "    >>> torch.save(x, 'tensor.pt')\n"
+    13:13:45.32                             '    >>> # Save to io.BytesIO buffer\n'
+    13:13:45.32                             '    >>> buffer = io.BytesIO()\n'
+    13:13:45.32                             '    >>> torch.save(x, buffer)',
+    13:13:45.32                             <Signature (obj, f: Union[str, os.PathLike, BinaryIO, IO[bytes]], pickle_module=<module 'pickle' from '/Users/Natsume/mambaforge/lib/python3.9/pickle.py'>, pickle_protocol=2, _use_new_zipfile_serialization=True) -> None>)
+    13:13:45.32 .... (self.path/fname).absolute() = Path('/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/model.pkl')
+
+
+
+    ---------------------------------------------------------------------------
+
+    RuntimeError                              Traceback (most recent call last)
+
+    Input In [48], in <cell line: 2>()
+          1 #|eval: false
+    ----> 2 learn.export('model.pkl')
+
+
+    Input In [47], in export(self, fname, pickle_module, pickle_protocol)
+         16     warnings.simplefilter("ignore")
+         17     pp(doc_sig(torch.save), (self.path/fname).absolute())
+    ---> 18     torch.save(self, self.path/fname, pickle_module=pickle_module, pickle_protocol=pickle_protocol)
+         19 pp(doc_sig(self.create_opt))
+         20 self.create_opt()
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/torch/serialization.py:379, in save(obj, f, pickle_module, pickle_protocol, _use_new_zipfile_serialization)
+        377 if _use_new_zipfile_serialization:
+        378     with _open_zipfile_writer(opened_file) as opened_zipfile:
+    --> 379         _save(obj, opened_zipfile, pickle_module, pickle_protocol)
+        380         return
+        381 _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/torch/serialization.py:589, in _save(obj, zip_file, pickle_module, pickle_protocol)
+        587 pickler = pickle_module.Pickler(data_buf, protocol=pickle_protocol)
+        588 pickler.persistent_id = persistent_id
+    --> 589 pickler.dump(obj)
+        590 data_value = data_buf.getvalue()
+        591 zip_file.write_record('data.pkl', data_value, len(data_value))
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/torch/serialization.py:574, in _save.<locals>.persistent_id(obj)
+        571         storage_dtypes[storage.data_ptr()] = storage_dtype
+        573 storage_key = id_map.setdefault(storage._cdata, str(len(id_map)))
+    --> 574 location = location_tag(storage)
+        575 serialized_storages[storage_key] = storage
+        577 return ('storage',
+        578         storage_type,
+        579         storage_key,
+        580         location,
+        581         storage_numel)
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/torch/serialization.py:169, in location_tag(storage)
+        167     if location:
+        168         return location
+    --> 169 raise RuntimeError("don't know how to determine data location of "
+        170                    + torch.typename(storage))
+
+
+    RuntimeError: don't know how to determine data location of torch.storage._UntypedStorage
 
 
 

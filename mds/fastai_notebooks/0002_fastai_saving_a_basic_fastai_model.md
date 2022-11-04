@@ -575,7 +575,12 @@ class DataLoaders(GetAttr):
 # Subclasses:     ImageDataLoaders, SegmentationDataLoaders
 ```
 
-### ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
+### doc: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
+
+
+official: "Create from the name attrs of `fnames` in `path`s with `label_func`"
+
+use `using_attr(label_func, 'name')` as `f`, and pass `f` to `from_path_func` to create a DataLoaders (which later passed to a learner)
 
 from_name_func: because the label is inside the name of the image filename
 
@@ -588,8 +593,24 @@ fnames: all the image/data filenames to be used for the model, get_image_files(p
 `f = using_attr(label_func, 'name')`: make sure `is_cat` is to work on the `name` of a image filename. (see example inside source below)
 
 ```python
+# fastnbs("DataBlock.dataloaders")
+# fastnbs("DataBlock.datasets")
+# fastnbs("Datasets")
+```
+
+### src: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
+
+```python
 doc_sig(ImageDataLoaders.from_name_func)
 doc_sig(get_image_files)
+```
+
+```python
+from __future__ import annotations # to ensure path:str|Path='.' can work
+```
+
+```python
+# DataLoaders.from_dblock??
 ```
 
 ```python
