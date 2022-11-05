@@ -2,6 +2,13 @@
 
 
 ```
+# todo:
+#     how to save a model
+#     push to nbviewer for different version review
+```
+
+
+```
 #| hide
 from fastdebug.utils import *
 ```
@@ -146,6 +153,7 @@ fastlistnbs("doc")
     ### doc: ImageDataLoaders.from_folder
     ### doc: aug_transforms(size=128, min_scale=0.75)
     ### doc: vision_learner(dls, 'resnet26d', metrics=error_rate, path='.').to_fp16()
+    ### doc: learn.export(fname='export.pkl', pickle_module=pickle, pickle_protocol=2)
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     ### doc: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
@@ -155,31 +163,116 @@ fastlistnbs("doc")
 
 
 ```
-fastnbs("doc: DataBlock.datasets")
+fastnbs("doc: ImageDataLoaders")
 ```
 
 
-### <mark style="background-color: #ffff00">doc:</mark>  <mark style="background-color: #FFFF00">datablock.datasets</mark> (source, verbose)
+### <mark style="background-color: #ffff00">doc:</mark>  <mark style="background-color: #FFFF00">imagedataloaders</mark> .from_folder
 
 
 
 
 The current section is heading 3.
 
-get data items from the source, and split the items and use `fastai.data.core.Datasets` to create the datasets
 
+
+To create a DataLoader obj from a folder, and a dataloader prepares functions for splitting training and validation sets, extracting images and labels, each item transformations, and batch transformations.
+
+eg., give it `trn_path` (folder has subfolders like train, test or even valid), `valid_pct` (split a portion from train to create validation set), `seed` (set a seed for reproducibility), `item_tfms` (do transforms to each item), and `batch_tfms` (do transformations on batches)
+
+<!-- #region -->
+```python
+dls = ImageDataLoaders.from_folder(trn_path, valid_pct=0.2, seed=42,
+    item_tfms=Resize(480, method='squish'),
+    batch_tfms=aug_transforms(size=128, min_scale=0.75))
+
+dls.show_batch(max_n=6)
+```
+<!-- #endregion -->
+
+<!-- #region -->
+```python
+@classmethod
+@delegates(DataLoaders.from_dblock)
+def from_folder(cls:ImageDataLoaders, path, train='train', valid='valid', valid_pct=None, seed=None, vocab=None, item_tfms=None,
+                batch_tfms=None, img_cls=PILImage, **kwargs):
+    "Create from imagenet style dataset in `path` with `train` and `valid` subfolders (or provide `valid_pct`)"
+    # get the splitter function to split training and validation sets
+    splitter = GrandparentSplitter(train_name=train, valid_name=valid) if valid_pct is None else RandomSplitter(valid_pct, seed=seed)
+    # get the function to extract image files from using get_image_files in different spices
+    get_items = get_image_files if valid_pct else partial(get_image_files, folders=[train, valid])
+    # create a DataBlock object to organise all the data processing functions or callbacks
+    dblock = DataBlock(blocks=(ImageBlock(img_cls), CategoryBlock(vocab=vocab)),
+                       get_items=get_items,
+                       splitter=splitter,
+                       get_y=parent_label,
+                       item_tfms=item_tfms,
+                       batch_tfms=batch_tfms)
+    # return a dataloaders created from the given DataBlock object above calling DataBlock.dataloaders
+    return cls.from_dblock(dblock, path, path=path, **kwargs)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/data.py
+# Type:      method
+```
+<!-- #endregion -->
+
+```python
+show_doc(ImageDataLoaders.from_folder)
+```
 
 start of another heading 3
-### src: DataBlock.datasets((source, verbose)
+### src: ImageDataLoaders.from_folder
 
 
 
-[Open `0001_fastai_is_it_a_bird` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb#doc:-DataBlock.datasets(source,-verbose)
+[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb#doc:-ImageDataLoaders.from_folder
 )
 
 
 
-[Open `0001_fastai_is_it_a_bird` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/is-it-a-bird-creating-a-model-from-your-own-data)
+[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1)
+
+
+
+### <mark style="background-color: #ffff00">doc:</mark>  <mark style="background-color: #FFFF00">imagedataloaders</mark> .from_name_func(path: 'str | path', fnames: 'list', label_func: 'callable', **kwargs) -> 'dataloaders'
+
+
+
+
+The current section is heading 3.
+
+
+
+official: "Create from the name attrs of `fnames` in `path`s with `label_func`"
+
+use `using_attr(label_func, 'name')` as `f`, and pass `f` to `from_path_func` to create a DataLoaders (which later passed to a learner)
+
+from_name_func: because the label is inside the name of the image filename
+
+label_func: is to get the targe or label from the name of the image filename
+
+path: is the string name or path for the folder which is to store models
+
+fnames: all the image/data filenames to be used for the model, get_image_files(path) can return a L list of image filenames/path
+
+`f = using_attr(label_func, 'name')`: make sure `is_cat` is to work on the `name` of a image filename. (see example inside source below)
+
+```python
+# fastnbs("DataBlock.dataloaders")
+# fastnbs("DataBlock.datasets")
+# fastnbs("Datasets")
+```
+
+start of another heading 3
+### src: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
+
+
+
+[Open `0002_fastai_saving_a_basic_fastai_model` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0002_fastai_saving_a_basic_fastai_model.ipynb#doc:-ImageDataLoaders.from_name_func(path:-'str-|-Path',-fnames:-'list',-label_func:-'callable',-**kwargs)-->-'DataLoaders'
+)
+
+
+
+[Open `0002_fastai_saving_a_basic_fastai_model` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/saving-a-basic-fastai-model)
 
 
 ## Search source code
@@ -586,28 +679,25 @@ start of another heading 3
 fastlistnbs("howto")
 ```
 
-
-<style>.container { width:100% !important; }</style>
-
-
     step 0: ht: imports==========================================================================================================================================
     
     ## ht: imports - vision
     ### ht: imports - fastkaggle 
-    ### ht: imports - use mylib in kaggle
-    ### ht: imports - fastkaggle - push libs to kaggle
+    ### ht: imports - upload and update mylib in kaggle
+    ### ht: imports - fastkaggle - push libs to kaggle with `create_libs_datasets`
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     step 1: ht: data_download====================================================================================================================================
     
     ## ht: data_download - kaggle competition dataset
-    ### ht: data_download - join, `kaggle.json`, `setup_comp`
+    ### ht: data_download - join, `kaggle.json`, `setup_comp` for local use
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     step 2: ht: data_access======================================================================================================================================
     ### ht: data_access - map subfolders content with `check_subfolders_img`
     ### ht: data_access - extract all images for test and train with `get_image_files`
     ### ht: data_access - display an image from test_files or train_files with `randomdisplay`
+    ### ht: data_access - select a subset from each subfolder with `get_image_files_subset`
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     step 3: ht: data_prep========================================================================================================================================
@@ -626,7 +716,8 @@ fastlistnbs("howto")
     step 6: ht: learner==========================================================================================================================================
     ### ht: learner - model arch - how to pick the first to try
     ### ht: learner - vision_learner - build a learner for vision
-    ### ht: learner - find learning rate with `lr_find`
+    ### ht: learner - find learning rate with `learn.lr_find(suggest_funcs=(valley, slide))`
+    ### ht: learner - save model with `learn.export`
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     step 7: ht: fit==============================================================================================================================================
@@ -655,6 +746,8 @@ fastlistnbs("question")
     ### qt: how to display a list of images?
     #### qt: why must all images have the same dimensions? how to resolve this problem?
     #### qt: why should we start with small resized images
+    ### qt: How many epochs should I train in general in this early stage with 10% dataset without gpu
+    ### qt: how to display video and embed webpage
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
 
@@ -686,20 +779,95 @@ hts
 # fastnbs("ht: load")
 ```
 
-### Search Meta
+## Search Meta
 
 
 ```
 fastlistnbs("radek")
 ```
 
-    #### rd: What is The hidden game of machine learning? 
-    #### rd: What makes you an adept practitioner? 
-    #### rd: What makes you a great practitioner? 
-    #### rd: What can lead to a tragic consequence of your model? 
-    #### rd: How to gain a deeper understanding of the ability to generalize to unseen data?
+    
+    ## rd: The hidden game of machine learning? 
+    ### rd: What makes you an adept practitioner? 
+    ### rd: What makes you a great practitioner? 
+    ### rd: What can lead to a tragic consequence of your model? 
+    ### rd: How to gain a deeper understanding of the ability to generalize to unseen data?
+    
+    ## rd: Programming is all about what you have to say
+    ### rd: How to learn a new language by reading and writing
+    ### rd: Why knowing the programming language is only a starting point
+    ### rd: Why domain knowledge comes first? 
+    ### rd: What is the fastest way to learn to program?
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md
     
+
+
+
+```
+fastnbs("rd: domain knowledge")
+```
+
+
+### <mark style="background-color: #ffff00">rd:</mark>  why <mark style="background-color: #ffff00">domain</mark>  <mark style="background-color: #FFFF00">knowledge</mark>  comes first? 
+
+
+
+
+The current section is heading 3.
+
+Why I should not put learning fastai library itself before doing experiments
+
+> The big secret is that domain knowledge comes first. There is an art to writing clean, maintainable code, no doubt about that. But you cannot put the cart before the horse. You can study naming, refactoring, dependency inversion, and so on only once you have a lot to say. Only then will the more advanced features of a language make sense. And only then will they become important.
+
+start of another heading 3
+### rd: What is the fastest way to learn to program?
+
+
+
+[Open `00_fastai_Meta_learning_Radek` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/00_fastai_Meta_learning_Radek.ipynb#rd:-Why-domain-knowledge-comes-first?-
+)
+
+
+## Search my practice
+
+
+```
+fastlistnbs("practice")
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+    ### pt: how my tool help me stay in the flow
+    ### pt: what is my voice and how could I help others (myself)?
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md
+    
+
+
+
+```
+fastnbs("pt: my tool")
+```
+
+
+### <mark style="background-color: #ffff00">pt:</mark>  how <mark style="background-color: #ffff00">my</mark>  <mark style="background-color: #FFFF00">tool</mark>  help me stay in the flow
+
+
+
+
+The current section is heading 3.
+
+
+Building index.ipynb using fastlistnbs and fastnbs on howto, doc, src, question, radek is the way to get closer to a state of flow 
+
+start of heading 2
+## rd: Use reality as your mirror
+
+
+
+[Open `00_fastai_Meta_learning_Radek` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/00_fastai_Meta_learning_Radek.ipynb#pt:-how-my-tool-help-me-stay-in-the-flow
+)
 
 
 

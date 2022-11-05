@@ -31,7 +31,6 @@ Why I am always trying to do something different? Why couldn't I just follow thi
 
 
 ```
-#| export
 # install fastkaggle if not available
 try: import fastkaggle
 except ModuleNotFoundError:
@@ -44,14 +43,12 @@ from fastkaggle import *
 
 
 ```
-#| export
 if iskaggle:
     !pip install nbdev snoop
 ```
 
 
 ```
-#| export
 if iskaggle:
     path = "../input/fastdebugutils0"
     import sys
@@ -1813,6 +1810,8 @@ learn.lr_find(suggest_funcs=(valley, slide))
 
 `lr_find` generally recommends rather conservative learning rates, to ensure that your model will train successfully. I generally like to push it a bit higher if I can. Let's train a few epochs and see how it looks:
 
+### The performance
+
 
 ```
 learn.fine_tune(3, 0.01)
@@ -2050,6 +2049,77 @@ learn.fine_tune(7, 0.01)
   </tbody>
 </table>
 
+
+### ht: learner - save model with `learn.export`
+
+### doc: learn.export(fname='export.pkl', pickle_module=pickle, pickle_protocol=2)
+
+return: nothing, but saved a model as a pkl file in `learn.path` with the name given by `fname`
+
+we can change the folder for storing model by changing `learn.path`
+
+we can give a detailed name to specify the model
+
+```python
+@patch
+def export(self:Learner, fname='export.pkl', pickle_module=pickle, pickle_protocol=2):
+    "Export the content of `self` without the items and the optimizer state for inference"
+    if rank_distrib(): return # don't export if child proc
+    self._end_cleanup()
+    old_dbunch = self.dls
+    self.dls = self.dls.new_empty()
+    state = self.opt.state_dict() if self.opt is not None else None
+    self.opt = None
+    with warnings.catch_warnings():
+        #To avoid the warning that come from PyTorch about model not being checked
+        warnings.simplefilter("ignore")
+        # the folder is defined by self.path
+        torch.save(self, self.path/fname, pickle_module=pickle_module, pickle_protocol=pickle_protocol)
+    self.create_opt()
+    if state is not None: self.opt.load_state_dict(state)
+    self.dls = old_dbunch
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py
+# Type:      method
+```
+
+
+```
+learn.path
+```
+
+
+
+
+    Path('.')
+
+
+
+
+```
+learn.path = Path('models')
+```
+
+
+```
+learn.path
+```
+
+
+
+
+    Path('models')
+
+
+
+
+```
+learn.export("paddy_10pct_resnet26d_10epochs.pkl")
+```
+
+
+```
+
+```
 
 ### qt: How many epochs should I train in general in this early stage with 10% dataset without gpu
 

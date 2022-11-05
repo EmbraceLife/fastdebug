@@ -15,6 +15,12 @@ jupyter:
 # Make Learning Fastai Uncool
 
 ```python
+# todo:
+#     how to save a model
+#     push to nbviewer for different version review
+```
+
+```python
 #| hide
 from fastdebug.utils import *
 ```
@@ -50,7 +56,7 @@ fastlistnbs("doc")
 ```
 
 ```python
-fastnbs("doc: DataBlock.datasets")
+fastnbs("doc: ImageDataLoaders")
 ```
 
 ## Search source code
@@ -96,10 +102,24 @@ hts
 # fastnbs("ht: load")
 ```
 
-### Search Meta
+## Search Meta
 
 ```python
 fastlistnbs("radek")
+```
+
+```python
+fastnbs("rd: domain knowledge")
+```
+
+## Search my practice
+
+```python
+fastlistnbs("practice")
+```
+
+```python
+fastnbs("pt: my tool")
 ```
 
 ```python

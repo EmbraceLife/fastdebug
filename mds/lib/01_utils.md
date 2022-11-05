@@ -1899,15 +1899,15 @@ def display_block(line, file, output=False, keywords=""):
             
     belowline = entire.split(line)[1]
     head_no = line.count("#")
-    full_section = "" + f"The current section is heading {head_no}." + "\n\n"
+    full_section = "" + f"heading {head_no}." + "\n\n"
     lst_belowline = belowline.split("\n")
     for idx, l in zip(range(len(lst_belowline)), lst_belowline):
         if l.strip().startswith("#"*(head_no-1)+" ") and not bool(lst_belowline[idx-1].strip()) \
         and not bool(lst_belowline[idx+1].strip()):
-            full_section = full_section + f"start of heading {head_no-1}" + "\n" + l
+            full_section = full_section + f"Next, heading {head_no-1}" + "\n" + l
             break
         elif l.strip().startswith("#"*head_no + " "):
-            full_section = full_section + f"start of another heading {head_no}" + "\n" + l
+            full_section = full_section + f"Next, heading {head_no}" + "\n" + l
             break
         else:  full_section = full_section + l + "\n"
     
@@ -2648,7 +2648,7 @@ hts
 
 ```python
 #| export
-def fastlistnbs(query="all", # howto, srcode, journey, question, doc, radek, or all
+def fastlistnbs(query="all", # howto, srcode, journey, question, doc, radek, practice, or all
                 flt_fd="src"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
 src_fastcore, all"
@@ -2681,27 +2681,31 @@ src_fastcore, all"
                             found = True
                         elif query == "srcode" and "src:" in l:
                             if l.count("#") == 2: print()                        
-                            print(l, end="") # no extra new line between each line printed    
+                            print(l, end="") 
                             found = True
                         elif query == "doc" and "doc:" in l:
                             if l.count("#") == 2: print()                        
-                            print(l, end="") # no extra new line between each line printed    
+                            print(l, end="") 
                             found = True                        
                         elif query == "journey" and "jn:" in l:
                             if l.count("#") == 2: print()                        
-                            print(l, end="") # no extra new line between each line printed   
+                            print(l, end="") 
                             found = True
                         elif query == "question" and "qt:" in l:
                             if l.count("#") == 2: print()                        
-                            print(l, end="") # no extra new line between each line printed   
+                            print(l, end="") 
                             found = True
                         elif query == "radek" and "rd:" in l:
                             if l.count("#") == 2: print()                        
-                            print(l, end="") # no extra new line between each line printed   
+                            print(l, end="") 
+                            found = True
+                        elif query == "practice" and "pt:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
                             found = True                            
                         elif query == "all": 
                             if l.count("#") == 2: print()                        
-                            print(l, end="") # no extra new line between each line printed
+                            print(l, end="") 
                             found = True                        
                 if found: print(nb_rt + "\n")
     else:
