@@ -36,10 +36,6 @@ import inspect, torch
 !jt -l
 ```
 
-
-<style>.container { width:100% !important; }</style>
-
-
     Available Themes: 
        chesterish
        grade3
@@ -400,6 +396,13 @@ from fastai.torch_core import tensor
 tensor(1,2,3).__len__()
 L([1,2,3]).__len__()
 ```
+
+
+
+
+    3
+
+
 
 
 
@@ -1650,7 +1653,7 @@ for note in notebookapp.list_running_servers():
     print(note)
 ```
 
-    {'base_url': '/', 'hostname': 'localhost', 'notebook_dir': '/Users/Natsume/Documents/fastdebug', 'password': False, 'pid': 31933, 'port': 8888, 'secure': False, 'sock': '', 'token': '0ad534e0cda8455b4dcfac3905c184ca5a6921ee4fb70ebf', 'url': 'http://localhost:8888/'}
+    {'base_url': '/', 'hostname': 'localhost', 'notebook_dir': '/Users/Natsume/Documents/fastdebug', 'password': False, 'pid': 15286, 'port': 8888, 'secure': False, 'sock': '', 'token': 'ae2092b66a88576ff8845acaf3d0b3dbf3d71e8f88a3e60d', 'url': 'http://localhost:8888/'}
 
 
 
@@ -1807,9 +1810,16 @@ str(Path.home()/"Documents/fastdebug/mds") + "/"
 def get_all_nbs():
     "return paths for all nbs both in md and ipynb format into lists"
 #     md_folder = '/Users/Natsume/Documents/divefastai/Debuggable/jupytext/'
+    py_folder = str(Path.home()/"Documents/fastdebug/fastdebug") + "/"
     md_folder = str(Path.home()/"Documents/fastdebug/mds") + "/" # '/Users/Natsume/Documents/fastdebug/mds/'
     md_output_folder = str(Path.home()/"Documents/fastdebug/mds_output") + "/" # '/Users/Natsume/Documents/fastdebug/mds_output/'    
     ipy_folder = str(Path.home()/"Documents/fastdebug/nbs") + "/" # '/Users/Natsume/Documents/fastdebug/nbs/'
+    
+    pys = []
+    for i in os.listdir(py_folder):
+        if ".py" in i: 
+            pys.append(py_folder + i)
+    
     md_nbs = []
     for i in os.listdir(md_folder):
         if "." not in i:
@@ -1825,7 +1835,7 @@ def get_all_nbs():
             ipy_nbs = ipy_nbs + [ipy_folder + i + "/" + j for j in os.listdir(ipy_folder + i) if j.endswith('.ipynb')]
 
             
-    return (md_nbs, md_folder, ipy_nbs, ipy_folder, md_output_nbs, md_output_folder)
+    return (md_nbs, md_folder, ipy_nbs, ipy_folder, md_output_nbs, md_output_folder, pys, py_folder)
 ```
 
 
@@ -1835,8 +1845,8 @@ def get_all_nbs():
 
 
 ```
-nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd = get_all_nbs()
-for i in [nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd]:
+nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd, pys, py_folder= get_all_nbs()
+for i in [nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd, pys, py_folder]:
     pprint(i)
     print()
 ```
@@ -1846,6 +1856,8 @@ for i in [nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd]:
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0016_collaborative_filtering_deep_dive.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0022_fastai_pt2_2019_why_sqrt5.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0007_fastai_how_random_forests_really_work.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_how_to_follow_Radek.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_links_forums_kaggle_github.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0004_fastai_how_neuralnet_work.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0001_fastai_is_it_a_bird.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0014_iterate_like_grandmaster.md',
@@ -1860,12 +1872,15 @@ for i in [nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd]:
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0002_fastai_saving_a_basic_fastai_model.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0005_fastai_linear_neuralnet_scratch.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0015_getting_started_with_nlp_for_absolute_beginner.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/001_newletter_Radek.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0013_best_vision_models_for_fine_tuning.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0012_fastai_using_nbdev_export_in_kaggle_notebook.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0020_fastai_pt2_2019_source_explained.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0003_fastai_which_image_model_best.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0018_fastai_pt2_2019_exports.md',
-     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0019_fastai_pt2_2019_lecture1_intro.md']
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0019_fastai_pt2_2019_lecture1_intro.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/001_fastai_newletter_Radek.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md']
     
     '/Users/Natsume/Documents/fastdebug/mds/'
     
@@ -1879,6 +1894,7 @@ for i in [nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd]:
      '/Users/Natsume/Documents/fastdebug/nbs/lib/01_utils.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/.ipynb_checkpoints',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0009_fastai_small_models_road_to_the_top_part_2.ipynb',
+     '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/001_fastai_newletter_Radek.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0007_fastai_how_random_forests_really_work.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0005_fastai_linear_neuralnet_scratch.ipynb',
@@ -1886,15 +1902,20 @@ for i in [nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd]:
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0014_iterate_like_grandmaster.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0006_fastai_why_should_use_framework.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/regex.ipynb',
+     '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/00_fastai_Meta_learning_Radek.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0013_best_vision_models_for_fine_tuning.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0015_getting_started_with_nlp_for_absolute_beginner.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0017_fastai_pt2_2019_matmul.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0019_fastai_pt2_2019_lecture1_intro.ipynb',
+     '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb',
+     '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/fastai_links_forums_kaggle_github.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0012_fastai_using_nbdev_export_in_kaggle_notebook.ipynb',
+     '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/00_fastai_how_to_follow_Radek.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0002_fastai_saving_a_basic_fastai_model.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0021_fastai_pt2_2019_fully_connected.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0010_fastai_scaling_up_road_to_top_part_3.ipynb',
+     '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/001_newletter_Radek.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0022_fastai_pt2_2019_why_sqrt5.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0018_fastai_pt2_2019_exports.ipynb',
      '/Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/0016_collaborative_filtering_deep_dive.ipynb',
@@ -1908,6 +1929,8 @@ for i in [nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd]:
     ['/Users/Natsume/Documents/fastdebug/mds_output/0016_collaborative_filtering_deep_dive.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0022_fastai_pt2_2019_why_sqrt5.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0007_fastai_how_random_forests_really_work.md',
+     '/Users/Natsume/Documents/fastdebug/mds_output/00_fastai_how_to_follow_Radek.md',
+     '/Users/Natsume/Documents/fastdebug/mds_output/fastai_links_forums_kaggle_github.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0004_fastai_how_neuralnet_work.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0001_fastai_is_it_a_bird.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0014_iterate_like_grandmaster.md',
@@ -1924,15 +1947,40 @@ for i in [nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd]:
      '/Users/Natsume/Documents/fastdebug/mds_output/00_core.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0005_fastai_linear_neuralnet_scratch.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0015_getting_started_with_nlp_for_absolute_beginner.md',
+     '/Users/Natsume/Documents/fastdebug/mds_output/001_newletter_Radek.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0013_best_vision_models_for_fine_tuning.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0012_fastai_using_nbdev_export_in_kaggle_notebook.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0020_fastai_pt2_2019_source_explained.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0003_fastai_which_image_model_best.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/0018_fastai_pt2_2019_exports.md',
      '/Users/Natsume/Documents/fastdebug/mds_output/01_utils.md',
-     '/Users/Natsume/Documents/fastdebug/mds_output/0019_fastai_pt2_2019_lecture1_intro.md']
+     '/Users/Natsume/Documents/fastdebug/mds_output/0019_fastai_pt2_2019_lecture1_intro.md',
+     '/Users/Natsume/Documents/fastdebug/mds_output/001_fastai_newletter_Radek.md',
+     '/Users/Natsume/Documents/fastdebug/mds_output/00_fastai_Meta_learning_Radek.md']
     
     '/Users/Natsume/Documents/fastdebug/mds_output/'
+    
+    ['/Users/Natsume/Documents/fastdebug/fastdebug/fastaiTD.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/delete_fastcore_foundation.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/to_delete_torch_core.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_paddy_pt1.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/_modidx.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/__init__.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/delete0002.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/core.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/to_delete.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/groundup.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/utils.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_notebook.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/todeletelayers.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/delete0004.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/basics.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/delete0000.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/losses.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/layers.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/todelete_dispatch.py']
+    
+    '/Users/Natsume/Documents/fastdebug/fastdebug/'
     
 
 
@@ -2014,7 +2062,7 @@ def openNB(name, db=False):
 #| export
 def openNB(name, heading=None, db=False):
     "Get a link to the notebook at by searching keyword or notebook name"
-    _, _, ipynbs, _, _, _= get_all_nbs()
+    _, _, ipynbs, _, _, _, pys, _= get_all_nbs()
     name = name.split(".md")[0]
     root = getrootport()[1]
     nb_path = ""
@@ -2059,6 +2107,160 @@ bool("head")
 
 ```
 # openNB("FixSigMeta", db=True)
+```
+
+## openpy
+
+
+```
+#| export
+def openpy(name, acu=0.8, heading=None, db=False):
+    "Get a link to the notebook at by searching keyword or notebook name"
+    _, _, ipynbs, _, _, _, pys, py_fd= get_all_nbs()
+    questlst = name.split(" ")
+    name = ""
+    for pyf in pys: 
+        truelst = [q.lower() in pyf.lower() for q in questlst]
+        pct = sum(truelst)/len(truelst)
+        if pct > acu: name = pyf.split(".py")[0]
+
+    if not bool(name): return "no match py file"
+
+#     name = name.split(".py")[0]
+    root = getrootport()[1]
+    py_path = ""
+    for f in pys:
+        if name in f:
+            py_path = f
+            name = f.split("/")[-1].split(".")[0]
+            if db: print(f'py_path:{py_path}, name: {name}')
+    root_server = getrootport()[0]
+    folder_mid = py_path.split(root)[1].split(name)[0]
+    if db: print(f'root: {root}, root_server: {root_server}, name: {name}, folder_mid: {folder_mid}')
+    path = root + folder_mid
+    path_server = root_server[:-1] + folder_mid
+    if db: print(f'path: {path}, path_server: {path_server}')
+    for f in os.listdir(path):  
+        if f.endswith(".py"):
+            if name in f: 
+                file_name = path_server + f + "#" + heading if bool(heading) else path_server + f
+                jn_link(name, file_name)
+```
+
+
+```
+# openpy("kaggle_paddy_pt1.py")
+openpy("pt1 kaggle")
+```
+
+
+[Open `kaggle_paddy_pt1` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/kaggle_paddy_pt1.py)
+
+
+
+```
+
+```
+
+## ht: fu - export_open_py
+
+
+```
+#| export
+# calling from a different notebook, nbdev_export() will cause error, this is why use exec() to call in a different notebook
+eop = """
+from time import sleep
+import os
+import nbdev
+nbdev.nbdev_export()
+sleep(2)
+openpy(quest)
+"""
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+```
+#| export
+def export_open_py():
+    _, _, _, _, _, _, pys, _, = get_all_nbs()
+    lst = [pyf for pyf in pys if "src" in Path(pyf).name or "kaggle" in Path(pyf).name]
+    pprint(lst)
+    res = """
+quest = "pyfile"
+exec(eop)
+"""
+    return res
+```
+
+
+```
+export_open_py()
+```
+
+    ['/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_paddy_pt1.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fast_src_download_kaggle_dataset.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_notebook.py']
+
+
+
+
+
+    '\nquest = "pyfile"\nexec(eop)\n'
+
+
+
+
+```
+exec(export_open_py().replace('pyfile', 'src_download'))
+```
+
+    ['/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_paddy_pt1.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fast_src_download_kaggle_dataset.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_notebook.py']
+
+
+
+[Open `fast_src_download_kaggle_dataset` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/fast_src_download_kaggle_dataset.py)
+
+
+
+```
+
+```
+
+## download_kaggle_dataset
+
+
+```
+#| export
+from fastkaggle import *
+```
+
+
+```
+#| export
+def download_kaggle_dataset(competition, local_folder='', install=''):
+    "override from fastkaggle.core.setup_comp. \
+Return a path of the `local_folder` where `competition` dataset stored, \
+downloading it if needed"
+    if iskaggle:
+        if install:
+            os.system(f'pip install -Uqq {install}')
+        return Path('../input')/competition
+    else:
+        path = Path(local_folder + competition)
+        api = import_kaggle()
+        if not path.exists():
+            import zipfile
+            api.competition_download_cli(str(competition), path=path)
+            zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
+        return path
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
 ```
 
 ## openNBKaggle
@@ -2449,7 +2651,7 @@ whichversion of a <mark style="background-color: #FFFF00">library</mark>
 
 
 
-The current section is heading 0.
+heading 0.
 
 
 
@@ -3223,7 +3425,7 @@ fastnbs() can use keywords to search learning points (a section title and a sect
 
 
 ```
-mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd = get_all_nbs()
+mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd, _, _ = get_all_nbs()
 [file_path for file_path in mds_no_output if "_fastai_" in file_path and "_fastai_pt2_" not in file_path]
 ```
 
@@ -3231,6 +3433,7 @@ mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd = get_all_nbs()
 
 
     ['/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0007_fastai_how_random_forests_really_work.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_how_to_follow_Radek.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0004_fastai_how_neuralnet_work.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0001_fastai_is_it_a_bird.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0006_fastai_why_should_use_framework.md',
@@ -3241,7 +3444,9 @@ mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd = get_all_nbs()
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0002_fastai_saving_a_basic_fastai_model.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0005_fastai_linear_neuralnet_scratch.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0012_fastai_using_nbdev_export_in_kaggle_notebook.md',
-     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0003_fastai_which_image_model_best.md']
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0003_fastai_which_image_model_best.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/001_fastai_newletter_Radek.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md']
 
 
 
@@ -3289,7 +3494,7 @@ fastnbs() can use keywords to search learning points (a section title and a sect
                         openNBKaggle(file_name, db=db)
 ```
 
-### optimize the search a little to speed up potentially
+### src: fastnbs(question, filter_folder="src", ...)
 
 
 ```
@@ -3306,7 +3511,7 @@ def fastnbs(question:str, # query options, "rd: adept practitioner", "doc: Image
 then use fastnotes() to find interesting lines which can be notes or codes, and finally \
 use fastnbs() display the entire learning points section including notes and codes."
     questlst = question.split(' ')
-    mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd = get_all_nbs()
+    mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd, pys, py_folder = get_all_nbs()
     if not output: mds = mds_no_output
     else: mds = mds_output
         
@@ -3861,6 +4066,8 @@ fastnotes("how understand matrix multiplication", n=17, db=True)
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0016_collaborative_filtering_deep_dive.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0022_fastai_pt2_2019_why_sqrt5.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0007_fastai_how_random_forests_really_work.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_how_to_follow_Radek.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_links_forums_kaggle_github.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0004_fastai_how_neuralnet_work.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0001_fastai_is_it_a_bird.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0014_iterate_like_grandmaster.md',
@@ -3875,12 +4082,15 @@ fastnotes("how understand matrix multiplication", n=17, db=True)
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0002_fastai_saving_a_basic_fastai_model.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0005_fastai_linear_neuralnet_scratch.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0015_getting_started_with_nlp_for_absolute_beginner.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/001_newletter_Radek.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0013_best_vision_models_for_fine_tuning.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0012_fastai_using_nbdev_export_in_kaggle_notebook.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0020_fastai_pt2_2019_source_explained.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0003_fastai_which_image_model_best.md',
      '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0018_fastai_pt2_2019_exports.md',
-     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0019_fastai_pt2_2019_lecture1_intro.md']
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0019_fastai_pt2_2019_lecture1_intro.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/001_fastai_newletter_Radek.md',
+     '/Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md']
     
 
 
@@ -4308,7 +4518,7 @@ src_fastcore, all"
             if found: print(nb_rt + "\n")
 ```
 
-### make howto splittable
+### src: fastlistnbs(query, fld_fd), hts
 
 
 ```
@@ -4347,11 +4557,11 @@ hts
 
 ```
 #| export
-def fastlistnbs(query="all", # howto, srcode, journey, question, doc, radek, practice, or all
+def fastlistnbs(query="all", # "howto", "srcode", "journey", "question", "doc", "radek", "practice", "links", or "all"
                 flt_fd="src"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
 src_fastcore, all"
-    nbs, folder, _, _, _, _ = get_all_nbs()
+    nbs, folder, _, _, _, _, pys, py_folder = get_all_nbs()
     nb_rt = ""
     nbs_fd = []
     for nb in nbs:
@@ -4401,6 +4611,10 @@ src_fastcore, all"
                         elif query == "practice" and "pt:" in l:
                             if l.count("#") == 2: print()                        
                             print(l, end="") 
+                            found = True
+                        elif query == "links" and "lk:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
                             found = True                            
                         elif query == "all": 
                             if l.count("#") == 2: print()                        
@@ -4441,26 +4655,50 @@ fastlistnbs("howto")
     
     ## ht: imports - vision
     ### ht: imports - fastkaggle 
-    ### ht: imports - use mylib in kaggle
-    ### ht: imports - fastkaggle - push libs to kaggle
+    ### ht: imports - upload and update mylib in kaggle
+    ### ht: imports - fastkaggle - push libs to kaggle with `create_libs_datasets`
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     step 1: ht: data_download====================================================================================================================================
     
     ## ht: data_download - kaggle competition dataset
-    ### ht: data_download - kaggle set up
+    ### ht: data_download - join, `kaggle.json`, `setup_comp` for local use
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     step 2: ht: data_access======================================================================================================================================
+    ### ht: data_access - map subfolders content with `check_subfolders_img`
+    ### ht: data_access - extract all images for test and train with `get_image_files`
+    ### ht: data_access - display an image from test_files or train_files with `randomdisplay`
+    ### ht: data_access - select a subset from each subfolder with `get_image_files_subset`
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
+    
     step 3: ht: data_prep========================================================================================================================================
+    ### ht: data_prep reproducibility in training a model
+    ### ht: data_prep - remove images that fail to open with `remove_failed(path)`
+    ### ht: data_prep - describe sizes of all images with `check_sizes_img`
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
+    
     step 4: ht: data_loaders=====================================================================================================================================
+    ### ht: data_loaders - create a dataloader from a folder with `ImageDataLoaders.from_folder`
+    ### ht: data_loaders - apply transformations to each image with `item_tfms = Resize(480, method='squish')`
+    ### ht: data_loaders - apply image augmentations to each batch of data with `batch_tfms = aug_transforms`
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
+    
     step 5: ht: cbs_tfms=========================================================================================================================================
     step 6: ht: learner==========================================================================================================================================
+    ### ht: learner - model arch - how to pick the first to try
+    ### ht: learner - vision_learner - build a learner for vision
+    ### ht: learner - find learning rate with `learn.lr_find(suggest_funcs=(valley, slide))`
+    ### ht: learner - save model with `learn.export`
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
+    
     step 7: ht: fit==============================================================================================================================================
     step 8: ht: pred=============================================================================================================================================
     step 9: ht: fu===============================================================================================================================================
     ### ht: fu - whatinside, show_doc, fastlistnbs, fastnbs
     ### ht: fu - git - when a commit takes too long
+    ### ht: fu - debug every srcline without breaking
+    ### ht: fu - (de)activate snoop without commenting out using `snoopon()` and `snoopoff()`  
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
 
@@ -4529,60 +4767,31 @@ fastnbs("snoop: from _funcs_kwargs to funcs_kwargs", output=True)
 
 
 
-    The current section is heading 8.
+    heading 8.
     
     
     
     
-        The current section is heading 3.
+        The current section is heading 8.
         
         
-        how to snoop on two functions one wrap around another: `funcs_kwargs` is a wrapper around `_funcs_kwargs`, so I can first snoop on `_funcs_kwargs` and assign its snoop dbsrc to \
-        `fm._funcs_kwargs` so that when I snoop on `funcs_kwargs`, it can use the snoop dbsrc of `_funcs_kwargs` and no example codes need to change.
         
         
-        ```
-        from fastcore.meta import _funcs_kwargs
-        ```
-        
-        
-        ```
-        fdb_ = Fastdb(_funcs_kwargs)
-        fdb_.eg = """
-        @funcs_kwargs
-        class T:
-            _methods=['b'] # allows you to add method b upon instantiation
-            def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-            def a(self): return 1
-            def b(self): return 2
+            The current section is heading 3.
             
-        t = T()
-        test_eq(t.a(), 1)
-        test_eq(t.b(), 2)
-        
-        test_sig(T, '(f=1, *, b=None)')
-        inspect.signature(T)
-        
-        def _new_func(): return 5
-        
-        t = T(b = _new_func)
-        test_eq(t.b(), 5)
-        
-        t = T(a = lambda:3)
-        test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-        """
-        ```
-        
-        
-        ```
-        #| column: screen
-        # no snoop result, it is expected, because the example is not calling _funcs_kwargs, but funcs_kwargs
-        fdb_.snoop(deco=True) # how to snoop decorator: _funcs_kwargs is a decorator, so set deco=True to see running codes in inner f
-        ```
-        
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
+            
+            how to snoop on two functions one wrap around another: `funcs_kwargs` is a wrapper around `_funcs_kwargs`, so I can first snoop on `_funcs_kwargs` and assign its snoop dbsrc to \
+            `fm._funcs_kwargs` so that when I snoop on `funcs_kwargs`, it can use the snoop dbsrc of `_funcs_kwargs` and no example codes need to change.
+            
+            
+            ```
+            from fastcore.meta import _funcs_kwargs
+            ```
+            
+            
+            ```
+            fdb_ = Fastdb(_funcs_kwargs)
+            fdb_.eg = """
             @funcs_kwargs
             class T:
                 _methods=['b'] # allows you to add method b upon instantiation
@@ -4604,78 +4813,58 @@ fastnbs("snoop: from _funcs_kwargs to funcs_kwargs", output=True)
             
             t = T(a = lambda:3)
             test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            [0m     
+            """
+            ```
             
-        
-        
-        
-        ```
-        import fastcore.meta as fm
-        ```
-        
-        
-        ```
-        fm._funcs_kwargs = fdb_.dbsrc # how to snoop on two functions one wrap around another
-        ```
-        
-        
-        ```
-        fdb = Fastdb(funcs_kwargs)
-        fdb.eg = """
-        @funcs_kwargs
-        class T:
-            _methods=['b'] # allows you to add method b upon instantiation
-            def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-            def a(self): return 1
-            def b(self): return 2
             
-        t = T()
-        test_eq(t.a(), 1)
-        test_eq(t.b(), 2)
-        
-        test_sig(T, '(f=1, *, b=None)')
-        inspect.signature(T)
-        
-        def _new_func(): return 5
-        
-        t = T(b = _new_func)
-        test_eq(t.b(), 5)
-        
-        t = T(a = lambda:3)
-        test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-        
-        def _f(self,a=1): return self.num + a # access the num attribute from the instance
-        
-        @funcs_kwargs(as_method=True)
-        class T: 
-            _methods=['b']
-            num = 5
+            ```
+            #| column: screen
+            # no snoop result, it is expected, because the example is not calling _funcs_kwargs, but funcs_kwargs
+            fdb_.snoop(deco=True) # how to snoop decorator: _funcs_kwargs is a decorator, so set deco=True to see running codes in inner f
+            ```
             
-        t = T(b = _f) # adds method b
-        test_eq(t.b(5), 10) # self.num + 5 = 10
-        
-        def _f(self,a=1): return self.num * a #multiply instead of add 
-        
-        class T2(T):
-            def __init__(self,num):
-                super().__init__(b = _f) # add method b from the super class
-                self.num=num
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
                 
-        t = T2(num=3)
-        test_eq(t.b(a=5), 15) # 3 * 5 = 15
-        test_sig(T2, '(num)')
-        """
-        ```
-        
-        
-        ```
-        #| column: screen
-        fdb.print()
-        ```
-        
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                [0m     
+                
+            
+            
+            
+            ```
+            import fastcore.meta as fm
+            ```
+            
+            
+            ```
+            fm._funcs_kwargs = fdb_.dbsrc # how to snoop on two functions one wrap around another
+            ```
+            
+            
+            ```
+            fdb = Fastdb(funcs_kwargs)
+            fdb.eg = """
             @funcs_kwargs
             class T:
                 _methods=['b'] # allows you to add method b upon instantiation
@@ -4718,989 +4907,1053 @@ fastnbs("snoop: from _funcs_kwargs to funcs_kwargs", output=True)
             t = T2(num=3)
             test_eq(t.b(a=5), 15) # 3 * 5 = 15
             test_sig(T2, '(num)')
-            [0m     
+            """
+            ```
             
-            def funcs_kwargs(as_method=False):========================================================(0)       
-                "Replace methods in `cls._methods` with those from `kwargs`"==========================(1)       
-                if callable(as_method): return _funcs_kwargs(as_method, False)========================(2)       
-                return partial(_funcs_kwargs, as_method=as_method)====================================(3)       
-                                                                                                                                                                    (4)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb_.print()
-        ```
-        
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
-                
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
             
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
+            ```
+            #| column: screen
+            fdb.print()
+            ```
             
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            def _funcs_kwargs(cls, as_method):========================================================(0)       
-                old_init = cls.__init__===============================================================(1)       
-                def _init(self, *args, **kwargs):=====================================================(2)       
-                    for k in cls._methods:============================================================(3)       
-                        arg = kwargs.pop(k,None)======================================================(4)       
-                        if arg is not None:===========================================================(5)       
-                            if as_method: arg = method(arg)===========================================(6)       
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7)       
-                            setattr(self, k, arg)=====================================================(8)       
-                    old_init(self, *args, **kwargs)===================================================(9)       
-                functools.update_wrapper(_init, old_init)=============================================(10)      
-                cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11)      
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
-                return cls============================================================================(13)      
-                                                                                                                                                                    (14)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb.docsrc(1, "how funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; \
-        the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;")
-        fdb.docsrc(2, "how to check whether an object is callable; how to return a result of running a func; ")
-        fdb.docsrc(3, "how to custom the params of `_funcs_kwargs` for a particular use with partial")
-        ```
-        
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m1[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
-                
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            def _f(self,a=1): return self.num + a # access the num attribute from the instance
-            
-            @funcs_kwargs(as_method=True)
-            class T: 
-                _methods=['b']
-                num = 5
-                
-            t = T(b = _f) # adds method b
-            test_eq(t.b(5), 10) # self.num + 5 = 10
-            
-            def _f(self,a=1): return self.num * a #multiply instead of add 
-            
-            class T2(T):
-                def __init__(self,num):
-                    super().__init__(b = _f) # add method b from the super class
-                    self.num=num
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
                     
-            t = T2(num=3)
-            test_eq(t.b(a=5), 15) # 3 * 5 = 15
-            test_sig(T2, '(num)')
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-            def funcs_kwargs(as_method=False):                                                                                                                      (0)
-                "Replace methods in `cls._methods` with those from `kwargs`"========================================================================================(1)
-            [91;1mhow funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;[0m
-                if callable(as_method): return _funcs_kwargs(as_method, False)                                                                                      (2)
-                return partial(_funcs_kwargs, as_method=as_method)                                                                                                  (3)
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m2[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            def _f(self,a=1): return self.num + a # access the num attribute from the instance
-            
-            @funcs_kwargs(as_method=True)
-            class T: 
-                _methods=['b']
-                num = 5
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
                 
-            t = T(b = _f) # adds method b
-            test_eq(t.b(5), 10) # self.num + 5 = 10
-            
-            def _f(self,a=1): return self.num * a #multiply instead of add 
-            
-            class T2(T):
-                def __init__(self,num):
-                    super().__init__(b = _f) # add method b from the super class
-                    self.num=num
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
                     
-            t = T2(num=3)
-            test_eq(t.b(a=5), 15) # 3 * 5 = 15
-            test_sig(T2, '(num)')
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-            def funcs_kwargs(as_method=False):                                                                                                                      (0)
-                "Replace methods in `cls._methods` with those from `kwargs`"                                                                                        (1)
-                if callable(as_method): return _funcs_kwargs(as_method, False)======================================================================================(2)
-                                                                                   [91;1mhow to check whether an object is callable; how to return a result of running a func; [0m
-                return partial(_funcs_kwargs, as_method=as_method)                                                                                                  (3)
-                                                                                                                                                                    (4)
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m3[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            def _f(self,a=1): return self.num + a # access the num attribute from the instance
-            
-            @funcs_kwargs(as_method=True)
-            class T: 
-                _methods=['b']
-                num = 5
+                def _f(self,a=1): return self.num * a #multiply instead of add 
                 
-            t = T(b = _f) # adds method b
-            test_eq(t.b(5), 10) # self.num + 5 = 10
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
+                def funcs_kwargs(as_method=False):========================================================(0)       
+                    "Replace methods in `cls._methods` with those from `kwargs`"==========================(1)       
+                    if callable(as_method): return _funcs_kwargs(as_method, False)========================(2)       
+                    return partial(_funcs_kwargs, as_method=as_method)====================================(3)       
+                                                                                                                                                                        (4)
             
-            def _f(self,a=1): return self.num * a #multiply instead of add 
             
-            class T2(T):
-                def __init__(self,num):
-                    super().__init__(b = _f) # add method b from the super class
-                    self.num=num
+            
+            ```
+            #| column: screen
+            fdb_.print()
+            ```
+            
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
                     
-            t = T2(num=3)
-            test_eq(t.b(a=5), 15) # 3 * 5 = 15
-            test_sig(T2, '(num)')
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                "Replace methods in `cls._methods` with those from `kwargs`"                                                                                        (1)
-                if callable(as_method): return _funcs_kwargs(as_method, False)                                                                                      (2)
-                return partial(_funcs_kwargs, as_method=as_method)==================================================================================================(3)
-                                                                                            [91;1mhow to custom the params of `_funcs_kwargs` for a particular use with partial[0m
-                                                                                                                                                                    (4)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb_.print()
-        ```
-        
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            def _funcs_kwargs(cls, as_method):========================================================(0)       
-                old_init = cls.__init__===============================================================(1)       
-                def _init(self, *args, **kwargs):=====================================================(2)       
-                    for k in cls._methods:============================================================(3)       
-                        arg = kwargs.pop(k,None)======================================================(4)       
-                        if arg is not None:===========================================================(5)       
-                            if as_method: arg = method(arg)===========================================(6)       
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7)       
-                            setattr(self, k, arg)=====================================================(8)       
-                    old_init(self, *args, **kwargs)===================================================(9)       
-                functools.update_wrapper(_init, old_init)=============================================(10)      
-                cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11)      
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
-                return cls============================================================================(13)      
-                                                                                                                                                                    (14)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb_.docsrc(0, "how does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; \
-        I need to give the method a name, \
-        and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; \
-        then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, \
-        I shall write @funcs_kwargs(as_method=True)")
-        fdb_.docsrc(2, "how to define a method which can use self and accept any parameters")
-        fdb_.docsrc(3, "how to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; ")
-        fdb_.docsrc(6, "how to turn a func into a method")
-        fdb_.docsrc(7, "how to give a method a different instance, like self")
-        fdb_.docsrc(8, "how to add a method to a class as an attribute")
-        fdb_.docsrc(10, "how to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself")
-        fdb_.docsrc(11, "how to add a list of names with None as default value to function `_init` to repalce its kwargs param")
-        fdb_.docsrc(12, "how to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`")
-        
-        ```
-        
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m0[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-            def _funcs_kwargs(cls, as_method):======================================================================================================================(0)
-            [91;1mhow does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; I need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True)[0m
-                old_init = cls.__init__                                                                                                                             (1)
-                def _init(self, *args, **kwargs):                                                                                                                   (2)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m2[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                def _new_func(): return 5
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-            def _funcs_kwargs(cls, as_method):                                                                                                                      (0)
-                old_init = cls.__init__                                                                                                                             (1)
-                def _init(self, *args, **kwargs):===================================================================================================================(2)
-                                                                                                      [91;1mhow to define a method which can use self and accept any parameters[0m
-                    for k in cls._methods:                                                                                                                          (3)
-                        arg = kwargs.pop(k,None)                                                                                                                    (4)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m3[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                old_init = cls.__init__                                                                                                                             (1)
-                def _init(self, *args, **kwargs):                                                                                                                   (2)
-                    for k in cls._methods:==========================================================================================================================(3)
-                                          [91;1mhow to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; [0m
-                        arg = kwargs.pop(k,None)                                                                                                                    (4)
-                        if arg is not None:                                                                                                                         (5)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m6[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                        arg = kwargs.pop(k,None)                                                                                                                    (4)
-                        if arg is not None:                                                                                                                         (5)
-                            if as_method: arg = method(arg)=========================================================================================================(6)
-                                                                                                                                         [91;1mhow to turn a func into a method[0m
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)                                                                     (7)
-                            setattr(self, k, arg)                                                                                                                   (8)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m7[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                [0m     
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
+                def _funcs_kwargs(cls, as_method):========================================================(0)       
+                    old_init = cls.__init__===============================================================(1)       
+                    def _init(self, *args, **kwargs):=====================================================(2)       
+                        for k in cls._methods:============================================================(3)       
+                            arg = kwargs.pop(k,None)======================================================(4)       
+                            if arg is not None:===========================================================(5)       
+                                if as_method: arg = method(arg)===========================================(6)       
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7)       
+                                setattr(self, k, arg)=====================================================(8)       
+                        old_init(self, *args, **kwargs)===================================================(9)       
+                    functools.update_wrapper(_init, old_init)=============================================(10)      
+                    cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11)      
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+                    return cls============================================================================(13)      
+                                                                                                                                                                        (14)
             
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
             
-            def _new_func(): return 5
             
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
+            ```
+            #| column: screen
+            fdb.docsrc(1, "how funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; \
+            the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;")
+            fdb.docsrc(2, "how to check whether an object is callable; how to return a result of running a func; ")
+            fdb.docsrc(3, "how to custom the params of `_funcs_kwargs` for a particular use with partial")
+            ```
             
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                        if arg is not None:                                                                                                                         (5)
-                            if as_method: arg = method(arg)                                                                                                         (6)
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=====================================================================(7)
-                                                                                                                     [91;1mhow to give a method a different instance, like self[0m
-                            setattr(self, k, arg)                                                                                                                   (8)
-                    old_init(self, *args, **kwargs)                                                                                                                 (9)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m8[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m1[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                            if as_method: arg = method(arg)                                                                                                         (6)
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)                                                                     (7)
-                            setattr(self, k, arg)===================================================================================================================(8)
-                                                                                                                           [91;1mhow to add a method to a class as an attribute[0m
-                    old_init(self, *args, **kwargs)                                                                                                                 (9)
-                functools.update_wrapper(_init, old_init)                                                                                                           (10)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m10[0m     ===============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                            setattr(self, k, arg)                                                                                                                   (8)
-                    old_init(self, *args, **kwargs)                                                                                                                 (9)
-                functools.update_wrapper(_init, old_init)===========================================================================================================(10)
-                                                                                  [91;1mhow to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself[0m
-                cls.__init__ = use_kwargs(cls._methods)(_init)                                                                                                      (11)
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m11[0m     ===============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                def _new_func(): return 5
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                    old_init(self, *args, **kwargs)                                                                                                                 (9)
-                functools.update_wrapper(_init, old_init)                                                                                                           (10)
-                cls.__init__ = use_kwargs(cls._methods)(_init)======================================================================================================(11)
-                                                                    [91;1mhow to add a list of names with None as default value to function `_init` to repalce its kwargs param[0m
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
-                return cls                                                                                                                                          (13)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m12[0m     ===============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
+                    
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
+                
+                def _f(self,a=1): return self.num * a #multiply instead of add 
+                
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                def funcs_kwargs(as_method=False):                                                                                                                      (0)
+                    "Replace methods in `cls._methods` with those from `kwargs`"========================================================================================(1)
+                [91;1mhow funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;[0m
+                    if callable(as_method): return _funcs_kwargs(as_method, False)                                                                                      (2)
+                    return partial(_funcs_kwargs, as_method=as_method)                                                                                                  (3)
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m2[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
+                    
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
+                
+                def _f(self,a=1): return self.num * a #multiply instead of add 
+                
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                def funcs_kwargs(as_method=False):                                                                                                                      (0)
+                    "Replace methods in `cls._methods` with those from `kwargs`"                                                                                        (1)
+                    if callable(as_method): return _funcs_kwargs(as_method, False)======================================================================================(2)
+                                                                                       [91;1mhow to check whether an object is callable; how to return a result of running a func; [0m
+                    return partial(_funcs_kwargs, as_method=as_method)                                                                                                  (3)
+                                                                                                                                                                        (4)
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m3[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
+                    
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
+                
+                def _f(self,a=1): return self.num * a #multiply instead of add 
+                
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                    "Replace methods in `cls._methods` with those from `kwargs`"                                                                                        (1)
+                    if callable(as_method): return _funcs_kwargs(as_method, False)                                                                                      (2)
+                    return partial(_funcs_kwargs, as_method=as_method)==================================================================================================(3)
+                                                                                                [91;1mhow to custom the params of `_funcs_kwargs` for a particular use with partial[0m
+                                                                                                                                                                        (4)
             
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
             
-            def _new_func(): return 5
             
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
+            ```
+            #| column: screen
+            fdb_.print()
+            ```
             
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                def _funcs_kwargs(cls, as_method):========================================================(0)       
+                    old_init = cls.__init__===============================================================(1)       
+                    def _init(self, *args, **kwargs):=====================================================(2)       
+                        for k in cls._methods:============================================================(3)       
+                            arg = kwargs.pop(k,None)======================================================(4)       
+                            if arg is not None:===========================================================(5)       
+                                if as_method: arg = method(arg)===========================================(6)       
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7)       
+                                setattr(self, k, arg)=====================================================(8)       
+                        old_init(self, *args, **kwargs)===================================================(9)       
+                    functools.update_wrapper(_init, old_init)=============================================(10)      
+                    cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11)      
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+                    return cls============================================================================(13)      
+                                                                                                                                                                        (14)
             
-            [0m     
             
-            [93;1mprint selected srcline with expands below[0m--------
-                functools.update_wrapper(_init, old_init)                                                                                                           (10)
-                cls.__init__ = use_kwargs(cls._methods)(_init)                                                                                                      (11)
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))=====================================================(12)
-                                                           [91;1mhow to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`[0m
-                return cls                                                                                                                                          (13)
-                                                                                                                                                                    (14)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb.snoop() # how to snoop together with docsrc: snoop first and docsrc above it
-        ```
-        
-            22:28:59.99 >>> Call to funcs_kwargs in File "/tmp/funcs_kwargs.py", line 3
-            22:28:59.99 ...... as_method = <class 'fastcore.meta.T'>
-            22:28:59.99    3 | def funcs_kwargs(as_method=False):
-            22:28:59.99    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
-                22:28:59.99 >>> Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
-                22:28:59.99 ...... cls = <class 'fastcore.meta.T'>
-                22:28:59.99 ...... as_method = False
-                22:28:59.99    3 | def _funcs_kwargs(cls, as_method):
-                22:28:59.99    4 |     old_init = cls.__init__
+            
+            ```
+            #| column: screen
+            fdb_.docsrc(0, "how does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; \
+            I need to give the method a name, \
+            and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; \
+            then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, \
+            I shall write @funcs_kwargs(as_method=True)")
+            fdb_.docsrc(2, "how to define a method which can use self and accept any parameters")
+            fdb_.docsrc(3, "how to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; ")
+            fdb_.docsrc(6, "how to turn a func into a method")
+            fdb_.docsrc(7, "how to give a method a different instance, like self")
+            fdb_.docsrc(8, "how to add a method to a class as an attribute")
+            fdb_.docsrc(10, "how to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself")
+            fdb_.docsrc(11, "how to add a list of names with None as default value to function `_init` to repalce its kwargs param")
+            fdb_.docsrc(12, "how to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`")
+            
+            ```
+            
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m0[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                def _funcs_kwargs(cls, as_method):======================================================================================================================(0)
+                [91;1mhow does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; I need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True)[0m
+                    old_init = cls.__init__                                                                                                                             (1)
+                    def _init(self, *args, **kwargs):                                                                                                                   (2)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m2[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                def _funcs_kwargs(cls, as_method):                                                                                                                      (0)
+                    old_init = cls.__init__                                                                                                                             (1)
+                    def _init(self, *args, **kwargs):===================================================================================================================(2)
+                                                                                                          [91;1mhow to define a method which can use self and accept any parameters[0m
+                        for k in cls._methods:                                                                                                                          (3)
+                            arg = kwargs.pop(k,None)                                                                                                                    (4)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m3[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                    old_init = cls.__init__                                                                                                                             (1)
+                    def _init(self, *args, **kwargs):                                                                                                                   (2)
+                        for k in cls._methods:==========================================================================================================================(3)
+                                              [91;1mhow to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; [0m
+                            arg = kwargs.pop(k,None)                                                                                                                    (4)
+                            if arg is not None:                                                                                                                         (5)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m6[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                            arg = kwargs.pop(k,None)                                                                                                                    (4)
+                            if arg is not None:                                                                                                                         (5)
+                                if as_method: arg = method(arg)=========================================================================================================(6)
+                                                                                                                                             [91;1mhow to turn a func into a method[0m
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)                                                                     (7)
+                                setattr(self, k, arg)                                                                                                                   (8)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m7[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                            if arg is not None:                                                                                                                         (5)
+                                if as_method: arg = method(arg)                                                                                                         (6)
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=====================================================================(7)
+                                                                                                                         [91;1mhow to give a method a different instance, like self[0m
+                                setattr(self, k, arg)                                                                                                                   (8)
+                        old_init(self, *args, **kwargs)                                                                                                                 (9)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m8[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                                if as_method: arg = method(arg)                                                                                                         (6)
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)                                                                     (7)
+                                setattr(self, k, arg)===================================================================================================================(8)
+                                                                                                                               [91;1mhow to add a method to a class as an attribute[0m
+                        old_init(self, *args, **kwargs)                                                                                                                 (9)
+                    functools.update_wrapper(_init, old_init)                                                                                                           (10)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m10[0m     ===============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                                setattr(self, k, arg)                                                                                                                   (8)
+                        old_init(self, *args, **kwargs)                                                                                                                 (9)
+                    functools.update_wrapper(_init, old_init)===========================================================================================================(10)
+                                                                                      [91;1mhow to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself[0m
+                    cls.__init__ = use_kwargs(cls._methods)(_init)                                                                                                      (11)
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m11[0m     ===============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                        old_init(self, *args, **kwargs)                                                                                                                 (9)
+                    functools.update_wrapper(_init, old_init)                                                                                                           (10)
+                    cls.__init__ = use_kwargs(cls._methods)(_init)======================================================================================================(11)
+                                                                        [91;1mhow to add a list of names with None as default value to function `_init` to repalce its kwargs param[0m
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+                    return cls                                                                                                                                          (13)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m12[0m     ===============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                    functools.update_wrapper(_init, old_init)                                                                                                           (10)
+                    cls.__init__ = use_kwargs(cls._methods)(_init)                                                                                                      (11)
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))=====================================================(12)
+                                                               [91;1mhow to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`[0m
+                    return cls                                                                                                                                          (13)
+                                                                                                                                                                        (14)
+            
+            
+            
+            ```
+            #| column: screen
+            fdb.snoop() # how to snoop together with docsrc: snoop first and docsrc above it
+            ```
+            
+                22:28:59.99 >>> Call to funcs_kwargs in File "/tmp/funcs_kwargs.py", line 3
+                22:28:59.99 ...... as_method = <class 'fastcore.meta.T'>
+                22:28:59.99    3 | def funcs_kwargs(as_method=False):
+                22:28:59.99    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
+                    22:28:59.99 >>> Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
+                    22:28:59.99 ...... cls = <class 'fastcore.meta.T'>
+                    22:28:59.99 ...... as_method = False
+                    22:28:59.99    3 | def _funcs_kwargs(cls, as_method):
+                    22:28:59.99    4 |     old_init = cls.__init__
+                    22:28:59.99 .......... old_init = <function T.__init__>
+                    22:28:59.99    5 |     import snoop
+                    22:28:59.99 .......... snoop = <class 'snoop.configuration.Config.__init__.<locals>.ConfiguredTracer'>
+                    22:28:59.99    6 |     @snoop
+                    22:28:59.99    7 |     def _init(self, *args, **kwargs):
+                    22:28:59.99 .......... _init = <function _funcs_kwargs.<locals>._init>
+                    22:28:59.99   15 |     functools.update_wrapper(_init, old_init)
+                    22:28:59.99 .......... _init = <function T.__init__>
+                    22:28:59.99   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
+                    22:28:59.99   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
+                    22:28:59.99   18 |     return cls
+                    22:28:59.99 <<< Return value from _funcs_kwargs: <class 'fastcore.meta.T'>
+                22:28:59.99    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
+                22:28:59.99 <<< Return value from funcs_kwargs: <class 'fastcore.meta.T'>
+                22:28:59.99 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
+                22:28:59.99 .......... self = <fastcore.meta.T object>
+                22:28:59.99 .......... args = ()
+                22:28:59.99 .......... kwargs = {}
+                22:28:59.99 .......... as_method = False
+                22:28:59.99 .......... cls = <class 'fastcore.meta.T'>
                 22:28:59.99 .......... old_init = <function T.__init__>
-                22:28:59.99    5 |     import snoop
-                22:28:59.99 .......... snoop = <class 'snoop.configuration.Config.__init__.<locals>.ConfiguredTracer'>
-                22:28:59.99    6 |     @snoop
                 22:28:59.99    7 |     def _init(self, *args, **kwargs):
-                22:28:59.99 .......... _init = <function _funcs_kwargs.<locals>._init>
-                22:28:59.99   15 |     functools.update_wrapper(_init, old_init)
-                22:28:59.99 .......... _init = <function T.__init__>
-                22:28:59.99   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
-                22:28:59.99   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
-                22:28:59.99   18 |     return cls
-                22:28:59.99 <<< Return value from _funcs_kwargs: <class 'fastcore.meta.T'>
-            22:28:59.99    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
-            22:28:59.99 <<< Return value from funcs_kwargs: <class 'fastcore.meta.T'>
-            22:28:59.99 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
-            22:28:59.99 .......... self = <fastcore.meta.T object>
-            22:28:59.99 .......... args = ()
-            22:28:59.99 .......... kwargs = {}
-            22:28:59.99 .......... as_method = False
-            22:28:59.99 .......... cls = <class 'fastcore.meta.T'>
-            22:28:59.99 .......... old_init = <function T.__init__>
-            22:28:59.99    7 |     def _init(self, *args, **kwargs):
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00 .............. k = 'b'
-            22:29:00.00    9 |             arg = kwargs.pop(k,None)
-            22:29:00.00 .................. arg = None
-            22:29:00.00   10 |             if arg is not None:
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00   14 |         old_init(self, *args, **kwargs)
-            22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
-            22:29:00.00 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
-            22:29:00.00 .......... self = <fastcore.meta.T object>
-            22:29:00.00 .......... args = ()
-            22:29:00.00 .......... kwargs = {'b': <function _new_func>}
-            22:29:00.00 .......... len(kwargs) = 1
-            22:29:00.00 .......... as_method = False
-            22:29:00.00 .......... cls = <class 'fastcore.meta.T'>
-            22:29:00.00 .......... old_init = <function T.__init__>
-            22:29:00.00    7 |     def _init(self, *args, **kwargs):
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00 .............. k = 'b'
-            22:29:00.00    9 |             arg = kwargs.pop(k,None)
-            22:29:00.00 .................. kwargs = {}
-            22:29:00.00 .................. arg = <function _new_func>
-            22:29:00.00   10 |             if arg is not None:
-            22:29:00.00   11 |                 if as_method: arg = method(arg)
-            22:29:00.00   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
-            22:29:00.00   13 |                 setattr(self, k, arg)
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00   14 |         old_init(self, *args, **kwargs)
-            22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
-            22:29:00.00 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
-            22:29:00.00 .......... self = <fastcore.meta.T object>
-            22:29:00.00 .......... args = ()
-            22:29:00.00 .......... kwargs = {'a': <function <lambda>>}
-            22:29:00.00 .......... len(kwargs) = 1
-            22:29:00.00 .......... as_method = False
-            22:29:00.00 .......... cls = <class 'fastcore.meta.T'>
-            22:29:00.00 .......... old_init = <function T.__init__>
-            22:29:00.00    7 |     def _init(self, *args, **kwargs):
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00 .............. k = 'b'
-            22:29:00.00    9 |             arg = kwargs.pop(k,None)
-            22:29:00.00 .................. arg = None
-            22:29:00.00   10 |             if arg is not None:
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00   14 |         old_init(self, *args, **kwargs)
-            22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
-            22:29:00.00 >>> Call to funcs_kwargs in File "/tmp/funcs_kwargs.py", line 3
-            22:29:00.00 ...... as_method = True
-            22:29:00.00    3 | def funcs_kwargs(as_method=False):
-            22:29:00.00    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
-            22:29:00.00    6 |     return partial(_funcs_kwargs, as_method=as_method)
-            22:29:00.00 <<< Return value from funcs_kwargs: functools.partial(<function _funcs_kwargs>, as_method=True)
-            22:29:00.00 >>> Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
-            22:29:00.00 ...... cls = <class 'fastcore.meta.T'>
-            22:29:00.00 ...... as_method = True
-            22:29:00.00    3 | def _funcs_kwargs(cls, as_method):
-            22:29:00.00    4 |     old_init = cls.__init__
-            22:29:00.00 .......... old_init = <slot wrapper '__init__' of 'object' objects>
-            22:29:00.00    5 |     import snoop
-            22:29:00.00 .......... snoop = <class 'snoop.configuration.Config.__init__.<locals>.ConfiguredTracer'>
-            22:29:00.00    6 |     @snoop
-            22:29:00.00    7 |     def _init(self, *args, **kwargs):
-            22:29:00.00 .......... _init = <function _funcs_kwargs.<locals>._init>
-            22:29:00.00   15 |     functools.update_wrapper(_init, old_init)
-            22:29:00.00 .......... _init = <function object.__init__>
-            22:29:00.00   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
-            22:29:00.01   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
-            22:29:00.01   18 |     return cls
-            22:29:00.01 <<< Return value from _funcs_kwargs: <class 'fastcore.meta.T'>
-            22:29:00.01 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
-            22:29:00.01 .......... self = <fastcore.meta.T object>
-            22:29:00.01 .......... args = ()
-            22:29:00.01 .......... kwargs = {'b': <function _f>}
-            22:29:00.01 .......... len(kwargs) = 1
-            22:29:00.01 .......... as_method = True
-            22:29:00.01 .......... cls = <class 'fastcore.meta.T'>
-            22:29:00.01 .......... old_init = <slot wrapper '__init__' of 'object' objects>
-            22:29:00.01    7 |     def _init(self, *args, **kwargs):
-            22:29:00.01    8 |         for k in cls._methods:
-            22:29:00.01 .............. k = 'b'
-            22:29:00.01    9 |             arg = kwargs.pop(k,None)
-            22:29:00.01 .................. kwargs = {}
-            22:29:00.01 .................. arg = <function _f>
-            22:29:00.01   10 |             if arg is not None:
-            22:29:00.01   11 |                 if as_method: arg = method(arg)
-            22:29:00.01 ...... arg = <bound method int._f of 1>
-            22:29:00.01   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
-            22:29:00.01 ...... arg = <bound method T._f of <fastcore.meta.T object>>
-            22:29:00.01   13 |                 setattr(self, k, arg)
-            22:29:00.01    8 |         for k in cls._methods:
-            22:29:00.01   14 |         old_init(self, *args, **kwargs)
-            22:29:00.01 <<< Return value from _funcs_kwargs.<locals>._init: None
-            22:29:00.01 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
-            22:29:00.01 .......... self = <fastcore.meta.T2 object>
-            22:29:00.01 .......... args = ()
-            22:29:00.01 .......... kwargs = {'b': <function _f>}
-            22:29:00.01 .......... len(kwargs) = 1
-            22:29:00.01 .......... as_method = True
-            22:29:00.01 .......... cls = <class 'fastcore.meta.T'>
-            22:29:00.01 .......... old_init = <slot wrapper '__init__' of 'object' objects>
-            22:29:00.01    7 |     def _init(self, *args, **kwargs):
-            22:29:00.01    8 |         for k in cls._methods:
-            22:29:00.01 .............. k = 'b'
-            22:29:00.01    9 |             arg = kwargs.pop(k,None)
-            22:29:00.01 .................. kwargs = {}
-            22:29:00.01 .................. arg = <function _f>
-            22:29:00.01   10 |             if arg is not None:
-            22:29:00.01   11 |                 if as_method: arg = method(arg)
-            22:29:00.01 ...... arg = <bound method int._f of 1>
-            22:29:00.01   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
-            22:29:00.01 ...... arg = <bound method T2._f of <fastcore.meta.T2 object>>
-            22:29:00.01   13 |                 setattr(self, k, arg)
-            22:29:00.01    8 |         for k in cls._methods:
-            22:29:00.01   14 |         old_init(self, *args, **kwargs)
-            22:29:00.01 <<< Return value from _funcs_kwargs.<locals>._init: None
-        
-        
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
-                
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00 .............. k = 'b'
+                22:29:00.00    9 |             arg = kwargs.pop(k,None)
+                22:29:00.00 .................. arg = None
+                22:29:00.00   10 |             if arg is not None:
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00   14 |         old_init(self, *args, **kwargs)
+                22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
+                22:29:00.00 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
+                22:29:00.00 .......... self = <fastcore.meta.T object>
+                22:29:00.00 .......... args = ()
+                22:29:00.00 .......... kwargs = {'b': <function _new_func>}
+                22:29:00.00 .......... len(kwargs) = 1
+                22:29:00.00 .......... as_method = False
+                22:29:00.00 .......... cls = <class 'fastcore.meta.T'>
+                22:29:00.00 .......... old_init = <function T.__init__>
+                22:29:00.00    7 |     def _init(self, *args, **kwargs):
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00 .............. k = 'b'
+                22:29:00.00    9 |             arg = kwargs.pop(k,None)
+                22:29:00.00 .................. kwargs = {}
+                22:29:00.00 .................. arg = <function _new_func>
+                22:29:00.00   10 |             if arg is not None:
+                22:29:00.00   11 |                 if as_method: arg = method(arg)
+                22:29:00.00   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+                22:29:00.00   13 |                 setattr(self, k, arg)
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00   14 |         old_init(self, *args, **kwargs)
+                22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
+                22:29:00.00 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
+                22:29:00.00 .......... self = <fastcore.meta.T object>
+                22:29:00.00 .......... args = ()
+                22:29:00.00 .......... kwargs = {'a': <function <lambda>>}
+                22:29:00.00 .......... len(kwargs) = 1
+                22:29:00.00 .......... as_method = False
+                22:29:00.00 .......... cls = <class 'fastcore.meta.T'>
+                22:29:00.00 .......... old_init = <function T.__init__>
+                22:29:00.00    7 |     def _init(self, *args, **kwargs):
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00 .............. k = 'b'
+                22:29:00.00    9 |             arg = kwargs.pop(k,None)
+                22:29:00.00 .................. arg = None
+                22:29:00.00   10 |             if arg is not None:
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00   14 |         old_init(self, *args, **kwargs)
+                22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
+                22:29:00.00 >>> Call to funcs_kwargs in File "/tmp/funcs_kwargs.py", line 3
+                22:29:00.00 ...... as_method = True
+                22:29:00.00    3 | def funcs_kwargs(as_method=False):
+                22:29:00.00    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
+                22:29:00.00    6 |     return partial(_funcs_kwargs, as_method=as_method)
+                22:29:00.00 <<< Return value from funcs_kwargs: functools.partial(<function _funcs_kwargs>, as_method=True)
+                22:29:00.00 >>> Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
+                22:29:00.00 ...... cls = <class 'fastcore.meta.T'>
+                22:29:00.00 ...... as_method = True
+                22:29:00.00    3 | def _funcs_kwargs(cls, as_method):
+                22:29:00.00    4 |     old_init = cls.__init__
+                22:29:00.00 .......... old_init = <slot wrapper '__init__' of 'object' objects>
+                22:29:00.00    5 |     import snoop
+                22:29:00.00 .......... snoop = <class 'snoop.configuration.Config.__init__.<locals>.ConfiguredTracer'>
+                22:29:00.00    6 |     @snoop
+                22:29:00.00    7 |     def _init(self, *args, **kwargs):
+                22:29:00.00 .......... _init = <function _funcs_kwargs.<locals>._init>
+                22:29:00.00   15 |     functools.update_wrapper(_init, old_init)
+                22:29:00.00 .......... _init = <function object.__init__>
+                22:29:00.00   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
+                22:29:00.01   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
+                22:29:00.01   18 |     return cls
+                22:29:00.01 <<< Return value from _funcs_kwargs: <class 'fastcore.meta.T'>
+                22:29:00.01 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
+                22:29:00.01 .......... self = <fastcore.meta.T object>
+                22:29:00.01 .......... args = ()
+                22:29:00.01 .......... kwargs = {'b': <function _f>}
+                22:29:00.01 .......... len(kwargs) = 1
+                22:29:00.01 .......... as_method = True
+                22:29:00.01 .......... cls = <class 'fastcore.meta.T'>
+                22:29:00.01 .......... old_init = <slot wrapper '__init__' of 'object' objects>
+                22:29:00.01    7 |     def _init(self, *args, **kwargs):
+                22:29:00.01    8 |         for k in cls._methods:
+                22:29:00.01 .............. k = 'b'
+                22:29:00.01    9 |             arg = kwargs.pop(k,None)
+                22:29:00.01 .................. kwargs = {}
+                22:29:00.01 .................. arg = <function _f>
+                22:29:00.01   10 |             if arg is not None:
+                22:29:00.01   11 |                 if as_method: arg = method(arg)
+                22:29:00.01 ...... arg = <bound method int._f of 1>
+                22:29:00.01   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+                22:29:00.01 ...... arg = <bound method T._f of <fastcore.meta.T object>>
+                22:29:00.01   13 |                 setattr(self, k, arg)
+                22:29:00.01    8 |         for k in cls._methods:
+                22:29:00.01   14 |         old_init(self, *args, **kwargs)
+                22:29:00.01 <<< Return value from _funcs_kwargs.<locals>._init: None
+                22:29:00.01 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
+                22:29:00.01 .......... self = <fastcore.meta.T2 object>
+                22:29:00.01 .......... args = ()
+                22:29:00.01 .......... kwargs = {'b': <function _f>}
+                22:29:00.01 .......... len(kwargs) = 1
+                22:29:00.01 .......... as_method = True
+                22:29:00.01 .......... cls = <class 'fastcore.meta.T'>
+                22:29:00.01 .......... old_init = <slot wrapper '__init__' of 'object' objects>
+                22:29:00.01    7 |     def _init(self, *args, **kwargs):
+                22:29:00.01    8 |         for k in cls._methods:
+                22:29:00.01 .............. k = 'b'
+                22:29:00.01    9 |             arg = kwargs.pop(k,None)
+                22:29:00.01 .................. kwargs = {}
+                22:29:00.01 .................. arg = <function _f>
+                22:29:00.01   10 |             if arg is not None:
+                22:29:00.01   11 |                 if as_method: arg = method(arg)
+                22:29:00.01 ...... arg = <bound method int._f of 1>
+                22:29:00.01   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+                22:29:00.01 ...... arg = <bound method T2._f of <fastcore.meta.T2 object>>
+                22:29:00.01   13 |                 setattr(self, k, arg)
+                22:29:00.01    8 |         for k in cls._methods:
+                22:29:00.01   14 |         old_init(self, *args, **kwargs)
+                22:29:00.01 <<< Return value from _funcs_kwargs.<locals>._init: None
             
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
             
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            def _f(self,a=1): return self.num + a # access the num attribute from the instance
-            
-            @funcs_kwargs(as_method=True)
-            class T: 
-                _methods=['b']
-                num = 5
-                
-            t = T(b = _f) # adds method b
-            test_eq(t.b(5), 10) # self.num + 5 = 10
-            
-            def _f(self,a=1): return self.num * a #multiply instead of add 
-            
-            class T2(T):
-                def __init__(self,num):
-                    super().__init__(b = _f) # add method b from the super class
-                    self.num=num
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
                     
-            t = T2(num=3)
-            test_eq(t.b(a=5), 15) # 3 * 5 = 15
-            test_sig(T2, '(num)')
-            [0m     
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
+                    
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
+                
+                def _f(self,a=1): return self.num * a #multiply instead of add 
+                
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
             
-        
-        
-        
-        ```
-        fdb_.debug()
-        ```
-        
-            _funcs_kwargs's dbsrc code: ==============
-            import snoop
-            @snoop
-            def _funcs_kwargs(cls, as_method):
-                old_init = cls.__init__
+            
+            
+            ```
+            fdb_.debug()
+            ```
+            
+                _funcs_kwargs's dbsrc code: ==============
                 import snoop
                 @snoop
-                def _init(self, *args, **kwargs):
-                    for k in cls._methods:
-                        arg = kwargs.pop(k,None)
-                        if arg is not None:
-                            if as_method: arg = method(arg)
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
-                            setattr(self, k, arg)
-                    old_init(self, *args, **kwargs)
-                functools.update_wrapper(_init, old_init)
-                cls.__init__ = use_kwargs(cls._methods)(_init)
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
-                return cls
-            
-            
-            
-            _funcs_kwargs's example processed with dbsrc: ===============
-            
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                def _funcs_kwargs(cls, as_method):
+                    old_init = cls.__init__
+                    import snoop
+                    @snoop
+                    def _init(self, *args, **kwargs):
+                        for k in cls._methods:
+                            arg = kwargs.pop(k,None)
+                            if arg is not None:
+                                if as_method: arg = method(arg)
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+                                setattr(self, k, arg)
+                        old_init(self, *args, **kwargs)
+                    functools.update_wrapper(_init, old_init)
+                    cls.__init__ = use_kwargs(cls._methods)(_init)
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
+                    return cls
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            
-        
-        
-        
-        ```
-        #| column: screen
-        fdb.print()
-        ```
-        
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            def _f(self,a=1): return self.num + a # access the num attribute from the instance
-            
-            @funcs_kwargs(as_method=True)
-            class T: 
-                _methods=['b']
-                num = 5
                 
-            t = T(b = _f) # adds method b
-            test_eq(t.b(5), 10) # self.num + 5 = 10
-            
-            def _f(self,a=1): return self.num * a #multiply instead of add 
-            
-            class T2(T):
-                def __init__(self,num):
-                    super().__init__(b = _f) # add method b from the super class
-                    self.num=num
+                _funcs_kwargs's example processed with dbsrc: ===============
+                
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
                     
-            t = T2(num=3)
-            test_eq(t.b(a=5), 15) # 3 * 5 = 15
-            test_sig(T2, '(num)')
-            [0m     
-            
-            def funcs_kwargs(as_method=False):========================================================(0)       
-                "Replace methods in `cls._methods` with those from `kwargs`"==========================(1) # [93;1mhow funcs_kwargs works[0m; [93;1mit is a wrapper around _funcs_kwargs[0m; [91;1mit offers two ways of running _funcs_kwargs[0m; [37;1mthe first, default way, is to add a func to a class without using self[0m; [91;1msecond way is to add func to class enabling self use;[0m; 
-                if callable(as_method): return _funcs_kwargs(as_method, False)========================(2) # [37;1mhow to check whether an object is callable[0m; [93;1mhow to return a result of running a func[0m; [37;1m[0m; 
-                return partial(_funcs_kwargs, as_method=as_method)====================================(3) # [92;1mhow to custom the params of `_funcs_kwargs` for a particular use with partial[0m; 
-                                                                                                                                                                    (4)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb_.print()
-        ```
-        
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m12[0m     ===============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                
             
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
             
-            def _new_func(): return 5
             
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
+            ```
+            #| column: screen
+            fdb.print()
+            ```
             
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
+                    
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
+                
+                def _f(self,a=1): return self.num * a #multiply instead of add 
+                
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
+                def funcs_kwargs(as_method=False):========================================================(0)       
+                    "Replace methods in `cls._methods` with those from `kwargs`"==========================(1) # [93;1mhow funcs_kwargs works[0m; [93;1mit is a wrapper around _funcs_kwargs[0m; [91;1mit offers two ways of running _funcs_kwargs[0m; [37;1mthe first, default way, is to add a func to a class without using self[0m; [91;1msecond way is to add func to class enabling self use;[0m; 
+                    if callable(as_method): return _funcs_kwargs(as_method, False)========================(2) # [37;1mhow to check whether an object is callable[0m; [93;1mhow to return a result of running a func[0m; [37;1m[0m; 
+                    return partial(_funcs_kwargs, as_method=as_method)====================================(3) # [92;1mhow to custom the params of `_funcs_kwargs` for a particular use with partial[0m; 
+                                                                                                                                                                        (4)
             
-            [0m     
             
-            def _funcs_kwargs(cls, as_method):========================================================(0) # [93;1mhow does _funcs_kwargs work: _funcs_kwargs is a decorator[0m; [35;1mit helps class e.g., T to add more methods[0m; [93;1mI need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T[0m; [36;1mthen after writing a func e.g., _new_func, I can add it by T(b = _new_func)[0m; [36;1mif I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True)[0m; 
-                old_init = cls.__init__===============================================================(1)       
-                def _init(self, *args, **kwargs):=====================================================(2) # [37;1mhow to define a method which can use self and accept any parameters[0m; 
-                    for k in cls._methods:============================================================(3) # [35;1mhow to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead[0m; [91;1m[0m; 
-                        arg = kwargs.pop(k,None)======================================================(4)       
-                        if arg is not None:===========================================================(5)       
-                            if as_method: arg = method(arg)===========================================(6) # [36;1mhow to turn a func into a method[0m; 
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7) # [93;1mhow to give a method a different instance, like self[0m; 
-                            setattr(self, k, arg)=====================================================(8) # [36;1mhow to add a method to a class as an attribute[0m; 
-                    old_init(self, *args, **kwargs)===================================================(9)       
-                functools.update_wrapper(_init, old_init)=============================================(10) # [34;1mhow to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself[0m; 
-                cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11) # [34;1mhow to add a list of names with None as default value to function `_init` to repalce its kwargs param[0m; 
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__)) # [35;1mhow to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`[0m;  (12)
-                return cls============================================================================(13)      
-                                                                                                                                                                    (14)
+            
+            ```
+            #| column: screen
+            fdb_.print()
+            ```
+            
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m12[0m     ===============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                def _funcs_kwargs(cls, as_method):========================================================(0) # [93;1mhow does _funcs_kwargs work: _funcs_kwargs is a decorator[0m; [35;1mit helps class e.g., T to add more methods[0m; [93;1mI need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T[0m; [36;1mthen after writing a func e.g., _new_func, I can add it by T(b = _new_func)[0m; [36;1mif I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True)[0m; 
+                    old_init = cls.__init__===============================================================(1)       
+                    def _init(self, *args, **kwargs):=====================================================(2) # [37;1mhow to define a method which can use self and accept any parameters[0m; 
+                        for k in cls._methods:============================================================(3) # [35;1mhow to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead[0m; [91;1m[0m; 
+                            arg = kwargs.pop(k,None)======================================================(4)       
+                            if arg is not None:===========================================================(5)       
+                                if as_method: arg = method(arg)===========================================(6) # [36;1mhow to turn a func into a method[0m; 
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7) # [93;1mhow to give a method a different instance, like self[0m; 
+                                setattr(self, k, arg)=====================================================(8) # [36;1mhow to add a method to a class as an attribute[0m; 
+                        old_init(self, *args, **kwargs)===================================================(9)       
+                    functools.update_wrapper(_init, old_init)=============================================(10) # [34;1mhow to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself[0m; 
+                    cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11) # [34;1mhow to add a list of names with None as default value to function `_init` to repalce its kwargs param[0m; 
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__)) # [35;1mhow to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`[0m;  (12)
+                    return cls============================================================================(13)      
+                                                                                                                                                                        (14)
+            
+            
+            
+            ```
+            
+            ```
+            
+            start of another heading 3
+            ### snoop only '_funcs_kwargs' by breaking up 'funcs_kwargs'
         
         
         
-        ```
+        [Open `0009_funcs_kwargs` in Jupyter Notebook locally](http://localhost:8889/tree/nbs/demos/0009_funcs_kwargs.ipynb#snoop:-from-_funcs_kwargs-to-funcs_kwargs
+        )
         
-        ```
         
-        start of another heading 3
-        ### snoop only '_funcs_kwargs' by breaking up 'funcs_kwargs'
+        
+        
+        
     
     
     
-    [Open `0009_funcs_kwargs` in Jupyter Notebook locally](http://localhost:8889/tree/nbs/demos/0009_funcs_kwargs.ipynb#snoop:-from-_funcs_kwargs-to-funcs_kwargs
+    [Open `01_utils` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/lib/01_utils.ipynb#<mark-style="background-color:-#ffff00">snoop:</mark>--<mark-style="background-color:-#ffff00">from</mark>--<mark-style="background-color:-#ffff00">_funcs_kwargs</mark>--<mark-style="background-color:-#ffff00">to</mark>--<mark-style="background-color:-#FFFF00">funcs_kwargs</mark>-
     )
     
     
@@ -5719,60 +5972,31 @@ fastnbs("snoop: from _funcs_kwargs to funcs_kwargs", output=True)
 
 
 
-    The current section is heading 8.
+    heading 8.
     
     
     
     
-        The current section is heading 3.
+        The current section is heading 8.
         
         
-        how to snoop on two functions one wrap around another: `funcs_kwargs` is a wrapper around `_funcs_kwargs`, so I can first snoop on `_funcs_kwargs` and assign its snoop dbsrc to \
-        `fm._funcs_kwargs` so that when I snoop on `funcs_kwargs`, it can use the snoop dbsrc of `_funcs_kwargs` and no example codes need to change.
         
         
-        ```
-        from fastcore.meta import _funcs_kwargs
-        ```
-        
-        
-        ```
-        fdb_ = Fastdb(_funcs_kwargs)
-        fdb_.eg = """
-        @funcs_kwargs
-        class T:
-            _methods=['b'] # allows you to add method b upon instantiation
-            def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-            def a(self): return 1
-            def b(self): return 2
+            The current section is heading 3.
             
-        t = T()
-        test_eq(t.a(), 1)
-        test_eq(t.b(), 2)
-        
-        test_sig(T, '(f=1, *, b=None)')
-        inspect.signature(T)
-        
-        def _new_func(): return 5
-        
-        t = T(b = _new_func)
-        test_eq(t.b(), 5)
-        
-        t = T(a = lambda:3)
-        test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-        """
-        ```
-        
-        
-        ```
-        #| column: screen
-        # no snoop result, it is expected, because the example is not calling _funcs_kwargs, but funcs_kwargs
-        fdb_.snoop(deco=True) # how to snoop decorator: _funcs_kwargs is a decorator, so set deco=True to see running codes in inner f
-        ```
-        
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
+            
+            how to snoop on two functions one wrap around another: `funcs_kwargs` is a wrapper around `_funcs_kwargs`, so I can first snoop on `_funcs_kwargs` and assign its snoop dbsrc to \
+            `fm._funcs_kwargs` so that when I snoop on `funcs_kwargs`, it can use the snoop dbsrc of `_funcs_kwargs` and no example codes need to change.
+            
+            
+            ```
+            from fastcore.meta import _funcs_kwargs
+            ```
+            
+            
+            ```
+            fdb_ = Fastdb(_funcs_kwargs)
+            fdb_.eg = """
             @funcs_kwargs
             class T:
                 _methods=['b'] # allows you to add method b upon instantiation
@@ -5794,78 +6018,58 @@ fastnbs("snoop: from _funcs_kwargs to funcs_kwargs", output=True)
             
             t = T(a = lambda:3)
             test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            [0m     
+            """
+            ```
             
-        
-        
-        
-        ```
-        import fastcore.meta as fm
-        ```
-        
-        
-        ```
-        fm._funcs_kwargs = fdb_.dbsrc # how to snoop on two functions one wrap around another
-        ```
-        
-        
-        ```
-        fdb = Fastdb(funcs_kwargs)
-        fdb.eg = """
-        @funcs_kwargs
-        class T:
-            _methods=['b'] # allows you to add method b upon instantiation
-            def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-            def a(self): return 1
-            def b(self): return 2
             
-        t = T()
-        test_eq(t.a(), 1)
-        test_eq(t.b(), 2)
-        
-        test_sig(T, '(f=1, *, b=None)')
-        inspect.signature(T)
-        
-        def _new_func(): return 5
-        
-        t = T(b = _new_func)
-        test_eq(t.b(), 5)
-        
-        t = T(a = lambda:3)
-        test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-        
-        def _f(self,a=1): return self.num + a # access the num attribute from the instance
-        
-        @funcs_kwargs(as_method=True)
-        class T: 
-            _methods=['b']
-            num = 5
+            ```
+            #| column: screen
+            # no snoop result, it is expected, because the example is not calling _funcs_kwargs, but funcs_kwargs
+            fdb_.snoop(deco=True) # how to snoop decorator: _funcs_kwargs is a decorator, so set deco=True to see running codes in inner f
+            ```
             
-        t = T(b = _f) # adds method b
-        test_eq(t.b(5), 10) # self.num + 5 = 10
-        
-        def _f(self,a=1): return self.num * a #multiply instead of add 
-        
-        class T2(T):
-            def __init__(self,num):
-                super().__init__(b = _f) # add method b from the super class
-                self.num=num
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
                 
-        t = T2(num=3)
-        test_eq(t.b(a=5), 15) # 3 * 5 = 15
-        test_sig(T2, '(num)')
-        """
-        ```
-        
-        
-        ```
-        #| column: screen
-        fdb.print()
-        ```
-        
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                [0m     
+                
+            
+            
+            
+            ```
+            import fastcore.meta as fm
+            ```
+            
+            
+            ```
+            fm._funcs_kwargs = fdb_.dbsrc # how to snoop on two functions one wrap around another
+            ```
+            
+            
+            ```
+            fdb = Fastdb(funcs_kwargs)
+            fdb.eg = """
             @funcs_kwargs
             class T:
                 _methods=['b'] # allows you to add method b upon instantiation
@@ -5908,989 +6112,1053 @@ fastnbs("snoop: from _funcs_kwargs to funcs_kwargs", output=True)
             t = T2(num=3)
             test_eq(t.b(a=5), 15) # 3 * 5 = 15
             test_sig(T2, '(num)')
-            [0m     
+            """
+            ```
             
-            def funcs_kwargs(as_method=False):========================================================(0)       
-                "Replace methods in `cls._methods` with those from `kwargs`"==========================(1)       
-                if callable(as_method): return _funcs_kwargs(as_method, False)========================(2)       
-                return partial(_funcs_kwargs, as_method=as_method)====================================(3)       
-                                                                                                                                                                    (4)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb_.print()
-        ```
-        
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
-                
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
             
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
+            ```
+            #| column: screen
+            fdb.print()
+            ```
             
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            def _funcs_kwargs(cls, as_method):========================================================(0)       
-                old_init = cls.__init__===============================================================(1)       
-                def _init(self, *args, **kwargs):=====================================================(2)       
-                    for k in cls._methods:============================================================(3)       
-                        arg = kwargs.pop(k,None)======================================================(4)       
-                        if arg is not None:===========================================================(5)       
-                            if as_method: arg = method(arg)===========================================(6)       
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7)       
-                            setattr(self, k, arg)=====================================================(8)       
-                    old_init(self, *args, **kwargs)===================================================(9)       
-                functools.update_wrapper(_init, old_init)=============================================(10)      
-                cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11)      
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
-                return cls============================================================================(13)      
-                                                                                                                                                                    (14)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb.docsrc(1, "how funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; \
-        the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;")
-        fdb.docsrc(2, "how to check whether an object is callable; how to return a result of running a func; ")
-        fdb.docsrc(3, "how to custom the params of `_funcs_kwargs` for a particular use with partial")
-        ```
-        
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m1[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
-                
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            def _f(self,a=1): return self.num + a # access the num attribute from the instance
-            
-            @funcs_kwargs(as_method=True)
-            class T: 
-                _methods=['b']
-                num = 5
-                
-            t = T(b = _f) # adds method b
-            test_eq(t.b(5), 10) # self.num + 5 = 10
-            
-            def _f(self,a=1): return self.num * a #multiply instead of add 
-            
-            class T2(T):
-                def __init__(self,num):
-                    super().__init__(b = _f) # add method b from the super class
-                    self.num=num
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
                     
-            t = T2(num=3)
-            test_eq(t.b(a=5), 15) # 3 * 5 = 15
-            test_sig(T2, '(num)')
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-            def funcs_kwargs(as_method=False):                                                                                                                      (0)
-                "Replace methods in `cls._methods` with those from `kwargs`"========================================================================================(1)
-            [91;1mhow funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;[0m
-                if callable(as_method): return _funcs_kwargs(as_method, False)                                                                                      (2)
-                return partial(_funcs_kwargs, as_method=as_method)                                                                                                  (3)
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m2[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            def _f(self,a=1): return self.num + a # access the num attribute from the instance
-            
-            @funcs_kwargs(as_method=True)
-            class T: 
-                _methods=['b']
-                num = 5
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
                 
-            t = T(b = _f) # adds method b
-            test_eq(t.b(5), 10) # self.num + 5 = 10
-            
-            def _f(self,a=1): return self.num * a #multiply instead of add 
-            
-            class T2(T):
-                def __init__(self,num):
-                    super().__init__(b = _f) # add method b from the super class
-                    self.num=num
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
                     
-            t = T2(num=3)
-            test_eq(t.b(a=5), 15) # 3 * 5 = 15
-            test_sig(T2, '(num)')
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-            def funcs_kwargs(as_method=False):                                                                                                                      (0)
-                "Replace methods in `cls._methods` with those from `kwargs`"                                                                                        (1)
-                if callable(as_method): return _funcs_kwargs(as_method, False)======================================================================================(2)
-                                                                                   [91;1mhow to check whether an object is callable; how to return a result of running a func; [0m
-                return partial(_funcs_kwargs, as_method=as_method)                                                                                                  (3)
-                                                                                                                                                                    (4)
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m3[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            def _f(self,a=1): return self.num + a # access the num attribute from the instance
-            
-            @funcs_kwargs(as_method=True)
-            class T: 
-                _methods=['b']
-                num = 5
+                def _f(self,a=1): return self.num * a #multiply instead of add 
                 
-            t = T(b = _f) # adds method b
-            test_eq(t.b(5), 10) # self.num + 5 = 10
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
+                def funcs_kwargs(as_method=False):========================================================(0)       
+                    "Replace methods in `cls._methods` with those from `kwargs`"==========================(1)       
+                    if callable(as_method): return _funcs_kwargs(as_method, False)========================(2)       
+                    return partial(_funcs_kwargs, as_method=as_method)====================================(3)       
+                                                                                                                                                                        (4)
             
-            def _f(self,a=1): return self.num * a #multiply instead of add 
             
-            class T2(T):
-                def __init__(self,num):
-                    super().__init__(b = _f) # add method b from the super class
-                    self.num=num
+            
+            ```
+            #| column: screen
+            fdb_.print()
+            ```
+            
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
                     
-            t = T2(num=3)
-            test_eq(t.b(a=5), 15) # 3 * 5 = 15
-            test_sig(T2, '(num)')
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                "Replace methods in `cls._methods` with those from `kwargs`"                                                                                        (1)
-                if callable(as_method): return _funcs_kwargs(as_method, False)                                                                                      (2)
-                return partial(_funcs_kwargs, as_method=as_method)==================================================================================================(3)
-                                                                                            [91;1mhow to custom the params of `_funcs_kwargs` for a particular use with partial[0m
-                                                                                                                                                                    (4)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb_.print()
-        ```
-        
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            def _funcs_kwargs(cls, as_method):========================================================(0)       
-                old_init = cls.__init__===============================================================(1)       
-                def _init(self, *args, **kwargs):=====================================================(2)       
-                    for k in cls._methods:============================================================(3)       
-                        arg = kwargs.pop(k,None)======================================================(4)       
-                        if arg is not None:===========================================================(5)       
-                            if as_method: arg = method(arg)===========================================(6)       
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7)       
-                            setattr(self, k, arg)=====================================================(8)       
-                    old_init(self, *args, **kwargs)===================================================(9)       
-                functools.update_wrapper(_init, old_init)=============================================(10)      
-                cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11)      
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
-                return cls============================================================================(13)      
-                                                                                                                                                                    (14)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb_.docsrc(0, "how does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; \
-        I need to give the method a name, \
-        and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; \
-        then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, \
-        I shall write @funcs_kwargs(as_method=True)")
-        fdb_.docsrc(2, "how to define a method which can use self and accept any parameters")
-        fdb_.docsrc(3, "how to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; ")
-        fdb_.docsrc(6, "how to turn a func into a method")
-        fdb_.docsrc(7, "how to give a method a different instance, like self")
-        fdb_.docsrc(8, "how to add a method to a class as an attribute")
-        fdb_.docsrc(10, "how to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself")
-        fdb_.docsrc(11, "how to add a list of names with None as default value to function `_init` to repalce its kwargs param")
-        fdb_.docsrc(12, "how to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`")
-        
-        ```
-        
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m0[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-            def _funcs_kwargs(cls, as_method):======================================================================================================================(0)
-            [91;1mhow does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; I need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True)[0m
-                old_init = cls.__init__                                                                                                                             (1)
-                def _init(self, *args, **kwargs):                                                                                                                   (2)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m2[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                def _new_func(): return 5
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-            def _funcs_kwargs(cls, as_method):                                                                                                                      (0)
-                old_init = cls.__init__                                                                                                                             (1)
-                def _init(self, *args, **kwargs):===================================================================================================================(2)
-                                                                                                      [91;1mhow to define a method which can use self and accept any parameters[0m
-                    for k in cls._methods:                                                                                                                          (3)
-                        arg = kwargs.pop(k,None)                                                                                                                    (4)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m3[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                old_init = cls.__init__                                                                                                                             (1)
-                def _init(self, *args, **kwargs):                                                                                                                   (2)
-                    for k in cls._methods:==========================================================================================================================(3)
-                                          [91;1mhow to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; [0m
-                        arg = kwargs.pop(k,None)                                                                                                                    (4)
-                        if arg is not None:                                                                                                                         (5)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m6[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                        arg = kwargs.pop(k,None)                                                                                                                    (4)
-                        if arg is not None:                                                                                                                         (5)
-                            if as_method: arg = method(arg)=========================================================================================================(6)
-                                                                                                                                         [91;1mhow to turn a func into a method[0m
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)                                                                     (7)
-                            setattr(self, k, arg)                                                                                                                   (8)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m7[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                [0m     
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
+                def _funcs_kwargs(cls, as_method):========================================================(0)       
+                    old_init = cls.__init__===============================================================(1)       
+                    def _init(self, *args, **kwargs):=====================================================(2)       
+                        for k in cls._methods:============================================================(3)       
+                            arg = kwargs.pop(k,None)======================================================(4)       
+                            if arg is not None:===========================================================(5)       
+                                if as_method: arg = method(arg)===========================================(6)       
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7)       
+                                setattr(self, k, arg)=====================================================(8)       
+                        old_init(self, *args, **kwargs)===================================================(9)       
+                    functools.update_wrapper(_init, old_init)=============================================(10)      
+                    cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11)      
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+                    return cls============================================================================(13)      
+                                                                                                                                                                        (14)
             
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
             
-            def _new_func(): return 5
             
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
+            ```
+            #| column: screen
+            fdb.docsrc(1, "how funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; \
+            the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;")
+            fdb.docsrc(2, "how to check whether an object is callable; how to return a result of running a func; ")
+            fdb.docsrc(3, "how to custom the params of `_funcs_kwargs` for a particular use with partial")
+            ```
             
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                        if arg is not None:                                                                                                                         (5)
-                            if as_method: arg = method(arg)                                                                                                         (6)
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=====================================================================(7)
-                                                                                                                     [91;1mhow to give a method a different instance, like self[0m
-                            setattr(self, k, arg)                                                                                                                   (8)
-                    old_init(self, *args, **kwargs)                                                                                                                 (9)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m8[0m     ================================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m1[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                            if as_method: arg = method(arg)                                                                                                         (6)
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)                                                                     (7)
-                            setattr(self, k, arg)===================================================================================================================(8)
-                                                                                                                           [91;1mhow to add a method to a class as an attribute[0m
-                    old_init(self, *args, **kwargs)                                                                                                                 (9)
-                functools.update_wrapper(_init, old_init)                                                                                                           (10)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m10[0m     ===============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                            setattr(self, k, arg)                                                                                                                   (8)
-                    old_init(self, *args, **kwargs)                                                                                                                 (9)
-                functools.update_wrapper(_init, old_init)===========================================================================================================(10)
-                                                                                  [91;1mhow to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself[0m
-                cls.__init__ = use_kwargs(cls._methods)(_init)                                                                                                      (11)
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m11[0m     ===============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                def _new_func(): return 5
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            [0m     
-            
-            [93;1mprint selected srcline with expands below[0m--------
-                    old_init(self, *args, **kwargs)                                                                                                                 (9)
-                functools.update_wrapper(_init, old_init)                                                                                                           (10)
-                cls.__init__ = use_kwargs(cls._methods)(_init)======================================================================================================(11)
-                                                                    [91;1mhow to add a list of names with None as default value to function `_init` to repalce its kwargs param[0m
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
-                return cls                                                                                                                                          (13)
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m12[0m     ===============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
+                    
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
+                
+                def _f(self,a=1): return self.num * a #multiply instead of add 
+                
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                def funcs_kwargs(as_method=False):                                                                                                                      (0)
+                    "Replace methods in `cls._methods` with those from `kwargs`"========================================================================================(1)
+                [91;1mhow funcs_kwargs works; it is a wrapper around _funcs_kwargs; it offers two ways of running _funcs_kwargs; the first, default way, is to add a func to a class without using self; second way is to add func to class enabling self use;[0m
+                    if callable(as_method): return _funcs_kwargs(as_method, False)                                                                                      (2)
+                    return partial(_funcs_kwargs, as_method=as_method)                                                                                                  (3)
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m2[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
+                    
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
+                
+                def _f(self,a=1): return self.num * a #multiply instead of add 
+                
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                def funcs_kwargs(as_method=False):                                                                                                                      (0)
+                    "Replace methods in `cls._methods` with those from `kwargs`"                                                                                        (1)
+                    if callable(as_method): return _funcs_kwargs(as_method, False)======================================================================================(2)
+                                                                                       [91;1mhow to check whether an object is callable; how to return a result of running a func; [0m
+                    return partial(_funcs_kwargs, as_method=as_method)                                                                                                  (3)
+                                                                                                                                                                        (4)
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m3[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
+                    
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
+                
+                def _f(self,a=1): return self.num * a #multiply instead of add 
+                
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                    "Replace methods in `cls._methods` with those from `kwargs`"                                                                                        (1)
+                    if callable(as_method): return _funcs_kwargs(as_method, False)                                                                                      (2)
+                    return partial(_funcs_kwargs, as_method=as_method)==================================================================================================(3)
+                                                                                                [91;1mhow to custom the params of `_funcs_kwargs` for a particular use with partial[0m
+                                                                                                                                                                        (4)
             
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
             
-            def _new_func(): return 5
             
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
+            ```
+            #| column: screen
+            fdb_.print()
+            ```
             
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                def _funcs_kwargs(cls, as_method):========================================================(0)       
+                    old_init = cls.__init__===============================================================(1)       
+                    def _init(self, *args, **kwargs):=====================================================(2)       
+                        for k in cls._methods:============================================================(3)       
+                            arg = kwargs.pop(k,None)======================================================(4)       
+                            if arg is not None:===========================================================(5)       
+                                if as_method: arg = method(arg)===========================================(6)       
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7)       
+                                setattr(self, k, arg)=====================================================(8)       
+                        old_init(self, *args, **kwargs)===================================================(9)       
+                    functools.update_wrapper(_init, old_init)=============================================(10)      
+                    cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11)      
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+                    return cls============================================================================(13)      
+                                                                                                                                                                        (14)
             
-            [0m     
             
-            [93;1mprint selected srcline with expands below[0m--------
-                functools.update_wrapper(_init, old_init)                                                                                                           (10)
-                cls.__init__ = use_kwargs(cls._methods)(_init)                                                                                                      (11)
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))=====================================================(12)
-                                                           [91;1mhow to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`[0m
-                return cls                                                                                                                                          (13)
-                                                                                                                                                                    (14)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb.snoop() # how to snoop together with docsrc: snoop first and docsrc above it
-        ```
-        
-            22:28:59.99 >>> Call to funcs_kwargs in File "/tmp/funcs_kwargs.py", line 3
-            22:28:59.99 ...... as_method = <class 'fastcore.meta.T'>
-            22:28:59.99    3 | def funcs_kwargs(as_method=False):
-            22:28:59.99    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
-                22:28:59.99 >>> Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
-                22:28:59.99 ...... cls = <class 'fastcore.meta.T'>
-                22:28:59.99 ...... as_method = False
-                22:28:59.99    3 | def _funcs_kwargs(cls, as_method):
-                22:28:59.99    4 |     old_init = cls.__init__
+            
+            ```
+            #| column: screen
+            fdb_.docsrc(0, "how does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; \
+            I need to give the method a name, \
+            and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; \
+            then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, \
+            I shall write @funcs_kwargs(as_method=True)")
+            fdb_.docsrc(2, "how to define a method which can use self and accept any parameters")
+            fdb_.docsrc(3, "how to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; ")
+            fdb_.docsrc(6, "how to turn a func into a method")
+            fdb_.docsrc(7, "how to give a method a different instance, like self")
+            fdb_.docsrc(8, "how to add a method to a class as an attribute")
+            fdb_.docsrc(10, "how to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself")
+            fdb_.docsrc(11, "how to add a list of names with None as default value to function `_init` to repalce its kwargs param")
+            fdb_.docsrc(12, "how to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`")
+            
+            ```
+            
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m0[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                def _funcs_kwargs(cls, as_method):======================================================================================================================(0)
+                [91;1mhow does _funcs_kwargs work: _funcs_kwargs is a decorator; it helps class e.g., T to add more methods; I need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T; then after writing a func e.g., _new_func, I can add it by T(b = _new_func); if I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True)[0m
+                    old_init = cls.__init__                                                                                                                             (1)
+                    def _init(self, *args, **kwargs):                                                                                                                   (2)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m2[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                def _funcs_kwargs(cls, as_method):                                                                                                                      (0)
+                    old_init = cls.__init__                                                                                                                             (1)
+                    def _init(self, *args, **kwargs):===================================================================================================================(2)
+                                                                                                          [91;1mhow to define a method which can use self and accept any parameters[0m
+                        for k in cls._methods:                                                                                                                          (3)
+                            arg = kwargs.pop(k,None)                                                                                                                    (4)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m3[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                    old_init = cls.__init__                                                                                                                             (1)
+                    def _init(self, *args, **kwargs):                                                                                                                   (2)
+                        for k in cls._methods:==========================================================================================================================(3)
+                                              [91;1mhow to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead; [0m
+                            arg = kwargs.pop(k,None)                                                                                                                    (4)
+                            if arg is not None:                                                                                                                         (5)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m6[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                            arg = kwargs.pop(k,None)                                                                                                                    (4)
+                            if arg is not None:                                                                                                                         (5)
+                                if as_method: arg = method(arg)=========================================================================================================(6)
+                                                                                                                                             [91;1mhow to turn a func into a method[0m
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)                                                                     (7)
+                                setattr(self, k, arg)                                                                                                                   (8)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m7[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                            if arg is not None:                                                                                                                         (5)
+                                if as_method: arg = method(arg)                                                                                                         (6)
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=====================================================================(7)
+                                                                                                                         [91;1mhow to give a method a different instance, like self[0m
+                                setattr(self, k, arg)                                                                                                                   (8)
+                        old_init(self, *args, **kwargs)                                                                                                                 (9)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m8[0m     ================================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                                if as_method: arg = method(arg)                                                                                                         (6)
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)                                                                     (7)
+                                setattr(self, k, arg)===================================================================================================================(8)
+                                                                                                                               [91;1mhow to add a method to a class as an attribute[0m
+                        old_init(self, *args, **kwargs)                                                                                                                 (9)
+                    functools.update_wrapper(_init, old_init)                                                                                                           (10)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m10[0m     ===============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                                setattr(self, k, arg)                                                                                                                   (8)
+                        old_init(self, *args, **kwargs)                                                                                                                 (9)
+                    functools.update_wrapper(_init, old_init)===========================================================================================================(10)
+                                                                                      [91;1mhow to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself[0m
+                    cls.__init__ = use_kwargs(cls._methods)(_init)                                                                                                      (11)
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m11[0m     ===============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                        old_init(self, *args, **kwargs)                                                                                                                 (9)
+                    functools.update_wrapper(_init, old_init)                                                                                                           (10)
+                    cls.__init__ = use_kwargs(cls._methods)(_init)======================================================================================================(11)
+                                                                        [91;1mhow to add a list of names with None as default value to function `_init` to repalce its kwargs param[0m
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))                                                     (12)
+                    return cls                                                                                                                                          (13)
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m12[0m     ===============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                [93;1mprint selected srcline with expands below[0m--------
+                    functools.update_wrapper(_init, old_init)                                                                                                           (10)
+                    cls.__init__ = use_kwargs(cls._methods)(_init)                                                                                                      (11)
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))=====================================================(12)
+                                                               [91;1mhow to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`[0m
+                    return cls                                                                                                                                          (13)
+                                                                                                                                                                        (14)
+            
+            
+            
+            ```
+            #| column: screen
+            fdb.snoop() # how to snoop together with docsrc: snoop first and docsrc above it
+            ```
+            
+                22:28:59.99 >>> Call to funcs_kwargs in File "/tmp/funcs_kwargs.py", line 3
+                22:28:59.99 ...... as_method = <class 'fastcore.meta.T'>
+                22:28:59.99    3 | def funcs_kwargs(as_method=False):
+                22:28:59.99    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
+                    22:28:59.99 >>> Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
+                    22:28:59.99 ...... cls = <class 'fastcore.meta.T'>
+                    22:28:59.99 ...... as_method = False
+                    22:28:59.99    3 | def _funcs_kwargs(cls, as_method):
+                    22:28:59.99    4 |     old_init = cls.__init__
+                    22:28:59.99 .......... old_init = <function T.__init__>
+                    22:28:59.99    5 |     import snoop
+                    22:28:59.99 .......... snoop = <class 'snoop.configuration.Config.__init__.<locals>.ConfiguredTracer'>
+                    22:28:59.99    6 |     @snoop
+                    22:28:59.99    7 |     def _init(self, *args, **kwargs):
+                    22:28:59.99 .......... _init = <function _funcs_kwargs.<locals>._init>
+                    22:28:59.99   15 |     functools.update_wrapper(_init, old_init)
+                    22:28:59.99 .......... _init = <function T.__init__>
+                    22:28:59.99   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
+                    22:28:59.99   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
+                    22:28:59.99   18 |     return cls
+                    22:28:59.99 <<< Return value from _funcs_kwargs: <class 'fastcore.meta.T'>
+                22:28:59.99    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
+                22:28:59.99 <<< Return value from funcs_kwargs: <class 'fastcore.meta.T'>
+                22:28:59.99 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
+                22:28:59.99 .......... self = <fastcore.meta.T object>
+                22:28:59.99 .......... args = ()
+                22:28:59.99 .......... kwargs = {}
+                22:28:59.99 .......... as_method = False
+                22:28:59.99 .......... cls = <class 'fastcore.meta.T'>
                 22:28:59.99 .......... old_init = <function T.__init__>
-                22:28:59.99    5 |     import snoop
-                22:28:59.99 .......... snoop = <class 'snoop.configuration.Config.__init__.<locals>.ConfiguredTracer'>
-                22:28:59.99    6 |     @snoop
                 22:28:59.99    7 |     def _init(self, *args, **kwargs):
-                22:28:59.99 .......... _init = <function _funcs_kwargs.<locals>._init>
-                22:28:59.99   15 |     functools.update_wrapper(_init, old_init)
-                22:28:59.99 .......... _init = <function T.__init__>
-                22:28:59.99   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
-                22:28:59.99   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
-                22:28:59.99   18 |     return cls
-                22:28:59.99 <<< Return value from _funcs_kwargs: <class 'fastcore.meta.T'>
-            22:28:59.99    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
-            22:28:59.99 <<< Return value from funcs_kwargs: <class 'fastcore.meta.T'>
-            22:28:59.99 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
-            22:28:59.99 .......... self = <fastcore.meta.T object>
-            22:28:59.99 .......... args = ()
-            22:28:59.99 .......... kwargs = {}
-            22:28:59.99 .......... as_method = False
-            22:28:59.99 .......... cls = <class 'fastcore.meta.T'>
-            22:28:59.99 .......... old_init = <function T.__init__>
-            22:28:59.99    7 |     def _init(self, *args, **kwargs):
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00 .............. k = 'b'
-            22:29:00.00    9 |             arg = kwargs.pop(k,None)
-            22:29:00.00 .................. arg = None
-            22:29:00.00   10 |             if arg is not None:
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00   14 |         old_init(self, *args, **kwargs)
-            22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
-            22:29:00.00 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
-            22:29:00.00 .......... self = <fastcore.meta.T object>
-            22:29:00.00 .......... args = ()
-            22:29:00.00 .......... kwargs = {'b': <function _new_func>}
-            22:29:00.00 .......... len(kwargs) = 1
-            22:29:00.00 .......... as_method = False
-            22:29:00.00 .......... cls = <class 'fastcore.meta.T'>
-            22:29:00.00 .......... old_init = <function T.__init__>
-            22:29:00.00    7 |     def _init(self, *args, **kwargs):
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00 .............. k = 'b'
-            22:29:00.00    9 |             arg = kwargs.pop(k,None)
-            22:29:00.00 .................. kwargs = {}
-            22:29:00.00 .................. arg = <function _new_func>
-            22:29:00.00   10 |             if arg is not None:
-            22:29:00.00   11 |                 if as_method: arg = method(arg)
-            22:29:00.00   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
-            22:29:00.00   13 |                 setattr(self, k, arg)
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00   14 |         old_init(self, *args, **kwargs)
-            22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
-            22:29:00.00 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
-            22:29:00.00 .......... self = <fastcore.meta.T object>
-            22:29:00.00 .......... args = ()
-            22:29:00.00 .......... kwargs = {'a': <function <lambda>>}
-            22:29:00.00 .......... len(kwargs) = 1
-            22:29:00.00 .......... as_method = False
-            22:29:00.00 .......... cls = <class 'fastcore.meta.T'>
-            22:29:00.00 .......... old_init = <function T.__init__>
-            22:29:00.00    7 |     def _init(self, *args, **kwargs):
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00 .............. k = 'b'
-            22:29:00.00    9 |             arg = kwargs.pop(k,None)
-            22:29:00.00 .................. arg = None
-            22:29:00.00   10 |             if arg is not None:
-            22:29:00.00    8 |         for k in cls._methods:
-            22:29:00.00   14 |         old_init(self, *args, **kwargs)
-            22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
-            22:29:00.00 >>> Call to funcs_kwargs in File "/tmp/funcs_kwargs.py", line 3
-            22:29:00.00 ...... as_method = True
-            22:29:00.00    3 | def funcs_kwargs(as_method=False):
-            22:29:00.00    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
-            22:29:00.00    6 |     return partial(_funcs_kwargs, as_method=as_method)
-            22:29:00.00 <<< Return value from funcs_kwargs: functools.partial(<function _funcs_kwargs>, as_method=True)
-            22:29:00.00 >>> Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
-            22:29:00.00 ...... cls = <class 'fastcore.meta.T'>
-            22:29:00.00 ...... as_method = True
-            22:29:00.00    3 | def _funcs_kwargs(cls, as_method):
-            22:29:00.00    4 |     old_init = cls.__init__
-            22:29:00.00 .......... old_init = <slot wrapper '__init__' of 'object' objects>
-            22:29:00.00    5 |     import snoop
-            22:29:00.00 .......... snoop = <class 'snoop.configuration.Config.__init__.<locals>.ConfiguredTracer'>
-            22:29:00.00    6 |     @snoop
-            22:29:00.00    7 |     def _init(self, *args, **kwargs):
-            22:29:00.00 .......... _init = <function _funcs_kwargs.<locals>._init>
-            22:29:00.00   15 |     functools.update_wrapper(_init, old_init)
-            22:29:00.00 .......... _init = <function object.__init__>
-            22:29:00.00   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
-            22:29:00.01   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
-            22:29:00.01   18 |     return cls
-            22:29:00.01 <<< Return value from _funcs_kwargs: <class 'fastcore.meta.T'>
-            22:29:00.01 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
-            22:29:00.01 .......... self = <fastcore.meta.T object>
-            22:29:00.01 .......... args = ()
-            22:29:00.01 .......... kwargs = {'b': <function _f>}
-            22:29:00.01 .......... len(kwargs) = 1
-            22:29:00.01 .......... as_method = True
-            22:29:00.01 .......... cls = <class 'fastcore.meta.T'>
-            22:29:00.01 .......... old_init = <slot wrapper '__init__' of 'object' objects>
-            22:29:00.01    7 |     def _init(self, *args, **kwargs):
-            22:29:00.01    8 |         for k in cls._methods:
-            22:29:00.01 .............. k = 'b'
-            22:29:00.01    9 |             arg = kwargs.pop(k,None)
-            22:29:00.01 .................. kwargs = {}
-            22:29:00.01 .................. arg = <function _f>
-            22:29:00.01   10 |             if arg is not None:
-            22:29:00.01   11 |                 if as_method: arg = method(arg)
-            22:29:00.01 ...... arg = <bound method int._f of 1>
-            22:29:00.01   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
-            22:29:00.01 ...... arg = <bound method T._f of <fastcore.meta.T object>>
-            22:29:00.01   13 |                 setattr(self, k, arg)
-            22:29:00.01    8 |         for k in cls._methods:
-            22:29:00.01   14 |         old_init(self, *args, **kwargs)
-            22:29:00.01 <<< Return value from _funcs_kwargs.<locals>._init: None
-            22:29:00.01 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
-            22:29:00.01 .......... self = <fastcore.meta.T2 object>
-            22:29:00.01 .......... args = ()
-            22:29:00.01 .......... kwargs = {'b': <function _f>}
-            22:29:00.01 .......... len(kwargs) = 1
-            22:29:00.01 .......... as_method = True
-            22:29:00.01 .......... cls = <class 'fastcore.meta.T'>
-            22:29:00.01 .......... old_init = <slot wrapper '__init__' of 'object' objects>
-            22:29:00.01    7 |     def _init(self, *args, **kwargs):
-            22:29:00.01    8 |         for k in cls._methods:
-            22:29:00.01 .............. k = 'b'
-            22:29:00.01    9 |             arg = kwargs.pop(k,None)
-            22:29:00.01 .................. kwargs = {}
-            22:29:00.01 .................. arg = <function _f>
-            22:29:00.01   10 |             if arg is not None:
-            22:29:00.01   11 |                 if as_method: arg = method(arg)
-            22:29:00.01 ...... arg = <bound method int._f of 1>
-            22:29:00.01   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
-            22:29:00.01 ...... arg = <bound method T2._f of <fastcore.meta.T2 object>>
-            22:29:00.01   13 |                 setattr(self, k, arg)
-            22:29:00.01    8 |         for k in cls._methods:
-            22:29:00.01   14 |         old_init(self, *args, **kwargs)
-            22:29:00.01 <<< Return value from _funcs_kwargs.<locals>._init: None
-        
-        
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
-                
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00 .............. k = 'b'
+                22:29:00.00    9 |             arg = kwargs.pop(k,None)
+                22:29:00.00 .................. arg = None
+                22:29:00.00   10 |             if arg is not None:
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00   14 |         old_init(self, *args, **kwargs)
+                22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
+                22:29:00.00 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
+                22:29:00.00 .......... self = <fastcore.meta.T object>
+                22:29:00.00 .......... args = ()
+                22:29:00.00 .......... kwargs = {'b': <function _new_func>}
+                22:29:00.00 .......... len(kwargs) = 1
+                22:29:00.00 .......... as_method = False
+                22:29:00.00 .......... cls = <class 'fastcore.meta.T'>
+                22:29:00.00 .......... old_init = <function T.__init__>
+                22:29:00.00    7 |     def _init(self, *args, **kwargs):
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00 .............. k = 'b'
+                22:29:00.00    9 |             arg = kwargs.pop(k,None)
+                22:29:00.00 .................. kwargs = {}
+                22:29:00.00 .................. arg = <function _new_func>
+                22:29:00.00   10 |             if arg is not None:
+                22:29:00.00   11 |                 if as_method: arg = method(arg)
+                22:29:00.00   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+                22:29:00.00   13 |                 setattr(self, k, arg)
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00   14 |         old_init(self, *args, **kwargs)
+                22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
+                22:29:00.00 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
+                22:29:00.00 .......... self = <fastcore.meta.T object>
+                22:29:00.00 .......... args = ()
+                22:29:00.00 .......... kwargs = {'a': <function <lambda>>}
+                22:29:00.00 .......... len(kwargs) = 1
+                22:29:00.00 .......... as_method = False
+                22:29:00.00 .......... cls = <class 'fastcore.meta.T'>
+                22:29:00.00 .......... old_init = <function T.__init__>
+                22:29:00.00    7 |     def _init(self, *args, **kwargs):
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00 .............. k = 'b'
+                22:29:00.00    9 |             arg = kwargs.pop(k,None)
+                22:29:00.00 .................. arg = None
+                22:29:00.00   10 |             if arg is not None:
+                22:29:00.00    8 |         for k in cls._methods:
+                22:29:00.00   14 |         old_init(self, *args, **kwargs)
+                22:29:00.00 <<< Return value from _funcs_kwargs.<locals>._init: None
+                22:29:00.00 >>> Call to funcs_kwargs in File "/tmp/funcs_kwargs.py", line 3
+                22:29:00.00 ...... as_method = True
+                22:29:00.00    3 | def funcs_kwargs(as_method=False):
+                22:29:00.00    5 |     if callable(as_method): return _funcs_kwargs(as_method, False)
+                22:29:00.00    6 |     return partial(_funcs_kwargs, as_method=as_method)
+                22:29:00.00 <<< Return value from funcs_kwargs: functools.partial(<function _funcs_kwargs>, as_method=True)
+                22:29:00.00 >>> Call to _funcs_kwargs in File "/tmp/_funcs_kwargs.py", line 3
+                22:29:00.00 ...... cls = <class 'fastcore.meta.T'>
+                22:29:00.00 ...... as_method = True
+                22:29:00.00    3 | def _funcs_kwargs(cls, as_method):
+                22:29:00.00    4 |     old_init = cls.__init__
+                22:29:00.00 .......... old_init = <slot wrapper '__init__' of 'object' objects>
+                22:29:00.00    5 |     import snoop
+                22:29:00.00 .......... snoop = <class 'snoop.configuration.Config.__init__.<locals>.ConfiguredTracer'>
+                22:29:00.00    6 |     @snoop
+                22:29:00.00    7 |     def _init(self, *args, **kwargs):
+                22:29:00.00 .......... _init = <function _funcs_kwargs.<locals>._init>
+                22:29:00.00   15 |     functools.update_wrapper(_init, old_init)
+                22:29:00.00 .......... _init = <function object.__init__>
+                22:29:00.00   16 |     cls.__init__ = use_kwargs(cls._methods)(_init)
+                22:29:00.01   17 |     if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
+                22:29:00.01   18 |     return cls
+                22:29:00.01 <<< Return value from _funcs_kwargs: <class 'fastcore.meta.T'>
+                22:29:00.01 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
+                22:29:00.01 .......... self = <fastcore.meta.T object>
+                22:29:00.01 .......... args = ()
+                22:29:00.01 .......... kwargs = {'b': <function _f>}
+                22:29:00.01 .......... len(kwargs) = 1
+                22:29:00.01 .......... as_method = True
+                22:29:00.01 .......... cls = <class 'fastcore.meta.T'>
+                22:29:00.01 .......... old_init = <slot wrapper '__init__' of 'object' objects>
+                22:29:00.01    7 |     def _init(self, *args, **kwargs):
+                22:29:00.01    8 |         for k in cls._methods:
+                22:29:00.01 .............. k = 'b'
+                22:29:00.01    9 |             arg = kwargs.pop(k,None)
+                22:29:00.01 .................. kwargs = {}
+                22:29:00.01 .................. arg = <function _f>
+                22:29:00.01   10 |             if arg is not None:
+                22:29:00.01   11 |                 if as_method: arg = method(arg)
+                22:29:00.01 ...... arg = <bound method int._f of 1>
+                22:29:00.01   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+                22:29:00.01 ...... arg = <bound method T._f of <fastcore.meta.T object>>
+                22:29:00.01   13 |                 setattr(self, k, arg)
+                22:29:00.01    8 |         for k in cls._methods:
+                22:29:00.01   14 |         old_init(self, *args, **kwargs)
+                22:29:00.01 <<< Return value from _funcs_kwargs.<locals>._init: None
+                22:29:00.01 >>> Call to _funcs_kwargs.<locals>._init in File "/tmp/_funcs_kwargs.py", line 7
+                22:29:00.01 .......... self = <fastcore.meta.T2 object>
+                22:29:00.01 .......... args = ()
+                22:29:00.01 .......... kwargs = {'b': <function _f>}
+                22:29:00.01 .......... len(kwargs) = 1
+                22:29:00.01 .......... as_method = True
+                22:29:00.01 .......... cls = <class 'fastcore.meta.T'>
+                22:29:00.01 .......... old_init = <slot wrapper '__init__' of 'object' objects>
+                22:29:00.01    7 |     def _init(self, *args, **kwargs):
+                22:29:00.01    8 |         for k in cls._methods:
+                22:29:00.01 .............. k = 'b'
+                22:29:00.01    9 |             arg = kwargs.pop(k,None)
+                22:29:00.01 .................. kwargs = {}
+                22:29:00.01 .................. arg = <function _f>
+                22:29:00.01   10 |             if arg is not None:
+                22:29:00.01   11 |                 if as_method: arg = method(arg)
+                22:29:00.01 ...... arg = <bound method int._f of 1>
+                22:29:00.01   12 |                 if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+                22:29:00.01 ...... arg = <bound method T2._f of <fastcore.meta.T2 object>>
+                22:29:00.01   13 |                 setattr(self, k, arg)
+                22:29:00.01    8 |         for k in cls._methods:
+                22:29:00.01   14 |         old_init(self, *args, **kwargs)
+                22:29:00.01 <<< Return value from _funcs_kwargs.<locals>._init: None
             
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
             
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            def _f(self,a=1): return self.num + a # access the num attribute from the instance
-            
-            @funcs_kwargs(as_method=True)
-            class T: 
-                _methods=['b']
-                num = 5
-                
-            t = T(b = _f) # adds method b
-            test_eq(t.b(5), 10) # self.num + 5 = 10
-            
-            def _f(self,a=1): return self.num * a #multiply instead of add 
-            
-            class T2(T):
-                def __init__(self,num):
-                    super().__init__(b = _f) # add method b from the super class
-                    self.num=num
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
                     
-            t = T2(num=3)
-            test_eq(t.b(a=5), 15) # 3 * 5 = 15
-            test_sig(T2, '(num)')
-            [0m     
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
+                    
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
+                
+                def _f(self,a=1): return self.num * a #multiply instead of add 
+                
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
             
-        
-        
-        
-        ```
-        fdb_.debug()
-        ```
-        
-            _funcs_kwargs's dbsrc code: ==============
-            import snoop
-            @snoop
-            def _funcs_kwargs(cls, as_method):
-                old_init = cls.__init__
+            
+            
+            ```
+            fdb_.debug()
+            ```
+            
+                _funcs_kwargs's dbsrc code: ==============
                 import snoop
                 @snoop
-                def _init(self, *args, **kwargs):
-                    for k in cls._methods:
-                        arg = kwargs.pop(k,None)
-                        if arg is not None:
-                            if as_method: arg = method(arg)
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
-                            setattr(self, k, arg)
-                    old_init(self, *args, **kwargs)
-                functools.update_wrapper(_init, old_init)
-                cls.__init__ = use_kwargs(cls._methods)(_init)
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
-                return cls
-            
-            
-            
-            _funcs_kwargs's example processed with dbsrc: ===============
-            
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                def _funcs_kwargs(cls, as_method):
+                    old_init = cls.__init__
+                    import snoop
+                    @snoop
+                    def _init(self, *args, **kwargs):
+                        for k in cls._methods:
+                            arg = kwargs.pop(k,None)
+                            if arg is not None:
+                                if as_method: arg = method(arg)
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)
+                                setattr(self, k, arg)
+                        old_init(self, *args, **kwargs)
+                    functools.update_wrapper(_init, old_init)
+                    cls.__init__ = use_kwargs(cls._methods)(_init)
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__))
+                    return cls
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            
-        
-        
-        
-        ```
-        #| column: screen
-        fdb.print()
-        ```
-        
-            =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
-            ==============================================================     on line [91;1mNone[0m     ==============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
-            
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
-            
-            def _new_func(): return 5
-            
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
-            
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
-            
-            def _f(self,a=1): return self.num + a # access the num attribute from the instance
-            
-            @funcs_kwargs(as_method=True)
-            class T: 
-                _methods=['b']
-                num = 5
                 
-            t = T(b = _f) # adds method b
-            test_eq(t.b(5), 10) # self.num + 5 = 10
-            
-            def _f(self,a=1): return self.num * a #multiply instead of add 
-            
-            class T2(T):
-                def __init__(self,num):
-                    super().__init__(b = _f) # add method b from the super class
-                    self.num=num
+                _funcs_kwargs's example processed with dbsrc: ===============
+                
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
                     
-            t = T2(num=3)
-            test_eq(t.b(a=5), 15) # 3 * 5 = 15
-            test_sig(T2, '(num)')
-            [0m     
-            
-            def funcs_kwargs(as_method=False):========================================================(0)       
-                "Replace methods in `cls._methods` with those from `kwargs`"==========================(1) # [93;1mhow funcs_kwargs works[0m; [93;1mit is a wrapper around _funcs_kwargs[0m; [91;1mit offers two ways of running _funcs_kwargs[0m; [37;1mthe first, default way, is to add a func to a class without using self[0m; [91;1msecond way is to add func to class enabling self use;[0m; 
-                if callable(as_method): return _funcs_kwargs(as_method, False)========================(2) # [37;1mhow to check whether an object is callable[0m; [93;1mhow to return a result of running a func[0m; [37;1m[0m; 
-                return partial(_funcs_kwargs, as_method=as_method)====================================(3) # [92;1mhow to custom the params of `_funcs_kwargs` for a particular use with partial[0m; 
-                                                                                                                                                                    (4)
-        
-        
-        
-        ```
-        #| column: screen
-        fdb_.print()
-        ```
-        
-            ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
-            ===============================================================     on line [91;1m12[0m     ===============================================================
-                 with example [91;1m
-            @funcs_kwargs
-            class T:
-                _methods=['b'] # allows you to add method b upon instantiation
-                def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
-                def a(self): return 1
-                def b(self): return 2
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
                 
-            t = T()
-            test_eq(t.a(), 1)
-            test_eq(t.b(), 2)
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                
             
-            test_sig(T, '(f=1, *, b=None)')
-            inspect.signature(T)
             
-            def _new_func(): return 5
             
-            t = T(b = _new_func)
-            test_eq(t.b(), 5)
+            ```
+            #| column: screen
+            fdb.print()
+            ```
             
-            t = T(a = lambda:3)
-            test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                =======================================================     Investigating [91;1mfuncs_kwargs[0m     =======================================================
+                ==============================================================     on line [91;1mNone[0m     ==============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                def _f(self,a=1): return self.num + a # access the num attribute from the instance
+                
+                @funcs_kwargs(as_method=True)
+                class T: 
+                    _methods=['b']
+                    num = 5
+                    
+                t = T(b = _f) # adds method b
+                test_eq(t.b(5), 10) # self.num + 5 = 10
+                
+                def _f(self,a=1): return self.num * a #multiply instead of add 
+                
+                class T2(T):
+                    def __init__(self,num):
+                        super().__init__(b = _f) # add method b from the super class
+                        self.num=num
+                        
+                t = T2(num=3)
+                test_eq(t.b(a=5), 15) # 3 * 5 = 15
+                test_sig(T2, '(num)')
+                [0m     
+                
+                def funcs_kwargs(as_method=False):========================================================(0)       
+                    "Replace methods in `cls._methods` with those from `kwargs`"==========================(1) # [93;1mhow funcs_kwargs works[0m; [93;1mit is a wrapper around _funcs_kwargs[0m; [91;1mit offers two ways of running _funcs_kwargs[0m; [37;1mthe first, default way, is to add a func to a class without using self[0m; [91;1msecond way is to add func to class enabling self use;[0m; 
+                    if callable(as_method): return _funcs_kwargs(as_method, False)========================(2) # [37;1mhow to check whether an object is callable[0m; [93;1mhow to return a result of running a func[0m; [37;1m[0m; 
+                    return partial(_funcs_kwargs, as_method=as_method)====================================(3) # [92;1mhow to custom the params of `_funcs_kwargs` for a particular use with partial[0m; 
+                                                                                                                                                                        (4)
             
-            [0m     
             
-            def _funcs_kwargs(cls, as_method):========================================================(0) # [93;1mhow does _funcs_kwargs work: _funcs_kwargs is a decorator[0m; [35;1mit helps class e.g., T to add more methods[0m; [93;1mI need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T[0m; [36;1mthen after writing a func e.g., _new_func, I can add it by T(b = _new_func)[0m; [36;1mif I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True)[0m; 
-                old_init = cls.__init__===============================================================(1)       
-                def _init(self, *args, **kwargs):=====================================================(2) # [37;1mhow to define a method which can use self and accept any parameters[0m; 
-                    for k in cls._methods:============================================================(3) # [35;1mhow to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead[0m; [91;1m[0m; 
-                        arg = kwargs.pop(k,None)======================================================(4)       
-                        if arg is not None:===========================================================(5)       
-                            if as_method: arg = method(arg)===========================================(6) # [36;1mhow to turn a func into a method[0m; 
-                            if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7) # [93;1mhow to give a method a different instance, like self[0m; 
-                            setattr(self, k, arg)=====================================================(8) # [36;1mhow to add a method to a class as an attribute[0m; 
-                    old_init(self, *args, **kwargs)===================================================(9)       
-                functools.update_wrapper(_init, old_init)=============================================(10) # [34;1mhow to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself[0m; 
-                cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11) # [34;1mhow to add a list of names with None as default value to function `_init` to repalce its kwargs param[0m; 
-                if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__)) # [35;1mhow to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`[0m;  (12)
-                return cls============================================================================(13)      
-                                                                                                                                                                    (14)
+            
+            ```
+            #| column: screen
+            fdb_.print()
+            ```
+            
+                ======================================================     Investigating [91;1m_funcs_kwargs[0m     =======================================================
+                ===============================================================     on line [91;1m12[0m     ===============================================================
+                     with example [91;1m
+                @funcs_kwargs
+                class T:
+                    _methods=['b'] # allows you to add method b upon instantiation
+                    def __init__(self, f=1, **kwargs): pass # don't forget to include **kwargs in __init__
+                    def a(self): return 1
+                    def b(self): return 2
+                    
+                t = T()
+                test_eq(t.a(), 1)
+                test_eq(t.b(), 2)
+                
+                test_sig(T, '(f=1, *, b=None)')
+                inspect.signature(T)
+                
+                def _new_func(): return 5
+                
+                t = T(b = _new_func)
+                test_eq(t.b(), 5)
+                
+                t = T(a = lambda:3)
+                test_eq(t.a(), 1) # the attempt to add a is ignored and uses the original method instead.
+                
+                [0m     
+                
+                def _funcs_kwargs(cls, as_method):========================================================(0) # [93;1mhow does _funcs_kwargs work: _funcs_kwargs is a decorator[0m; [35;1mit helps class e.g., T to add more methods[0m; [93;1mI need to give the method a name, and put the name e.g., 'b' inside a list called _methods=['b'] inside class T[0m; [36;1mthen after writing a func e.g., _new_func, I can add it by T(b = _new_func)[0m; [36;1mif I want the func added to class to use self, I shall write @funcs_kwargs(as_method=True)[0m; 
+                    old_init = cls.__init__===============================================================(1)       
+                    def _init(self, *args, **kwargs):=====================================================(2) # [37;1mhow to define a method which can use self and accept any parameters[0m; 
+                        for k in cls._methods:============================================================(3) # [35;1mhow to pop out the value of an item in a dict (with None as default), and if the item name is not found, pop out None instead[0m; [91;1m[0m; 
+                            arg = kwargs.pop(k,None)======================================================(4)       
+                            if arg is not None:===========================================================(5)       
+                                if as_method: arg = method(arg)===========================================(6) # [36;1mhow to turn a func into a method[0m; 
+                                if isinstance(arg,MethodType): arg = MethodType(arg.__func__, self)=======(7) # [93;1mhow to give a method a different instance, like self[0m; 
+                                setattr(self, k, arg)=====================================================(8) # [36;1mhow to add a method to a class as an attribute[0m; 
+                        old_init(self, *args, **kwargs)===================================================(9)       
+                    functools.update_wrapper(_init, old_init)=============================================(10) # [34;1mhow to wrap `_init` around `old_init`, so that `_init` can use `old_init` inside itself[0m; 
+                    cls.__init__ = use_kwargs(cls._methods)(_init)========================================(11) # [34;1mhow to add a list of names with None as default value to function `_init` to repalce its kwargs param[0m; 
+                    if hasattr(cls, '__signature__'): cls.__signature__ = _rm_self(inspect.signature(cls.__init__)) # [35;1mhow to make a class.`__init__` signature to be the signature of the class using `__signature__` and `_rm_self`[0m;  (12)
+                    return cls============================================================================(13)      
+                                                                                                                                                                        (14)
+            
+            
+            
+            ```
+            
+            ```
+            
+            start of another heading 3
+            ### snoop only '_funcs_kwargs' by breaking up 'funcs_kwargs'
         
         
         
-        ```
+        [Open `0009_funcs_kwargs` in Jupyter Notebook locally](http://localhost:8889/tree/nbs/demos/0009_funcs_kwargs.ipynb#snoop:-from-_funcs_kwargs-to-funcs_kwargs
+        )
         
-        ```
         
-        start of another heading 3
-        ### snoop only '_funcs_kwargs' by breaking up 'funcs_kwargs'
+        
+        
+        
     
     
     
-    [Open `0009_funcs_kwargs` in Jupyter Notebook locally](http://localhost:8889/tree/nbs/demos/0009_funcs_kwargs.ipynb#snoop:-from-_funcs_kwargs-to-funcs_kwargs
+    [Open `01_utils` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/lib/01_utils.ipynb#<mark-style="background-color:-#ffff00">snoop:</mark>--<mark-style="background-color:-#ffff00">from</mark>--<mark-style="background-color:-#ffff00">_funcs_kwargs</mark>--<mark-style="background-color:-#ffff00">to</mark>--<mark-style="background-color:-#FFFF00">funcs_kwargs</mark>-
     )
     
     
@@ -6911,10 +7179,6 @@ fastnbs("snoop: from _funcs_kwargs to funcs_kwargs", output=True)
 import fastdebug.utils as fu
 import fastcore.meta as fm
 ```
-
-
-<style>.container { width:100% !important; }</style>
-
 
 **When looking for previous documented learning points**
 
@@ -7040,6 +7304,87 @@ fastsrcs()
 from nbdev import nbdev_export
 nbdev_export()
 ```
+
+
+    ---------------------------------------------------------------------------
+
+    TypeError                                 Traceback (most recent call last)
+
+    Input In [184], in <cell line: 3>()
+          1 #| hide
+          2 from nbdev import nbdev_export
+    ----> 3 nbdev_export()
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/fastcore/script.py:110, in call_parse.<locals>._f(*args, **kwargs)
+        107 @wraps(func)
+        108 def _f(*args, **kwargs):
+        109     mod = inspect.getmodule(inspect.currentframe().f_back)
+    --> 110     if not mod: return func(*args, **kwargs)
+        111     if not SCRIPT_INFO.func and mod.__name__=="__main__": SCRIPT_INFO.func = func.__name__
+        112     if len(sys.argv)>1 and sys.argv[1]=='': sys.argv.pop(1)
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/nbdev/doclinks.py:134, in nbdev_export(path, **kwargs)
+        132 if os.environ.get('IN_TEST',0): return
+        133 files = nbglob(path=path, **kwargs)
+    --> 134 for f in files: nb_export(f)
+        135 add_init(get_config().lib_path)
+        136 _build_modidx()
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/nbdev/export.py:59, in nb_export(nbname, lib_path, procs, debug, mod_maker)
+         57     return
+         58 mm = mod_maker(dest=lib_path, name=name, nb_path=nbname, is_new=mod=='#')
+    ---> 59 mm.make(cells, all_cells, lib_path=lib_path)
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/nbdev/maker.py:196, in make(self, cells, all_cells, lib_path)
+        194     mod_dir = os.path.relpath(self.fname.parent, Path(lib_path).parent)
+        195     _import2relative(all_cells, mod_dir)
+    --> 196 if not self.is_new: return self._make_exists(cells, all_cells)
+        198 self.fname.parent.mkdir(exist_ok=True, parents=True)
+        199 last_future = 0
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/nbdev/maker.py:222, in _make_exists(self, cells, all_cells)
+        220 "`make` for `is_new=False`"
+        221 if all_cells and self.parse:
+    --> 222     update_var('__all__', partial(self._update_all, all_cells), fn=self.fname)
+        223 with self.fname.open('a') as f: write_cells(cells, self.hdr, f)
+
+
+    File ~/mambaforge/lib/python3.9/site-packages/nbdev/maker.py:56, in update_var(varname, func, fn, code)
+         54 start,end = find_var(lines, varname)
+         55 del(lines[start:end])
+    ---> 56 lines.insert(start, f"{varname} = {res}")
+         57 code = '\n'.join(lines)
+         58 if fn: fn.write_text(code)
+
+
+    TypeError: 'NoneType' object cannot be interpreted as an integer
+
+
+
+```
+%debug
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+    > [0;32m/Users/Natsume/mambaforge/lib/python3.9/site-packages/nbdev/maker.py[0m(69)[0;36m__init__[0;34m()[0m
+    [0;32m     67 [0;31m        [0mself[0m[0;34m.[0m[0mfname[0m [0;34m=[0m [0mdest[0m[0;34m/[0m[0;34m([0m[0mname[0m[0;34m.[0m[0mreplace[0m[0;34m([0m[0;34m'.'[0m[0;34m,[0m[0;34m'/'[0m[0;34m)[0m [0;34m+[0m [0;34m".py"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+    [0m[0;32m     68 [0;31m        [0;32mif[0m [0mis_new[0m[0;34m:[0m [0mdest[0m[0;34m.[0m[0mmkdir[0m[0;34m([0m[0mparents[0m[0;34m=[0m[0;32mTrue[0m[0;34m,[0m [0mexist_ok[0m[0;34m=[0m[0;32mTrue[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+    [0m[0;32m---> 69 [0;31m        [0;32melse[0m[0;34m:[0m [0;32massert[0m [0mself[0m[0;34m.[0m[0mfname[0m[0;34m.[0m[0mexists[0m[0;34m([0m[0;34m)[0m[0;34m,[0m [0;34mf"{self.fname} does not exist"[0m[0;34m[0m[0;34m[0m[0m
+    [0m[0;32m     70 [0;31m        [0mself[0m[0;34m.[0m[0mdest2nb[0m [0;34m=[0m [0mnb_path[0m[0;34m.[0m[0mrelpath[0m[0;34m([0m[0mself[0m[0;34m.[0m[0mfname[0m[0;34m.[0m[0mparent[0m[0;34m)[0m[0;34m.[0m[0mas_posix[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+    [0m[0;32m     71 [0;31m        [0mself[0m[0;34m.[0m[0mhdr[0m [0;34m=[0m [0;34mf"# %% {self.dest2nb}"[0m[0;34m[0m[0;34m[0m[0m
+    [0m
+    ipdb> p dest
+    Path('/Users/Natsume/Documents/fastdebug/fastdebug')
+    ipdb> q
+
 
 
 ```

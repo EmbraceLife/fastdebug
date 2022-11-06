@@ -1,11 +1,12 @@
 # Make Learning Fastai Uncool
 
+## Todos
 
-```
-# todo:
-#     how to save a model
-#     push to nbviewer for different version review
-```
+- a workflow: use nbdev to split and assembly code/notebooks starting with kaggle notebook 1 
+- start to work on Radek's notebooks on OTTO competition [started]
+- display all important forum posts of mine and others I admire [done]
+- what do I most like to work on and share (kaggle notebooks dissection)
+
 
 
 ```
@@ -17,7 +18,7 @@ from fastdebug.utils import *
 <style>.container { width:100% !important; }</style>
 
 
-## `fastlistnbs` to read menu, `fastnbs` to dive in
+## use `fastlistnbs` to check menu
 
 
 ```
@@ -39,15 +40,165 @@ display section headings of notebooks, filter options: fastai, part2, groundup, 
 
 |    | **Type** | **Default** | **Details** |
 | -- | -------- | ----------- | ----------- |
-| query | str | all | howto, srcode, journey, question, doc, radek, or all |
+| query | str | all | "howto", "srcode", "journey", "question", "doc", "radek", "practice", "links", or "all" |
 | flt_fd | str | src | other options: "groundup", "part2", "all" |
 
 
 
 
 ```
-# fastlistnbs??
+fastnbs("src: fastlistnbs")
 ```
+
+
+### <mark style="background-color: #ffff00">src:</mark>  <mark style="background-color: #FFFF00">fastlistnbs</mark> (query, fld_fd), hts
+
+
+
+
+heading 3.
+
+
+```python
+#| export 
+import pandas as pd
+```
+
+```python
+#| export
+hts = pd.Series(list(map(lambda x: "ht: " + x, "imports, data_download, data_access, data_prep, data_loaders, cbs_tfms, learner, fit, pred, fu".split(", "))))
+```
+
+```python
+hts
+```
+
+```python
+#| export
+def fastlistnbs(query="all", # "howto", "srcode", "journey", "question", "doc", "radek", "practice", "links", or "all"
+                flt_fd="src"): # other options: "groundup", "part2", "all"
+    "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
+src_fastcore, all"
+    nbs, folder, _, _, _, _ = get_all_nbs()
+    nb_rt = ""
+    nbs_fd = []
+    for nb in nbs:
+        if flt_fd == "fastai" and "_fastai_" in nb.split("/")[-1] and not "_fastai_pt2" in nb.split("/")[-1]: 
+            nbs_fd.append(nb)
+        elif flt_fd == "part2" and "_fastai_pt2" in nb.split("/")[-1]:
+            nbs_fd.append(nb)
+        elif flt_fd == "groundup" and "groundup_" in nb.split("/")[-1]:            
+            nbs_fd.append(nb)
+        elif flt_fd == "src" and "fast" in nb.split("/")[-1]:
+            nbs_fd.append(nb)
+        elif flt_fd == "all": 
+            nbs_fd.append(nb)
+        else: 
+            continue      
+
+    if query != "howto":
+        for nb_rt in nbs_fd:
+            with open(nb_rt, 'r') as file:
+                found = False
+                for idx, l in enumerate(file):
+                    if "##" in l:
+                        if query == "howto" and "ht:" in l:
+                            if l.count("#") == 2: print()
+                            print(l, end="") # no extra new line between each line printed   
+                            found = True
+                        elif query == "srcode" and "src:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
+                            found = True
+                        elif query == "doc" and "doc:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
+                            found = True                        
+                        elif query == "journey" and "jn:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
+                            found = True
+                        elif query == "question" and "qt:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
+                            found = True
+                        elif query == "radek" and "rd:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
+                            found = True
+                        elif query == "practice" and "pt:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
+                            found = True
+                        elif query == "links" and "lk:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
+                            found = True                            
+                        elif query == "all": 
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
+                            found = True                        
+                if found: print(nb_rt + "\n")
+    else:
+        for idx, o in enumerate(hts):
+            print('{:=<157}'.format(f"step {idx}: {o}"))
+            for nb_rt in nbs_fd:
+                with open(nb_rt, 'r') as file:
+                    found = False
+                    for idx, l in enumerate(file):
+                        if "##" in l:
+                            if o in l:
+                                if l.count("#") == 2: print()
+                                print(l, end="") # no extra new line between each line printed   
+                                found = True                   
+                    if found: print(nb_rt + "\n")
+```
+
+```python
+# for i, o in enumerate("imports, data-download, data-access, data-prep, data-loaders, cbs-tfms, learner, fit, pred".split(", ")):
+#     i, o
+```
+
+```python
+fastlistnbs("howto")
+# fastlistnbs("doc")
+# fastlistnbs("srcode")
+# fastlistnbs("journey")
+
+```
+
+Next, heading 2
+## fastlistsrcs
+
+
+
+[Open `01_utils` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/lib/01_utils.ipynb#src:-fastlistnbs(query,-fld_fd),-hts
+)
+
+
+
+```
+hts
+```
+
+
+
+
+    0          ht: imports
+    1    ht: data_download
+    2      ht: data_access
+    3        ht: data_prep
+    4     ht: data_loaders
+    5         ht: cbs_tfms
+    6          ht: learner
+    7              ht: fit
+    8             ht: pred
+    9               ht: fu
+    dtype: object
+
+
+
+## use fastnbs to dive in
 
 
 ```
@@ -95,16 +246,16 @@ fastlistnbs("journey")
 
 
 ```
-fastnbs("jn: help")
+fastnbs("jn: help other")
 ```
 
 
-### <mark style="background-color: #ffff00">jn:</mark>  <mark style="background-color: #FFFF00">help</mark>  other is the best way forward
+### <mark style="background-color: #ffff00">jn:</mark>  <mark style="background-color: #ffff00">help</mark>  <mark style="background-color: #FFFF00">other</mark>  is the best way forward
 
 
 
 
-The current section is heading 3.
+heading 3.
 
 
 
@@ -125,7 +276,7 @@ What Jeremy told us to do is loud and clear, the 4 steps (watch, experiment, rep
 Why I am always trying to do something different? Why couldn't I just follow this great advice right from the start? I walked [a long way around it](https://twitter.com/shendusuipian/status/1587429658621988871?s=20&t=zjz1OlYRt7yJJ8HVBdsqoA) and luckily I get my sense back and move onto the second step now. 
 
 
-start of heading 2
+Next, heading 2
 ## ht: imports - vision
 
 
@@ -172,7 +323,7 @@ fastnbs("doc: ImageDataLoaders")
 
 
 
-The current section is heading 3.
+heading 3.
 
 
 
@@ -219,7 +370,7 @@ def from_folder(cls:ImageDataLoaders, path, train='train', valid='valid', valid_
 show_doc(ImageDataLoaders.from_folder)
 ```
 
-start of another heading 3
+Next, heading 3
 ### src: ImageDataLoaders.from_folder
 
 
@@ -238,7 +389,7 @@ start of another heading 3
 
 
 
-The current section is heading 3.
+heading 3.
 
 
 
@@ -262,7 +413,7 @@ fnames: all the image/data filenames to be used for the model, get_image_files(p
 # fastnbs("Datasets")
 ```
 
-start of another heading 3
+Next, heading 3
 ### src: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
 
 
@@ -313,7 +464,7 @@ fastnbs("src: ImageDataLoaders.from_name")
 
 
 
-The current section is heading 3.
+heading 3.
 
 
 ```python
@@ -649,7 +800,7 @@ class DataLoaders(GetAttr):
 
 ```
 
-start of another heading 3
+Next, heading 3
 ### vision_learner(dls, resnet18, metrics=error_rate)
 
 
@@ -733,8 +884,109 @@ fastlistnbs("howto")
 
 
 ```
+fastnbs('ht: learner save model')
+```
+
+
+### <mark style="background-color: #ffff00">ht:</mark>  <mark style="background-color: #ffff00">learner</mark>  - <mark style="background-color: #ffff00">save</mark>  <mark style="background-color: #FFFF00">model</mark>  with `learn.export`
+
+
+
+
+heading 3.
+
+
+
+Next, heading 3
+### doc: learn.export(fname='export.pkl', pickle_module=pickle, pickle_protocol=2)
+
+
+
+[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb#ht:-learner---save-model-with-`learn.export`
+)
+
+
+
+[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1)
+
+
 
 ```
+fastnbs("doc: learn.export")
+```
+
+
+### <mark style="background-color: #ffff00">doc:</mark>  <mark style="background-color: #FFFF00">learn.export</mark> (fname='export.pkl', pickle_module=pickle, pickle_protocol=2)
+
+
+
+
+heading 3.
+
+
+
+return: nothing, but saved a model as a pkl file in `learn.path` with the name given by `fname`
+
+we can change the folder for storing model by changing `learn.path`
+
+we can give a detailed name to specify the model
+
+<!-- #region -->
+```python
+@patch
+def export(self:Learner, fname='export.pkl', pickle_module=pickle, pickle_protocol=2):
+    "Export the content of `self` without the items and the optimizer state for inference"
+    if rank_distrib(): return # don't export if child proc
+    self._end_cleanup()
+    old_dbunch = self.dls
+    self.dls = self.dls.new_empty()
+    state = self.opt.state_dict() if self.opt is not None else None
+    self.opt = None
+    with warnings.catch_warnings():
+        #To avoid the warning that come from PyTorch about model not being checked
+        warnings.simplefilter("ignore")
+        # the folder is defined by self.path
+        torch.save(self, self.path/fname, pickle_module=pickle_module, pickle_protocol=pickle_protocol)
+    self.create_opt()
+    if state is not None: self.opt.load_state_dict(state)
+    self.dls = old_dbunch
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/learner.py
+# Type:      method
+```
+<!-- #endregion -->
+
+```python
+learn.path
+```
+
+```python
+learn.path = Path('models')
+```
+
+```python
+learn.path
+```
+
+```python
+learn.export("paddy_10pct_resnet26d_10epochs.pkl")
+```
+
+```python
+
+```
+
+Next, heading 3
+### qt: How many epochs should I train in general in this early stage with 10% dataset without gpu
+
+
+
+[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb#doc:-learn.export(fname='export.pkl',-pickle_module=pickle,-pickle_protocol=2)
+)
+
+
+
+[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1)
+
 
 ## Search questions (notes and Q&A on forum) 
 
@@ -787,44 +1039,142 @@ fastlistnbs("radek")
 ```
 
     
-    ## rd: The hidden game of machine learning? 
+    ## rd: The problem with theory
+    ### rd: How Hinton approaches and discover theories
+    ### rd: Why must practice before theory
+    ### rd: How to make practice before theory
+    
+    ## rd: For best effects, use one cup of theory, one cup of practice. Rinse and repeat
+    ### rd: Is your learning of theory takes you where you want to go
+    ### rd: What is the darker effect of just learning theory
+    ### rd: How to combine practice and theory as a learner of image classification
+    ### rd: What benefits does the practice + theory approach offer
+    
+    ## rd: Practice wins every time
+    
+    ## rd: Programming is all about what you have to say
+    ### rd: What makes one a good programmer? (give me the most wrong answer)
+    ### rd: How is your ability to program ultimately measured
+    ### rd: What is the only way to really understand a piece of syntax
+    ### rd: How to learn a new language by reading and writing
+    ### rd: Why knowing the programming language is only a starting point
+    ### rd: Why domain knowledge comes first? 
+    ### rd: What is the fastest way to learn to program?
+    
+    ## rd: The secret of good developers
+    ### rd: Why it is costly to enter your zone of work
+    ### rd: What's wrong with switching context during work
+    ### rd: Tips to achieve a long uninterrupted sessions
+    
+    ## rd: The best way to improve as a developer
+    ### rd: How to be better at something
+    ### rd:  What being a developer is all about
+    ### rd: How to start to read code
+    ### rd: How to start to write code
+    ### rd: Just do it
+    
+    ## rd: How to use your tools to achieve a state of flow
+    ### rd: What is a state of flow and why it is great to be in
+    ### rd: What developers often do for achieving a state of flow
+    ### rd: What can prevent you dive into a state of flow
+    ### rd: How to get into a state of flow more often
+    
+    ## rd: Use reality as your mirror
+    ### rd: Why testing beliefs and assumptions
+    ### rd: How Radek overcomed the fear of tweeting
+    ### rd: How to face the unknown
+    
+    ## rd: Do genuine work (it compounds)
+    ### rd: Why writing is better than thinking
+    ### rd: Why sharing is even better than writing alone
+    ### rd: What is the best/fastest way to learn
+    
+    ## rd: The hidden game of machine learning
+    ### rd: What are the essential questions of machine learning
     ### rd: What makes you an adept practitioner? 
     ### rd: What makes you a great practitioner? 
     ### rd: What can lead to a tragic consequence of your model? 
     ### rd: How to gain a deeper understanding of the ability to generalize to unseen data?
     
-    ## rd: Programming is all about what you have to say
-    ### rd: How to learn a new language by reading and writing
-    ### rd: Why knowing the programming language is only a starting point
-    ### rd: Why domain knowledge comes first? 
-    ### rd: What is the fastest way to learn to program?
+    ## rd: How to structure a healthy machine learning project
+    ### rd: ingredient 1 - train-validation-test split
+    ### rd: ingredient 2 - what is a baseline
+    ### rd: what does a simplest baseline look like
+    ### rd: Why is having a baseline so crucial? 
+    ### rd: What to experiment on after baseline
+    ### rd: Why running entire pipeline regularly?
+    ### rd: How to allow time to do the rest
+    ### rd: A beautiful sum up by Radek
+    
+    ## rd: How to win Kaggle
+    ### rd: even getting started can take a while
+    ### rd: Why Kaggle competition takes time
+    ### rd: Join the competition early for creativity
+    ### rd: What to do with Kaggle forum
+    ### rd: How to read papers for kaggle
+    ### rd: What about blog posts on papers
+    ### rd: What to tweak daily
+    ### rd: How to build a baseline for kaggle
+    ### rd: What's the objective of initial models
+    ### rd: The importance of validation split
+    ### rd: how do we measure whether we got it right?
+    ### rd: Why ensemble is a must
+    ### rd: cross-validation is a must (not clear to me)
+    ### rd: Sum up
+    
+    ## rd: How to Pick Up What They Put Down by swyx
+    ### rd: Who are they?
+    ### rd: What do you mean by “put down”?
+    ### rd: How do I pick “it” up? 
+    ### rd: Love what you do above and tag your mentor
+    ### rd: What happens when you do this?
+    ### rd: Why does this work on them?
+    ### rd: Why does this work on you?
+    ### rd: How to get started
+    
+    ## rd: The Permissionless Apprenticeship
+    ### rd: How to have their attention
+    ### rd: Why working for them without asking
+    ### rd: How to work for them
+    ### rd: The worse scenario of working for them
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md
     
 
 
 
 ```
-fastnbs("rd: domain knowledge")
+fastnbs("rd: experiment")
 ```
 
 
-### <mark style="background-color: #ffff00">rd:</mark>  why <mark style="background-color: #ffff00">domain</mark>  <mark style="background-color: #FFFF00">knowledge</mark>  comes first? 
+### <mark style="background-color: #ffff00">rd:</mark>  what to <mark style="background-color: #FFFF00">experiment</mark>  on after baseline
 
 
 
 
-The current section is heading 3.
-
-Why I should not put learning fastai library itself before doing experiments
-
-> The big secret is that domain knowledge comes first. There is an art to writing clean, maintainable code, no doubt about that. But you cannot put the cart before the horse. You can study naming, refactoring, dependency inversion, and so on only once you have a lot to say. Only then will the more advanced features of a language make sense. And only then will they become important.
-
-start of another heading 3
-### rd: What is the fastest way to learn to program?
+heading 3.
 
 
+> However, it is important that we **not** run the experiments solely to tweak the **hyperparameters**, especially early in the training. We want to invest our time where it matters. That usually means **exploring a larger set of architectures and developing diagnostic code**. The more we learn about **how our models are performing**, the better. Additionally, **trying out different architectures can be a great source of insight on what is possible**.
 
-[Open `00_fastai_Meta_learning_Radek` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/00_fastai_Meta_learning_Radek.ipynb#rd:-Why-domain-knowledge-comes-first?-
+
+> As we build on our baseline, the idea is to keep moving in small steps. Just as we didn’t want to go from having no pipeline to training a complex model, neither do we want to jump straight to it now. Before we train an elaborate, state-of-the- art deep learning model, we might want to **try random forest[31] or a simple model consisting only of fully connected layers**.
+
+> [31] Random Forest is a great algorithm to reach for, given the chance! It is very quick to train and it doesn’t overfit. On many datasets, it can match the performance of more complex methods. It also lends itself extremely well to interpretation. For an example in which a Random Forest classifier matched the performance of a neural network, see this repository. Additionally, it enabled a deeper understanding of the factors at play, which would be very hard or impossible to get at using the RNN!
+
+
+> Extending this way of thinking to the implementation of our most complex model, we probably **don**’t want to go about **building it in one sweep**. We might want to **begin by implementing the loss and bolting it onto a simple model consisting of only fully connected layers**. The **next** step might be to implement **some set of layers** and **pass a batch from our dataloader through it**. Ensuring we **get something other than all zeros and an output of the correct shape is a very valuable check**.[32]
+
+> [32] This can be taken further, where we **look at the means and standard deviations of intermittent layers**, **monitor for how many dead ReLus** we have, and so on. In many instances, just a single check will suffice as it provides a great value for the time invested.
+
+> The idea is to always move in **small increments**, using simpler models as **a stepping stone to more complex** ones.
+
+Next, heading 3
+### pt: how to explore architectures and developing diagnostic code in tiny steps (above)
+
+
+
+[Open `00_fastai_Meta_learning_Radek` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/00_fastai_Meta_learning_Radek.ipynb#rd:-What-to-experiment-on-after-baseline
 )
 
 
@@ -835,12 +1185,11 @@ start of another heading 3
 fastlistnbs("practice")
 ```
 
-
-<style>.container { width:100% !important; }</style>
-
-
+    ### pt: what does Radek mean by benchmarks and where are they and how to use them
     ### pt: how my tool help me stay in the flow
     ### pt: what is my voice and how could I help others (myself)?
+    ### pt: how to explore architectures and developing diagnostic code in tiny steps (above)
+    #### pt: how to find (what) valuable insights from simple model with subset of data?
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md
     
 
@@ -856,17 +1205,62 @@ fastnbs("pt: my tool")
 
 
 
-The current section is heading 3.
+heading 3.
 
 
 Building index.ipynb using fastlistnbs and fastnbs on howto, doc, src, question, radek is the way to get closer to a state of flow 
 
-start of heading 2
+Next, heading 2
 ## rd: Use reality as your mirror
 
 
 
 [Open `00_fastai_Meta_learning_Radek` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/00_fastai_Meta_learning_Radek.ipynb#pt:-how-my-tool-help-me-stay-in-the-flow
+)
+
+
+## Search links
+
+
+```
+fastlistnbs("links")
+```
+
+    ### lk: Jeremy and Paddy
+    ### lk: Daniel's fastai forum posts
+    ### lk: Radek and OTTO
+    ### lk: ilovescience on kaggle
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_links_forums_kaggle_github.md
+    
+
+
+
+```
+fastnbs("lk: Radek Otto")
+```
+
+
+### <mark style="background-color: #ffff00">lk:</mark>  <mark style="background-color: #ffff00">radek</mark>  and <mark style="background-color: #FFFF00">otto</mark> 
+
+
+
+
+heading 3.
+
+Radek on [twitter](https://twitter.com/radekosmulski)
+
+How to get started [post](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364062)
+
+Baseline model [notebook](https://www.kaggle.com/code/radek1/co-visitation-matrix-simplified-imprvd-logic/notebook?scriptVersionId=110068977)
+
+Full dataset converted to csv/parquet format [post](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843) with notebooks
+
+Next, heading 3
+### lk: ilovescience on kaggle
+
+
+
+[Open `fastai_links_forums_kaggle_github` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/fastai_links_forums_kaggle_github.ipynb#lk:-Radek-and-OTTO
 )
 
 

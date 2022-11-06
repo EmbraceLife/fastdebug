@@ -68,10 +68,6 @@ import fastai
 ```
 
 ```python
-whichversion("fastai")
-```
-
-```python
 whatinside(fastai, lib=True)
 ```
 
@@ -548,6 +544,10 @@ def resize_images(path, max_workers=defaults.cpus, max_size=None, recurse=False,
 search and download images use query words using duckduckgo_search and fastdownload
 
 two type of things (images) will be downloaded into two folders "bird" and "forest" under the parent folder "bird_or_forest"
+
+```python
+sleep
+```
 
 ```python
 # @snoop

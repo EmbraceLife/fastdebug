@@ -14,26 +14,36 @@ jupyter:
 
 # Make Learning Fastai Uncool
 
-```python
-# todo:
-#     how to save a model
-#     push to nbviewer for different version review
-```
+
+## Todos
+
+
+- a workflow: use nbdev to split and assembly code/notebooks starting with kaggle notebook 1 
+- start to work on Radek's notebooks on OTTO competition [started]
+- display all important forum posts of mine and others I admire [done]
+- what do I most like to work on and share (kaggle notebooks dissection)
+
 
 ```python
 #| hide
 from fastdebug.utils import *
 ```
 
-## `fastlistnbs` to read menu, `fastnbs` to dive in
+## use `fastlistnbs` to check menu
 
 ```python
 show_doc(fastlistnbs)
 ```
 
 ```python
-# fastlistnbs??
+fastnbs("src: fastlistnbs")
 ```
+
+```python
+hts
+```
+
+## use fastnbs to dive in
 
 ```python
 show_doc(fastnbs)
@@ -46,7 +56,7 @@ fastlistnbs("journey")
 ```
 
 ```python
-fastnbs("jn: help")
+fastnbs("jn: help other")
 ```
 
 ## Search docs
@@ -85,7 +95,11 @@ fastlistnbs("howto")
 ```
 
 ```python
+fastnbs('ht: learner save model')
+```
 
+```python
+fastnbs("doc: learn.export")
 ```
 
 ## Search questions (notes and Q&A on forum) 
@@ -109,7 +123,7 @@ fastlistnbs("radek")
 ```
 
 ```python
-fastnbs("rd: domain knowledge")
+fastnbs("rd: experiment")
 ```
 
 ## Search my practice
@@ -120,6 +134,16 @@ fastlistnbs("practice")
 
 ```python
 fastnbs("pt: my tool")
+```
+
+## Search links
+
+```python
+fastlistnbs("links")
+```
+
+```python
+fastnbs("lk: Radek Otto")
 ```
 
 ```python

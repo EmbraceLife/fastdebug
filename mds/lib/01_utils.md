@@ -1469,9 +1469,16 @@ str(Path.home()/"Documents/fastdebug/mds") + "/"
 def get_all_nbs():
     "return paths for all nbs both in md and ipynb format into lists"
 #     md_folder = '/Users/Natsume/Documents/divefastai/Debuggable/jupytext/'
+    py_folder = str(Path.home()/"Documents/fastdebug/fastdebug") + "/"
     md_folder = str(Path.home()/"Documents/fastdebug/mds") + "/" # '/Users/Natsume/Documents/fastdebug/mds/'
     md_output_folder = str(Path.home()/"Documents/fastdebug/mds_output") + "/" # '/Users/Natsume/Documents/fastdebug/mds_output/'    
     ipy_folder = str(Path.home()/"Documents/fastdebug/nbs") + "/" # '/Users/Natsume/Documents/fastdebug/nbs/'
+    
+    pys = []
+    for i in os.listdir(py_folder):
+        if ".py" in i: 
+            pys.append(py_folder + i)
+    
     md_nbs = []
     for i in os.listdir(md_folder):
         if "." not in i:
@@ -1487,7 +1494,7 @@ def get_all_nbs():
             ipy_nbs = ipy_nbs + [ipy_folder + i + "/" + j for j in os.listdir(ipy_folder + i) if j.endswith('.ipynb')]
 
             
-    return (md_nbs, md_folder, ipy_nbs, ipy_folder, md_output_nbs, md_output_folder)
+    return (md_nbs, md_folder, ipy_nbs, ipy_folder, md_output_nbs, md_output_folder, pys, py_folder)
 ```
 
 ```python
@@ -1495,8 +1502,8 @@ def get_all_nbs():
 ```
 
 ```python
-nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd = get_all_nbs()
-for i in [nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd]:
+nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd, pys, py_folder= get_all_nbs()
+for i in [nbs_md, fdmd, nbs_ipy, fdipy, md_out, md_out_fd, pys, py_folder]:
     pprint(i)
     print()
 ```
@@ -1574,7 +1581,7 @@ def openNB(name, db=False):
 #| export
 def openNB(name, heading=None, db=False):
     "Get a link to the notebook at by searching keyword or notebook name"
-    _, _, ipynbs, _, _, _= get_all_nbs()
+    _, _, ipynbs, _, _, _, pys, _= get_all_nbs()
     name = name.split(".md")[0]
     root = getrootport()[1]
     nb_path = ""
@@ -1603,6 +1610,121 @@ bool("head")
 
 ```python
 # openNB("FixSigMeta", db=True)
+```
+
+## openpy
+
+```python
+#| export
+def openpy(name, acu=0.8, heading=None, db=False):
+    "Get a link to the notebook at by searching keyword or notebook name"
+    _, _, ipynbs, _, _, _, pys, py_fd= get_all_nbs()
+    questlst = name.split(" ")
+    name = ""
+    for pyf in pys: 
+        truelst = [q.lower() in pyf.lower() for q in questlst]
+        pct = sum(truelst)/len(truelst)
+        if pct > acu: name = pyf.split(".py")[0]
+
+    if not bool(name): return "no match py file"
+
+#     name = name.split(".py")[0]
+    root = getrootport()[1]
+    py_path = ""
+    for f in pys:
+        if name in f:
+            py_path = f
+            name = f.split("/")[-1].split(".")[0]
+            if db: print(f'py_path:{py_path}, name: {name}')
+    root_server = getrootport()[0]
+    folder_mid = py_path.split(root)[1].split(name)[0]
+    if db: print(f'root: {root}, root_server: {root_server}, name: {name}, folder_mid: {folder_mid}')
+    path = root + folder_mid
+    path_server = root_server[:-1] + folder_mid
+    if db: print(f'path: {path}, path_server: {path_server}')
+    for f in os.listdir(path):  
+        if f.endswith(".py"):
+            if name in f: 
+                file_name = path_server + f + "#" + heading if bool(heading) else path_server + f
+                jn_link(name, file_name)
+```
+
+```python
+# openpy("kaggle_paddy_pt1.py")
+openpy("pt1 kaggle")
+```
+
+```python
+
+```
+
+## ht: fu - export_open_py
+
+```python
+#| export
+# calling from a different notebook, nbdev_export() will cause error, this is why use exec() to call in a different notebook
+eop = """
+from time import sleep
+import os
+import nbdev
+nbdev.nbdev_export()
+sleep(2)
+openpy(quest)
+"""
+```
+
+```python
+#| export
+def export_open_py():
+    _, _, _, _, _, _, pys, _, = get_all_nbs()
+    lst = [pyf for pyf in pys if "src" in Path(pyf).name or "kaggle" in Path(pyf).name]
+    pprint(lst)
+    res = """
+quest = "pyfile"
+exec(eop)
+"""
+    return res
+```
+
+```python
+export_open_py()
+```
+
+```python
+exec(export_open_py().replace('pyfile', 'src_download'))
+```
+
+```python
+
+```
+
+## download_kaggle_dataset
+
+```python
+#| export
+from fastkaggle import *
+```
+
+```python
+#| export
+def download_kaggle_dataset(competition, local_folder='', install=''):
+    "override from fastkaggle.core.setup_comp. \
+Return a path of the `local_folder` where `competition` dataset stored, \
+downloading it if needed"
+    if iskaggle:
+        if install:
+            os.system(f'pip install -Uqq {install}')
+        return Path('../input')/competition
+    else:
+        path = Path(local_folder + competition)
+        api = import_kaggle()
+        if not path.exists():
+            import zipfile
+            api.competition_download_cli(str(competition), path=path)
+            zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
+        return path
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
 ```
 
 ## openNBKaggle
@@ -2002,7 +2124,7 @@ fastnbs() can use keywords to search learning points (a section title and a sect
 ```
 
 ```python
-mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd = get_all_nbs()
+mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd, _, _ = get_all_nbs()
 [file_path for file_path in mds_no_output if "_fastai_" in file_path and "_fastai_pt2_" not in file_path]
 ```
 
@@ -2049,7 +2171,7 @@ fastnbs() can use keywords to search learning points (a section title and a sect
                         openNBKaggle(file_name, db=db)
 ```
 
-### optimize the search a little to speed up potentially
+### src: fastnbs(question, filter_folder="src", ...)
 
 ```python
 #| export
@@ -2065,7 +2187,7 @@ def fastnbs(question:str, # query options, "rd: adept practitioner", "doc: Image
 then use fastnotes() to find interesting lines which can be notes or codes, and finally \
 use fastnbs() display the entire learning points section including notes and codes."
     questlst = question.split(' ')
-    mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd = get_all_nbs()
+    mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd, pys, py_folder = get_all_nbs()
     if not output: mds = mds_no_output
     else: mds = mds_output
         
@@ -2630,7 +2752,7 @@ src_fastcore, all"
             if found: print(nb_rt + "\n")
 ```
 
-### make howto splittable
+### src: fastlistnbs(query, fld_fd), hts
 
 ```python
 #| export 
@@ -2648,11 +2770,11 @@ hts
 
 ```python
 #| export
-def fastlistnbs(query="all", # howto, srcode, journey, question, doc, radek, practice, or all
+def fastlistnbs(query="all", # "howto", "srcode", "journey", "question", "doc", "radek", "practice", "links", or "all"
                 flt_fd="src"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
 src_fastcore, all"
-    nbs, folder, _, _, _, _ = get_all_nbs()
+    nbs, folder, _, _, _, _, pys, py_folder = get_all_nbs()
     nb_rt = ""
     nbs_fd = []
     for nb in nbs:
@@ -2700,6 +2822,10 @@ src_fastcore, all"
                             print(l, end="") 
                             found = True
                         elif query == "practice" and "pt:" in l:
+                            if l.count("#") == 2: print()                        
+                            print(l, end="") 
+                            found = True
+                        elif query == "links" and "lk:" in l:
                             if l.count("#") == 2: print()                        
                             print(l, end="") 
                             found = True                            
@@ -2854,6 +2980,10 @@ fastsrcs()
 #| hide
 from nbdev import nbdev_export
 nbdev_export()
+```
+
+```python
+%debug
 ```
 
 ```python

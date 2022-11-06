@@ -50,22 +50,30 @@ Why I am always trying to do something different? Why couldn't I just follow thi
 ### ht: imports - fastkaggle 
 
 ```python
-# install fastkaggle if not available
+#| export kaggle_paddy_pt1
+# make sure fastkaggle is install and imported
+import os
+```
+
+```python
+#| export kaggle_paddy_pt1
 try: import fastkaggle
 except ModuleNotFoundError:
-    !pip install -Uq fastkaggle
+    os.system("pip install -Uq fastkaggle")
 
 from fastkaggle import *
 ```
 
-### imports for kaggle or local
+### ht: imports - imports fastdebug.utils on Kaggle
 
 ```python
-if iskaggle:
-    !pip install nbdev snoop
+#| export kaggle_paddy_pt1
+# use fastdebug.utils 
+if iskaggle: os.system("pip install nbdev snoop")
 ```
 
 ```python
+#| export kaggle_paddy_pt1
 if iskaggle:
     path = "../input/fastdebugutils0"
     import sys
@@ -75,8 +83,15 @@ if iskaggle:
     from utils import *
 else: 
     from fastdebug.utils import *
-    from fastai.vision.all import *
     import fastdebug.utils as fu
+```
+
+### ht: imports - import for vision
+
+```python
+#| export kaggle_paddy_pt1
+# import for dealing with vision problem
+from fastai.vision.all import *
 ```
 
 ### ht: fu - whatinside, show_doc, fastlistnbs, fastnbs
@@ -111,19 +126,11 @@ else:
 
 - when updating the library, go to the dataset [page](https://www.kaggle.com/datasets/danielliao/fastdebugutils0), click top right `...` and click `update version` to upload the latest version of your script
 
-```python
-# !pip install nbdev snoop
 
-# path = "../input/fastdebugutils0"
-# import sys
-# sys.path
-# sys.path.insert(1, path)
-# import utils as fu
-```
-
-### ht: imports - fastkaggle - push libs to kaggle with `create_libs_datasets`
+### ht: imports - create libs as datasets for kaggle with `create_libs_datasets`
 
 ```python
+# from fastkaggle import *
 # lib_path = Path('/root/kaggle_datasets') # not working
 # lib_path = Path('../input/kaggle_datasets') # it's working, and created and stored locally
 # username = 'danielliao'
@@ -191,7 +198,7 @@ running `setup_comp(comp, install='fastai "timm>=0.6.2.dev0")` to download the d
 First, we'll get the data. I've just created a new library called [fastkaggle](https://fastai.github.io/fastkaggle/) which has a few handy features, including getting the data for a competition correctly regardless of whether we're running on Kaggle or elsewhere. Note you'll need to first accept the competition rules and join the competition, and you'll need your kaggle API key file `kaggle.json` downloaded if you're running this somewhere other than on Kaggle. `setup_comp` is the function we use in `fastkaggle` to grab the data, and install or upgrade our needed python modules when we're running on Kaggle:
 
 
-### doc: setup_comp(comp, local_folder='', install='fastai "timm>=0.6.2.dev0")
+### doc: download_kaggle_dataset(comp, local_folder='', install='fastai "timm>=0.6.2.dev0")
 
 
 override `fastkaggle.core.setup_comp` for my use
@@ -199,6 +206,10 @@ override `fastkaggle.core.setup_comp` for my use
 If on kaggle, download and install required libraries to work with, and return a path linking to the dataset
 
 If on local machine, download the dataset to the path based on local_folder if the path is not available and return the path
+
+```python
+setup_comp
+```
 
 ```python
 show_doc(setup_comp)
@@ -236,6 +247,16 @@ show_doc(fastkaggle.core.setup_comp)
 src(fastkaggle.core.setup_comp)
 ```
 
+### src: download_kaggle_dataset
+
+```python
+export_open_py()
+```
+
+```python
+exec(export_open_py().replace('pyfile', 'src_download'))
+```
+
 ### ht: fu - debug every srcline without breaking
 
 
@@ -247,40 +268,25 @@ src(chk)
 
 ### ht: fu - (de)activate snoop without commenting out using `snoopon()` and `snoopoff()`  
 
-
-### src: setup_compsetup_comp(comp, local_folder='', install='fastai "timm>=0.6.2.dev0")
-
 ```python
 snoopon()
 ```
 
 ```python
-# @snoop
-# def setup_comp(competition, local_folder='', install=''):
-#     "Get a path to data for `competition`, downloading it if needed"
-#     if iskaggle:
-#         if install:
-#             os.system(f'pip install -Uqq {install}')
-#         return Path('../input')/competition
-#     else:
-#         path = Path(local_folder + competition)
-#         api = import_kaggle()
-#         if not path.exists():
-#             import zipfile
-# #             pp(doc_sig(api.competition_download_cli))
-# #             return
-#             api.competition_download_cli(str(competition), path=path)
-#             zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
-#         return path
-# # File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
-# # Type:      function
+
 ```
 
 ```python
+#| export kaggle_paddy_pt1
+# download (if necessary and return the path of the dataset)
+home = "/Users/Natsume/Documents/fastdebug/kaggle_datasets/"
 comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
-# local = "/Users/Natsume/Documents/"
-# path = setup_comp(comp, local_folder=local, install='fastai "timm>=0.6.2.dev0"')
-path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+# path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+```
+
+```python
+hts
 ```
 
 ```python
@@ -301,6 +307,7 @@ Now we can import the stuff we'll need from fastai, set a seed (for reproducibil
 ```
 
 ```python
+#| export kaggle_paddy_pt1
 set_seed(42)
 ```
 
@@ -1119,6 +1126,9 @@ learn.lr_find(suggest_funcs=(valley, slide))
 
 ### The performance
 
+
+To check the first 10 epochs training history [here in nbviewer](https://nbviewer.org/github/EmbraceLife/fastdebug/blob/347b73e242da326eff12113630493878052d91d1/nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb#The-performance)
+
 ```python
 learn.fine_tune(3, 0.01)
 ```
@@ -1189,7 +1199,7 @@ learn.export("paddy_10pct_resnet26d_10epochs.pkl")
 ### The result with full dataset on Kaggle
 
 
-When given the full dataset for training on kaggle, we will have the following
+When given the full dataset for training on kaggle, we will have the following.
 
 
 ```
@@ -1360,6 +1370,32 @@ if not iskaggle:
                   title='0008 fastai first steps 1 version 2',
                   file='0008_fastai_first_steps_road_to_top_part_1.ipynb',
                   competition=comp, private=False, gpu=True)
+```
+
+### export and move py file
+
+```python
+#|hide
+
+```
+
+```python
+from fastdebug.utils import *
+```
+
+```python
+def export_open_py(quest):
+    from time import sleep
+    import os
+    import nbdev
+    nbdev.nbdev_export()
+    sleep(1)
+    openpy(quest)
+
+```
+
+```python
+export_open_py("pt1")
 ```
 
 ```python
