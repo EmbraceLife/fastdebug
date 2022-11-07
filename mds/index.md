@@ -12,24 +12,32 @@ jupyter:
     name: python3
 ---
 
+```python
+#| hide
+from fastdebug.utils import *
+```
+
 # Make Learning Fastai Uncool
 
 
 ## Todos
 
 
-- a workflow: use nbdev to split and assembly code/notebooks starting with kaggle notebook 1 
-- start to work on Radek's notebooks on OTTO competition [started]
-- display all important forum posts of mine and others I admire [done]
-- what do I most like to work on and share (kaggle notebooks dissection)
+### 2022.11.7
 
 
-```python
-#| hide
-from fastdebug.utils import *
-```
+- [x] a workflow: 1. create a pure verion of code for training models; 2. create code for exploring src; 3. create links to open both codes 
+- [ ] redo kaggle paddy part 1 with new workflow
+- [ ] share my notes of meta learning and ask Radek for permession of sharing
+- [ ] start to work on Radek's notebooks on OTTO competition 
+- [ ] display all important forum posts of mine and others I admire 
+- [ ] what do I most like to work on and share (kaggle notebooks dissection as a beginner)
 
-## use `fastlistnbs` to check menu
+
+## How to use this notebook
+
+
+### use `fastlistnbs` to check menu
 
 ```python
 show_doc(fastlistnbs)
@@ -43,20 +51,32 @@ fastnbs("src: fastlistnbs")
 hts
 ```
 
-## use fastnbs to dive in
+```python
+
+```
+
+### use `fastnbs` to dive in
 
 ```python
 show_doc(fastnbs)
 ```
 
+```python
+fastnbs("src: fastnbs")
+```
+
 ## Search my Journey 
+
+```python
+
+```
 
 ```python
 fastlistnbs("journey")
 ```
 
 ```python
-fastnbs("jn: help other")
+fastnbs("src: fastnbs")
 ```
 
 ## Search docs
@@ -71,16 +91,19 @@ fastnbs("doc: ImageDataLoaders")
 
 ## Search source code
 
+
+To run actual source code with snoop, but first search with `fastlistnbs` and `export_open_py`
+
 ```python
 fastlistnbs("srcode")
 ```
 
 ```python
-fastnbs("src: ImageDataLoaders.from_name")
+fastnbs("src: download_kaggle")
 ```
 
 ```python
-
+fastnbs("src: export")
 ```
 
 ## Search howto
@@ -116,7 +139,7 @@ hts
 # fastnbs("ht: load")
 ```
 
-## Search Meta
+## Search Radek
 
 ```python
 fastlistnbs("radek")
@@ -144,6 +167,20 @@ fastlistnbs("links")
 
 ```python
 fastnbs("lk: Radek Otto")
+```
+
+```python
+
+```
+
+## Search pyfiles
+
+```python
+openpy()
+```
+
+```python
+openpy('remove failed')
 ```
 
 ```python

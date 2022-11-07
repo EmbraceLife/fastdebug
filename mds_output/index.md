@@ -1,14 +1,3 @@
-# Make Learning Fastai Uncool
-
-## Todos
-
-- a workflow: use nbdev to split and assembly code/notebooks starting with kaggle notebook 1 
-- start to work on Radek's notebooks on OTTO competition [started]
-- display all important forum posts of mine and others I admire [done]
-- what do I most like to work on and share (kaggle notebooks dissection)
-
-
-
 ```
 #| hide
 from fastdebug.utils import *
@@ -18,7 +7,22 @@ from fastdebug.utils import *
 <style>.container { width:100% !important; }</style>
 
 
-## use `fastlistnbs` to check menu
+# Make Learning Fastai Uncool
+
+## Todos
+
+### 2022.11.7
+
+- [x] a workflow: 1. create a pure verion of code for training models; 2. create code for exploring src; 3. create links to open both codes 
+- [ ] redo kaggle paddy part 1 with new workflow
+- [ ] share my notes of meta learning and ask Radek for permession of sharing
+- [ ] start to work on Radek's notebooks on OTTO competition 
+- [ ] display all important forum posts of mine and others I admire 
+- [ ] what do I most like to work on and share (kaggle notebooks dissection as a beginner)
+
+## How to use this notebook
+
+### use `fastlistnbs` to check menu
 
 
 ```
@@ -51,132 +55,6 @@ fastnbs("src: fastlistnbs")
 ```
 
 
-### <mark style="background-color: #ffff00">src:</mark>  <mark style="background-color: #FFFF00">fastlistnbs</mark> (query, fld_fd), hts
-
-
-
-
-heading 3.
-
-
-```python
-#| export 
-import pandas as pd
-```
-
-```python
-#| export
-hts = pd.Series(list(map(lambda x: "ht: " + x, "imports, data_download, data_access, data_prep, data_loaders, cbs_tfms, learner, fit, pred, fu".split(", "))))
-```
-
-```python
-hts
-```
-
-```python
-#| export
-def fastlistnbs(query="all", # "howto", "srcode", "journey", "question", "doc", "radek", "practice", "links", or "all"
-                flt_fd="src"): # other options: "groundup", "part2", "all"
-    "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
-src_fastcore, all"
-    nbs, folder, _, _, _, _ = get_all_nbs()
-    nb_rt = ""
-    nbs_fd = []
-    for nb in nbs:
-        if flt_fd == "fastai" and "_fastai_" in nb.split("/")[-1] and not "_fastai_pt2" in nb.split("/")[-1]: 
-            nbs_fd.append(nb)
-        elif flt_fd == "part2" and "_fastai_pt2" in nb.split("/")[-1]:
-            nbs_fd.append(nb)
-        elif flt_fd == "groundup" and "groundup_" in nb.split("/")[-1]:            
-            nbs_fd.append(nb)
-        elif flt_fd == "src" and "fast" in nb.split("/")[-1]:
-            nbs_fd.append(nb)
-        elif flt_fd == "all": 
-            nbs_fd.append(nb)
-        else: 
-            continue      
-
-    if query != "howto":
-        for nb_rt in nbs_fd:
-            with open(nb_rt, 'r') as file:
-                found = False
-                for idx, l in enumerate(file):
-                    if "##" in l:
-                        if query == "howto" and "ht:" in l:
-                            if l.count("#") == 2: print()
-                            print(l, end="") # no extra new line between each line printed   
-                            found = True
-                        elif query == "srcode" and "src:" in l:
-                            if l.count("#") == 2: print()                        
-                            print(l, end="") 
-                            found = True
-                        elif query == "doc" and "doc:" in l:
-                            if l.count("#") == 2: print()                        
-                            print(l, end="") 
-                            found = True                        
-                        elif query == "journey" and "jn:" in l:
-                            if l.count("#") == 2: print()                        
-                            print(l, end="") 
-                            found = True
-                        elif query == "question" and "qt:" in l:
-                            if l.count("#") == 2: print()                        
-                            print(l, end="") 
-                            found = True
-                        elif query == "radek" and "rd:" in l:
-                            if l.count("#") == 2: print()                        
-                            print(l, end="") 
-                            found = True
-                        elif query == "practice" and "pt:" in l:
-                            if l.count("#") == 2: print()                        
-                            print(l, end="") 
-                            found = True
-                        elif query == "links" and "lk:" in l:
-                            if l.count("#") == 2: print()                        
-                            print(l, end="") 
-                            found = True                            
-                        elif query == "all": 
-                            if l.count("#") == 2: print()                        
-                            print(l, end="") 
-                            found = True                        
-                if found: print(nb_rt + "\n")
-    else:
-        for idx, o in enumerate(hts):
-            print('{:=<157}'.format(f"step {idx}: {o}"))
-            for nb_rt in nbs_fd:
-                with open(nb_rt, 'r') as file:
-                    found = False
-                    for idx, l in enumerate(file):
-                        if "##" in l:
-                            if o in l:
-                                if l.count("#") == 2: print()
-                                print(l, end="") # no extra new line between each line printed   
-                                found = True                   
-                    if found: print(nb_rt + "\n")
-```
-
-```python
-# for i, o in enumerate("imports, data-download, data-access, data-prep, data-loaders, cbs-tfms, learner, fit, pred".split(", ")):
-#     i, o
-```
-
-```python
-fastlistnbs("howto")
-# fastlistnbs("doc")
-# fastlistnbs("srcode")
-# fastlistnbs("journey")
-
-```
-
-Next, heading 2
-## fastlistsrcs
-
-
-
-[Open `01_utils` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/lib/01_utils.ipynb#src:-fastlistnbs(query,-fld_fd),-hts
-)
-
-
-
 ```
 hts
 ```
@@ -198,7 +76,12 @@ hts
 
 
 
-## use fastnbs to dive in
+
+```
+
+```
+
+### use `fastnbs` to dive in
 
 
 ```
@@ -221,7 +104,7 @@ check with fastlistnbs() to skim through all the learning points as section titl
 
 |    | **Type** | **Default** | **Details** |
 | -- | -------- | ----------- | ----------- |
-| question | str |  | query options, "rd: adept practitioner", "doc: ImageDataLoaders", "src: DataBlock", "ht: git", "jn: help others is the way" |
+| question | str |  | see fastlistnbs() results for what to search "doc: ", "rd: ", "src: ", "ht: ", "jn: ", "qt: ", "pt:" |
 | filter_folder | str | src | options: src, all, |
 | strict | bool | False | loose search keyword, not as the first query word |
 | output | bool | False | True for nice print of cell output |
@@ -231,26 +114,13 @@ check with fastlistnbs() to skim through all the learning points as section titl
 
 
 
-## Search my Journey 
-
 
 ```
-fastlistnbs("journey")
-```
-
-    ### jn: help other is the best way forward
-    ### jn: how to iterate or make one step forward at at time
-    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
-    
-
-
-
-```
-fastnbs("jn: help other")
+fastnbs("src: fastnbs")
 ```
 
 
-### <mark style="background-color: #ffff00">jn:</mark>  <mark style="background-color: #ffff00">help</mark>  <mark style="background-color: #FFFF00">other</mark>  is the best way forward
+### <mark style="background-color: #ffff00">src:</mark>  <mark style="background-color: #FFFF00">fastnbs</mark> (question, filter_folder="src", ...)
 
 
 
@@ -258,35 +128,233 @@ fastnbs("jn: help other")
 heading 3.
 
 
+```python
+#| export
+# @snoop
+def fastnbs(question:str, # see fastlistnbs() results for what to search "doc: ", "rd: ", "src: ", "ht: ", "jn: ", "qt: ", "pt:"
+            filter_folder="src", # options: src, all,
+            strict=False, # loose search keyword, not as the first query word
+            output=False, # True for nice print of cell output
+            accu:float=0.8, 
+            nb=True, 
+            db=False):
+    "check with fastlistnbs() to skim through all the learning points as section titles; \
+then use fastnotes() to find interesting lines which can be notes or codes, and finally \
+use fastnbs() display the entire learning points section including notes and codes."
+    questlst = question.split(' ')
+    mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd, pys, py_folder = get_all_nbs()
+    if not output: mds = mds_no_output
+    else: mds = mds_output
+        
+    for file_path in mds:
+        if filter_folder == "fastai" and "_fastai_" in file_path and not "_fastai_pt2_" in file_path:
+            file_fullname = file_path
+        elif filter_folder == "part2" and "_fastai_pt2_" in file_path:
+            file_fullname = file_path
+        elif filter_folder == "src" and "fast" in file_path:
+            file_fullname = file_path            
+        elif filter_folder == "all": 
+            file_fullname = file_path
+        else: continue
 
-**Reflection on Radek's 1st newsletter**
+        file_name = file_fullname.split('/')[-1]
+        with open(file_fullname, 'r') as file:
+            for count, l in enumerate(file):
+                if l.startswith("## ") or l.startswith("### ") or l.startswith("#### "):
+                    truelst = [q.lower() in l.lower() for q in questlst]
+                    pct = sum(truelst)/len(truelst)
+                    ctn = l.split("# ```")[1] if "# ```" in l else l.split("# ")[1] if "# " in l else l.split("# `")
+                    if strict:
+                        if pct >= accu and ctn.startswith(questlst[0]): # make sure the heading start with the exact quest word
+                            if db: 
+                                head1 = f"keyword match is {pct}, Found a section: in {file_name}"
+                                head1 = highlight(str(pct), head1)
+                                head1 = highlight(file_name, head1)
+                                display_md(head1)
+                                highlighted_line = highlight(question, l, db=db)                        
+        #                         print()
+                            display_block(l, file_fullname, output=output, keywords=question)
+                            if nb: # to link a notebook with specific heading
+                                if "# ```" in l: openNB(file_name, l.split("```")[1].replace(" ", "-"), db=db)
+                                else: openNB(file_name, l.split("# ")[1].replace(" ", "-"), db=db)
 
-One way to summarize Radek's secret to success is the following: 
+                                openNBKaggle(file_name, db=db)
+                    else: 
+                        if pct >= accu: # make sure the heading start with the exact quest word
+                            if db: 
+                                head1 = f"keyword match is {pct}, Found a section: in {file_name}"
+                                head1 = highlight(str(pct), head1)
+                                head1 = highlight(file_name, head1)
+                                display_md(head1)
+                                highlighted_line = highlight(question, l, db=db)                        
+        #                         print()
+                            display_block(l, file_fullname, output=output, keywords=question)
+                            if nb: # to link a notebook with specific heading
+                                if "# ```" in l: openNB(file_name, l.split("```")[1].replace(" ", "-"), db=db)
+                                else: openNB(file_name, l.split("# ")[1].replace(" ", "-"), db=db)
 
-> No matter which stage of journey in the deep learning or any subject, when you are doing your best to help others to learn what you learnt and what you are dying to find out, and if you persist, you will be happy and successful. 
+                                openNBKaggle(file_name, db=db)
+```
 
-I have dreamed of such hypothesis many times when I motivated myself to share online, and Radek proved it to be solid and true! No time to waste now!
+```python
+"# this is me".split("# ")[1].replace(" ", "-")
+"# thisisme".split("# ")[1].replace(" ", "-")
+```
 
-Another extremely simple but shocking secret to Radek's success is, in his words (now I can recite):
+```python
+# fastnbs("Snoop them together in one go", output=True)
+# fastnbs("how matrix multiplication")
+# fastnbs("how matrix multiplication", folder="fastai")
+# fastnbs("show_image", "src")
+# fastnbs("module", "src")
+# fastnbs("module", "src", False)
+# fastnbs("module")
+# fastnbs("apply")
+# fastnbs("get all nbs")
+```
 
-> I would suspend my disbelief and do exactly what Jeremy Howard told us to do in the lectures
-
-What Jeremy told us to do is loud and clear, the 4 steps (watch, experiment, reproduce, apply elsewhere). More importantly, they are true and working if one holds onto it like Radek did. 
-
-Why I am always trying to do something different? Why couldn't I just follow this great advice right from the start? I walked [a long way around it](https://twitter.com/shendusuipian/status/1587429658621988871?s=20&t=zjz1OlYRt7yJJ8HVBdsqoA) and luckily I get my sense back and move onto the second step now. 
-
+```python
+"### ```show_image(b, a, c)```".split("```")[1].replace(" ", "-")
+```
 
 Next, heading 2
-## ht: imports - vision
+## fastcodes
 
 
 
-[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb#jn:-help-other-is-the-best-way-forward
+[Open `01_utils` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/lib/01_utils.ipynb#src:-fastnbs(question,-filter_folder="src",-...)
 )
 
 
+## Search my Journey 
 
-[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1)
+
+```
+
+```
+
+
+```
+fastlistnbs("journey")
+```
+
+    jn by dates: ========
+    ### jn: help other is the best way forward  /2022-11-2
+    ### jn: combine experimenting notebooks with reading and writing codes /2022-11-5
+    ### jn: Why start to try Kaggle Recommendation competition OTTO now /2022-11-7
+    ### jn: The nner voice often reminds me: You won't succeed no matter how hard you try. But with all the amazing alumni like Radek, Moody etc in fastai community I can't help trying /2022-11-7
+
+
+
+```
+fastnbs("src: fastnbs")
+```
+
+
+### <mark style="background-color: #ffff00">src:</mark>  <mark style="background-color: #FFFF00">fastnbs</mark> (question, filter_folder="src", ...)
+
+
+
+
+heading 3.
+
+
+```python
+#| export
+# @snoop
+def fastnbs(question:str, # see fastlistnbs() results for what to search "doc: ", "rd: ", "src: ", "ht: ", "jn: ", "qt: ", "pt:"
+            filter_folder="src", # options: src, all,
+            strict=False, # loose search keyword, not as the first query word
+            output=False, # True for nice print of cell output
+            accu:float=0.8, 
+            nb=True, 
+            db=False):
+    "check with fastlistnbs() to skim through all the learning points as section titles; \
+then use fastnotes() to find interesting lines which can be notes or codes, and finally \
+use fastnbs() display the entire learning points section including notes and codes."
+    questlst = question.split(' ')
+    mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd, pys, py_folder = get_all_nbs()
+    if not output: mds = mds_no_output
+    else: mds = mds_output
+        
+    for file_path in mds:
+        if filter_folder == "fastai" and "_fastai_" in file_path and not "_fastai_pt2_" in file_path:
+            file_fullname = file_path
+        elif filter_folder == "part2" and "_fastai_pt2_" in file_path:
+            file_fullname = file_path
+        elif filter_folder == "src" and "fast" in file_path:
+            file_fullname = file_path            
+        elif filter_folder == "all": 
+            file_fullname = file_path
+        else: continue
+
+        file_name = file_fullname.split('/')[-1]
+        with open(file_fullname, 'r') as file:
+            for count, l in enumerate(file):
+                if l.startswith("## ") or l.startswith("### ") or l.startswith("#### "):
+                    truelst = [q.lower() in l.lower() for q in questlst]
+                    pct = sum(truelst)/len(truelst)
+                    ctn = l.split("# ```")[1] if "# ```" in l else l.split("# ")[1] if "# " in l else l.split("# `")
+                    if strict:
+                        if pct >= accu and ctn.startswith(questlst[0]): # make sure the heading start with the exact quest word
+                            if db: 
+                                head1 = f"keyword match is {pct}, Found a section: in {file_name}"
+                                head1 = highlight(str(pct), head1)
+                                head1 = highlight(file_name, head1)
+                                display_md(head1)
+                                highlighted_line = highlight(question, l, db=db)                        
+        #                         print()
+                            display_block(l, file_fullname, output=output, keywords=question)
+                            if nb: # to link a notebook with specific heading
+                                if "# ```" in l: openNB(file_name, l.split("```")[1].replace(" ", "-"), db=db)
+                                else: openNB(file_name, l.split("# ")[1].replace(" ", "-"), db=db)
+
+                                openNBKaggle(file_name, db=db)
+                    else: 
+                        if pct >= accu: # make sure the heading start with the exact quest word
+                            if db: 
+                                head1 = f"keyword match is {pct}, Found a section: in {file_name}"
+                                head1 = highlight(str(pct), head1)
+                                head1 = highlight(file_name, head1)
+                                display_md(head1)
+                                highlighted_line = highlight(question, l, db=db)                        
+        #                         print()
+                            display_block(l, file_fullname, output=output, keywords=question)
+                            if nb: # to link a notebook with specific heading
+                                if "# ```" in l: openNB(file_name, l.split("```")[1].replace(" ", "-"), db=db)
+                                else: openNB(file_name, l.split("# ")[1].replace(" ", "-"), db=db)
+
+                                openNBKaggle(file_name, db=db)
+```
+
+```python
+"# this is me".split("# ")[1].replace(" ", "-")
+"# thisisme".split("# ")[1].replace(" ", "-")
+```
+
+```python
+# fastnbs("Snoop them together in one go", output=True)
+# fastnbs("how matrix multiplication")
+# fastnbs("how matrix multiplication", folder="fastai")
+# fastnbs("show_image", "src")
+# fastnbs("module", "src")
+# fastnbs("module", "src", False)
+# fastnbs("module")
+# fastnbs("apply")
+# fastnbs("get all nbs")
+```
+
+```python
+"### ```show_image(b, a, c)```".split("```")[1].replace(" ", "-")
+```
+
+Next, heading 2
+## fastcodes
+
+
+
+[Open `01_utils` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/lib/01_utils.ipynb#src:-fastnbs(question,-filter_folder="src",-...)
+)
 
 
 ## Search docs
@@ -300,7 +368,10 @@ fastlistnbs("doc")
     ### doc: DataBlock.dataloaders
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0001_fastai_is_it_a_bird.md
     
-    ### doc: setup_comp(comp, local_folder='', install='fastai "timm>=0.6.2.dev0")
+    ### doc: download_kaggle_dataset(comp, local_folder='', install='fastai "timm>=0.6.2.dev0")
+    ### doc: check_subfolders_img(path, db=False)
+    ### doc: randomdisplay(path, size, db=False)
+    ### doc: remove_failed
     ### doc: ImageDataLoaders.from_folder
     ### doc: aug_transforms(size=128, min_scale=0.75)
     ### doc: vision_learner(dls, 'resnet26d', metrics=error_rate, path='.').to_fp16()
@@ -310,6 +381,7 @@ fastlistnbs("doc")
     ### doc: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0002_fastai_saving_a_basic_fastai_model.md
     
+    jn by dates: ========
 
 
 
@@ -428,6 +500,8 @@ Next, heading 3
 
 ## Search source code
 
+To run actual source code with snoop, but first search with `fastlistnbs` and `export_open_py`
+
 
 ```
 fastlistnbs("srcode")
@@ -439,9 +513,10 @@ fastlistnbs("srcode")
     ### src: DataBlock.dataloaders
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0001_fastai_is_it_a_bird.md
     
-    ### src: setup_compsetup_comp(comp, local_folder='', install='fastai "timm>=0.6.2.dev0")
+    ### src: download_kaggle_dataset
     ### src: check_subfolders_img(path, db=False)
     ### src: randomdisplay(path, size, db=False)
+    ### src: remove_failed
     ### src: check_sizes_img(files)
     ### src: ImageDataLoaders.from_folder
     ### src: aug_transforms(size=128, min_scale=0.75)
@@ -451,15 +526,16 @@ fastlistnbs("srcode")
     ### src: ImageDataLoaders.from_name_func(path: 'str | Path', fnames: 'list', label_func: 'callable', **kwargs) -> 'DataLoaders'
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0002_fastai_saving_a_basic_fastai_model.md
     
+    jn by dates: ========
 
 
 
 ```
-fastnbs("src: ImageDataLoaders.from_name")
+fastnbs("src: download_kaggle")
 ```
 
 
-### <mark style="background-color: #ffff00">src:</mark>  <mark style="background-color: #FFFF00">imagedataloaders.from_name</mark> _func(path: 'str | path', fnames: 'list', label_func: 'callable', **kwargs) -> 'dataloaders'
+### <mark style="background-color: #ffff00">src:</mark>  <mark style="background-color: #FFFF00">download_kaggle</mark> _dataset
 
 
 
@@ -468,355 +544,62 @@ heading 3.
 
 
 ```python
-doc_sig(ImageDataLoaders.from_name_func)
-doc_sig(get_image_files)
+export_open_py()
 ```
 
 ```python
-from __future__ import annotations # to ensure path:str|Path='.' can work
-```
-
-```python
-# DataLoaders.from_dblock??
-```
-
-```python
-class ImageDataLoaders(DataLoaders):
-    "Basic wrapper around several `DataLoader`s with factory methods for computer vision problems"
-    @classmethod
-    @delegates(DataLoaders.from_dblock)
-    def from_folder(cls, path, train='train', valid='valid', valid_pct=None, seed=None, vocab=None, item_tfms=None,
-                    batch_tfms=None, **kwargs):
-        "Create from imagenet style dataset in `path` with `train` and `valid` subfolders (or provide `valid_pct`)"
-        splitter = GrandparentSplitter(train_name=train, valid_name=valid) if valid_pct is None else RandomSplitter(valid_pct, seed=seed)
-        get_items = get_image_files if valid_pct else partial(get_image_files, folders=[train, valid])
-        dblock = DataBlock(blocks=(ImageBlock, CategoryBlock(vocab=vocab)),
-                           get_items=get_items,
-                           splitter=splitter,
-                           get_y=parent_label,
-                           item_tfms=item_tfms,
-                           batch_tfms=batch_tfms)
-        return cls.from_dblock(dblock, path, path=path, **kwargs)
-
-    @classmethod
-    @delegates(DataLoaders.from_dblock)
-    def from_path_func(cls, path, fnames, label_func, valid_pct=0.2, seed=None, item_tfms=None, batch_tfms=None, **kwargs):
-        "Create from list of `fnames` in `path`s with `label_func`"
-        dblock = DataBlock(blocks=(ImageBlock, CategoryBlock),
-                           splitter=RandomSplitter(valid_pct, seed=seed),
-                           get_y=label_func,
-                           item_tfms=item_tfms,
-                           batch_tfms=batch_tfms)
-        return cls.from_dblock(dblock, fnames, path=path, **kwargs)
-
-    @classmethod
-    @snoop
-    def from_name_func(cls,
-        path:str|Path, # Set the default path to a directory that a `Learner` can use to save files like models
-        fnames:list, # A list of `os.Pathlike`'s to individual image files
-        label_func:callable, # A function that receives a string (the file name) and outputs a label
-        **kwargs
-    ) -> DataLoaders:
-        "Create from the name attrs of `fnames` in `path`s with `label_func`"
-        if sys.platform == 'win32' and isinstance(label_func, types.LambdaType) and label_func.__name__ == '<lambda>':
-            # https://medium.com/@jwnx/multiprocessing-serialization-in-python-with-pickle-9844f6fa1812
-            raise ValueError("label_func couldn't be lambda function on Windows")
-        f = using_attr(label_func, 'name')
-        pp(doc_sig(using_attr), f)
-        pp(f(fnames[0]), fnames[0].name) # no need to worry about getting the name out of the filename
-        return cls.from_path_func(path, fnames, f, **kwargs)
-
-    @classmethod
-    def from_path_re(cls, path, fnames, pat, **kwargs):
-        "Create from list of `fnames` in `path`s with re expression `pat`"
-        return cls.from_path_func(path, fnames, RegexLabeller(pat), **kwargs)
-
-    @classmethod
-    @delegates(DataLoaders.from_dblock)
-    def from_name_re(cls, path, fnames, pat, **kwargs):
-        "Create from the name attrs of `fnames` in `path`s with re expression `pat`"
-        return cls.from_name_func(path, fnames, RegexLabeller(pat), **kwargs)
-
-    @classmethod
-    @delegates(DataLoaders.from_dblock)
-    def from_df(cls, df, path='.', valid_pct=0.2, seed=None, fn_col=0, folder=None, suff='', label_col=1, label_delim=None,
-                y_block=None, valid_col=None, item_tfms=None, batch_tfms=None, **kwargs):
-        "Create from `df` using `fn_col` and `label_col`"
-        pref = f'{Path(path) if folder is None else Path(path)/folder}{os.path.sep}'
-        if y_block is None:
-            is_multi = (is_listy(label_col) and len(label_col) > 1) or label_delim is not None
-            y_block = MultiCategoryBlock if is_multi else CategoryBlock
-        splitter = RandomSplitter(valid_pct, seed=seed) if valid_col is None else ColSplitter(valid_col)
-        dblock = DataBlock(blocks=(ImageBlock, y_block),
-                           get_x=ColReader(fn_col, pref=pref, suff=suff),
-                           get_y=ColReader(label_col, label_delim=label_delim),
-                           splitter=splitter,
-                           item_tfms=item_tfms,
-                           batch_tfms=batch_tfms)
-        return cls.from_dblock(dblock, df, path=path, **kwargs)
-
-    @classmethod
-    def from_csv(cls, path, csv_fname='labels.csv', header='infer', delimiter=None, **kwargs):
-        "Create from `path/csv_fname` using `fn_col` and `label_col`"
-        df = pd.read_csv(Path(path)/csv_fname, header=header, delimiter=delimiter)
-        return cls.from_df(df, path=path, **kwargs)
-
-    @classmethod
-    @delegates(DataLoaders.from_dblock)
-    def from_lists(cls, path, fnames, labels, valid_pct=0.2, seed:int=None, y_block=None, item_tfms=None, batch_tfms=None,
-                   **kwargs):
-        "Create from list of `fnames` and `labels` in `path`"
-        if y_block is None:
-            y_block = MultiCategoryBlock if is_listy(labels[0]) and len(labels[0]) > 1 else (
-                RegressionBlock if isinstance(labels[0], float) else CategoryBlock)
-        dblock = DataBlock.from_columns(blocks=(ImageBlock, y_block),
-                           splitter=RandomSplitter(valid_pct, seed=seed),
-                           item_tfms=item_tfms,
-                           batch_tfms=batch_tfms)
-        return cls.from_dblock(dblock, (fnames, labels), path=path, **kwargs)
-# File:           ~/mambaforge/lib/python3.9/site-packages/fastai/vision/data.py
-# Type:           type
-# Subclasses:     
-```
-
-```python
-# fastnbs("DataBlock.__")
-
-# fastnbs("get_image_files")
-# fastnbs("Resize", "src", True)
-```
-
-```python
-#|eval: false
-dls = ImageDataLoaders.from_name_func('.',
-    get_image_files(path), 
-    valid_pct=0.2, 
-    seed=42,
-    label_func=is_cat,
-    item_tfms=Resize(192))
-```
-
-```python
-class ImageDataLoaders(DataLoaders):
-    "Basic wrapper around several `DataLoader`s with factory methods for computer vision problems"
-    @classmethod
-    @delegates(DataLoaders.from_dblock)
-    def from_folder(cls, path, train='train', valid='valid', valid_pct=None, seed=None, vocab=None, item_tfms=None,
-                    batch_tfms=None, **kwargs):
-        "Create from imagenet style dataset in `path` with `train` and `valid` subfolders (or provide `valid_pct`)"
-        splitter = GrandparentSplitter(train_name=train, valid_name=valid) if valid_pct is None else RandomSplitter(valid_pct, seed=seed)
-        get_items = get_image_files if valid_pct else partial(get_image_files, folders=[train, valid])
-        dblock = DataBlock(blocks=(ImageBlock, CategoryBlock(vocab=vocab)),
-                           get_items=get_items,
-                           splitter=splitter,
-                           get_y=parent_label,
-                           item_tfms=item_tfms,
-                           batch_tfms=batch_tfms)
-        return cls.from_dblock(dblock, path, path=path, **kwargs)
-
-    @classmethod
-    @delegates(DataLoaders.from_dblock)
-    def from_path_func(cls, path, fnames, label_func, valid_pct=0.2, seed=None, item_tfms=None, batch_tfms=None, **kwargs):
-        "Create from list of `fnames` in `path`s with `label_func`"
-        dblock = DataBlock(blocks=(ImageBlock, CategoryBlock),
-                           splitter=RandomSplitter(valid_pct, seed=seed),
-                           get_y=label_func,
-                           item_tfms=item_tfms,
-                           batch_tfms=batch_tfms)
-        return cls.from_dblock(dblock, fnames, path=path, **kwargs)
-
-    @classmethod
-    def from_name_func(cls,
-        path:str|Path, # Set the default path to a directory that a `Learner` can use to save files like models
-        fnames:list, # A list of `os.Pathlike`'s to individual image files
-        label_func:callable, # A function that receives a string (the file name) and outputs a label
-        **kwargs
-    ) -> DataLoaders:
-        "Create from the name attrs of `fnames` in `path`s with `label_func`"
-        if sys.platform == 'win32' and isinstance(label_func, types.LambdaType) and label_func.__name__ == '<lambda>':
-            # https://medium.com/@jwnx/multiprocessing-serialization-in-python-with-pickle-9844f6fa1812
-            raise ValueError("label_func couldn't be lambda function on Windows")
-        f = using_attr(label_func, 'name')
-        return cls.from_path_func(path, fnames, f, **kwargs)
-
-    @classmethod
-    def from_path_re(cls, path, fnames, pat, **kwargs):
-        "Create from list of `fnames` in `path`s with re expression `pat`"
-        return cls.from_path_func(path, fnames, RegexLabeller(pat), **kwargs)
-
-    @classmethod
-    @delegates(DataLoaders.from_dblock)
-    def from_name_re(cls, path, fnames, pat, **kwargs):
-        "Create from the name attrs of `fnames` in `path`s with re expression `pat`"
-        return cls.from_name_func(path, fnames, RegexLabeller(pat), **kwargs)
-
-    @classmethod
-    @delegates(DataLoaders.from_dblock)
-    def from_df(cls, df, path='.', valid_pct=0.2, seed=None, fn_col=0, folder=None, suff='', label_col=1, label_delim=None,
-                y_block=None, valid_col=None, item_tfms=None, batch_tfms=None, **kwargs):
-        "Create from `df` using `fn_col` and `label_col`"
-        pref = f'{Path(path) if folder is None else Path(path)/folder}{os.path.sep}'
-        if y_block is None:
-            is_multi = (is_listy(label_col) and len(label_col) > 1) or label_delim is not None
-            y_block = MultiCategoryBlock if is_multi else CategoryBlock
-        splitter = RandomSplitter(valid_pct, seed=seed) if valid_col is None else ColSplitter(valid_col)
-        dblock = DataBlock(blocks=(ImageBlock, y_block),
-                           get_x=ColReader(fn_col, pref=pref, suff=suff),
-                           get_y=ColReader(label_col, label_delim=label_delim),
-                           splitter=splitter,
-                           item_tfms=item_tfms,
-                           batch_tfms=batch_tfms)
-        return cls.from_dblock(dblock, df, path=path, **kwargs)
-
-    @classmethod
-    def from_csv(cls, path, csv_fname='labels.csv', header='infer', delimiter=None, **kwargs):
-        "Create from `path/csv_fname` using `fn_col` and `label_col`"
-        df = pd.read_csv(Path(path)/csv_fname, header=header, delimiter=delimiter)
-        return cls.from_df(df, path=path, **kwargs)
-
-    @classmethod
-    @delegates(DataLoaders.from_dblock)
-    def from_lists(cls, path, fnames, labels, valid_pct=0.2, seed:int=None, y_block=None, item_tfms=None, batch_tfms=None,
-                   **kwargs):
-        "Create from list of `fnames` and `labels` in `path`"
-        if y_block is None:
-            y_block = MultiCategoryBlock if is_listy(labels[0]) and len(labels[0]) > 1 else (
-                RegressionBlock if isinstance(labels[0], float) else CategoryBlock)
-        dblock = DataBlock.from_columns(blocks=(ImageBlock, y_block),
-                           splitter=RandomSplitter(valid_pct, seed=seed),
-                           item_tfms=item_tfms,
-                           batch_tfms=batch_tfms)
-        return cls.from_dblock(dblock, (fnames, labels), path=path, **kwargs)
-# File:           ~/mambaforge/lib/python3.9/site-packages/fastai/vision/data.py
-# Type:           type
-# Subclasses:     
-```
-
-```python
-@docs
-class DataLoaders(GetAttr):
-    "Basic wrapper around several `DataLoader`s."
-    _default='train'
-    def __init__(self, 
-        *loaders, # `DataLoader` objects to wrap
-        path:str|Path='.', # Path to store export objects
-        device=None # Device to put `DataLoaders`
-    ):
-        self.loaders,self.path = list(loaders),Path(path)
-        if device is not None or hasattr(loaders[0],'to'): self.device = device
-
-    def __getitem__(self, i): return self.loaders[i]
-    def __len__(self): return len(self.loaders)
-    def new_empty(self):
-        loaders = [dl.new(dl.dataset.new_empty()) for dl in self.loaders]
-        return type(self)(*loaders, path=self.path, device=self.device)
-
-    def _set(i, self, v): self.loaders[i] = v
-    train   ,valid    = add_props(lambda i,x: x[i], _set)
-    train_ds,valid_ds = add_props(lambda i,x: x[i].dataset)
-
-    @property
-    def device(self): return self._device
-
-    @device.setter
-    def device(self, 
-        d # Device to put `DataLoaders`
-    ):
-        for dl in self.loaders: dl.to(d)
-        self._device = d
-
-    def to(self, 
-        device # Device to put `DataLoaders`
-    ):
-        self.device = device
-        return self
-            
-    def _add_tfms(self, tfms, event, dl_idx):
-        "Adds `tfms` to `event` on `dl`"
-        if(isinstance(dl_idx,str)): dl_idx = 0 if(dl_idx=='train') else 1
-        dl_tfms = getattr(self[dl_idx], event)
-        apply(dl_tfms.add, tfms)
-        
-    def add_tfms(self,
-        tfms, # List of `Transform`(s) or `Pipeline` to apply
-        event, # When to run `Transform`. Events mentioned in `TfmdDL`
-        loaders=None # List of `DataLoader` objects to add `tfms` to
-    ):
-        "Adds `tfms` to `events` on `loaders`"
-        if(loaders is None): loaders=range(len(self.loaders))
-        if not is_listy(loaders): loaders = listify(loaders)
-        for loader in loaders:
-            self._add_tfms(tfms,event,loader)      
-
-    def cuda(self): return self.to(device=default_device())
-    def cpu(self):  return self.to(device=torch.device('cpu'))
-
-    @classmethod
-    def from_dsets(cls, 
-        *ds, # `Datasets` object(s)
-        path:str|Path='.', # Path to put in `DataLoaders`
-        bs:int=64, # Size of batch
-        device=None, # Device to put `DataLoaders`
-        dl_type=TfmdDL, # Type of `DataLoader`
-        **kwargs
-    ):
-        default = (True,) + (False,) * (len(ds)-1)
-        defaults = {'shuffle': default, 'drop_last': default}
-        tfms = {k:tuple(Pipeline(kwargs[k]) for i in range_of(ds)) for k in _batch_tfms if k in kwargs}
-        kwargs = merge(defaults, {k: tuplify(v, match=ds) for k,v in kwargs.items() if k not in _batch_tfms}, tfms)
-        kwargs = [{k: v[i] for k,v in kwargs.items()} for i in range_of(ds)]
-        return cls(*[dl_type(d, bs=bs, **k) for d,k in zip(ds, kwargs)], path=path, device=device)
-
-    @classmethod
-    def from_dblock(cls, 
-        dblock, # `DataBlock` object
-        source, # Source of data. Can be `Path` to files
-        path:str|Path='.', # Path to put in `DataLoaders`
-        bs:int=64, # Size of batch
-        val_bs:int=None, # Size of batch for validation `DataLoader`
-        shuffle:bool=True, # Whether to shuffle data
-        device=None, # Device to put `DataLoaders`
-        **kwargs
-    ):
-        return dblock.dataloaders(source, path=path, bs=bs, val_bs=val_bs, shuffle=shuffle, device=device, **kwargs)
-
-    _docs=dict(__getitem__="Retrieve `DataLoader` at `i` (`0` is training, `1` is validation)",
-               train="Training `DataLoader`",
-               valid="Validation `DataLoader`",
-               train_ds="Training `Dataset`",
-               valid_ds="Validation `Dataset`",
-               to="Use `device`",
-               add_tfms="Add `tfms` to `loaders` for `event",
-               cuda="Use accelerator if available",
-               cpu="Use the cpu",
-               new_empty="Create a new empty version of `self` with the same transforms",
-               from_dblock="Create a dataloaders from a given `dblock`")
-# File:           ~/mambaforge/lib/python3.9/site-packages/fastai/data/core.py
-# Type:           type
-# Subclasses:     ImageDataLoaders, SegmentationDataLoaders
-```
-
-```python
-
+exec(export_open_py().replace('pyfile', 'src_download'))
 ```
 
 Next, heading 3
-### vision_learner(dls, resnet18, metrics=error_rate)
+### ht: fu - debug every srcline without breaking
 
 
 
-[Open `0002_fastai_saving_a_basic_fastai_model` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0002_fastai_saving_a_basic_fastai_model.ipynb#src:-ImageDataLoaders.from_name_func(path:-'str-|-Path',-fnames:-'list',-label_func:-'callable',-**kwargs)-->-'DataLoaders'
+[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb#src:-download_kaggle_dataset
 )
 
 
 
-[Open `0002_fastai_saving_a_basic_fastai_model` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/saving-a-basic-fastai-model)
+[Open `0008_fastai_first_steps_road_to_top_part_1` in Jupyter Notebook on Kaggle](https://www.kaggle.com/code/jhoward/first-steps-road-to-the-top-part-1)
 
 
 
 ```
+fastnbs("src: export")
+```
+
+
+## <mark style="background-color: #ffff00">src:</mark>  <mark style="background-color: #FFFF00">export</mark> _nbdev
+
+
+
+
+heading 2.
+
+
+```python
+#| export
+# calling from a different notebook, nbdev_export() will cause error, this is why use exec() to call in a different notebook
+export_nbdev = "import nbdev; nbdev.nbdev_export()"
+```
+
+```python
+exec(export_nbdev)
+```
+
+```python
 
 ```
+
+Next, heading 2
+## download_kaggle_dataset
+
+
+
+[Open `01_utils` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/lib/01_utils.ipynb#src:-export_nbdev
+)
+
 
 ## Search howto
 
@@ -834,8 +617,10 @@ fastlistnbs("howto")
     
     ## ht: imports - vision
     ### ht: imports - fastkaggle 
+    ### ht: imports - imports fastdebug.utils on Kaggle
+    ### ht: imports - import for vision
     ### ht: imports - upload and update mylib in kaggle
-    ### ht: imports - fastkaggle - push libs to kaggle with `create_libs_datasets`
+    ### ht: imports - create libs as datasets for kaggle with `create_libs_datasets`
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
     step 1: ht: data_download====================================================================================================================================
@@ -880,6 +665,7 @@ fastlistnbs("howto")
     ### ht: fu - (de)activate snoop without commenting out using `snoopon()` and `snoopoff()`  
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
+    jn by dates: ========
 
 
 
@@ -1002,6 +788,7 @@ fastlistnbs("question")
     ### qt: how to display video and embed webpage
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.md
     
+    jn by dates: ========
 
 
 
@@ -1031,7 +818,7 @@ hts
 # fastnbs("ht: load")
 ```
 
-## Search Meta
+## Search Radek
 
 
 ```
@@ -1119,26 +906,27 @@ fastlistnbs("radek")
     ### rd: The importance of validation split
     ### rd: how do we measure whether we got it right?
     ### rd: Why ensemble is a must
-    ### rd: cross-validation is a must (not clear to me)
+    ### rd: cross-validation (???)
     ### rd: Sum up
     
     ## rd: How to Pick Up What They Put Down by swyx
     ### rd: Who are they?
     ### rd: What do you mean by “put down”?
     ### rd: How do I pick “it” up? 
-    ### rd: Love what you do above and tag your mentor
+    ### rd: Love what you do above and tag them
     ### rd: What happens when you do this?
     ### rd: Why does this work on them?
     ### rd: Why does this work on you?
     ### rd: How to get started
     
-    ## rd: The Permissionless Apprenticeship
+    ## rd: The Permissionless Apprenticeship by jackbutcher
     ### rd: How to have their attention
     ### rd: Why working for them without asking
     ### rd: How to work for them
     ### rd: The worse scenario of working for them
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md
     
+    jn by dates: ========
 
 
 
@@ -1192,6 +980,7 @@ fastlistnbs("practice")
     #### pt: how to find (what) valuable insights from simple model with subset of data?
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md
     
+    jn by dates: ========
 
 
 
@@ -1232,6 +1021,7 @@ fastlistnbs("links")
     ### lk: ilovescience on kaggle
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_links_forums_kaggle_github.md
     
+    jn by dates: ========
 
 
 
@@ -1249,11 +1039,11 @@ heading 3.
 
 Radek on [twitter](https://twitter.com/radekosmulski)
 
-How to get started [post](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364062)
+How to get started on OTTO [post](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364062)
 
-Baseline model [notebook](https://www.kaggle.com/code/radek1/co-visitation-matrix-simplified-imprvd-logic/notebook?scriptVersionId=110068977)
+Baseline model OTTO [notebook](https://www.kaggle.com/code/radek1/co-visitation-matrix-simplified-imprvd-logic/notebook?scriptVersionId=110068977)
 
-Full dataset converted to csv/parquet format [post](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843) with notebooks
+Full dataset converted to csv/parquet format for OTTO [post](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843) with notebooks
 
 Next, heading 3
 ### lk: ilovescience on kaggle
@@ -1262,6 +1052,36 @@ Next, heading 3
 
 [Open `fastai_links_forums_kaggle_github` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/fastai_links_forums_kaggle_github.ipynb#lk:-Radek-and-OTTO
 )
+
+
+
+```
+
+```
+
+## Search pyfiles
+
+
+```
+openpy()
+```
+
+    ['/Users/Natsume/Documents/fastdebug/fastdebug/fastaiTD.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_utils_remove_failed.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_paddy_pt1.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fast_src_download_kaggle_dataset.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_utils_randomdisplay.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_notebook.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_check_subfolders_img.py']
+
+
+
+```
+openpy('remove failed')
+```
+
+
+[Open `fastai_src_utils_remove_failed` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/fastai_src_utils_remove_failed.py)
 
 
 

@@ -2034,24 +2034,24 @@ Some photos might not download correctly which could cause our model training to
 
 
 ```
-#| export utils 
-from fastai.vision.all import *
+# #| export utils 
+# from fastai.vision.all import *
 ```
 
 
 ```
-#| export utils
-def remove_failed(path):
-#     from fastai.vision.all import get_image_files, parallel
-    print("before running remove_failed:")
-    check_subfolders_img(path)
-    failed = verify_images(get_image_files(path))
-    print(f"total num: {len(get_image_files(path))}")
-    print(f"num offailed: {len(failed)}")
-    failed.map(Path.unlink)
-    print()
-    print("after running remove_failed:")
-    check_subfolders_img(path)
+# #| export utils
+# def remove_failed(path):
+# #     from fastai.vision.all import get_image_files, parallel
+#     print("before running remove_failed:")
+#     check_subfolders_img(path)
+#     failed = verify_images(get_image_files(path))
+#     print(f"total num: {len(get_image_files(path))}")
+#     print(f"num offailed: {len(failed)}")
+#     failed.map(Path.unlink)
+#     print()
+#     print("after running remove_failed:")
+#     check_subfolders_img(path)
 ```
 
 

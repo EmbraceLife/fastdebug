@@ -1,3 +1,12 @@
+```
+#| hide
+from fastdebug.utils import *
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
 # 0008_fastai_first_steps_road_to_top_part_1
 ---
 skip_exec: true
@@ -6,24 +15,6 @@ skip_exec: true
 ```
 #| default_exp run_kaggle_001
 ```
-
-### jn: help other is the best way forward
-
-**Reflection on Radek's 1st newsletter**
-
-One way to summarize Radek's secret to success is the following: 
-
-> No matter which stage of journey in the deep learning or any subject, when you are doing your best to help others to learn what you learnt and what you are dying to find out, and if you persist, you will be happy and successful. 
-
-I have dreamed of such hypothesis many times when I motivated myself to share online, and Radek proved it to be solid and true! No time to waste now!
-
-Another extremely simple but shocking secret to Radek's success is, in his words (now I can recite):
-
-> I would suspend my disbelief and do exactly what Jeremy Howard told us to do in the lectures
-
-What Jeremy told us to do is loud and clear, the 4 steps (watch, experiment, reproduce, apply elsewhere). More importantly, they are true and working if one holds onto it like Radek did. 
-
-Why I am always trying to do something different? Why couldn't I just follow this great advice right from the start? I walked [a long way around it](https://twitter.com/shendusuipian/status/1587429658621988871?s=20&t=zjz1OlYRt7yJJ8HVBdsqoA) and luckily I get my sense back and move onto the second step now. 
 
 ## ht: imports - vision
 
@@ -141,7 +132,7 @@ from fastai.vision.all import *
 3. cp everything in repo except .git folder to the latest repo just downloaded
 4. git push to update
 
-### jn: how to iterate or make one step forward at at time
+### ht: how to iterate or make one step forward at at time
 
 This is Jeremy showing us how to iterate, ie., increment learning one tiny step every time every day
 
@@ -188,36 +179,6 @@ override `fastkaggle.core.setup_comp` for my use
 If on kaggle, download and install required libraries to work with, and return a path linking to the dataset
 
 If on local machine, download the dataset to the path based on local_folder if the path is not available and return the path
-
-
-```
-setup_comp
-```
-
-
-
-
-    <function fastkaggle.core.setup_comp(competition, install='')>
-
-
-
-
-```
-show_doc(setup_comp)
-```
-
-
-
-
----
-
-### setup_comp
-
->      setup_comp (competition, install='')
-
-Get a path to data for `competition`, downloading it if needed
-
-
 
 ```python
 @snoop
@@ -405,6 +366,7 @@ Now we can import the stuff we'll need from fastai, set a seed (for reproducibil
 
 ```
 #| export kaggle_paddy_pt1
+# set seed for reproducibility
 set_seed(42)
 ```
 
@@ -426,19 +388,41 @@ path.ls()
 
 
 
-### src: check_subfolders_img(path, db=False)
+### doc: check_subfolders_img(path, db=False)
 
 
 ```
-#| export utils 
-from fastai.data.transforms import image_extensions
+show_doc(check_subfolders_img)
 ```
 
 
-```
-#| export utils
-# @snoop
-def check_subfolders_img(path, db=False):
+<style>.container { width:100% !important; }</style>
+
+
+
+
+
+---
+
+[source](https://github.com/EmbraceLife/fastdebug/blob/master/fastdebug/utils.py#LNone){target="_blank" style="float:right; font-size:smaller"}
+
+### check_subfolders_img
+
+>      check_subfolders_img (path, db=False)
+
+map the image contents of all subfolders of the path
+
+|    | **Type** | **Default** | **Details** |
+| -- | -------- | ----------- | ----------- |
+| path |  |  | a Path object |
+| db | bool | False |  |
+
+
+
+```python
+def check_subfolders_img(path:Path, # a Path object
+                         db=False):
+    "map the image contents of all subfolders of the path"
     from pathlib import Path
     for entry in path.iterdir():
         if entry.is_file():
@@ -463,10 +447,17 @@ def check_subfolders_img(path, db=False):
 #             with snoop:
             check_subfolders_img(entry)
     print(f"addup num: {addup}")
+# File:      ~/Documents/fastdebug/fastdebug/utils.py
+# Type:      function
+
 ```
+
+### src: check_subfolders_img(path, db=False)
 
 
 ```
+#| export kaggle_paddy_pt1
+# map the content of all subfolders of images
 check_subfolders_img(path)
 ```
 
@@ -487,10 +478,31 @@ check_subfolders_img(path)
     addup num: 3469
 
 
+
+```
+exec(export_open_py().replace('pyfile', "src subfolders"))
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+    ['/Users/Natsume/Documents/fastdebug/fastdebug/fastaiTD.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fast_src_download_kaggle_dataset.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_notebook.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_check_subfolders_img.py']
+
+
+
+[Open `fastai_src_check_subfolders_img` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/fastai_src_check_subfolders_img.py)
+
+
 ### ht: data_access - extract all images for test and train with `get_image_files`
 
 
 ```
+#| export kaggle_paddy_pt1
+# to extract all images from a folder recursively (for subfolders)
 test_files = get_image_files(path/"test_images")
 train_files = get_image_files(path/"train_images")
 ```
@@ -526,41 +538,9 @@ train_files
 
 use `randomdisplay(path, size, db=False)` to display images from a folder or a L list of images such as `test_files` or `train_files`
 
-### src: randomdisplay(path, size, db=False)
+### doc: randomdisplay(path, size, db=False)
 
-display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
-    the image filename is printed as well
-
-
-```
-import pathlib
-type(path) == pathlib.PosixPath
-type(train_files) == L
-```
-
-
-
-
-    True
-
-
-
-
-
-
-    True
-
-
-
-
-```
-snoopon()
-```
-
-
-```
-#| export utils
-# @snoop
+```python
 def randomdisplay(path, size=128, db=False):
     "display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
     the image filename is printed as well"
@@ -578,11 +558,19 @@ def randomdisplay(path, size=128, db=False):
     if db: pp(im.width, im.height, file)
     pp(file)
     return im.to_thumb(size)
+# File:      ~/Documents/fastdebug/fastdebug/utils.py
+# Type:      function
 ```
+
+### src: randomdisplay(path, size, db=False)
+
+display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
+    the image filename is printed as well
 
 
 ```
-randomdisplay(test_files, 128)
+#| export kaggle_paddy_pt1
+# to display a random image from a path 
 randomdisplay(train_files, 200)
 randomdisplay(path/"train_images/dead_heart", 128)
 ```
@@ -595,7 +583,7 @@ randomdisplay(path/"train_images/dead_heart", 128)
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_78_1.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_76_1.png)
     
 
 
@@ -608,7 +596,7 @@ randomdisplay(path/"train_images/dead_heart", 128)
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_78_3.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_76_3.png)
     
 
 
@@ -621,15 +609,30 @@ randomdisplay(path/"train_images/dead_heart", 128)
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_78_5.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_76_5.png)
     
 
 
 
 
 ```
-snoopoff()
+exec(export_open_py().replace("pyfile", "paddy pt1"))
 ```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+    ['/Users/Natsume/Documents/fastdebug/fastdebug/fastaiTD.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_paddy_pt1.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fast_src_download_kaggle_dataset.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_notebook.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_check_subfolders_img.py']
+
+
+
+[Open `kaggle_paddy_pt1` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/kaggle_paddy_pt1.py)
+
 
 ### ht: data_prep - remove images that fail to open with `remove_failed(path)`
 
@@ -683,6 +686,66 @@ remove_failed(path)
     /Users/Natsume/Documents/fastdebug/nbs/fastai_notebooks/paddy-disease-classification/train_images: 1088  tungro
     addup num: 10407
     addup num: 3469
+
+
+### doc: remove_failed
+
+```python
+def remove_failed(path):
+#     from fastai.vision.all import get_image_files, parallel
+    print("before running remove_failed:")
+    check_subfolders_img(path)
+    failed = verify_images(get_image_files(path))
+    print(f"total num: {len(get_image_files(path))}")
+    print(f"num offailed: {len(failed)}")
+    failed.map(Path.unlink)
+    print()
+    print("after running remove_failed:")
+    check_subfolders_img(path)
+# File:      ~/Documents/fastdebug/fastdebug/utils.py
+# Type:      function
+```
+
+### src: remove_failed
+
+
+```
+#| export kaggle_paddy_pt1
+# remove all images which fail to open
+remove_failed(path)
+```
+
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Input In [14], in <cell line: 1>()
+    ----> 1 remove_failed(path)
+
+
+    NameError: name 'path' is not defined
+
+
+
+```
+exec(export_open_py().replace("pyfile", "paddy pt1"))
+```
+
+
+<style>.container { width:100% !important; }</style>
+
+
+    ['/Users/Natsume/Documents/fastdebug/fastdebug/fastaiTD.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_paddy_pt1.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fast_src_download_kaggle_dataset.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_utils_randomdisplay.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_notebook.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_check_subfolders_img.py']
+
+
+
+[Open `kaggle_paddy_pt1` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/kaggle_paddy_pt1.py)
 
 
 ### ht: data_prep - describe sizes of all images with `check_sizes_img`
@@ -776,7 +839,7 @@ imgs[1]
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_96_0.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_99_0.png)
     
 
 
@@ -785,7 +848,7 @@ imgs[1]
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_96_1.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_99_1.png)
     
 
 
@@ -1214,7 +1277,7 @@ dls.train_ds
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_127_1.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_130_1.png)
     
 
 
@@ -1856,7 +1919,7 @@ learn.lr_find(suggest_funcs=(valley, slide))
 
 
     
-![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_163_4.png)
+![png](0008_fastai_first_steps_road_to_top_part_1_files/0008_fastai_first_steps_road_to_top_part_1_166_4.png)
     
 
 

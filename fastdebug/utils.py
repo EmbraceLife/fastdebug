@@ -6,7 +6,7 @@ annotations = annotations
 import inspect, torch
 
 # %% auto 0
-__all__ = ['annotations', 'L', 'Path', 'doc', 'show_doc', 'snoop', 'pp', 'test_eq', 'test_is', 'FunctionType', 'MethodType', 'eop', 'kagglenbs', 'hts', 'plot_func', 'plot_funcs', 'plot_fns', 'snoopon', 'snoopoff', 'chk', 'doc_sig', 'src', 'nb_url', 'nb_path', 'nb_name', 'ipy2md', 'automagics', 'inspect_class', 'ismetaclass', 'isdecorator', 'whatinside', 'fastview', 'fastsrcs', 'get_all_nbs', 'openNB', 'openpy', 'export_open_py', 'download_kaggle_dataset', 'openNBKaggle', 'fastnbs', 'fastcodes', 'fastnotes', 'fastlistnbs', 'fastlistsrcs', 'verify_images', 'remove_failed', 'check_subfolders_img', 'randomdisplay', 'f', 'check_sizes_img']
+__all__ = ['annotations', 'L', 'Path', 'doc', 'show_doc', 'snoop', 'pp', 'test_eq', 'test_is', 'FunctionType', 'MethodType', 'kagglenbs', 'hts', 'export_nbdev', 'plot_func', 'plot_funcs', 'plot_fns', 'snoopon', 'snoopoff', 'chk', 'doc_sig', 'src', 'nb_url', 'nb_path', 'nb_name', 'ipy2md', 'automagics', 'inspect_class', 'ismetaclass', 'isdecorator', 'whatinside', 'fastview', 'fastsrcs', 'get_all_nbs', 'openNB', 'openpy', 'openNBKaggle', 'fastnbs', 'fastcodes', 'fastnotes', 'fastlistnbs', 'fastlistsrcs', 'check_subfolders_img', 'randomdisplay', 'remove_failed', 'download_kaggle_dataset', 'verify_images', 'f', 'check_sizes_img']
 
 # %% ../nbs/lib/01_utils.ipynb 11
 from fastcore.foundation import L
@@ -590,9 +590,14 @@ def openNB(name, heading=None, db=False):
                 jn_link(name, file_name)
 
 # %% ../nbs/lib/01_utils.ipynb 175
-def openpy(name, acu=0.8, heading=None, db=False):
+def openpy(name=None, acu=0.8, heading=None, db=False):
     "Get a link to the notebook at by searching keyword or notebook name"
     _, _, ipynbs, _, _, _, pys, py_fd= get_all_nbs()
+    if not bool(name):
+        lst = [pyf for pyf in pys if "src" in Path(pyf).name or "kaggle" in Path(pyf).name or "fastai" in Path(pyf).name]
+        pprint(lst)
+        return
+    
     questlst = name.split(" ")
     name = ""
     for pyf in pys: 
@@ -622,52 +627,7 @@ def openpy(name, acu=0.8, heading=None, db=False):
                 file_name = path_server + f + "#" + heading if bool(heading) else path_server + f
                 jn_link(name, file_name)
 
-# %% ../nbs/lib/01_utils.ipynb 179
-# calling from a different notebook, nbdev_export() will cause error, this is why use exec() to call in a different notebook
-eop = """
-from time import sleep
-import os
-import nbdev
-nbdev.nbdev_export()
-sleep(2)
-openpy(quest)
-"""
-
 # %% ../nbs/lib/01_utils.ipynb 180
-def export_open_py():
-    _, _, _, _, _, _, pys, _, = get_all_nbs()
-    lst = [pyf for pyf in pys if "src" in Path(pyf).name or "kaggle" in Path(pyf).name]
-    pprint(lst)
-    res = """
-quest = "pyfile"
-exec(eop)
-"""
-    return res
-
-# %% ../nbs/lib/01_utils.ipynb 185
-from fastkaggle import *
-
-# %% ../nbs/lib/01_utils.ipynb 186
-def download_kaggle_dataset(competition, local_folder='', install=''):
-    "override from fastkaggle.core.setup_comp. \
-Return a path of the `local_folder` where `competition` dataset stored, \
-downloading it if needed"
-    if iskaggle:
-        if install:
-            os.system(f'pip install -Uqq {install}')
-        return Path('../input')/competition
-    else:
-        path = Path(local_folder + competition)
-        api = import_kaggle()
-        if not path.exists():
-            import zipfile
-            api.competition_download_cli(str(competition), path=path)
-            zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
-        return path
-# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
-# Type:      function
-
-# %% ../nbs/lib/01_utils.ipynb 189
 kagglenbs = [
     "https://www.kaggle.com/code/jhoward/how-does-a-neural-net-really-work",
     "https://www.kaggle.com/code/jhoward/is-it-a-bird-creating-a-model-from-your-own-data",
@@ -698,7 +658,7 @@ kagglenbs = [
     "https://www.kaggle.com/code/jhoward/improved-lstm-baseline-glove-dropout"
 ]
 
-# %% ../nbs/lib/01_utils.ipynb 191
+# %% ../nbs/lib/01_utils.ipynb 182
 def openNBKaggle(filename_full, db=False):
     if 'fastai' in filename_full:
         # split by 'fastai' and take the later
@@ -716,7 +676,7 @@ def openNBKaggle(filename_full, db=False):
                 if db: print(f'pct is {pct}')
                 jn_link(filename_full.split(".md")[0], f, where="on Kaggle") 
 
-# %% ../nbs/lib/01_utils.ipynb 199
+# %% ../nbs/lib/01_utils.ipynb 190
 def highlight(question:str, line:str, db=False):
     "highlight a string with yellow background"
     questlst = question.split(' ')
@@ -728,13 +688,13 @@ def highlight(question:str, line:str, db=False):
     if db: print(f'line: {line}')
     return line
 
-# %% ../nbs/lib/01_utils.ipynb 203
+# %% ../nbs/lib/01_utils.ipynb 194
 def display_md(text):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(text))                
 
-# %% ../nbs/lib/01_utils.ipynb 214
+# %% ../nbs/lib/01_utils.ipynb 205
 def display_block(line, file, output=False, keywords=""):
     "`line` is a section title, find all subsequent lines which belongs to the same section and display them together"
     from IPython.display import Markdown
@@ -763,9 +723,9 @@ def display_block(line, file, output=False, keywords=""):
     else: print(full_section)
 
 
-# %% ../nbs/lib/01_utils.ipynb 224
+# %% ../nbs/lib/01_utils.ipynb 211
 # @snoop
-def fastnbs(question:str, # query options, "rd: adept practitioner", "doc: ImageDataLoaders", "src: DataBlock", "ht: git", "jn: help others is the way"
+def fastnbs(question:str, # see fastlistnbs() results for what to search "doc: ", "rd: ", "src: ", "ht: ", "jn: ", "qt: ", "pt:"
             filter_folder="src", # options: src, all,
             strict=False, # loose search keyword, not as the first query word
             output=False, # True for nice print of cell output
@@ -829,7 +789,7 @@ use fastnbs() display the entire learning points section including notes and cod
 
                                 openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/01_utils.ipynb 229
+# %% ../nbs/lib/01_utils.ipynb 216
 def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
     "using keywords to search learning points from commented sources files"
     questlst = question.split(' ')
@@ -860,7 +820,7 @@ def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/01_utils.ipynb 242
+# %% ../nbs/lib/01_utils.ipynb 229
 def fastnotes(question:str, 
               search_code:bool=False, # if search code, do check True for nicer printing
               accu:float=0.8, 
@@ -937,13 +897,13 @@ of surrounding lines."
                         openNB(file_name, db=db)
                         openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/01_utils.ipynb 254
+# %% ../nbs/lib/01_utils.ipynb 234
 import pandas as pd
 
-# %% ../nbs/lib/01_utils.ipynb 255
+# %% ../nbs/lib/01_utils.ipynb 235
 hts = pd.Series(list(map(lambda x: "ht: " + x, "imports, data_download, data_access, data_prep, data_loaders, cbs_tfms, learner, fit, pred, fu".split(", "))))
 
-# %% ../nbs/lib/01_utils.ipynb 257
+# %% ../nbs/lib/01_utils.ipynb 237
 def fastlistnbs(query="all", # "howto", "srcode", "journey", "question", "doc", "radek", "practice", "links", or "all"
                 flt_fd="src"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
@@ -965,6 +925,7 @@ src_fastcore, all"
         else: 
             continue      
 
+    jnlst = []
     if query != "howto":
         for nb_rt in nbs_fd:
             with open(nb_rt, 'r') as file:
@@ -984,9 +945,10 @@ src_fastcore, all"
                             print(l, end="") 
                             found = True                        
                         elif query == "journey" and "jn:" in l:
-                            if l.count("#") == 2: print()                        
-                            print(l, end="") 
-                            found = True
+                            jnlst.append(l)
+#                             if l.count("#") == 2: print()                        
+#                             print(l, end="") 
+#                             found = True
                         elif query == "question" and "qt:" in l:
                             if l.count("#") == 2: print()                        
                             print(l, end="") 
@@ -1021,8 +983,18 @@ src_fastcore, all"
                                 print(l, end="") # no extra new line between each line printed   
                                 found = True                   
                     if found: print(nb_rt + "\n")
+    
+    dates = [jn.split("/")[-1].split("\n")[0] for jn in jnlst]
+    dates = list(set(dates))
+    dates.sort(key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
+    print("jn by dates: ========")
+    for d in dates:
+        for jn in jnlst:
+            if d in jn: 
+                if jn.count("#") == 2: print()                        
+                print(jn, end="") 
 
-# %% ../nbs/lib/01_utils.ipynb 262
+# %% ../nbs/lib/01_utils.ipynb 244
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
@@ -1036,51 +1008,13 @@ def fastlistsrcs():
 #                         print(l, end="") # no extra new line between each line printed
         
 
-# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 78
-from fastai.vision.core import *
-
-# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 99
-# @snoop
-def verify_images(fns):
-    "Find images in `fns` that can't be opened. using parallel, to applies `verify_image` in parallel to `fns`, using `n_workers=8`"
-#     return L(fns[i] for i,o in enumerate(parallel(verify_image, fns)) if not o)
-    lst = []
-    for i,o in enumerate(parallel(verify_image, fns)):
-        if not o:
-            lst.append(fns[i])
-    return L(lst)
-# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/utils.py
-# Type:      function
-
-# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 100
-def verify_images(fns):
-    "Find images in `fns` that can't be opened"
-    return L(fns[i] for i,o in enumerate(parallel(verify_image, fns)) if not o)
-# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/utils.py
-# Type:      function
-
-# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 104
-from fastai.vision.all import *
-
-# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 105
-def remove_failed(path):
-#     from fastai.vision.all import get_image_files, parallel
-    print("before running remove_failed:")
-    check_subfolders_img(path)
-    failed = verify_images(get_image_files(path))
-    print(f"total num: {len(get_image_files(path))}")
-    print(f"num offailed: {len(failed)}")
-    failed.map(Path.unlink)
-    print()
-    print("after running remove_failed:")
-    check_subfolders_img(path)
-
-# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 63
+# %% ../nbs/lib/01_utils.ipynb 261
 from fastai.data.transforms import image_extensions
 
-# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 64
-# @snoop
-def check_subfolders_img(path, db=False):
+# %% ../nbs/lib/01_utils.ipynb 262
+def check_subfolders_img(path:Path, # a Path object
+                         db=False):
+    "map the image contents of all subfolders of the path"
     from pathlib import Path
     for entry in path.iterdir():
         if entry.is_file():
@@ -1106,8 +1040,7 @@ def check_subfolders_img(path, db=False):
             check_subfolders_img(entry)
     print(f"addup num: {addup}")
 
-# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 77
-# @snoop
+# %% ../nbs/lib/01_utils.ipynb 264
 def randomdisplay(path, size=128, db=False):
     "display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
     the image filename is printed as well"
@@ -1126,17 +1059,83 @@ def randomdisplay(path, size=128, db=False):
     pp(file)
     return im.to_thumb(size)
 
-# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 89
+# %% ../nbs/lib/01_utils.ipynb 266
+from fastai.vision.all import *
+
+# %% ../nbs/lib/01_utils.ipynb 267
+def remove_failed(path):
+#     from fastai.vision.all import get_image_files, parallel
+    print("before running remove_failed:")
+    check_subfolders_img(path)
+    failed = verify_images(get_image_files(path))
+    print(f"total num: {len(get_image_files(path))}")
+    print(f"num of failed: {len(failed)}")
+    failed.map(Path.unlink)
+    print()
+    print("after running remove_failed:")
+    check_subfolders_img(path)
+
+# %% ../nbs/lib/01_utils.ipynb 270
+# calling from a different notebook, nbdev_export() will cause error, this is why use exec() to call in a different notebook
+export_nbdev = "import nbdev; nbdev.nbdev_export()"
+
+# %% ../nbs/lib/01_utils.ipynb 274
+from fastkaggle import *
+
+# %% ../nbs/lib/01_utils.ipynb 275
+def download_kaggle_dataset(competition, local_folder='', install=''):
+    "override from fastkaggle.core.setup_comp. \
+Return a path of the `local_folder` where `competition` dataset stored, \
+downloading it if needed"
+    if iskaggle:
+        if install:
+            os.system(f'pip install -Uqq {install}')
+        return Path('../input')/competition
+    else:
+        path = Path(local_folder + competition)
+        api = import_kaggle()
+        if not path.exists():
+            import zipfile
+            api.competition_download_cli(str(competition), path=path)
+            zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
+        return path
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
+
+# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 78
+from fastai.vision.core import *
+
+# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 99
+# @snoop
+def verify_images(fns):
+    "Find images in `fns` that can't be opened. using parallel, to applies `verify_image` in parallel to `fns`, using `n_workers=8`"
+#     return L(fns[i] for i,o in enumerate(parallel(verify_image, fns)) if not o)
+    lst = []
+    for i,o in enumerate(parallel(verify_image, fns)):
+        if not o:
+            lst.append(fns[i])
+    return L(lst)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/utils.py
+# Type:      function
+
+# %% ../nbs/fastai_notebooks/0001_fastai_is_it_a_bird.ipynb 100
+def verify_images(fns):
+    "Find images in `fns` that can't be opened"
+    return L(fns[i] for i,o in enumerate(parallel(verify_image, fns)) if not o)
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastai/vision/utils.py
+# Type:      function
+
+# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 92
 def f(o, sz=None): 
     im = None
     if sz and PILImage.create(o).size == sz:
         im = PILImage.create(o).to_thumb(500)
     return PILImage.create(o).size, im
 
-# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 91
+# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 94
 from fastcore.meta import delegates
 
-# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 92
+# %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 95
 # @snoop
 @delegates(f)
 def check_sizes_img(files, **kwargs):

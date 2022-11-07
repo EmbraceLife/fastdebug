@@ -1616,9 +1616,14 @@ bool("head")
 
 ```python
 #| export
-def openpy(name, acu=0.8, heading=None, db=False):
+def openpy(name=None, acu=0.8, heading=None, db=False):
     "Get a link to the notebook at by searching keyword or notebook name"
     _, _, ipynbs, _, _, _, pys, py_fd= get_all_nbs()
+    if not bool(name):
+        lst = [pyf for pyf in pys if "src" in Path(pyf).name or "kaggle" in Path(pyf).name or "fastai" in Path(pyf).name]
+        pprint(lst)
+        return
+    
     questlst = name.split(" ")
     name = ""
     for pyf in pys: 
@@ -1656,75 +1661,6 @@ openpy("pt1 kaggle")
 
 ```python
 
-```
-
-## ht: fu - export_open_py
-
-```python
-#| export
-# calling from a different notebook, nbdev_export() will cause error, this is why use exec() to call in a different notebook
-eop = """
-from time import sleep
-import os
-import nbdev
-nbdev.nbdev_export()
-sleep(2)
-openpy(quest)
-"""
-```
-
-```python
-#| export
-def export_open_py():
-    _, _, _, _, _, _, pys, _, = get_all_nbs()
-    lst = [pyf for pyf in pys if "src" in Path(pyf).name or "kaggle" in Path(pyf).name]
-    pprint(lst)
-    res = """
-quest = "pyfile"
-exec(eop)
-"""
-    return res
-```
-
-```python
-export_open_py()
-```
-
-```python
-exec(export_open_py().replace('pyfile', 'src_download'))
-```
-
-```python
-
-```
-
-## download_kaggle_dataset
-
-```python
-#| export
-from fastkaggle import *
-```
-
-```python
-#| export
-def download_kaggle_dataset(competition, local_folder='', install=''):
-    "override from fastkaggle.core.setup_comp. \
-Return a path of the `local_folder` where `competition` dataset stored, \
-downloading it if needed"
-    if iskaggle:
-        if install:
-            os.system(f'pip install -Uqq {install}')
-        return Path('../input')/competition
-    else:
-        path = Path(local_folder + competition)
-        api = import_kaggle()
-        if not path.exists():
-            import zipfile
-            api.competition_download_cli(str(competition), path=path)
-            zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
-        return path
-# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
-# Type:      function
 ```
 
 ## openNBKaggle
@@ -2055,128 +1991,13 @@ display_block("whichversion of a library", "/Users/Natsume/Documents/divefastai/
 
 ## fastnbs
 
-```python
-
-def fastnbs(question:str, accu:float=0.8, n=10, nb=False, db=False):
-    "using keywords to search learning points from my documented fastai notebooks"
-    questlst = question.split(' ')
-    folder ='/Users/Natsume/Documents/divefastai/Debuggable/jupytext/2022part1/'
-    for f in os.listdir(folder):  
-        if f.endswith(".md"):
-            file_name =folder + f
-            with open(file_name, 'r') as file:
-                for count, l in enumerate(file):
-#                 for l in file:
-                    truelst = [q in l for q in questlst]
-                    pct = sum(truelst)/len(truelst)
-
-                    if pct >= accu:
-                        head1 = f"keyword match is {pct}, Found a line: in {f}"
-                        head1 = highlight(str(pct), head1)
-                        head1 = highlight(f, head1)
-                        display_md(head1)
-                        l = highlight(question, l, db=db)                        
-                        display_md(l)
-                        print()
-                        
-                        head2 = f"Show {n} lines after in {f}:"
-                        head2 = highlight(f, head2)
-                        head2 = highlight(str(n), head2)
-                        display_md(head2)                        
-                        idx = count
-                        with open(file_name, 'r') as file:
-                            for count, l in enumerate(file):
-                                if count >= idx and count <= idx + n:
-                                    if count == idx: display_md(highlight(question, l))
-                                    else: display_md(l)                        
-                        if nb:
-                            openNB(f, "nbs/2022part1/")
-```
-
-```python
-
-def fastnbs(question:str, output=False, accu:float=0.8, nb=True, db=False):
-    "check with fastlistnbs() to find interesting things to search \
-fastnbs() can use keywords to search learning points (a section title and a section itself) from my documented fastai notebooks"
-    questlst = question.split(' ')
-    mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd = get_all_nbs()
-    if not output: mds = mds_no_output
-    else: mds = mds_output
-        
-    for file_fullname in mds:
-        file_name = file_fullname.split('/')[-1]
-        with open(file_fullname, 'r') as file:
-            for count, l in enumerate(file):
-                truelst = [q.lower() in l.lower() for q in questlst]
-                pct = sum(truelst)/len(truelst)
-                if pct >= accu and (l.startswith("##") or l.startswith("###") or l.startswith("####")):
-                    if db: 
-                        head1 = f"keyword match is {pct}, Found a section: in {file_name}"
-                        head1 = highlight(str(pct), head1)
-                        head1 = highlight(file_name, head1)
-                        display_md(head1)
-                        highlighted_line = highlight(question, l, db=db)                        
-                        print()
-                    display_block(l, file_fullname, output=output, keywords=question)
-                    if nb: 
-                        openNB(file_name, db=db)
-                        openNBKaggle(file_name, db=db)
-```
-
-```python
-mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd, _, _ = get_all_nbs()
-[file_path for file_path in mds_no_output if "_fastai_" in file_path and "_fastai_pt2_" not in file_path]
-```
-
-```python
-
-def fastnbs(question:str, # query in string
-            filter_folder="all", # options: all, fastai, part2
-            output=False, # True for nice print of cell output
-            accu:float=0.8, 
-            nb=True, 
-            db=False):
-    "check with fastlistnbs() to find interesting things to search \
-fastnbs() can use keywords to search learning points (a section title and a section itself) from my documented fastai notebooks"
-    questlst = question.split(' ')
-    mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd = get_all_nbs()
-    if not output: mds = mds_no_output
-    else: mds = mds_output
-        
-    for file_path in mds:
-        if filter_folder == "fastai" and "_fastai_" in file_path and not "_fastai_pt2_" in file_path:
-            file_fullname = file_path
-        elif filter_folder == "part2" and "_fastai_pt2_" in file_path:
-            file_fullname = file_path
-        elif filter_folder == "all": 
-            file_fullname = file_path
-        else: continue
-
-        file_name = file_fullname.split('/')[-1]
-        with open(file_fullname, 'r') as file:
-            for count, l in enumerate(file):
-                truelst = [q.lower() in l.lower() for q in questlst]
-                pct = sum(truelst)/len(truelst)
-                if pct >= accu and (l.startswith("##") or l.startswith("###") or l.startswith("####")):
-                    if db: 
-                        head1 = f"keyword match is {pct}, Found a section: in {file_name}"
-                        head1 = highlight(str(pct), head1)
-                        head1 = highlight(file_name, head1)
-                        display_md(head1)
-                        highlighted_line = highlight(question, l, db=db)                        
-#                         print()
-                    display_block(l, file_fullname, output=output, keywords=question)
-                    if nb: 
-                        openNB(file_name, db=db)
-                        openNBKaggle(file_name, db=db)
-```
 
 ### src: fastnbs(question, filter_folder="src", ...)
 
 ```python
 #| export
 # @snoop
-def fastnbs(question:str, # query options, "rd: adept practitioner", "doc: ImageDataLoaders", "src: DataBlock", "ht: git", "jn: help others is the way"
+def fastnbs(question:str, # see fastlistnbs() results for what to search "doc: ", "rd: ", "src: ", "ht: ", "jn: ", "qt: ", "pt:"
             filter_folder="src", # options: src, all,
             strict=False, # loose search keyword, not as the first query word
             output=False, # True for nice print of cell output
@@ -2645,114 +2466,7 @@ fastnotes("how understand matrix multiplication", n=17, db=True)
 
 ```
 
-## fastlistnbs
-
-```python
-
-def fastlistnbs():
-    "display all my commented notebooks subheadings in a long list"
-    nbs, folder, _, _, _, _ = get_all_nbs()
-    for nb in nbs:
-        print("\n"+nb)
-        with open(nb, 'r') as file:
-            for idx, l in enumerate(file):
-                if "##" in l:
-                    print(l, end="") # no extra new line between each line printed
-        
-```
-
-```python
-
-def fastlistnbs():
-    "display all my commented notebooks subheadings in a long list. Best to work with fastnbs together."
-    nbs, folder, _, _, _, _ = get_all_nbs()
-    for nb in nbs:
-        print("\n"+nb)
-        with open(nb, 'r') as file:
-            for idx, l in enumerate(file):
-                if l.startswith("##"):
-                    print(l, end="") # no extra new line between each line printed
-        
-```
-
-### add filter 
-
-```python
-
-def fastlistnbs(filter="fastai"):
-    "display all my commented notebooks subheadings in a long list. Best to work with fastnbs together."
-    nbs, folder, _, _, _, _ = get_all_nbs()
-    nb_rt = ""
-    for nb in nbs:
-        if filter == "fastai" and "_fastai_" in nb: 
-            nb_rt = nb
-        elif filter == "all": 
-            nb_rt = nb
-        else: 
-            continue
-            
-        print("\n"+nb_rt)
-        with open(nb_rt, 'r') as file:
-            for idx, l in enumerate(file):
-                if "##" in l:
-                    print(l, end="") # no extra new line between each line printed       
-```
-
-```python
-
-```
-
-```python
-
-def fastlistnbs(query="all", # howto, srcode, journey, or all
-                flt_fd="src"): # other options: "groundup", "part2", "all"
-    "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
-src_fastcore, all"
-    nbs, folder, _, _, _, _ = get_all_nbs()
-    nb_rt = ""
-    for nb in nbs:
-        if flt_fd == "fastai" and "_fastai_" in nb.split("/")[-1] and not "_fastai_pt2" in nb.split("/")[-1]: 
-            nb_rt = nb
-        elif flt_fd == "part2" and "_fastai_pt2" in nb.split("/")[-1]:
-            nb_rt = nb
-        elif flt_fd == "groundup" and "groundup_" in nb.split("/")[-1]:            
-            nb_rt = nb
-        elif flt_fd == "src" and "fast" in nb.split("/")[-1]:
-            nb_rt = nb            
-        elif flt_fd == "all": 
-            nb_rt = nb
-        else: 
-            continue
-            
-#         print("\n"+nb_rt)
-        with open(nb_rt, 'r') as file:
-            found = False
-            for idx, l in enumerate(file):
-                if "##" in l:
-                    if query == "howto" and "ht:" in l:
-                        if l.count("#") == 2: print()
-                        print(l, end="") # no extra new line between each line printed   
-                        found = True
-                    elif query == "srcode" and "src:" in l:
-                        if l.count("#") == 2: print()                        
-                        print(l, end="") # no extra new line between each line printed    
-                        found = True
-                    elif query == "doc" and "doc:" in l:
-                        if l.count("#") == 2: print()                        
-                        print(l, end="") # no extra new line between each line printed    
-                        found = True                        
-                    elif query == "journey" and "jn:" in l:
-                        if l.count("#") == 2: print()                        
-                        print(l, end="") # no extra new line between each line printed   
-                        found = True                        
-                    elif query == "all": 
-                        if l.count("#") == 2: print()                        
-                        print(l, end="") # no extra new line between each line printed
-                        found = True                        
-            if found: print(nb_rt + "\n")
-```
-
-### src: fastlistnbs(query, fld_fd), hts
+## fastlistnbs, hts
 
 ```python
 #| export 
@@ -2791,6 +2505,7 @@ src_fastcore, all"
         else: 
             continue      
 
+    jnlst = []
     if query != "howto":
         for nb_rt in nbs_fd:
             with open(nb_rt, 'r') as file:
@@ -2810,9 +2525,10 @@ src_fastcore, all"
                             print(l, end="") 
                             found = True                        
                         elif query == "journey" and "jn:" in l:
-                            if l.count("#") == 2: print()                        
-                            print(l, end="") 
-                            found = True
+                            jnlst.append(l)
+#                             if l.count("#") == 2: print()                        
+#                             print(l, end="") 
+#                             found = True
                         elif query == "question" and "qt:" in l:
                             if l.count("#") == 2: print()                        
                             print(l, end="") 
@@ -2847,19 +2563,44 @@ src_fastcore, all"
                                 print(l, end="") # no extra new line between each line printed   
                                 found = True                   
                     if found: print(nb_rt + "\n")
+    
+    dates = [jn.split("/")[-1].split("\n")[0] for jn in jnlst]
+    dates = list(set(dates))
+    dates.sort(key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
+    print("jn by dates: ========")
+    for d in dates:
+        for jn in jnlst:
+            if d in jn: 
+                if jn.count("#") == 2: print()                        
+                print(jn, end="") 
 ```
 
 ```python
-# for i, o in enumerate("imports, data-download, data-access, data-prep, data-loaders, cbs-tfms, learner, fit, pred".split(", ")):
-#     i, o
+[s for s in set(['a', 'b', 'c', 'c'])]
 ```
 
 ```python
-fastlistnbs("howto")
-# fastlistnbs("doc")
-# fastlistnbs("srcode")
-# fastlistnbs("journey")
+# jnlst =  ["adfadfdfdadfadsf/23-05-2018", "adfadsf/2-03-2017", "adfadsf/11-04-2018", 
+#               "adfadsf/01-06-2019", "adfadsf/10-01-2016", "adfadsf/01-02-2007"]  
+# dates = [jn.split("/")[-1] for jn in jnlst]
+# dates
 
+# dates.sort(key=lambda date: datetime.strptime(date, "%d-%m-%Y"))
+# dates
+
+# for d in dates:
+#     for jn in jnlst:
+#         if d in jn: 
+#             if jn.count("#") == 2: print()                        
+#             print(jn, end="") 
+```
+
+```python
+fastlistnbs("journey")
+```
+
+```python
+fastnbs("jn: help other")
 ```
 
 ## fastlistsrcs
@@ -2961,16 +2702,136 @@ fastview("test_sig")
 fastsrcs()
 ```
 
-### import fastdebug.utils as fu
+### src: check_subfolders_img
 
 ```python
-# #| export
-# import fastdebug.utils as fu
+#| export
+from fastai.data.transforms import image_extensions
 ```
 
 ```python
-# #| export 
-# fu = fu
+#| export
+def check_subfolders_img(path:Path, # a Path object
+                         db=False):
+    "map the image contents of all subfolders of the path"
+    from pathlib import Path
+    for entry in path.iterdir():
+        if entry.is_file():
+            print(f'{str(entry.absolute())}')
+    addup = 0
+    for entry in path.iterdir():
+        if entry.is_dir() and not entry.name.startswith(".") and len(entry.ls(file_exts=image_extensions)) > 5:
+            addup += len(entry.ls(file_exts=image_extensions))
+            print(f'{str(entry.parent.absolute())}: {len(entry.ls(file_exts=image_extensions))}  {entry.name}')
+#             print(entry.name, f': {len(entry.ls(file_exts=[".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]))}') # how to include both png and jpg
+            if db:
+                for e in entry.ls(): # check any image file which has a different suffix from those above
+                    if e.is_file() and not e.name.startswith(".") and e.suffix not in image_extensions and e.suffix not in [".ipynb", ".py"]:
+    #                 if e.suffix not in [".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]:
+                        pp(e.suffix, e)
+                        try:
+                            pp(Image.open(e).width)
+                        except:
+                            print(f"{e} can't be opened")
+    #                     pp(Image.open(e).width if e.suffix in image_extensions)
+        elif entry.is_dir() and not entry.name.startswith("."): 
+#             with snoop:
+            check_subfolders_img(entry)
+    print(f"addup num: {addup}")
+```
+
+### src: randomdisplay(path, size=128, db=False)
+
+```python
+#| export
+def randomdisplay(path, size=128, db=False):
+    "display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
+    the image filename is printed as well"
+# https://www.geeksforgeeks.org/python-random-module/
+    import random
+    import pathlib
+    from fastai.vision.all import PILImage
+    if type(path) == pathlib.PosixPath:
+        rand = random.randint(0,len(path.ls())-1) 
+        file = path.ls()[rand]
+    elif type(path) == L:
+        rand = random.randint(0,len(path)-1) 
+        file = path[rand]
+    im = PILImage.create(file)
+    if db: pp(im.width, im.height, file)
+    pp(file)
+    return im.to_thumb(size)
+```
+
+### src: remove_failed(path)
+
+```python
+#| export 
+from fastai.vision.all import *
+```
+
+```python
+#| export 
+def remove_failed(path):
+#     from fastai.vision.all import get_image_files, parallel
+    print("before running remove_failed:")
+    check_subfolders_img(path)
+    failed = verify_images(get_image_files(path))
+    print(f"total num: {len(get_image_files(path))}")
+    print(f"num of failed: {len(failed)}")
+    failed.map(Path.unlink)
+    print()
+    print("after running remove_failed:")
+    check_subfolders_img(path)
+```
+
+```python
+
+```
+
+## src: export_nbdev
+
+```python
+#| export
+# calling from a different notebook, nbdev_export() will cause error, this is why use exec() to call in a different notebook
+export_nbdev = "import nbdev; nbdev.nbdev_export()"
+```
+
+```python
+exec(export_nbdev)
+```
+
+```python
+
+```
+
+## download_kaggle_dataset
+
+```python
+#| export
+from fastkaggle import *
+```
+
+```python
+#| export
+def download_kaggle_dataset(competition, local_folder='', install=''):
+    "override from fastkaggle.core.setup_comp. \
+Return a path of the `local_folder` where `competition` dataset stored, \
+downloading it if needed"
+    if iskaggle:
+        if install:
+            os.system(f'pip install -Uqq {install}')
+        return Path('../input')/competition
+    else:
+        path = Path(local_folder + competition)
+        api = import_kaggle()
+        if not path.exists():
+            import zipfile
+            api.competition_download_cli(str(competition), path=path)
+            zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
+        return path
+# File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
+# Type:      function
 ```
 
 #|hide

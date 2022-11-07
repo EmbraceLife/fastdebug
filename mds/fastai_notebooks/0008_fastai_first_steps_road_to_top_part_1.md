@@ -12,6 +12,11 @@ jupyter:
     name: python3
 ---
 
+```python
+#| hide
+from fastdebug.utils import *
+```
+
 # 0008_fastai_first_steps_road_to_top_part_1
 
 <!-- #raw -->
@@ -23,26 +28,6 @@ skip_exec: true
 ```python
 #| default_exp run_kaggle_001
 ```
-
-### jn: help other is the best way forward
-
-
-**Reflection on Radek's 1st newsletter**
-
-One way to summarize Radek's secret to success is the following: 
-
-> No matter which stage of journey in the deep learning or any subject, when you are doing your best to help others to learn what you learnt and what you are dying to find out, and if you persist, you will be happy and successful. 
-
-I have dreamed of such hypothesis many times when I motivated myself to share online, and Radek proved it to be solid and true! No time to waste now!
-
-Another extremely simple but shocking secret to Radek's success is, in his words (now I can recite):
-
-> I would suspend my disbelief and do exactly what Jeremy Howard told us to do in the lectures
-
-What Jeremy told us to do is loud and clear, the 4 steps (watch, experiment, reproduce, apply elsewhere). More importantly, they are true and working if one holds onto it like Radek did. 
-
-Why I am always trying to do something different? Why couldn't I just follow this great advice right from the start? I walked [a long way around it](https://twitter.com/shendusuipian/status/1587429658621988871?s=20&t=zjz1OlYRt7yJJ8HVBdsqoA) and luckily I get my sense back and move onto the second step now. 
-
 
 ## ht: imports - vision
 
@@ -150,7 +135,7 @@ from fastai.vision.all import *
 4. git push to update
 
 
-### jn: how to iterate or make one step forward at at time
+### ht: how to iterate or make one step forward at at time
 
 
 This is Jeremy showing us how to iterate, ie., increment learning one tiny step every time every day
@@ -206,14 +191,6 @@ override `fastkaggle.core.setup_comp` for my use
 If on kaggle, download and install required libraries to work with, and return a path linking to the dataset
 
 If on local machine, download the dataset to the path based on local_folder if the path is not available and return the path
-
-```python
-setup_comp
-```
-
-```python
-show_doc(setup_comp)
-```
 
 <!-- #region -->
 ```python
@@ -308,6 +285,7 @@ Now we can import the stuff we'll need from fastai, set a seed (for reproducibil
 
 ```python
 #| export kaggle_paddy_pt1
+# set seed for reproducibility
 set_seed(42)
 ```
 
@@ -323,17 +301,17 @@ use `path.ls()` and `check_subfolders_img(path)` to see what inside each subfold
 path.ls()
 ```
 
-### src: check_subfolders_img(path, db=False)
+### doc: check_subfolders_img(path, db=False)
 
 ```python
-#| export utils 
-from fastai.data.transforms import image_extensions
+show_doc(check_subfolders_img)
 ```
 
+<!-- #region -->
 ```python
-#| export utils
-# @snoop
-def check_subfolders_img(path, db=False):
+def check_subfolders_img(path:Path, # a Path object
+                         db=False):
+    "map the image contents of all subfolders of the path"
     from pathlib import Path
     for entry in path.iterdir():
         if entry.is_file():
@@ -358,15 +336,29 @@ def check_subfolders_img(path, db=False):
 #             with snoop:
             check_subfolders_img(entry)
     print(f"addup num: {addup}")
+# File:      ~/Documents/fastdebug/fastdebug/utils.py
+# Type:      function
+
+```
+<!-- #endregion -->
+
+### src: check_subfolders_img(path, db=False)
+
+```python
+#| export kaggle_paddy_pt1
+# map the content of all subfolders of images
+check_subfolders_img(path)
 ```
 
 ```python
-check_subfolders_img(path)
+exec(export_open_py().replace('pyfile', "src subfolders"))
 ```
 
 ### ht: data_access - extract all images for test and train with `get_image_files`
 
 ```python
+#| export kaggle_paddy_pt1
+# to extract all images from a folder recursively (for subfolders)
 test_files = get_image_files(path/"test_images")
 train_files = get_image_files(path/"train_images")
 ```
@@ -389,25 +381,10 @@ train_files
 use `randomdisplay(path, size, db=False)` to display images from a folder or a L list of images such as `test_files` or `train_files`
 
 
-### src: randomdisplay(path, size, db=False)
+### doc: randomdisplay(path, size, db=False)
 
-
-display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
-    the image filename is printed as well
-
+<!-- #region -->
 ```python
-import pathlib
-type(path) == pathlib.PosixPath
-type(train_files) == L
-```
-
-```python
-snoopon()
-```
-
-```python
-#| export utils
-# @snoop
 def randomdisplay(path, size=128, db=False):
     "display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
     the image filename is printed as well"
@@ -425,16 +402,26 @@ def randomdisplay(path, size=128, db=False):
     if db: pp(im.width, im.height, file)
     pp(file)
     return im.to_thumb(size)
+# File:      ~/Documents/fastdebug/fastdebug/utils.py
+# Type:      function
 ```
+<!-- #endregion -->
+
+### src: randomdisplay(path, size, db=False)
+
+
+display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
+    the image filename is printed as well
 
 ```python
-randomdisplay(test_files, 128)
+#| export kaggle_paddy_pt1
+# to display a random image from a path 
 randomdisplay(train_files, 200)
 randomdisplay(path/"train_images/dead_heart", 128)
 ```
 
 ```python
-snoopoff()
+exec(export_open_py().replace("pyfile", "paddy pt1"))
 ```
 
 ### ht: data_prep - remove images that fail to open with `remove_failed(path)`
@@ -452,6 +439,38 @@ images failed to open must be removed, otherwise it will cause errors during tra
 
 ```python
 remove_failed(path)
+```
+
+### doc: remove_failed
+
+<!-- #region -->
+```python
+def remove_failed(path):
+#     from fastai.vision.all import get_image_files, parallel
+    print("before running remove_failed:")
+    check_subfolders_img(path)
+    failed = verify_images(get_image_files(path))
+    print(f"total num: {len(get_image_files(path))}")
+    print(f"num offailed: {len(failed)}")
+    failed.map(Path.unlink)
+    print()
+    print("after running remove_failed:")
+    check_subfolders_img(path)
+# File:      ~/Documents/fastdebug/fastdebug/utils.py
+# Type:      function
+```
+<!-- #endregion -->
+
+### src: remove_failed
+
+```python
+#| export kaggle_paddy_pt1
+# remove all images which fail to open
+remove_failed(path)
+```
+
+```python
+exec(export_open_py().replace("pyfile", "paddy pt1"))
 ```
 
 ### ht: data_prep - describe sizes of all images with `check_sizes_img`
