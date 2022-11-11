@@ -531,10 +531,10 @@ def jn_link(name, file_path, where="locally"):
     from IPython.display import Markdown
     display(Markdown(f'[Open `{name}` in Jupyter Notebook {where}]({file_path})'))                
 
-# %% ../nbs/lib/01_utils.ipynb 159
+# %% ../nbs/lib/01_utils.ipynb 154
 from pathlib import *
 
-# %% ../nbs/lib/01_utils.ipynb 163
+# %% ../nbs/lib/01_utils.ipynb 157
 def get_all_nbs():
     "return paths for all nbs both in md and ipynb format into lists"
 #     md_folder = '/Users/Natsume/Documents/divefastai/Debuggable/jupytext/'
@@ -545,7 +545,7 @@ def get_all_nbs():
     
     pys = []
     for i in os.listdir(py_folder):
-        if ".py" in i: 
+        if ".py" in i or ".ipynb" in i: 
             pys.append(py_folder + i)
     
     md_nbs = []
@@ -565,7 +565,7 @@ def get_all_nbs():
             
     return (md_nbs, md_folder, ipy_nbs, ipy_folder, md_output_nbs, md_output_folder, pys, py_folder)
 
-# %% ../nbs/lib/01_utils.ipynb 171
+# %% ../nbs/lib/01_utils.ipynb 165
 def openNB(name, heading=None, db=False):
     "Get a link to the notebook at by searching keyword or notebook name"
     _, _, ipynbs, _, _, _, pys, _= get_all_nbs()
@@ -589,9 +589,10 @@ def openNB(name, heading=None, db=False):
                 file_name = path_server + f + "#" + heading if bool(heading) else path_server + f
                 jn_link(name, file_name)
 
-# %% ../nbs/lib/01_utils.ipynb 175
+# %% ../nbs/lib/01_utils.ipynb 169
 def openpy(name=None, acu=0.8, heading=None, db=False):
-    "Get a link to the notebook at by searching keyword or notebook name"
+    "run openpy() can give all the py or ipynb files on src, kaggle, fastai related\
+    run openpy(query) can get us a link to py or ipynb on query."
     _, _, ipynbs, _, _, _, pys, py_fd= get_all_nbs()
     if not bool(name):
         lst = [pyf for pyf in pys if "src" in Path(pyf).name or "kaggle" in Path(pyf).name or "fastai" in Path(pyf).name]
@@ -622,12 +623,12 @@ def openpy(name=None, acu=0.8, heading=None, db=False):
     path_server = root_server[:-1] + folder_mid
     if db: print(f'path: {path}, path_server: {path_server}')
     for f in os.listdir(path):  
-        if f.endswith(".py"):
+        if f.endswith(".py") or f.endswith(".ipynb"):
             if name in f: 
                 file_name = path_server + f + "#" + heading if bool(heading) else path_server + f
                 jn_link(name, file_name)
 
-# %% ../nbs/lib/01_utils.ipynb 180
+# %% ../nbs/lib/01_utils.ipynb 174
 kagglenbs = [
     "https://www.kaggle.com/code/jhoward/how-does-a-neural-net-really-work",
     "https://www.kaggle.com/code/jhoward/is-it-a-bird-creating-a-model-from-your-own-data",
@@ -658,7 +659,7 @@ kagglenbs = [
     "https://www.kaggle.com/code/jhoward/improved-lstm-baseline-glove-dropout"
 ]
 
-# %% ../nbs/lib/01_utils.ipynb 182
+# %% ../nbs/lib/01_utils.ipynb 176
 def openNBKaggle(filename_full, db=False):
     if 'fastai' in filename_full:
         # split by 'fastai' and take the later
@@ -676,7 +677,7 @@ def openNBKaggle(filename_full, db=False):
                 if db: print(f'pct is {pct}')
                 jn_link(filename_full.split(".md")[0], f, where="on Kaggle") 
 
-# %% ../nbs/lib/01_utils.ipynb 190
+# %% ../nbs/lib/01_utils.ipynb 184
 def highlight(question:str, line:str, db=False):
     "highlight a string with yellow background"
     questlst = question.split(' ')
@@ -688,13 +689,13 @@ def highlight(question:str, line:str, db=False):
     if db: print(f'line: {line}')
     return line
 
-# %% ../nbs/lib/01_utils.ipynb 194
+# %% ../nbs/lib/01_utils.ipynb 188
 def display_md(text):
     "Get a link to the notebook at `path` on Jupyter Notebook"
     from IPython.display import Markdown
     display(Markdown(text))                
 
-# %% ../nbs/lib/01_utils.ipynb 205
+# %% ../nbs/lib/01_utils.ipynb 199
 def display_block(line, file, output=False, keywords=""):
     "`line` is a section title, find all subsequent lines which belongs to the same section and display them together"
     from IPython.display import Markdown
@@ -723,7 +724,7 @@ def display_block(line, file, output=False, keywords=""):
     else: print(full_section)
 
 
-# %% ../nbs/lib/01_utils.ipynb 211
+# %% ../nbs/lib/01_utils.ipynb 205
 # @snoop
 def fastnbs(question:str, # see fastlistnbs() results for what to search "doc: ", "rd: ", "src: ", "ht: ", "jn: ", "qt: ", "pt:"
             filter_folder="src", # options: src, all,
@@ -789,7 +790,7 @@ use fastnbs() display the entire learning points section including notes and cod
 
                                 openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/01_utils.ipynb 216
+# %% ../nbs/lib/01_utils.ipynb 210
 def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
     "using keywords to search learning points from commented sources files"
     questlst = question.split(' ')
@@ -820,7 +821,7 @@ def fastcodes(question:str, accu:float=0.8, nb=False, db=False):
                         if nb:
                             openNB(name)
 
-# %% ../nbs/lib/01_utils.ipynb 229
+# %% ../nbs/lib/01_utils.ipynb 223
 def fastnotes(question:str, 
               search_code:bool=False, # if search code, do check True for nicer printing
               accu:float=0.8, 
@@ -897,13 +898,13 @@ of surrounding lines."
                         openNB(file_name, db=db)
                         openNBKaggle(file_name, db=db)
 
-# %% ../nbs/lib/01_utils.ipynb 234
+# %% ../nbs/lib/01_utils.ipynb 228
 import pandas as pd
 
-# %% ../nbs/lib/01_utils.ipynb 235
+# %% ../nbs/lib/01_utils.ipynb 229
 hts = pd.Series(list(map(lambda x: "ht: " + x, "imports, data_download, data_access, data_prep, data_loaders, cbs_tfms, learner, fit, pred, fu".split(", "))))
 
-# %% ../nbs/lib/01_utils.ipynb 237
+# %% ../nbs/lib/01_utils.ipynb 231
 def fastlistnbs(query="all", # "howto", "srcode", "journey", "question", "doc", "radek", "practice", "links", or "all"
                 flt_fd="src"): # other options: "groundup", "part2", "all"
     "display section headings of notebooks, filter options: fastai, part2, groundup, src_fastai,\
@@ -918,7 +919,7 @@ src_fastcore, all"
             nbs_fd.append(nb)
         elif flt_fd == "groundup" and "groundup_" in nb.split("/")[-1]:            
             nbs_fd.append(nb)
-        elif flt_fd == "src" and "fast" in nb.split("/")[-1]:
+        elif flt_fd == "src" and ("fast" in nb.split("/")[-1] or "kaggle" in nb.split("/")[-1]):
             nbs_fd.append(nb)
         elif flt_fd == "all": 
             nbs_fd.append(nb)
@@ -994,7 +995,7 @@ src_fastcore, all"
                 if jn.count("#") == 2: print()                        
                 print(jn, end="") 
 
-# %% ../nbs/lib/01_utils.ipynb 244
+# %% ../nbs/lib/01_utils.ipynb 238
 def fastlistsrcs():
     "display all my commented src codes learning comments in a long list"
     folder ='/Users/Natsume/Documents/fastdebug/learnings/'
@@ -1008,10 +1009,10 @@ def fastlistsrcs():
 #                         print(l, end="") # no extra new line between each line printed
         
 
-# %% ../nbs/lib/01_utils.ipynb 261
+# %% ../nbs/lib/01_utils.ipynb 255
 from fastai.data.transforms import image_extensions
 
-# %% ../nbs/lib/01_utils.ipynb 262
+# %% ../nbs/lib/01_utils.ipynb 256
 def check_subfolders_img(path:Path, # a Path object
                          db=False):
     "map the image contents of all subfolders of the path"
@@ -1040,7 +1041,7 @@ def check_subfolders_img(path:Path, # a Path object
             check_subfolders_img(entry)
     print(f"addup num: {addup}")
 
-# %% ../nbs/lib/01_utils.ipynb 264
+# %% ../nbs/lib/01_utils.ipynb 258
 def randomdisplay(path, size=128, db=False):
     "display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
     the image filename is printed as well"
@@ -1059,10 +1060,10 @@ def randomdisplay(path, size=128, db=False):
     pp(file)
     return im.to_thumb(size)
 
-# %% ../nbs/lib/01_utils.ipynb 266
+# %% ../nbs/lib/01_utils.ipynb 260
 from fastai.vision.all import *
 
-# %% ../nbs/lib/01_utils.ipynb 267
+# %% ../nbs/lib/01_utils.ipynb 261
 def remove_failed(path):
 #     from fastai.vision.all import get_image_files, parallel
     print("before running remove_failed:")
@@ -1075,14 +1076,14 @@ def remove_failed(path):
     print("after running remove_failed:")
     check_subfolders_img(path)
 
-# %% ../nbs/lib/01_utils.ipynb 270
+# %% ../nbs/lib/01_utils.ipynb 264
 # calling from a different notebook, nbdev_export() will cause error, this is why use exec() to call in a different notebook
 export_nbdev = "import nbdev; nbdev.nbdev_export()"
 
-# %% ../nbs/lib/01_utils.ipynb 274
+# %% ../nbs/lib/01_utils.ipynb 268
 from fastkaggle import *
 
-# %% ../nbs/lib/01_utils.ipynb 275
+# %% ../nbs/lib/01_utils.ipynb 269
 def download_kaggle_dataset(competition, local_folder='', install=''):
     "override from fastkaggle.core.setup_comp. \
 Return a path of the `local_folder` where `competition` dataset stored, \

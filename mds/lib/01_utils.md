@@ -1382,78 +1382,16 @@ jn_link("utils", "http://localhost:8888/notebooks/nbs/lib/utils.ipynb")
 
 ## get_all_nbs
 
-```python
-def get_all_nbs(folder='/Users/Natsume/Documents/divefastai/Debuggable/jupytext/'):
-    "return all nbs of subfolders of the `folder` into a list"
-    all_nbs = []
-    for i in os.listdir(folder):
-        if "." not in i:
-            all_nbs = all_nbs + [folder + i + "/" + j for j in os.listdir(folder + i) if j.endswith('.md')]
-    return (all_nbs, folder)
-```
 
 ### get all nbs path for both md and ipynb
 
 ```python
 
-def get_all_nbs():
-    "return paths for all nbs both in md and ipynb format into lists"
-#     md_folder = '/Users/Natsume/Documents/divefastai/Debuggable/jupytext/'
-    md_folder = '/Users/Natsume/Documents/fastdebug/mds/'
-    ipy_folder = '/Users/Natsume/Documents/fastdebug/nbs/'
-    md_nbs = []
-    for i in os.listdir(md_folder):
-        if "." not in i:
-            md_nbs = md_nbs + [md_folder + i + "/" + j for j in os.listdir(md_folder + i) if j.endswith('.md')]
-            
-    ipy_nbs = []
-    for i in os.listdir(ipy_folder):
-        if "." not in i:
-            ipy_nbs = ipy_nbs + [ipy_folder + i + "/" + j for j in os.listdir(ipy_folder + i) if j.endswith('.ipynb')]
-            
-    return (md_nbs, md_folder, ipy_nbs, ipy_folder)
-```
-
-```python
-
-```
-
-```python
-
-def get_all_nbs():
-    "return paths for all nbs both in md and ipynb format into lists"
-#     md_folder = '/Users/Natsume/Documents/divefastai/Debuggable/jupytext/'
-    md_folder = '/Users/Natsume/Documents/fastdebug/mds/'
-    md_output_folder = '/Users/Natsume/Documents/fastdebug/mds_output/'    
-    ipy_folder = '/Users/Natsume/Documents/fastdebug/nbs/'
-    md_nbs = []
-    for i in os.listdir(md_folder):
-        if "." not in i:
-            md_nbs = md_nbs + [md_folder + i + "/" + j for j in os.listdir(md_folder + i) if j.endswith('.md')]
-
-    md_output_nbs = [md_output_folder + i for i in os.listdir(md_output_folder) if ".md" in i]        
-            
-    ipy_nbs = []
-    for i in os.listdir(ipy_folder):
-        if "." not in i:
-            ipy_nbs = ipy_nbs + [ipy_folder + i + "/" + j for j in os.listdir(ipy_folder + i) if j.endswith('.ipynb')]
-            
-    return (md_nbs, md_folder, ipy_nbs, ipy_folder, md_output_nbs, md_output_folder)
-```
-
-### add index.ipynb
-
-```python
-!push-code-new
 ```
 
 ```python
 #| export
 from pathlib import *
-```
-
-```python
-# fastnbs("Path")
 ```
 
 ```python
@@ -1476,7 +1414,7 @@ def get_all_nbs():
     
     pys = []
     for i in os.listdir(py_folder):
-        if ".py" in i: 
+        if ".py" in i or ".ipynb" in i: 
             pys.append(py_folder + i)
     
     md_nbs = []
@@ -1617,7 +1555,8 @@ bool("head")
 ```python
 #| export
 def openpy(name=None, acu=0.8, heading=None, db=False):
-    "Get a link to the notebook at by searching keyword or notebook name"
+    "run openpy() can give all the py or ipynb files on src, kaggle, fastai related\
+    run openpy(query) can get us a link to py or ipynb on query."
     _, _, ipynbs, _, _, _, pys, py_fd= get_all_nbs()
     if not bool(name):
         lst = [pyf for pyf in pys if "src" in Path(pyf).name or "kaggle" in Path(pyf).name or "fastai" in Path(pyf).name]
@@ -1648,7 +1587,7 @@ def openpy(name=None, acu=0.8, heading=None, db=False):
     path_server = root_server[:-1] + folder_mid
     if db: print(f'path: {path}, path_server: {path_server}')
     for f in os.listdir(path):  
-        if f.endswith(".py"):
+        if f.endswith(".py") or f.endswith(".ipynb"):
             if name in f: 
                 file_name = path_server + f + "#" + heading if bool(heading) else path_server + f
                 jn_link(name, file_name)
@@ -2498,7 +2437,7 @@ src_fastcore, all"
             nbs_fd.append(nb)
         elif flt_fd == "groundup" and "groundup_" in nb.split("/")[-1]:            
             nbs_fd.append(nb)
-        elif flt_fd == "src" and "fast" in nb.split("/")[-1]:
+        elif flt_fd == "src" and ("fast" in nb.split("/")[-1] or "kaggle" in nb.split("/")[-1]):
             nbs_fd.append(nb)
         elif flt_fd == "all": 
             nbs_fd.append(nb)
@@ -2832,6 +2771,10 @@ downloading it if needed"
         return path
 # File:      ~/mambaforge/lib/python3.9/site-packages/fastkaggle/core.py
 # Type:      function
+```
+
+```python
+
 ```
 
 #|hide

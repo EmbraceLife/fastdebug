@@ -76,7 +76,7 @@ fastlistnbs("journey")
 ```
 
 ```python
-fastnbs("src: fastnbs")
+fastnbs("jn: The nner voice often reminds me")
 ```
 
 ## Search docs
@@ -139,7 +139,11 @@ hts
 # fastnbs("ht: load")
 ```
 
-## Search Radek
+## Search Mentors, like "radek"
+
+```python
+# fastnbs("rd: process jsonl to df")
+```
 
 ```python
 fastlistnbs("radek")
@@ -166,7 +170,7 @@ fastlistnbs("links")
 ```
 
 ```python
-fastnbs("lk: Radek Otto")
+fastnbs("lk: Daniel's fastai forum pos")
 ```
 
 ```python
@@ -180,7 +184,7 @@ openpy()
 ```
 
 ```python
-openpy('remove failed')
+openpy('kaggle_utils')
 ```
 
 ```python

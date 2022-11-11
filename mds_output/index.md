@@ -242,16 +242,29 @@ fastlistnbs("journey")
     ### jn: help other is the best way forward  /2022-11-2
     ### jn: combine experimenting notebooks with reading and writing codes /2022-11-5
     ### jn: Why start to try Kaggle Recommendation competition OTTO now /2022-11-7
-    ### jn: The nner voice often reminds me: You won't succeed no matter how hard you try. But with all the amazing alumni like Radek, Moody etc in fastai community I can't help trying /2022-11-7
+    ### jn: The inner voice often reminds me: You won't succeed no matter how hard you try. But with all the amazing alumni like Radek, Moody etc in fastai community I can't help trying /2022-11-7
+    ### jn: A get-started  [post](https://www.kaggle.com/competitions/otto-recommender-system) on recsys by Radek /2022-11-8
+    #### jn: don't worry many theories or models or equations about recsys I don't understand as good libraries of recsys should have them all in code. As long as I can use the code in practice, I should be able to understand them in the end /2022-11-9
+    #### jn: I should run code and experiment notebooks daily when even I don't have a whole picture of recsys /2022-11-9
+    ### jn: Radek - do tell the world what you are up to /2022-11-9
+    ### jn: Radek - Don't worry about how your writing is written /2022-11-9
+    ### jn: Radek - let Kaggle be a life changing experience /2022-11-9
+    ### jn: Radek - how to do project based learning /2022-11-9
+    ### jn: I preordered walk with fastai, but I will primarily focus on Radek and OTTO /2022-11-10
+    ### jn: as Radek suggested, I should focus on notebooks and discussions shared on Kaggle OTTO to grow myself bit by bit /2022-11-10
+    ### jn: I have experimented `process_data.ipynb` and `eda on OTTO.ipynb` by Radek /2022-11-10
+    ### jn: I started to read https://github.com/otto-de/recsys-dataset which has a lot helpful info for beginners /2022-11-10
+    ### jn: record all techniques learnt within a context (using "recsys - otto - get started") is much more helpful than extract it from the context it's learnt /2022-11-11
+    ### jn: starting to work on Radek's [notebook](https://www.kaggle.com/code/radek1/howto-full-dataset-as-parquet-csv-files?scriptVersionId=109945227) on how to use the otto dataset in parquet file /2022-11-11
 
 
 
 ```
-fastnbs("src: fastnbs")
+fastnbs("jn: The nner voice often reminds me")
 ```
 
 
-### <mark style="background-color: #ffff00">src:</mark>  <mark style="background-color: #FFFF00">fastnbs</mark> (question, filter_folder="src", ...)
+### <mark style="background-color: #ffff00">jn:</mark>  <mark style="background-color: #ffff00">the</mark>  inner <mark style="background-color: #ffff00">voice</mark>  <mark style="background-color: #ffff00">often</mark>  <mark style="background-color: #ffff00">reminds</mark>  <mark style="background-color: #FFFF00">me</mark> : you won't succeed no matter how hard you try. but with all <mark style="background-color: #ffff00">the</mark>  amazing alumni like radek, moody etc in fastai community i can't help trying /2022-11-7
 
 
 
@@ -259,101 +272,12 @@ fastnbs("src: fastnbs")
 heading 3.
 
 
-```python
-#| export
-# @snoop
-def fastnbs(question:str, # see fastlistnbs() results for what to search "doc: ", "rd: ", "src: ", "ht: ", "jn: ", "qt: ", "pt:"
-            filter_folder="src", # options: src, all,
-            strict=False, # loose search keyword, not as the first query word
-            output=False, # True for nice print of cell output
-            accu:float=0.8, 
-            nb=True, 
-            db=False):
-    "check with fastlistnbs() to skim through all the learning points as section titles; \
-then use fastnotes() to find interesting lines which can be notes or codes, and finally \
-use fastnbs() display the entire learning points section including notes and codes."
-    questlst = question.split(' ')
-    mds_no_output, folder, ipynbs, ipyfolder, mds_output, output_fd, pys, py_folder = get_all_nbs()
-    if not output: mds = mds_no_output
-    else: mds = mds_output
-        
-    for file_path in mds:
-        if filter_folder == "fastai" and "_fastai_" in file_path and not "_fastai_pt2_" in file_path:
-            file_fullname = file_path
-        elif filter_folder == "part2" and "_fastai_pt2_" in file_path:
-            file_fullname = file_path
-        elif filter_folder == "src" and "fast" in file_path:
-            file_fullname = file_path            
-        elif filter_folder == "all": 
-            file_fullname = file_path
-        else: continue
-
-        file_name = file_fullname.split('/')[-1]
-        with open(file_fullname, 'r') as file:
-            for count, l in enumerate(file):
-                if l.startswith("## ") or l.startswith("### ") or l.startswith("#### "):
-                    truelst = [q.lower() in l.lower() for q in questlst]
-                    pct = sum(truelst)/len(truelst)
-                    ctn = l.split("# ```")[1] if "# ```" in l else l.split("# ")[1] if "# " in l else l.split("# `")
-                    if strict:
-                        if pct >= accu and ctn.startswith(questlst[0]): # make sure the heading start with the exact quest word
-                            if db: 
-                                head1 = f"keyword match is {pct}, Found a section: in {file_name}"
-                                head1 = highlight(str(pct), head1)
-                                head1 = highlight(file_name, head1)
-                                display_md(head1)
-                                highlighted_line = highlight(question, l, db=db)                        
-        #                         print()
-                            display_block(l, file_fullname, output=output, keywords=question)
-                            if nb: # to link a notebook with specific heading
-                                if "# ```" in l: openNB(file_name, l.split("```")[1].replace(" ", "-"), db=db)
-                                else: openNB(file_name, l.split("# ")[1].replace(" ", "-"), db=db)
-
-                                openNBKaggle(file_name, db=db)
-                    else: 
-                        if pct >= accu: # make sure the heading start with the exact quest word
-                            if db: 
-                                head1 = f"keyword match is {pct}, Found a section: in {file_name}"
-                                head1 = highlight(str(pct), head1)
-                                head1 = highlight(file_name, head1)
-                                display_md(head1)
-                                highlighted_line = highlight(question, l, db=db)                        
-        #                         print()
-                            display_block(l, file_fullname, output=output, keywords=question)
-                            if nb: # to link a notebook with specific heading
-                                if "# ```" in l: openNB(file_name, l.split("```")[1].replace(" ", "-"), db=db)
-                                else: openNB(file_name, l.split("# ")[1].replace(" ", "-"), db=db)
-
-                                openNBKaggle(file_name, db=db)
-```
-
-```python
-"# this is me".split("# ")[1].replace(" ", "-")
-"# thisisme".split("# ")[1].replace(" ", "-")
-```
-
-```python
-# fastnbs("Snoop them together in one go", output=True)
-# fastnbs("how matrix multiplication")
-# fastnbs("how matrix multiplication", folder="fastai")
-# fastnbs("show_image", "src")
-# fastnbs("module", "src")
-# fastnbs("module", "src", False)
-# fastnbs("module")
-# fastnbs("apply")
-# fastnbs("get all nbs")
-```
-
-```python
-"### ```show_image(b, a, c)```".split("```")[1].replace(" ", "-")
-```
-
-Next, heading 2
-## fastcodes
+Next, heading 3
+### jn: combine experimenting notebooks with reading and writing codes /2022-11-5
 
 
 
-[Open `01_utils` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/lib/01_utils.ipynb#src:-fastnbs(question,-filter_folder="src",-...)
+[Open `00_fastai_Meta_learning_Radek` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/00_fastai_Meta_learning_Radek.ipynb#jn:-The-inner-voice-often-reminds-me:-You-won't-succeed-no-matter-how-hard-you-try.-But-with-all-the-amazing-alumni-like-Radek,-Moody-etc-in-fastai-community-I-can't-help-trying-/2022-11-7
 )
 
 
@@ -818,13 +742,59 @@ hts
 # fastnbs("ht: load")
 ```
 
-## Search Radek
+## Search Mentors, like "radek"
+
+
+```
+# fastnbs("rd: process jsonl to df")
+```
 
 
 ```
 fastlistnbs("radek")
 ```
 
+
+<style>.container { width:100% !important; }</style>
+
+
+    ### rd: recsys - otto - get started - Andrew Ng recsys old videos 2022-11-7
+    ### rd:  recsys - otto - get started - Andrew Ng on new recsys videos 2022-11-8
+    #### rd: recsys - otto - get started - The best recsys intro video recommended by Radek
+    #### rd: recsys - otto - get started - What is session based recommendations and current development of recsys
+    #### rd: recsys - otto - get started - transformers - post recommended by Radek
+    ### rd: recsys - otto - get started - Intro of recsys (video) by Xavier Amatriain
+    ### rd: recsys - otto - get started - advices from Radek - how to get started on recsys with OTTO
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_Radek_OTTO.md
+    
+    ### rd: recsys - otto - get started - subset the training set based on entire sessions, train.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use, random_state=42)['session'], train[train.session.isin(lucky_sessions_train)]
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle_otto_Radek_covisiation_matrix.md
+    
+    ### rd: recsys - otto - get started - save a list or dict into pkl and load them
+    ### rd: recsys - otto - get started - process jsonl to df
+    ### rd: recsys - otto - get started - RAM needed to process data on Kaggle, 400MB jsonl takes up nearly 4GB ram
+    ### rd: recsys - otto - get started - use parquet over csv, why and how
+    ### rd: recsys - otto - get started - use parquet to instead of jsonl or csv to save space on disk
+    ### rd: recsys - otto - get started - use `uint8` instead of `int` or `str` to reduce RAM usage by 9 times
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_radek_otto_get_started_process_data.md
+    
+    ### rd: recsys - otto - get started - copy and paste dataset path and use !ls to see what inside
+    ### rd: recsys - otto - get started - pd.read_parquet('copy and paste the dataset path')
+    ### rd: recsys - otto - get started - load a function from a pickle file with pickle5, with open as fh: and pick.load(fh)
+    ### rd: recsys - otto - get started - convert int back to string, train.iloc[:1000].type.map(lambda i: id2type[i])
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_otto_access_parquet_dataset.md
+    
+    ### rd: recsys - otto - get started - Read parquet file with `pd.read_parquet`
+    ### rd: recsys - otto - get started - find all the unique sessions, train.session.unique()
+    ### rd: recsys - otto - get started - group 'aid' by 'session' and count, test.groupby('session')['aid'].count()
+    ### rd: recsys - otto - get started - return natural log and also be super accurate in floating point, train.groupby('session')['aid'].count().apply(np.log1p).hist()
+    ### rd: recsys - otto - get started - train and test sessions have no time intersection, datetime.datetime.fromtimestamp, question
+    ### rd: recsys - otto - get started - no new items in test, len(set(test.aid.tolist()) - set(train.aid.tolist()))
+    ### rd: recsys - otto - get started - train and test have different session length distributions, train.groupby('session')['aid'].count().describe()
+    ### rd: recsys - otto - get started - define a session (a tracking period)
+    ### rd: recsys - otto - get started - train and test have no common sessions, train.session.max(), test.session.min()
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_radek_otto_eda.md
+    
     
     ## rd: The problem with theory
     ### rd: How Hinton approaches and discover theories
@@ -1017,6 +987,7 @@ fastlistnbs("links")
 
     ### lk: Jeremy and Paddy
     ### lk: Daniel's fastai forum posts
+    ### lk: Radek on animal language models
     ### lk: Radek and OTTO
     ### lk: ilovescience on kaggle
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_links_forums_kaggle_github.md
@@ -1026,31 +997,31 @@ fastlistnbs("links")
 
 
 ```
-fastnbs("lk: Radek Otto")
+fastnbs("lk: Daniel's fastai forum pos")
 ```
 
 
-### <mark style="background-color: #ffff00">lk:</mark>  <mark style="background-color: #ffff00">radek</mark>  and <mark style="background-color: #FFFF00">otto</mark> 
+### <mark style="background-color: #ffff00">lk:</mark>  <mark style="background-color: #ffff00">daniel's</mark>  <mark style="background-color: #ffff00">fastai</mark>  <mark style="background-color: #ffff00">forum</mark>  <mark style="background-color: #FFFF00">pos</mark> ts
 
 
 
 
 heading 3.
 
-Radek on [twitter](https://twitter.com/radekosmulski)
+  
+[Exploring fastai with Excel and Python](https://forums.fast.ai/t/exploring-fastai-with-excel-and-python/97426)
+  
+[Hidden Docs of Fastcore](https://forums.fast.ai/t/hidden-docs-of-fastcore/98455)
+  
+[Help: reading fastcore and fastai docs](https://forums.fast.ai/t/help-reading-fastcore-and-fastai-docs/100168) 
 
-How to get started on OTTO [post](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364062)
-
-Baseline model OTTO [notebook](https://www.kaggle.com/code/radek1/co-visitation-matrix-simplified-imprvd-logic/notebook?scriptVersionId=110068977)
-
-Full dataset converted to csv/parquet format for OTTO [post](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843) with notebooks
 
 Next, heading 3
-### lk: ilovescience on kaggle
+### lk: Radek on animal language models
 
 
 
-[Open `fastai_links_forums_kaggle_github` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/fastai_links_forums_kaggle_github.ipynb#lk:-Radek-and-OTTO
+[Open `fastai_links_forums_kaggle_github` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/fastai_links_forums_kaggle_github.ipynb#lk:-Daniel's-fastai-forum-posts
 )
 
 
@@ -1069,19 +1040,20 @@ openpy()
     ['/Users/Natsume/Documents/fastdebug/fastdebug/fastaiTD.py',
      '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_utils_remove_failed.py',
      '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_paddy_pt1.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_multiprocess_counter.ipynb',
      '/Users/Natsume/Documents/fastdebug/fastdebug/fast_src_download_kaggle_dataset.py',
+     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_utils_dataset.py',
      '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_utils_randomdisplay.py',
-     '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_notebook.py',
      '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_check_subfolders_img.py']
 
 
 
 ```
-openpy('remove failed')
+openpy('kaggle_utils')
 ```
 
 
-[Open `fastai_src_utils_remove_failed` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/fastai_src_utils_remove_failed.py)
+[Open `kaggle_utils_dataset` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/kaggle_utils_dataset.py)
 
 
 

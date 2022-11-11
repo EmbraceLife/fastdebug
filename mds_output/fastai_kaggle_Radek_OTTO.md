@@ -1,28 +1,12 @@
-# 📈 What do we know so far? ⚡Summary with links to relevant resources
-
-## Discussion summary
-
--   Training on test data is okay! 🥳
-    -   as observed by [@cdeotte](https://www.kaggle.com/cdeotte) [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363939)
-    -   and confirmed by the organizer [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363939)
--   How are sessions defined?
-    -   A session is all activity by a single user either in train or in test
-    -   confirmed by the organizer [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363554#2015486)
--   In the beginning, there were issues with the competition metric (someone managed to score ~4.8 on recall on public LB😅)
-    -   This has now been [corrected](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363772). Thank you, [@inversion](https://www.kaggle.com/inversion)! 🙌
--   Some good thoughts on the competition [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363874) by [@narsil](https://www.kaggle.com/narsil).
-
-## Notebooks recap
-
--   The outstanding [co-visitation matrix](https://www.kaggle.com/code/vslaykovsky/co-visitation-matrix) by [@vslaykovsky](https://www.kaggle.com/vslaykovsky)!
--   A notebook by [@cdeotte](https://www.kaggle.com/cdeotte) building on the co-visitation matrix 👆 and demonstrating the power of training on the test data! (maybe training is too strong of a word, rather using the leak in your calculations)
--   the last 20 AIDs are very powerful! ([original code](https://www.kaggle.com/code/ttahara/last-aid-20), [simplified without need for chunking](https://www.kaggle.com/code/radek1/last-20-aids)
-
 # Resources for getting started
 
--   A [great post](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363624) from [@andradaolteanu](https://www.kaggle.com/andradaolteanu) with a link to Andrew Ng's videos on Recommender Systems
+## Andrew Ng
+### rd: recsys - otto - get started - Andrew Ng recsys old videos 2022-11-7
+The one of the first recommended resource by @Radek for getting started
 
-### rd: recsys - otto - get started - Andrew Ng videos
+> A [great post](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363624) from [@andradaolteanu](https://www.kaggle.com/andradaolteanu) with a link to Andrew Ng's videos on Recommender Systems 
+
+#### Recommenation system by Andrew Ng (Older course)
 
 **Lecture 16.2 — Recommender Systems Intro**
 [00:00](https://youtu.be/giIXNoiqO_U?list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&t=0) - How important recommendation system to the real world?
@@ -53,15 +37,161 @@ How To predict the rate of any user to any movie, we just need to find out the f
 [00:00](https://youtu.be/5R1xOJOFRzs?list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&t=0) - What is low-rank matrix factorization? put all features of all movies into a matrix, all features of all users into a matrix and put all rating prediction as a dot product of two matricies
 [05:07](https://youtu.be/5R1xOJOFRzs?list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&t=307) - How can collaborative filtering enable recommendations of similar movies to a user? As it finds out all the features of all movies, we can compare the similarity of movie feature vectors to find out similar movies
 
--   [Getting started resources](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363814) from yours truly, among other things a link to a legendary lecture by Xavier Amatriain of Netflix fame
--   [Transformers4Rec](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363980) by NVIDIA, deep learning session-based recommendation models, as recommended by [@snnclsr](https://www.kaggle.com/snnclsr)! 🚀
--   [A post on RecBole](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363603), a very interesting looking Recommendation Model library implemented in PyTorch 🔥(thanks [@hidehisaarai1213](https://www.kaggle.com/hidehisaarai1213))
+**Lecture 16.6 — Recommender Systems | Implementational Detail Mean Normalization**
+[00:00](https://youtu.be/Am9fhp2Q91o?list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&t=0) - How a new user without giving any rating create challenges on learning based on the loss of our recommendation system algo learnt above
+[03:23](https://youtu.be/Am9fhp2Q91o?list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&t=203) - How mean normalization on all movies' ratings on the rows (movie on row, user on col) come to rescue? Why it makes sense? (assume the new user will give the average ratings to all movies)
+[07:29](https://youtu.be/Am9fhp2Q91o?list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN&t=449) - What about having movies without any user giving ratings? What problem does taking mean normalization on ratings on col? (mean normalization on a user's ratings of all movies does not make much sense )
 
-💡 Also, do note that there is [a repo on GitHub](https://github.com/otto-de/recsys-dataset) under which the data for this competition has been shared. It contains preprocessing code and information beyond what is available on Kaggle in the competition tabs (you can find most if not all of it in the discussions though that I link to above)!
+### rd:  recsys - otto - get started - Andrew Ng on new recsys videos 2022-11-8
+When was Andrew's recsys courses made? (This new course seems made in 2017, the older course was made in 2011)
 
-The competition is shaping up really nicely and I am super excited about it! 🥳
+> Learning objectives given by Andrew
+> -   Implement collaborative filtering recommender systems in TensorFlow
+> -   Implement deep learning content based filtering using a neural network in TensorFlow
+> -   Understand ethical considerations in building recommender systems
 
-- [ ] Thanks so much for all the hard work and the amazing resources that so many people have shared! 🙏
+Below are the actual new videos from this new course
+
+**Binary labels: favs, likes and clicks** 
+[00:00](https://youtu.be/tnIiuLQk63I?t=0) - What is the binary label problem application in recsys?
+[01:50](https://youtu.be/tnIiuLQk63I?t=110) - How to define label 1 and label 0?
+[04:04](https://youtu.be/tnIiuLQk63I?t=244) - How to move from regression to binary prediction in recsys? 
+[05:16](https://youtu.be/tnIiuLQk63I?t=316) - How to modify loss function for binary labels?
+
+**Finding related items**
+[00:00](https://youtu.be/uXMa7YwDVbE?t=0) - how to find related items using features of movies or products
+03:24 - what are the limitations of collaborative filter? (cold start problem and not-using side information problem)
+
+**Collaborative filtering vs Content-based filtering** 
+[00:00](https://youtu.be/UgSBaD7s5HU?t=0) - How collaboratibe filtering differ from content based filtering? (content-based filtering use side info on both users and items) 
+[01:57](https://youtu.be/UgSBaD7s5HU?t=116) - What do the features or side informations of users or items look like? What's the problem to solve in order to utilize the features?
+[05:44](https://youtu.be/UgSBaD7s5HU?t=345) - How does the features of users and items can help make predictions of ratings? The key is to convert the side info of users and items into the actual features (same length) of users and items in making predictions 
+[09:10](https://youtu.be/UgSBaD7s5HU?t=550) - summary
+
+**Content-based Filtering | Deep learning for content-based filtering**
+[00:00](https://youtu.be/jhgnQB7fYKM?t=0) - How deep learning (two neuralnets) help to convert side info into features (same length) of users and items?
+[03:07](https://youtu.be/jhgnQB7fYKM?t=187) - How to do the above with a single neuralnet?
+[06:02](https://youtu.be/jhgnQB7fYKM?t=362) - How to find similar items 
+[08:09](https://youtu.be/jhgnQB7fYKM?t=489) - Sum up: deep learning can easily merge two neuralnets together; how to in practice make the computation of large amount of side info of users and items into actual features fast
+
+**9.10 Advanced implementation | Recommending from a large catalogue**
+[00:00](https://www.youtube.com/watch?v=nNJPU5fwc8E&list=PLxfEOJXRm7eZKJyovNH-lE3ooXTsOCvfC&index=123&loop=0) - Why it is a challenge to make predictions when there are millions of users and items?
+[01:17](https://youtu.be/nNJPU5fwc8E?list=PLxfEOJXRm7eZKJyovNH-lE3ooXTsOCvfC&t=77) - How to make use of features of users and items to recommend for existing user daily? Retrieval of related items for the user
+[04:03](https://youtu.be/nNJPU5fwc8E?list=PLxfEOJXRm7eZKJyovNH-lE3ooXTsOCvfC&t=243) - How to use the model to predict on the retrieved items in order to speed up or ease the computation? Rank by using the neuralnet model
+[05:26](https://youtu.be/nNJPU5fwc8E?list=PLxfEOJXRm7eZKJyovNH-lE3ooXTsOCvfC&t=326) - How to decide how many items to select in retrieval step?
+[07:09](https://youtu.be/nNJPU5fwc8E?list=PLxfEOJXRm7eZKJyovNH-lE3ooXTsOCvfC&t=429) - sum up
+
+**9.11 Advanced implementation | Ethical use of recommender systems**
+[00:00](https://youtu.be/GGnPWaNjaGM?list=PLxfEOJXRm7eZKJyovNH-lE3ooXTsOCvfC) - goals of recommendation system? what are the suspicous ones?
+[04:28](https://youtu.be/GGnPWaNjaGM?list=PLxfEOJXRm7eZKJyovNH-lE3ooXTsOCvfC&t=268) - Ad examples
+[07:51](https://youtu.be/GGnPWaNjaGM?list=PLxfEOJXRm7eZKJyovNH-lE3ooXTsOCvfC&t=471) - other problematic cases
+
+## Radek
+
+### jn: A get-started  [post](https://www.kaggle.com/competitions/otto-recommender-system) on recsys by Radek /2022-11-8
+
+Hey!
+
+I am super excited for this competition 😊 Have been perusing the world of recommender systems for the last 6 months or so, will interesting to put all that to a test 🙂
+
+In terms of good learning resources to get started with recommender systems, there are not that many, unfortunately.
+
+#### rd: recsys - otto - get started - The best recsys intro video recommended by Radek
+I would highly recommend [this lecture](https://youtu.be/bLhq63ygoU8) by a colleague of mine, Xavier Amatriain. It provides the best introduction to thinking about recommendations, what recommender systems are, what can be achieved, that I have ever come across.
+
+#### rd: recsys - otto - get started - What is session based recommendations and current development of recsys
+This particular problem that we will be working on in this competition are session based recommendations. Essentially, from a timeseries of actions taken by a user in a single session (single visit to a website), we want to predict what is the likely next action a user might take (and most importantly, on what item the action is likely to be taken!)
+
+Session recommendations are a very hot topic. They pull in a lot of exciting concepts together such as serving real time predictions (versus predictions calculated offline, usually in batches). And their sequential nature lends themselves well to modelling with RNNs or more recently, Transformers!
+
+There is a lot of complexity and interesting ideas to all of this 😊 I am hoping we will have a chance to explore many of them in this competition together!
+
+#### rd: recsys - otto - get started - transformers - post recommended by Radek
+If you'd like to read more about using Transformers for session based recommendations, here is [a very nice blog post](https://medium.com/nvidia-merlin/transformers4rec-4523cc7d8fa8) from my colleagues.
+
+So looking forward to jumping into this competition 🥳
+
+Happy Kaggling!
+
+### rd: recsys - otto - get started - Intro of recsys (video) by Xavier Amatriain
+
+#### jn: don't worry many theories or models or equations about recsys I don't understand as good libraries of recsys should have them all in code. As long as I can use the code in practice, I should be able to understand them in the end /2022-11-9
+
+#### jn: I should run code and experiment notebooks daily when even I don't have a whole picture of recsys /2022-11-9
+
+[06:00](https://youtu.be/bLhq63ygoU8?t=360) - lecture outline
+
+[08:09](https://youtu.be/bLhq63ygoU8?t=489) - Why recommendation system is so important? information overload, commercial value of recommendation
+
+[13:32](https://youtu.be/bLhq63ygoU8?t=812) - what is the "Recommendation problem"? 
+
+[14:35](https://youtu.be/bLhq63ygoU8?t=875) - what is the "Recommendation problem" formally?
+
+[15:48](https://youtu.be/bLhq63ygoU8?t=948) - The two-step: offline and online process
+
+[17:53](https://youtu.be/bLhq63ygoU8?t=1073) - approaches to recommendations
+
+[21:23](https://youtu.be/bLhq63ygoU8?t=1283) - recommendation as data mining
+
+[22:33](https://youtu.be/bLhq63ygoU8?t=1353) - Serendipity: unsought findings
+
+[25:00](https://youtu.be/bLhq63ygoU8?t=1500) - a safe bet on what works: collaborative filtering + data preprocessing + matrix factorying
+
+[27:05](https://youtu.be/bLhq63ygoU8?t=1625) - Ingredients of Collaborative filtering: implicit vs explicit data - rating data is very noisy, contradiction
+
+[30:34](https://youtu.be/bLhq63ygoU8?t=1834) - Other ingredients
+
+[31:04](https://youtu.be/bLhq63ygoU8?t=1864) - Collaborative filtering in a sentence
+
+[32:05](https://youtu.be/bLhq63ygoU8?t=1925) - The basic steps of doing CF and other approaches
+
+[32:57](https://youtu.be/bLhq63ygoU8?t=1977) - The Pros and Cons of CF
+
+[36:06](https://youtu.be/bLhq63ygoU8?t=2166) - Personalized vs Non-Personalized CF (what is your base line when you don't know the active user to predict at hand)
+
+[45:18](https://youtu.be/bLhq63ygoU8?t=2718) - User-based collaborative filtering
+
+[52:22](https://youtu.be/bLhq63ygoU8?t=3142) - User-based collaborative filtering example
+
+[54:30](https://youtu.be/bLhq63ygoU8?t=3270) - Challenges to User-based CF (intro to latent models)
+
+[56:43](https://youtu.be/bLhq63ygoU8?t=3403) - Item-based CF
+
+[58:01](https://youtu.be/bLhq63ygoU8?t=3481) - Item-based CF example
+
+[59:48](https://youtu.be/bLhq63ygoU8?t=3588) - neighborhood based CF problems: Sparsity
+
+[1:03:39](https://youtu.be/bLhq63ygoU8?t=3819) - Scalability problem
+
+[1:05:21](https://youtu.be/bLhq63ygoU8?t=3921) - Model-based CF
+
+[1:09:08](https://youtu.be/bLhq63ygoU8?t=4148) - SVD/MF
+
+[1:12:36](https://youtu.be/bLhq63ygoU8?t=4356) - SVD for rating prediction
+
+[1:17:54](https://youtu.be/bLhq63ygoU8?t=4674) - What is RBM for Recommendation
+
+[1:21:30](https://youtu.be/bLhq63ygoU8?t=4890) - Hinton's paper on RBM for recommendation and How it put together in production
+
+[1:29:01](https://youtu.be/bLhq63ygoU8?t=5341) - How to do clustering for recommendation and its pros and cons
+
+[1:33:09](https://youtu.be/bLhq63ygoU8?t=5589) - LSH (locality sensitivity Hashing)
+
+[1:34:48](https://youtu.be/bLhq63ygoU8?t=5688) - Association Rule mining
+
+[1: 39:22](https://youtu.be/bLhq63ygoU8?t=5962) - classifiers
+
+[1:43:31](https://youtu.be/bLhq63ygoU8?t=6211) - limitations of CF: cold start and popularity bias
+
+[1:45:50](https://youtu.be/bLhq63ygoU8?t=6350) - cold start problem
+
+[1:47:28](https://youtu.be/bLhq63ygoU8?t=6448) - content-based recommenders
+
+[1:50:45](https://youtu.be/bLhq63ygoU8?t=6645) - CF advantages and disadvantages
+
+[1:52:27](https://youtu.be/bLhq63ygoU8?t=6747) - Content-based methods: TF-IDF, content-based User profile, and a paper recommended (a word of caution)
+
+
 
 ### jn: Why start to try Kaggle Recommendation competition OTTO now /2022-11-7
 Radek is doing it now, it's a great opportunity to try out his method and makes him my mentor without asking
@@ -70,3 +200,89 @@ Also it is a great test to see whether I can follow this method and learn someth
 
 I can always come back to paddy and other finished competitions as they are done and notebooks are there always.
 
+
+
+
+### rd: recsys - otto - get started - advices from Radek - how to get started on recsys with OTTO
+
+Q and A from kaggle [discussion](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363814#2023136)
+
+Me: 
+
+> Hi [@radek1](https://www.kaggle.com/radek1) Thank you so much for the resources to help beginners to get started.
+
+> I have finished watching and [note taking](https://www.kaggle.com/competitions/otto-recommender-system/discussion/365039) the getting started videos on recsys from Andrew Ng (which are relatively easy to follow) and I am half way through those of Xavier Amatriain (two more hours to go for lecture 3+4) which I found many concepts are not very familiar and definitely need to rewatch a few more times.
+
+> I wonder how much should I understand Xavier's lectures? I know you would approve that the best way to help understanding is to experiment with the models he talked about, but there are no accompany notebooks or codes available from the lectures right?
+
+> I wonder have you found or implemented those the models or codes when you study the videos? or do you know where I can find them? or do actually I need to study them now for learning recsys in order to prepare me for participating in OTTO competition? Or maybe focusing on experimenting with your notebooks is already enough for beginners?
+
+Thanks!
+
+Radek: 
+
+> Xavier does a great job in his lectures of explaining the reasoning behind recommender systems, I think that is where the value lies. Very few people do that and nearly no one has experience comparable to his 🙂 As in, the thinking behind what you want and why you want to make the decisions that you do.
+
+> But on the technical side, I think you will find there is a great disconnect between the ideas and what you can implement in code. Everything is very dataset-specific. In some way, this is another skillset that you have to build up, this ability to transfer those ideas to the problem you are working on. Even one or two ideas can go a long way.
+
+> Here, for instance, this is a recommender system competition, but the curve ball is the high cardinality of action ids. How do you deal with this? There has been some really good discussion on this here: [🐘 the elephant in the room -- high cardinality of targets and what to do about this](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364722).
+
+> Or even more concretely, how do you work with the amount of data that you have available in this competition? This is on a completely different scale than most of the "toy" ML problems.
+
+> So I think chipping away at this competition and learning from the conversations and the kernels that people post is a great way of getting hands-on experience 🙂 It really does go a long way in actual business context.
+
+> Though some of the challenges that you might have to solve in the real world will be different, the problem-solving methodology that you can work out while trying to improve at a Kaggle competition goes a really long way 🙂
+
+> Meaning, I feel if you found your way to Kaggle and this competition, you probably are in a great spot to grow your practical set of abilities by working on this problem 🙂
+
+### jn: I preordered walk with fastai, but I will primarily focus on Radek and OTTO /2022-11-10
+
+### jn: as Radek suggested, I should focus on notebooks and discussions shared on Kaggle OTTO to grow myself bit by bit /2022-11-10
+
+### jn: I have experimented `process_data.ipynb` and `eda on OTTO.ipynb` by Radek /2022-11-10
+
+### jn: I started to read https://github.com/otto-de/recsys-dataset which has a lot helpful info for beginners /2022-11-10
+
+Radek: 
+
+> 💡 Also, do note that there is [a repo on GitHub](https://github.com/otto-de/recsys-dataset) under which the data for this competition has been shared. It contains preprocessing code and information beyond what is available on Kaggle in the competition tabs (you can find most if not all of it in the discussions though that I link to above)!
+
+### jn: record all techniques learnt within a context (using "recsys - otto - get started") is much more helpful than extract it from the context it's learnt /2022-11-11
+
+### jn: starting to work on Radek's [notebook](https://www.kaggle.com/code/radek1/howto-full-dataset-as-parquet-csv-files?scriptVersionId=109945227) on how to use the otto dataset in parquet file /2022-11-11
+
+## other getting started resources
+
+-   [Transformers4Rec](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363980) by NVIDIA, deep learning session-based recommendation models, as recommended by [@snnclsr](https://www.kaggle.com/snnclsr)! 🚀
+-   [A post on RecBole](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363603), a very interesting looking Recommendation Model library implemented in PyTorch 🔥(thanks [@hidehisaarai1213](https://www.kaggle.com/hidehisaarai1213))
+
+
+
+## Discussion summary
+
+-   Training on test data is okay! 🥳
+    -   as observed by [@cdeotte](https://www.kaggle.com/cdeotte) [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363939)
+    -   and confirmed by the organizer [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363939)
+-   How are sessions defined?
+    -   A session is all activity by a single user either in train or in test
+    -   confirmed by the organizer [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363554#2015486)
+-   In the beginning, there were issues with the competition metric (someone managed to score ~4.8 on recall on public LB😅)
+    -   This has now been [corrected](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363772). Thank you, [@inversion](https://www.kaggle.com/inversion)! 🙌
+-   Some good thoughts on the competition [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363874) by [@narsil](https://www.kaggle.com/narsil).
+
+## Notebooks on OTTO
+[Read](https://www.kaggle.com/competitions/otto-recommender-system/discussion) Competition discussion for notebooks
+
+- Radek's [notebook](https://www.kaggle.com/code/radek1/eda-an-overview-of-the-full-dataset) doing exploratory Data analysis on OTTO dataset (done)
+- Radek's [notebooks](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843) on process the OTTO dataset (done)
+- Radek's [notebook](https://www.kaggle.com/code/radek1/howto-full-dataset-as-parquet-csv-files?scriptVersionId=109945227) on how to use the otto dataset in parquet file (done)
+- radek's [notebook](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364210) on co-visitation matrix
+-   the last 20 AIDs are very powerful! ([original code](https://www.kaggle.com/code/ttahara/last-aid-20), [simplified without need for chunking](https://www.kaggle.com/code/radek1/last-20-aids)
+-   A notebook by [@cdeotte](https://www.kaggle.com/cdeotte) building on the co-visitation matrix 👆 and demonstrating the power of training on the test data! (maybe training is too strong of a word, rather using the leak in your calculations)
+- [elephants in the room](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364722)
+
+## libraries on recsys
+[RecBole](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363603)
+
+## More notebooks to experiment recommended by Radek
+[twitter](https://twitter.com/radekosmulski/status/1590184916632731648?s=20&t=hcJfR0YMdaC-d5LH7iwKdQ) thread
