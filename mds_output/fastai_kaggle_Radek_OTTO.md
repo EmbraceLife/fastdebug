@@ -270,19 +270,18 @@ Radek:
     -   This has now been [corrected](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363772). Thank you, [@inversion](https://www.kaggle.com/inversion)! 🙌
 -   Some good thoughts on the competition [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363874) by [@narsil](https://www.kaggle.com/narsil).
 
-## Notebooks on OTTO
-[Read](https://www.kaggle.com/competitions/otto-recommender-system/discussion) Competition discussion for notebooks
-
-- Radek's [notebook](https://www.kaggle.com/code/radek1/eda-an-overview-of-the-full-dataset) doing exploratory Data analysis on OTTO dataset (done)
-- Radek's [notebooks](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843) on process the OTTO dataset (done)
-- Radek's [notebook](https://www.kaggle.com/code/radek1/howto-full-dataset-as-parquet-csv-files?scriptVersionId=109945227) on how to use the otto dataset in parquet file (done)
-- radek's [notebook](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364210) on co-visitation matrix
--   the last 20 AIDs are very powerful! ([original code](https://www.kaggle.com/code/ttahara/last-aid-20), [simplified without need for chunking](https://www.kaggle.com/code/radek1/last-20-aids)
--   A notebook by [@cdeotte](https://www.kaggle.com/cdeotte) building on the co-visitation matrix 👆 and demonstrating the power of training on the test data! (maybe training is too strong of a word, rather using the leak in your calculations)
-- [elephants in the room](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364722)
-
 ## libraries on recsys
 [RecBole](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363603)
 
 ## More notebooks to experiment recommended by Radek
 [twitter](https://twitter.com/radekosmulski/status/1590184916632731648?s=20&t=hcJfR0YMdaC-d5LH7iwKdQ) thread
+
+### jn: there are too many notebooks to try and hard to figure out which one to try first, but I should work on local validation tracks by Radek next /2022-11-14
+
+### jn: to gradually conquer my fear, I should run both subset and full dataset to submit as did Radek with co-visitation matrix notebook. check my [leaderboard](https://www.kaggle.com/competitions/otto-recommender-system/leaderboard#) /2022-11-14
+
+### jn: a helpful thing to all is to organize all otto kernels from easy to advanced /2022-11-14
+
+### jn: well, it is a defeated night that I can't run the local validation notebook as RAM runs out. Todos: I need to find a more efficient way to search for codes learnt from Radek's notebooks; maybe rd: recsys - otto - codes - actual funcs example /2022-11-14
+
+### jn: still can't failed to run local validation notebook of Radek because of RAM running out even though no one else reported the issue. kind of stuck here, but other notebooks I run seem fine including the one using GPU. I should keep trying other notebooks. Also I have started to writing up a map of otto for myself and other beginners like myself. /2022-11-15

@@ -68,7 +68,7 @@ fastnbs("src: fastnbs")
 ## Search my Journey 
 
 ```python
-
+# fastnbs("jn: even for questions not answered")
 ```
 
 ```python
@@ -142,7 +142,7 @@ hts
 ## Search Mentors, like "radek"
 
 ```python
-# fastnbs("rd: process jsonl to df")
+# fastnbs("rd: src")
 ```
 
 ```python
@@ -184,7 +184,19 @@ openpy()
 ```
 
 ```python
-openpy('kaggle_utils')
+openpy("utils dataset")
+```
+
+```python
+openpy("all")
+```
+
+```python
+openpy('fast_src_download_kaggle_dataset.py')
+```
+
+```python
+openpy("utils dataset")
 ```
 
 ```python

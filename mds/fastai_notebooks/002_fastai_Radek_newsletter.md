@@ -1,3 +1,18 @@
+---
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .md
+      format_name: markdown
+      format_version: '1.3'
+      jupytext_version: 1.14.0
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+
 I got my second ML job nearly virtually in parallel to my first one!
 
 When I say job here I don't mean full time work -- it was a consulting role, around 10 hours a week, for around 3 months.
@@ -12,7 +27,7 @@ Remember that Kaggle competition I won as I was doing the [fast.ai](http://fast
 
 That gentleman had a very similar problem to solve at his startup! He engaged a couple of companies (sic!) but none of them got very far.
 
-### jn: Radek - do tell the world what you are up to /2022-11-9
+### jn: newsletter - Radek - do tell the world what you are up to /2022-11-9
 There are two components to this story.
 
 First of all, it reinforces the idea that if you do something, even with a modicum of success, make sure to tell the world about it!
@@ -25,7 +40,7 @@ No clue.
 
 I am sure it might be similar for you. But I implore you -- do tell the world about what you are up to!
 
-### jn: Radek - Don't worry about how your writing is written /2022-11-9
+### jn: newsletter - Radek - Don't worry about how your writing is written /2022-11-9
 
 I tweeted about my victory, wrote about it on Kaggle forums, and of course shared the news with my friends on the [fast.ai](http://fast.ai/) forums. Bear in mind, those tweets were nothing special in terms of how they were written.
 
@@ -33,7 +48,7 @@ Neither were the posts.
 
 It DOESN'T MATTER how good your writing is! Just type those characters out onto a screen and send them into the world.
 
-### jn: Radek - let Kaggle be a life changing experience /2022-11-9
+### jn: newsletter - Radek - let Kaggle be a life changing experience /2022-11-9
 And the second observation about this situation is what happened in the years to come...
 
 People completely do not understand Kaggle. Yes, it is extremely hard to compete. Yes, it takes a rediculous amount of work.
@@ -75,7 +90,7 @@ On the Internet, and in life in general, people don't know how awesome you are o
 And that's it for this email, hope you enjoyed it ![😊](https://fonts.gstatic.com/s/e/notoemoji/14.0/1f60a/72.png). In the next email I'll cover... how I got my 3rd machine learning job! And maybe I will slip in a couple of thoughts about working on projects, we'll see ![🙂](https://fonts.gstatic.com/s/e/notoemoji/14.0/1f642/72.png)
 
 
-### jn: Radek - how to do project based learning /2022-11-9
+### jn: newsletter - Radek - how to do project based learning /2022-11-9
 If you are however dying right now to read about what project based learning might look like, you might want to give [this blog post](https://click.convertkit-mail2.com/lmumqdwwm4hmh0vvm9xc6/wnh2hghr03g2d6t7/aHR0cHM6Ly9yYWRla29zbXVsc2tpLmNvbS9nb2luZy1mcm9tLW5vdC1iZWluZy1hYmxlLXRvLWNvZGUtdG8tZGVlcC1sZWFybmluZy1oZXJvLw==) a read.
 
 #### step 1: what a lecture

@@ -1,16 +1,4 @@
----
-jupyter:
-  jupytext:
-    text_representation:
-      extension: .md
-      format_name: markdown
-      format_version: '1.3'
-      jupytext_version: 1.14.0
-  kernelspec:
-    display_name: Python 3 (ipykernel)
-    language: python
-    name: python3
----
+## Experimenting on @radek1's [Howto] Full dataset as parquet/csv file notebook
 
 I converated the dataset for this competition from `jsonl` to `csv` and `parquet` so that it is easy to work with using our favorite set of tools! 🙂 You can find the converted dataset [here](https://www.kaggle.com/datasets/radek1/otto-full-optimized-memory-footprint).
 
@@ -20,15 +8,16 @@ The 'type' information was represented as a string, which takes up a lot of memo
 
 Let me walk you through how everything is set up so that you can use this data in your work.
 
+### rd: recsys - otto - access parquet - copy and paste dataset path - !ls ../input/otto-full-optimized-memory-footprint/
 
-### rd: recsys - otto - get started - copy and paste dataset path and use !ls to see what inside
 
 ```python
 # Here are the files
 !ls ../input/otto-full-optimized-memory-footprint/
 ```
 
-### rd: recsys - otto - get started - pd.read_parquet('copy and paste the dataset path')
+### rd: recsys - otto - access parquet - pd.read_parquet('../input/otto-full-optimized-memory-footprint/train.parquet')
+
 
 ```python
 import pandas as pd
@@ -40,14 +29,15 @@ train = pd.read_parquet('../input/otto-full-optimized-memory-footprint/train.par
 test = pd.read_parquet('../input/otto-full-optimized-memory-footprint/test.parquet')
 ```
 
+
 ```python
 train.head()
 ```
 
 The `type` column has been encoded as integers. To translate between the integer and original representations, please use the following.
 
+### rd: recsys - otto - access parquet - load a function from a pickle file - import pickle5 as pickle - with open('../input/otto-full-optimized-memory-footprint/id2type.pkl', "rb") as fh: - id2type = pickle.load(fh)
 
-### rd: recsys - otto - get started - load a function from a pickle file with pickle5, with open as fh: and pick.load(fh)
 
 ```python
 !pip install pickle5
@@ -62,15 +52,18 @@ with open('../input/otto-full-optimized-memory-footprint/type2id.pkl', "rb") as 
 
 Using `id2type` we can convert from integer to string representation (and we can use `type2id` to go in the other direction)
 
+
 ```python
 id2type, type2id
 ```
+
 
 ```python
 id2type
 ```
 
-### rd: recsys - otto - get started - convert int back to string, train.iloc[:1000].type.map(lambda i: id2type[i])
+### rd: recsys - otto - access parquet - access the first 1000 rows and convert int back to string, train.iloc[:1000].type.map(lambda i: id2type[i])
+
 
 ```python
 type_as_string = train.iloc[:1000].type.map(lambda i: id2type[i])
@@ -79,9 +72,13 @@ type_as_string.head()
 
 And we can just as easily go back from strings to idxs.
 
+### rd: recsys - otto - access parquet - how to use Series, map, lambda, dict together - type_as_string.map(lambda i: type2id[i])
+
+
 ```python
 type_as_string.map(lambda i: type2id[i]).head()
 ```
+
 
 ```python
 type_as_string.map(type2id).head()

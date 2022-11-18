@@ -230,7 +230,7 @@ Next, heading 2
 
 
 ```
-
+# fastnbs("jn: even for questions not answered")
 ```
 
 
@@ -246,16 +246,51 @@ fastlistnbs("journey")
     ### jn: A get-started  [post](https://www.kaggle.com/competitions/otto-recommender-system) on recsys by Radek /2022-11-8
     #### jn: don't worry many theories or models or equations about recsys I don't understand as good libraries of recsys should have them all in code. As long as I can use the code in practice, I should be able to understand them in the end /2022-11-9
     #### jn: I should run code and experiment notebooks daily when even I don't have a whole picture of recsys /2022-11-9
-    ### jn: Radek - do tell the world what you are up to /2022-11-9
-    ### jn: Radek - Don't worry about how your writing is written /2022-11-9
-    ### jn: Radek - let Kaggle be a life changing experience /2022-11-9
-    ### jn: Radek - how to do project based learning /2022-11-9
+    ### jn: newsletter - Radek - do tell the world what you are up to /2022-11-9
+    ### jn: newsletter - Radek - Don't worry about how your writing is written /2022-11-9
+    ### jn: newsletter - Radek - let Kaggle be a life changing experience /2022-11-9
+    ### jn: newsletter - Radek - how to do project based learning /2022-11-9
     ### jn: I preordered walk with fastai, but I will primarily focus on Radek and OTTO /2022-11-10
     ### jn: as Radek suggested, I should focus on notebooks and discussions shared on Kaggle OTTO to grow myself bit by bit /2022-11-10
     ### jn: I have experimented `process_data.ipynb` and `eda on OTTO.ipynb` by Radek /2022-11-10
     ### jn: I started to read https://github.com/otto-de/recsys-dataset which has a lot helpful info for beginners /2022-11-10
     ### jn: record all techniques learnt within a context (using "recsys - otto - get started") is much more helpful than extract it from the context it's learnt /2022-11-11
     ### jn: starting to work on Radek's [notebook](https://www.kaggle.com/code/radek1/howto-full-dataset-as-parquet-csv-files?scriptVersionId=109945227) on how to use the otto dataset in parquet file /2022-11-11
+    ### jn: started the notebook [co-visitation matrix - simplified, imprvd logic 🔥](https://www.kaggle.com/code/radek1/co-visitation-matrix-simplified-imprvd-logic) and half way through. At first the notebook was intimidating even though Radek made the codes easy to follow, and after experiment line by line I can taste the refresh and interesting flavor from this notebook /2022-11-11
+    ### jn: in the discussion word2vec is frequently mentioned, I will at some point [search embedding](https://forums.fast.ai/t/exploring-fastai-with-excel-and-python/97426/4?u=daniel) in fastai lectures (videos) for related content (search [colab](https://colab.research.google.com/drive/102_vWdSfRxw8SI61CED1B9uVE2cJxpCC?usp=sharing)) /2022-11-11
+    ### jn: read radek explaining what is co-visitation matrix on [twitter](https://twitter.com/radekosmulski/status/1590909701797007360) for a second time (first time on Kaggle), it certainly makes more sense to me after last night's work on the notebook. The next notebook to explore is train-validation split notebook recommended [here](https://twitter.com/radekosmulski/status/1590909730469294080?s=20&t=hTs07NKjbCWpz5sAXxJLwg) /2022-11-11
+    ### jn: another useful notebook study group [repo](https://github.com/jcatanza/Fastai-A-Code-First-Introduction-To-Natural-Language-Processing-TWiML-Study-Group) on NLP course by Rachel /2022-11-12
+    ### jn: radek's summary on Xavier's lecture 1-2 on [twitter](https://twitter.com/radekosmulski/status/1565716248083566592) /2022-11-12
+    ### jn: I don't believe I will succeed as a DL practitioner no matter how great examples or paths Jeremy, Radek etc have set for me. But because it's such as a great pleasure to witness these amazing human beings' stories, I will try my best to follow their paths in particular Radek's anyway despite how much I disbelieve I could make it /2022-11-12
+    ### jn: Radek and Jeremy said it numerously to share your work publicly. I think one way I feel good to share is to tweet a list of what I learnt from each of Radek's kaggle notebooks. /2022-11-12
+    ### jn: when I saw this big picture, I can feel there are a lot of new stuff to learn here. It is tempting and can lead to many hours go without result. However, I will follow Radek's advice to stay with the Kaggle discussion and kernels, make sure I make the most out of them first before I explore new waters /2022-11-13
+    ### jn: I have finished the annotation of Radek's co-visitation matrix simplified notebook, and have a good feel of what does co-visitation matrix do here. But still there is more work on it can be learnt, e.g., all the previous notebooks [1st](https://www.kaggle.com/code/vslaykovsky/co-visitation-matrix) [2nd](https://www.kaggle.com/code/cdeotte/test-data-leak-lb-boost), [3nd](https://www.kaggle.com/code/ingvarasgalinskas/item-type-vs-multiple-clicks-vs-latest-items) which Radek based to built the simplifed notebook /2022-11-13
+    ### jn: I need to finish up the annotation on Radek's EDA notebook properly /2022-11-13
+    ### jn: following Radek's advice, I realize that there are also other great kagglers to learn from like [Chris Deotte](https://www.kaggle.com/code/cdeotte/test-data-leak-lb-boost) /2022-11-13
+    ### jn: there are too many notebooks to try and hard to figure out which one to try first, but I should work on local validation tracks by Radek next /2022-11-14
+    ### jn: to gradually conquer my fear, I should run both subset and full dataset to submit as did Radek with co-visitation matrix notebook. check my [leaderboard](https://www.kaggle.com/competitions/otto-recommender-system/leaderboard#) /2022-11-14
+    ### jn: a helpful thing to all is to organize all otto kernels from easy to advanced /2022-11-14
+    ### jn: well, it is a defeated night that I can't run the local validation notebook as RAM runs out. Todos: I need to find a more efficient way to search for codes learnt from Radek's notebooks; maybe rd: recsys - otto - codes - actual funcs example /2022-11-14
+    ### jn: what does `density` suppose to tell us and how it is calcuated? I have raised an [issue](https://github.com/otto-de/recsys-dataset/issues/2) in the otto dataset github /2022-11-14
+    ### jn: I should find time to work on the [TBA](https://github.com/otto-de/recsys-dataset#dataset-statistics) of the dataset which helps me know better of the dataset and also it is the lower hanging fruits to contribute to the repo /2022-11-14
+    ### jn: actually as the test set is not fully available due to competition, and after the competition test set statistics will be made available. I have done the basic statistics for the competition test set, can be seen [here](https://www.kaggle.com/code/danielliao/eda-an-overview-of-the-full-dataset?scriptVersionId=110913371) /2022-11-14
+    ### jn: revisit process_data notebook and change get started to process_data in title. /2022-11-14
+    ### jn: process_data revisited and get the name straight for search (done) /2022-11-14
+    ##### jn: use help instead of doc_sig and chk from my utils will have less error throwing. Maybe remove doc_sig and chk from fastdebug.utils /2022-11-14
+    #### jn: even for questions not answered, but writing up and revisit them, potential answers may flow to me more likely: use `/1000` could make the comparison more obvious? and without `/1000` can reveal the holiday season. /2022-11-14
+    #### jn: (qusetion answered) Radek just informed me that dividing by 1000 on the timestamps can save RAM on Kaggle. /2022-11-14
+    ### jn: eda revisit is done /2022-11-14
+    ### jn: just got Radek very detailed and helpful replies, and I did the same with more experiments and questions on the effect of convert to int32 and divde by 1000 [here](https://www.kaggle.com/code/radek1/eda-an-overview-of-the-full-dataset/comments#2028533) /2022-11-14
+    ### jn: still can't failed to run local validation notebook of Radek because of RAM running out even though no one else reported the issue. kind of stuck here, but other notebooks I run seem fine including the one using GPU. I should keep trying other notebooks. Also I have started to writing up a map of otto for myself and other beginners like myself. /2022-11-15
+    ### jn: radek - newsletter - why popularity on twitter is not what you really need (>90% knows little of you) /2022-11-15
+    ### jn: radek - newsletter - what kind of followers do you need (insider of industry) /2022-11-15
+    ### jn: radek - newsletter - how did Radek get his third job? (sharing an interesting project) /2022-11-15
+    ### jn: radek - newsletter - how to ask for help by sharing (an example) /2022-11-15
+    ### jn: out of desperation (keep running out of RAM by copying and running local validation notebook from Radek, all versions are tried) I started to experiment every line of Radek's local validation notebook, and to my surprise I get the notebook to run without error this time by removing `/1000` from one line of code. Then I figured out what problem does `/1000` cause which seems to be a bug. However, I have no idea how such a 'bug' cause me to run out of RAM and no problem for Radek and seemingly everybody else.  /2022-11-16
+    ### jn: I figured out a way to debug every line of a block of code contains loop of loop with easy: make the block of code into a function and use return and print and run the function. /2022-11-16
+    ### jn: (todos) After reading Radek's 3rd newsletter, I had an idea to create a beginner's map to recsys through otto competition. However, I am very slow on writing it up as great kaggler like Radek and Chris are faster in making new notebooks than I can read and experiment them. What shall I do? /2022-11-16
+    ### jn: (todos) I have finished debug every line of code for local validation notebook, but I still need to revisit it to form a big picture as a whole, also I need to read more on recall metrics of otto dataset  /2022-11-16
+    ### jn: I want to finish the beginners' map first at least the first version of it to have a sense of the scale of work to cover /2022-11-17
 
 
 
@@ -746,17 +781,13 @@ hts
 
 
 ```
-# fastnbs("rd: process jsonl to df")
+# fastnbs("rd: src")
 ```
 
 
 ```
 fastlistnbs("radek")
 ```
-
-
-<style>.container { width:100% !important; }</style>
-
 
     ### rd: recsys - otto - get started - Andrew Ng recsys old videos 2022-11-7
     ### rd:  recsys - otto - get started - Andrew Ng on new recsys videos 2022-11-8
@@ -765,35 +796,115 @@ fastlistnbs("radek")
     #### rd: recsys - otto - get started - transformers - post recommended by Radek
     ### rd: recsys - otto - get started - Intro of recsys (video) by Xavier Amatriain
     ### rd: recsys - otto - get started - advices from Radek - how to get started on recsys with OTTO
+    ### jn: well, it is a defeated night that I can't run the local validation notebook as RAM runs out. Todos: I need to find a more efficient way to search for codes learnt from Radek's notebooks; maybe rd: recsys - otto - codes - actual funcs example /2022-11-14
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_Radek_OTTO.md
     
-    ### rd: recsys - otto - get started - subset the training set based on entire sessions, train.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use, random_state=42)['session'], train[train.session.isin(lucky_sessions_train)]
-    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle_otto_Radek_covisiation_matrix.md
+    ### rd: recsys - otto - big pic - what is candidate generation
+    ### rd: recsys - otto - big pic - what is ranking
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_otto_radek_recsys_overview.md
     
-    ### rd: recsys - otto - get started - save a list or dict into pkl and load them
-    ### rd: recsys - otto - get started - process jsonl to df
-    ### rd: recsys - otto - get started - RAM needed to process data on Kaggle, 400MB jsonl takes up nearly 4GB ram
-    ### rd: recsys - otto - get started - use parquet over csv, why and how
-    ### rd: recsys - otto - get started - use parquet to instead of jsonl or csv to save space on disk
-    ### rd: recsys - otto - get started - use `uint8` instead of `int` or `str` to reduce RAM usage by 9 times
+    ### rd: recsys - otto - process data - save a list or dict into pkl and load them - id2type = ['clicks', 'carts', 'orders'] - type2id = {a: i for i, a in enumerate(id2type)} - pd.to_pickle(id2type, 'id2type.pkl')
+    ### rd: recsys - otto - process data - how to process jsonl file to df (pd.read_json, chunk.iterrows) - chunks = pd.read_json(fn, lines=True, chunksize=2) - for chunk in chunks: - for row_idx, session_data in chunk.iterrows(): - sessions = [] - num_events = len(session_data.events) - sessions += ([session_data.session] * num_events)
+    ### rd: src - recsys - otto - process data - jsonl_to_df
+    ### rd: recsys - otto - process data - 400MB parquet file takes up nearly 4GB ram on Kaggle
+    ### rd: recsys - otto - process data - use parquet over csv, why and how - test_df.type = test_df.type.astype(np.uint8) - test_df.to_parquet('test.parquet', index=False) - test_df.to_csv('test.csv', index=False)
+    ### rd: recsys - otto - process data - use parquet to instead of jsonl or csv to save space on disk - os.path.getsize(path)
+    ### rd: recsys - otto - process data - use `uint8` instead of `int` or `str` to reduce RAM usage by 9 times - test_df.memory_usage()
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_radek_otto_get_started_process_data.md
     
-    ### rd: recsys - otto - get started - copy and paste dataset path and use !ls to see what inside
-    ### rd: recsys - otto - get started - pd.read_parquet('copy and paste the dataset path')
-    ### rd: recsys - otto - get started - load a function from a pickle file with pickle5, with open as fh: and pick.load(fh)
-    ### rd: recsys - otto - get started - convert int back to string, train.iloc[:1000].type.map(lambda i: id2type[i])
+    ### rd: recsys - otto - access otto parquet dataset - copy and paste dataset path and use !ls to see what inside - !ls ../input/otto-full-optimized-memory-footprint/
+    ### rd: recsys - otto - access otto parquet dataset - pd.read_parquet('copy and paste the dataset path') - train = pd.read_parquet('../input/otto-full-optimized-memory-footprint/train.parquet')
+    ### rd: recsys - otto - access otto parquet dataset - load a function from a pickle file - import pickle5 as pickle - with open('../input/otto-full-optimized-memory-footprint/id2type.pkl', "rb") as fh: - id2type = pickle.load(fh)
+    ### rd: recsys - otto - access otto parquet dataset - convert int back to string - train.iloc[:1000].type.map(lambda i: id2type[i])
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_otto_access_parquet_dataset.md
     
-    ### rd: recsys - otto - get started - Read parquet file with `pd.read_parquet`
-    ### rd: recsys - otto - get started - find all the unique sessions, train.session.unique()
-    ### rd: recsys - otto - get started - group 'aid' by 'session' and count, test.groupby('session')['aid'].count()
-    ### rd: recsys - otto - get started - return natural log and also be super accurate in floating point, train.groupby('session')['aid'].count().apply(np.log1p).hist()
-    ### rd: recsys - otto - get started - train and test sessions have no time intersection, datetime.datetime.fromtimestamp, question
-    ### rd: recsys - otto - get started - no new items in test, len(set(test.aid.tolist()) - set(train.aid.tolist()))
-    ### rd: recsys - otto - get started - train and test have different session length distributions, train.groupby('session')['aid'].count().describe()
-    ### rd: recsys - otto - get started - define a session (a tracking period)
-    ### rd: recsys - otto - get started - train and test have no common sessions, train.session.max(), test.session.min()
+    ### rd: recsys - otto - access parquet - copy and paste dataset path and use !ls to see what inside
+    ### rd: recsys - otto - access parquet - pd.read_parquet('copy and paste the dataset path')
+    ### rd: recsys - otto - access parquet - load a function from a pickle file with pickle5, with open as fh: and pick.load(fh)
+    ### rd: recsys - otto - access parquet - access the first 1000 rows and convert int back to string, train.iloc[:1000].type.map(lambda i: id2type[i])
+    ### rd: recsys - otto - access parquet - how to use Series, map, lambda, dict together - type_as_string.map(lambda i: type2id[i])
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle-access-parquet-otto.md
+    
+    ### rd: recsys - otto - get started - what are unigram, bigram, trigram models
+    ### rd: recsys - otto - get started - How RNN improve on uni-bi-trigram models
+    ### rd: recsys - otto - get started - How co-visitation matrix relate to embeddings?
+    ### rd: recsys - otto - get started - limitations and resembles of co-visitation matrix
+    ### rd: recsys - otto - get started - build word2vec as a resemblence of co-visitation matrix
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_otto_Radek_covisiation_matrix_discussion.md
+    
+    
+    ## rd: recsys - otto - covisitation_simplified - load the dataset files and have a peek at them
+    ### rd: recsys - otto - covisitation_simplified - read parquet and csv from dataset, pd.read_parquet('copy & paste the file path'), pd.read_csv('copy & paste path')
+    
+    ## rd: recsys - otto - covisitation_simplified - taking subset for fast experiment
+    ### rd: recsys - otto - covisitation_simplified - subset based on entire sessions, train.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use, random_state=42)['session'], train[train.session.isin(lucky_sessions_train)]
+    
+    ## rd: recsys - otto - covisitation_simplified - some setups before training
+    ### rd: recsys - otto - covisitation_simplified - use session column as index, subset_of_train.index = pd.MultiIndex.from_frame(subset_of_train[['session']]), [['session']] as Series not DataFrame
+    ### rd: recsys - otto - covisitation_simplified - get starting and end timestamp for all sessions from start of training set to end of test set, train.ts.min() test.ts.max()
+    ### rd: recsys - otto - covisitation_simplified - use defaultdict + Counter to count occurences, next_AIDs = defaultdict(Counter)
+    ### rd: recsys - otto - covisitation_simplified - use test for training, get subsets, sessions, sessions_train, sessions_test - subsets = pd.concat([subset_of_train, subset_of_test]) - sessions = subsets.session.unique()
+    
+    ## rd: recsys - otto - covisitation_simplified - Training: when one aid occurred, keep track of what other aid occurred, how often they occurred. Do this for every aid across both train and test sessions.
+    ### rd: recsys - otto - covisitation_simplified - loop every chunk_size number unique sessions - for i in range(0, sessions.shape[0], chunk_size): 
+    ### rd: recsys - otto - covisitation_simplified - take a chunk_size number of sessions (each session in its entirety, ie, probably with many rows) from subsets as current_chunk - current_chunk = subsets.loc[sessions[i]:sessions[min(sessions.shape[0]-1, i+chunk_size-1)]].reset_index(drop=True) 
+    ### rd: recsys - otto - covisitation_simplified - In current_chunk, from each session (in its entirety) only takes the last/latest 30 events/rows and combine them to update current_chunk (focus on the latest 30 events to save computations) - current_chunk = current_chunk.groupby('session', as_index=False).nth(list(range(-30,0))).reset_index(drop=True)
+    ### rd: recsys - otto - covisitation_simplified - merge an session of its entirety onto itself (help to see the relation between one aid and every other aid within each session) - consecutive_AIDs = current_chunk.merge(current_chunk, on='session')
+    ### rd: recsys - otto - covisitation_simplified - remove all the rows which aid_x == aid_y (remove the row when the two articles are the same) as they are meaningless - consecutive_AIDs[consecutive_AIDs.aid_x != consecutive_AIDs.aid_y]
+    ### rd: recsys - otto - covisitation_simplified - add a column named 'days_elapsed' which shows how many days passed between the two aids in a session - consecutive_AIDs['days_elapsed'] = (consecutive_AIDs.ts_y - consecutive_AIDs.ts_x) / (24 * 60 * 60)
+    ### rd: recsys - otto - covisitation_simplified - keep the rows if the two aids of a session are occurred within the same day on the right order (one after the other) -     consecutive_AIDs = consecutive_AIDs[(consecutive_AIDs.days_elapsed >= 0) & (consecutive_AIDs.days_elapsed <= 1)]
+    ### rd: recsys - otto - covisitation_simplified - among all sessions/rows selected (regardless which session we are looking at), for each aid occurred, count how often the other aids are occurred -     for aid_x, aid_y in zip(consecutive_AIDs['aid_x'], consecutive_AIDs['aid_y']): next_AIDs[aid_x][aid_y] += 1
+    ### rd: src - recsys - otto - covisitation_simplified
+    ### rd: recsys - otto - covisitation_simplified - remove some data objects to save RAM
+    
+    ## rd: recsys - otto - covisitation_simplified - make predictions
+    ### rd: recsys - otto - covisitation_simplified - group the test set by session, under each session, put all aids into a list, and put all action types into another list - test.reset_index(drop=True).groupby('session')['aid'].apply(list)
+    ### rd: recsys - otto - covisitation_simplified - setup, create some containers, such as labels, no_data, no_data_all_aids - type_weight_multipliers = {0: 1, 1: 6, 2: 3} - session_types = ['clicks', 'carts', 'orders']
+    ### rd: recsys - otto - covisitation_simplified - loop every session, access all of its aids and types - for AIDs, types in zip(test_session_AIDs, test_session_types):
+    ### rd: recsys - otto - covisitation_simplified - when there are >= 20 aids in a session: 
+    ### rd: recsys - otto - covisitation_simplified - assign logspaced weight to each aid under each session, as the latter aids should have higher weight/probability to occur than the earlier aids. - if len(AIDs) >= 20: - weights=np.logspace(0.1,1,len(AIDs),base=2, endpoint=True)-1
+    ### rd: recsys - otto - covisitation_simplified - create a defaultdict (if no value to the key, set value to 0) - aids_temp=defaultdict(lambda: 0)
+    ### rd: recsys - otto - covisitation_simplified - loop each aid, weight, event_type of a session: - for aid,w,t in zip(AIDs,weights,types):
+    ### rd: recsys - otto - covisitation_simplified - Within each session, accumulate the weight for each aid based on its occurences, event_type and logspaced weight; save the accumulated weight as value and each aid as key into a defaultdict (aids_temp), no duplicated aid here in this dict, and every session has its own aid_temp - aids_temp[aid] += w * type_weight_multipliers[t]
+    ### rd: recsys - otto - covisitation_simplified - sort a defaultdict from largest weight to smallest weight of all aids in each session???, and then put its keys into a list named sorted_aids - sorted_aids=[k for k, v in sorted(aids_temp.items(), key=lambda item: -item[1])]
+    ### rd: recsys - otto - covisitation_simplified - store the first 20 aids (the most weighted or most likely aids to be acted upon within a session) into the list 'labels' -         labels.append(sorted_aids[:20])
+    ### rd: recsys - otto - covisitation_simplified - when there are < 20 aids in a session: - if len(AIDs) > 10:
+    ### rd: recsys - otto - covisitation_simplified - within each test session, reverse the order of AIDs, remove the duplicated, put into a list, reassign it to AIDs - AIDs = list(dict.fromkeys(AIDs[::-1]))
+    ### rd: recsys - otto - covisitation_simplified - keep track the length of AIDs and create an empty list named candidates - AIDs_len_start = len(AIDs)
+    ### rd: recsys - otto - covisitation_simplified - (within a session) for each AID inside AIDs: if AID is in the keys of next_AIDs (from training), then take the 20 most common other aids occurred (from next_AIDs) when AID occurred, into a list and add this list into the list named candidate (not a list of list, just a merged list). Each candidate in its full size has len(AIDs) * 20 number of other aids, which can have duplicated ids. -         for AID in AIDs: - if AID in next_AIDs: - candidates = candidates + [aid for aid, count in next_AIDs[AID].most_common(20)]
+    ### rd: recsys - otto - covisitation_simplified - find the first 40 most common aids in a candidate (for a session); and if they (these aids) are not found in AIDs then merge them into AIDs list, so that a session has a updated AIDs list (which most likely to occur) - AIDs += [AID for AID, cnt in Counter(candidates).most_common(40) if AID not in AIDs]
+    ### rd: recsys - otto - covisitation_simplified - give the first 20 aids from AIDs to labels (a list); count how many test sessions whose aids are not seen in next_AIDs from training; count how many test sessions don't receive additional aids from next_AIDs  labels.append(AIDs[:20]) - if candidates == []: no_data += 1 - if AIDs_len_start == len(AIDs): no_data_all_aids += 1
+    ### rd: src - recsys - otto - covisitation_simplified
+    
+    ## rd: recsys - otto - covisitation_simplified - prepare results to CSV
+    ### rd: recsys - otto - covisitation_simplified - make a list of lists (labels) into a list of strings (labels_as_strings) - labels_as_strings = [' '.join([str(l) for l in lls]) for lls in labels]
+    ### rd: recsys - otto - covisitation_simplified - give each list of label strings a session number - predictions = pd.DataFrame(data={'session_type': test_session_AIDs.index, 'labels': labels_as_strings})
+    ### rd: recsys - otto - covisitation_simplified - multi-objective means 'clicks', 'carts', and 'orders'; and we make the same predictions on them - session_types = ['clicks', 'carts', 'orders'] - for st in session_types: - modified_predictions = predictions.copy() - modified_predictions.session_type = modified_predictions.session_type.astype('str') + f'_{st}' - prediction_dfs.append(modified_predictions)
+    ### rd: recsys - otto - covisitation_simplified - get the csv file ready, stack on each other. - submission = pd.concat(prediction_dfs).reset_index(drop=True) - submission.to_csv('submission.csv', index=False) - submission.head()
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_radek_covisitation_matrix_simplifed.md
+    
+    ### rd: recsys - otto - eda - Read parquet file with `pd.read_parquet`
+    ### rd: recsys - otto - eda - load object from a pikle file - import pickle5 as pickle - with open('../input/otto-full-optimized-memory-footprint/id2type.pkl', "rb") as fh: - id2type = pickle.load(fh)
+    ### rd: recsys - otto - eda - explore how lightweighted is inference vs training - test.shape[0]/train.shape[0]
+    ### rd: recsys - otto - eda - how much more of the unique sessions in train vs in test sets - test.session.unique().shape[0]/train.session.unique().shape[0]
+    ### rd: recsys - otto - eda - are sessions in test shorter than sessions in train?
+    #### rd: recsys - otto - eda - compare the histograms of train vs test on the natural log of the amount of aids in each session. The comparison of histogram can give us a sense of distribution difference - test.groupby('session')['aid'].count().apply(np.log1p).hist()
+    #### rd: recsys - otto - eda - why np.log1p over np.log? return natural log and also be super accurate in floating point, train.groupby('session')['aid'].count().apply(np.log1p).hist()
+    ### rd: recsys - otto - eda - whether train and test sessions have time intersection - datetime.datetime.fromtimestamp(test.ts.min()/1000) - 
+    ### rd: recsys - otto - eda - are there new items in test not in train? len(set(test.aid.tolist()) - set(train.aid.tolist()))
+    ### rd: recsys - otto - eda - describe (check distribution of ) total number of aids of sessions between train and test, train.groupby('session')['aid'].count().describe()
+    ### rd: recsys - otto - eda - define a session (a tracking period)
+    ### rd: recsys - otto - eda - whether train and test have no common sessions, - train.session.max(), test.session.min()
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_radek_otto_eda.md
+    
+    
+    ## rd: recsys - otto - last 20 aids - The purpose of this notebook - Grabbing the last 20 aid for each session of the test set, use them as prediction and submit or run local validation to see how powerful can the last 20 aids be.
+    ### rd: recsys - otto - last 20 aid - sort df by two columns - test.sort_values(['session', 'ts'])
+    ### rd: recsys - otto - last 20 aid - take last 20 aids from each session - test.groupby('session')['aid'].apply(lambda x: list(x)[-20:])
+    ### rd: recsys - otto - last 20 aid - loop through a Series with session as index with a list as the only column's value - for session, aids in session_aids.iteritems():
+    ### rd: recsys - otto - last 20 aid - turn a list into a string with values connected with empty space - labels.append(' '.join([str(a) for a in aids]))
+    ### rd: recsys - otto - last 20 aid - make a df from a dict with two lists as values - pd.DataFrame({'session_type': session_type, 'labels': labels})
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle-otto-rd-last-20-aids.md
     
     
     ## rd: The problem with theory
@@ -903,6 +1014,78 @@ fastlistnbs("radek")
 ```
 fastnbs("rd: experiment")
 ```
+
+
+## <mark style="background-color: #ffff00">rd:</mark>  recsys - otto - covisitation_simplified - taking subset for fast <mark style="background-color: #FFFF00">experiment</mark> 
+
+
+
+
+heading 2.
+
+
+
+### rd: recsys - otto - covisitation_simplified - subset based on entire sessions, train.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use, random_state=42)['session'], train[train.session.isin(lucky_sessions_train)]
+
+```python
+fraction_of_sessions_to_use = 0.000001 # 0.001 is recommended, but 0.000001 can finish in less than 4 minutes
+```
+
+```python
+train.shape # how many rows
+```
+
+```python
+train.drop_duplicates(['session']).shape # how many unique sessions (drop rows with the same session)
+```
+
+```python
+subset_of_train_no_duplicate = train.sample(frac=fraction_of_sessions_to_use, random_state=42)['session']
+subset_of_train_no_duplicate.shape # take 0.000001 from entire train
+```
+
+```python
+lucky_sessions_train = train.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use, random_state=42)['session']
+lucky_sessions_train.shape # take 0.000001 from a dataframe in which each row is an unique session
+```
+
+```python
+lucky_sessions_train.head()
+lucky_sessions_train.reset_index(drop=True).head() # make index easier to see
+```
+
+```python
+train.session.isin(lucky_sessions_train).sum() # how many rows under the 13 sessions
+```
+
+```python
+if fraction_of_sessions_to_use != 1:
+    lucky_sessions_train = train.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use, random_state=42)['session']
+    subset_of_train = train[train.session.isin(lucky_sessions_train)]
+    
+    lucky_sessions_test = test.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use, random_state=42)['session']
+    subset_of_test = test[test.session.isin(lucky_sessions_test)]
+else:
+    subset_of_train = train
+    subset_of_test = test
+```
+
+```python
+subset_of_train.shape
+```
+
+```python
+subset_of_train
+```
+
+Next, heading 2
+## rd: recsys - otto - covisitation_simplified - some setups before training
+
+
+
+[Open `fastai_kaggle_radek_covisitation_matrix_simplifed` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/fastai_kaggle_radek_covisitation_matrix_simplifed.ipynb#rd:-recsys---otto---covisitation_simplified---taking-subset-for-fast-experiment
+)
+
 
 
 ### <mark style="background-color: #ffff00">rd:</mark>  what to <mark style="background-color: #FFFF00">experiment</mark>  on after baseline
@@ -1037,10 +1220,8 @@ Next, heading 3
 openpy()
 ```
 
-    ['/Users/Natsume/Documents/fastdebug/fastdebug/fastaiTD.py',
-     '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_utils_remove_failed.py',
+    ['/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_utils_remove_failed.py',
      '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_paddy_pt1.py',
-     '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_multiprocess_counter.ipynb',
      '/Users/Natsume/Documents/fastdebug/fastdebug/fast_src_download_kaggle_dataset.py',
      '/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_utils_dataset.py',
      '/Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_utils_randomdisplay.py',
@@ -1049,8 +1230,632 @@ openpy()
 
 
 ```
-openpy('kaggle_utils')
+openpy("utils dataset")
 ```
+
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 6
+    # make sure fastkaggle is install and imported
+    import os
+    
+    try: import fastkaggle
+    except ModuleNotFoundError:
+        os.system("pip install -Uq fastkaggle")
+    
+    from fastkaggle import *
+    
+    # use fastdebug.utils 
+    if iskaggle: os.system("pip install nbdev snoop")
+    
+    if iskaggle:
+        path = "../input/fastdebugutils0"
+        import sys
+        sys.path
+        sys.path.insert(1, path)
+        import utils as fu
+        from utils import *
+    else: 
+        from fastdebug.utils import *
+        import fastdebug.utils as fu
+    
+    # import for dealing with vision problem
+    from fastai.vision.all import *
+    
+    # download (if necessary and return the path of the dataset)
+    home = "/Users/Natsume/Documents/fastdebug/kaggle_datasets/"
+    comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    # path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+    /Users/Natsume/Documents/fastdebug/fastdebug/kaggle_utils_dataset.py
+
+
+
+[Open `kaggle_utils_dataset` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/kaggle_utils_dataset.py)
+
+
+
+```
+openpy("all")
+```
+
+    # %%
+    # AUTOGENERATED! DO NOT EDIT! File to edit: ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb.
+    
+    # %% auto 0
+    __all__ = ['home', 'comp', 'path', 'test_files', 'train_files']
+    
+    # %% ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb 2
+    # this is a notebook for receiving code snippet from other notebooks
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 8
+    # make sure fastkaggle is install and imported
+    import os
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 9
+    try: import fastkaggle
+    except ModuleNotFoundError:
+        os.system("pip install -Uq fastkaggle")
+    
+    from fastkaggle import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 11
+    # use fastdebug.utils 
+    if iskaggle: os.system("pip install nbdev snoop")
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 12
+    if iskaggle:
+        path = "../input/fastdebugutils0"
+        import sys
+        sys.path
+        sys.path.insert(1, path)
+        import utils as fu
+        from utils import *
+    else: 
+        from fastdebug.utils import *
+        import fastdebug.utils as fu
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 14
+    # import for dealing with vision problem
+    from fastai.vision.all import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 49
+    # download (if necessary and return the path of the dataset)
+    home = "/Users/Natsume/Documents/fastdebug/kaggle_datasets/"
+    comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    # path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 56
+    # set seed for reproducibility
+    set_seed(42)
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 65
+    # map the content of all subfolders of images
+    check_subfolders_img(path)
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 68
+    # to extract all images from a folder recursively (for subfolders)
+    test_files = get_image_files(path/"test_images")
+    train_files = get_image_files(path/"train_images")
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 78
+    # to display a random image from a path 
+    randomdisplay(train_files, 200)
+    randomdisplay(path/"train_images/dead_heart", 128)
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 88
+    # remove all images which fail to open
+    remove_failed(path)
+    
+    
+    # %%
+    @snoop
+    def remove_failed(path):
+    #     from fastai.vision.all import get_image_files, parallel
+        print("before running remove_failed:")
+        check_subfolders_img(path)
+        failed = verify_images(get_image_files(path))
+        print(f"total num: {len(get_image_files(path))}")
+        print(f"num offailed: {len(failed)}")
+        failed.map(Path.unlink)
+        print()
+        print("after running remove_failed:")
+        check_subfolders_img(path)
+    # File:      ~/Documents/fastdebug/fastdebug/utils.py
+    # Type:      function
+    
+    
+    # %%
+    remove_failed(path)
+    
+    # %%
+    /Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_utils_remove_failed.py
+    # AUTOGENERATED! DO NOT EDIT! File to edit: ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb.
+    
+    # %% auto 0
+    __all__ = ['home', 'comp', 'path', 'test_files', 'train_files']
+    
+    # %% ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb 2
+    # this is a notebook for receiving code snippet from other notebooks
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 6
+    # make sure fastkaggle is install and imported
+    import os
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 7
+    try: import fastkaggle
+    except ModuleNotFoundError:
+        os.system("pip install -Uq fastkaggle")
+    
+    from fastkaggle import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 9
+    # use fastdebug.utils 
+    if iskaggle: os.system("pip install nbdev snoop")
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 10
+    if iskaggle:
+        path = "../input/fastdebugutils0"
+        import sys
+        sys.path
+        sys.path.insert(1, path)
+        import utils as fu
+        from utils import *
+    else: 
+        from fastdebug.utils import *
+        import fastdebug.utils as fu
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 12
+    # import for dealing with vision problem
+    from fastai.vision.all import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 47
+    # download (if necessary and return the path of the dataset)
+    home = "/Users/Natsume/Documents/fastdebug/kaggle_datasets/"
+    comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    # path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 54
+    # set seed for reproducibility
+    set_seed(42)
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 63
+    # map the content of all subfolders of images
+    check_subfolders_img(path)
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 66
+    # to extract all images from a folder recursively (for subfolders)
+    test_files = get_image_files(path/"test_images")
+    train_files = get_image_files(path/"train_images")
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 76
+    # to display a random image from a path 
+    randomdisplay(train_files, 200)
+    randomdisplay(path/"train_images/dead_heart", 128)
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 86
+    # remove all images which fail to open
+    remove_failed(path)/Users/Natsume/Documents/fastdebug/fastdebug/kaggle_paddy_pt1.py
+    # %%
+    # AUTOGENERATED! DO NOT EDIT! File to edit: ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb.
+    
+    # %% auto 0
+    __all__ = ['home', 'comp', 'path']
+    
+    # %% ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb 2
+    # this is a notebook for receiving code snippet from other notebooks
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 7
+    # make sure fastkaggle is install and imported
+    import os
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 8
+    try: import fastkaggle
+    except ModuleNotFoundError:
+        os.system("pip install -Uq fastkaggle")
+    
+    from fastkaggle import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 10
+    # use fastdebug.utils 
+    if iskaggle: os.system("pip install nbdev snoop")
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 11
+    if iskaggle:
+        path = "../input/fastdebugutils0"
+        import sys
+        sys.path
+        sys.path.insert(1, path)
+        import utils as fu
+        from utils import *
+    else: 
+        from fastdebug.utils import *
+        import fastdebug.utils as fu
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 13
+    # import for dealing with vision problem
+    from fastai.vision.all import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 49
+    # download (if necessary and return the path of the dataset)
+    home = "/Users/Natsume/Documents/fastdebug/kaggle_datasets/"
+    comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    # path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 57
+    @snoop
+    def download_kaggle_dataset(competition, local_folder='', install=''):
+        "override from fastkaggle.core.setup_comp. \
+    Return a path of the `local_folder` where `competition` dataset stored, \
+    downloading it if needed"
+        if iskaggle:
+            if install:
+                os.system(f'pip install -Uqq {install}')
+            return Path('../input')/competition
+        else:
+            path = Path(local_folder + competition)
+            api = import_kaggle()
+            if not path.exists():
+                import zipfile
+                api.competition_download_cli(str(competition), path=path)
+                zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
+            return path
+    # File:      ~/Documents/fastdebug/fastdebug/utils.py
+    # Type:      function
+    
+    
+    # %%
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    
+    # %%
+    /Users/Natsume/Documents/fastdebug/fastdebug/fast_src_download_kaggle_dataset.py
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 6
+    # make sure fastkaggle is install and imported
+    import os
+    
+    try: import fastkaggle
+    except ModuleNotFoundError:
+        os.system("pip install -Uq fastkaggle")
+    
+    from fastkaggle import *
+    
+    # use fastdebug.utils 
+    if iskaggle: os.system("pip install nbdev snoop")
+    
+    if iskaggle:
+        path = "../input/fastdebugutils0"
+        import sys
+        sys.path
+        sys.path.insert(1, path)
+        import utils as fu
+        from utils import *
+    else: 
+        from fastdebug.utils import *
+        import fastdebug.utils as fu
+    
+    # import for dealing with vision problem
+    from fastai.vision.all import *
+    
+    # download (if necessary and return the path of the dataset)
+    home = "/Users/Natsume/Documents/fastdebug/kaggle_datasets/"
+    comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    # path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+    /Users/Natsume/Documents/fastdebug/fastdebug/kaggle_utils_dataset.py
+    # %%
+    # AUTOGENERATED! DO NOT EDIT! File to edit: ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb.
+    
+    # %% auto 0
+    __all__ = ['home', 'comp', 'path', 'test_files', 'train_files']
+    
+    # %% ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb 2
+    # this is a notebook for receiving code snippet from other notebooks
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 8
+    # make sure fastkaggle is install and imported
+    import os
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 9
+    try: import fastkaggle
+    except ModuleNotFoundError:
+        os.system("pip install -Uq fastkaggle")
+    
+    from fastkaggle import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 11
+    # use fastdebug.utils 
+    if iskaggle: os.system("pip install nbdev snoop")
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 12
+    if iskaggle:
+        path = "../input/fastdebugutils0"
+        import sys
+        sys.path
+        sys.path.insert(1, path)
+        import utils as fu
+        from utils import *
+    else: 
+        from fastdebug.utils import *
+        import fastdebug.utils as fu
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 14
+    # import for dealing with vision problem
+    from fastai.vision.all import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 49
+    # download (if necessary and return the path of the dataset)
+    home = "/Users/Natsume/Documents/fastdebug/kaggle_datasets/"
+    comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    # path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 56
+    # set seed for reproducibility
+    set_seed(42)
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 65
+    # map the content of all subfolders of images
+    check_subfolders_img(path)
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 68
+    # to extract all images from a folder recursively (for subfolders)
+    test_files = get_image_files(path/"test_images")
+    train_files = get_image_files(path/"train_images")
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 78
+    # to display a random image from a path 
+    randomdisplay(train_files, 200)
+    randomdisplay(path/"train_images/dead_heart", 128)
+    
+    
+    # %%
+    @snoop
+    def randomdisplay(path, size=128, db=False):
+        "display a random images from a L list (eg., test_files, train_files) of image files or from a path/folder of images.\
+        the image filename is printed as well"
+    # https://www.geeksforgeeks.org/python-random-module/
+        import random
+        import pathlib
+        from fastai.vision.all import PILImage
+        if type(path) == pathlib.PosixPath:
+            rand = random.randint(0,len(path.ls())-1) 
+            file = path.ls()[rand]
+        elif type(path) == L:
+            rand = random.randint(0,len(path)-1) 
+            file = path[rand]
+        im = PILImage.create(file)
+        if db: pp(im.width, im.height, file)
+        pp(file)
+        return im.to_thumb(size)
+    # File:      ~/Documents/fastdebug/fastdebug/utils.py
+    # Type:      function
+    
+    
+    # %%
+    randomdisplay(train_files, 200)
+    
+    # %%
+    /Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_utils_randomdisplay.py
+    # %%
+    # AUTOGENERATED! DO NOT EDIT! File to edit: ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb.
+    
+    # %% auto 0
+    __all__ = ['home', 'comp', 'path']
+    
+    # %% ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb 2
+    # this is a notebook for receiving code snippet from other notebooks
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 8
+    # make sure fastkaggle is install and imported
+    import os
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 9
+    try: import fastkaggle
+    except ModuleNotFoundError:
+        os.system("pip install -Uq fastkaggle")
+    
+    from fastkaggle import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 11
+    # use fastdebug.utils 
+    if iskaggle: os.system("pip install nbdev snoop")
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 12
+    if iskaggle:
+        path = "../input/fastdebugutils0"
+        import sys
+        sys.path
+        sys.path.insert(1, path)
+        import utils as fu
+        from utils import *
+    else: 
+        from fastdebug.utils import *
+        import fastdebug.utils as fu
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 14
+    # import for dealing with vision problem
+    from fastai.vision.all import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 49
+    # download (if necessary and return the path of the dataset)
+    home = "/Users/Natsume/Documents/fastdebug/kaggle_datasets/"
+    comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    # path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 56
+    # set seed for reproducibility
+    set_seed(42)
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 64
+    check_subfolders_img(path)
+    
+    
+    # %%
+    @snoop
+    def check_subfolders_img(path:Path, # a Path object
+                             db=False):
+        "map the image contents of all subfolders of the path"
+        from pathlib import Path
+        for entry in path.iterdir():
+            if entry.is_file():
+                print(f'{str(entry.absolute())}')
+        addup = 0
+        for entry in path.iterdir():
+            if entry.is_dir() and not entry.name.startswith(".") and len(entry.ls(file_exts=image_extensions)) > 5:
+                addup += len(entry.ls(file_exts=image_extensions))
+                print(f'{str(entry.parent.absolute())}: {len(entry.ls(file_exts=image_extensions))}  {entry.name}')
+    #             print(entry.name, f': {len(entry.ls(file_exts=[".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]))}') # how to include both png and jpg
+                if db:
+                    for e in entry.ls(): # check any image file which has a different suffix from those above
+                        if e.is_file() and not e.name.startswith(".") and e.suffix not in image_extensions and e.suffix not in [".ipynb", ".py"]:
+        #                 if e.suffix not in [".jpg", ".png", ".jpeg", ".JPG", ".jpg!d"]:
+                            pp(e.suffix, e)
+                            try:
+                                pp(Image.open(e).width)
+                            except:
+                                print(f"{e} can't be opened")
+        #                     pp(Image.open(e).width if e.suffix in image_extensions)
+            elif entry.is_dir() and not entry.name.startswith("."): 
+    #             with snoop:
+                check_subfolders_img(entry)
+        print(f"addup num: {addup}")
+    # File:      ~/Documents/fastdebug/fastdebug/utils.py
+    # Type:      function
+    
+    
+    # %%
+    check_subfolders_img(path)
+    
+    # %%
+    /Users/Natsume/Documents/fastdebug/fastdebug/fastai_src_check_subfolders_img.py
+
+
+
+```
+openpy('fast_src_download_kaggle_dataset.py')
+```
+
+    # %%
+    # AUTOGENERATED! DO NOT EDIT! File to edit: ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb.
+    
+    # %% auto 0
+    __all__ = ['home', 'comp', 'path']
+    
+    # %% ../nbs/fastai_notebooks/0000_fastai_kaggle_paddy_001.ipynb 2
+    # this is a notebook for receiving code snippet from other notebooks
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 7
+    # make sure fastkaggle is install and imported
+    import os
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 8
+    try: import fastkaggle
+    except ModuleNotFoundError:
+        os.system("pip install -Uq fastkaggle")
+    
+    from fastkaggle import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 10
+    # use fastdebug.utils 
+    if iskaggle: os.system("pip install nbdev snoop")
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 11
+    if iskaggle:
+        path = "../input/fastdebugutils0"
+        import sys
+        sys.path
+        sys.path.insert(1, path)
+        import utils as fu
+        from utils import *
+    else: 
+        from fastdebug.utils import *
+        import fastdebug.utils as fu
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 13
+    # import for dealing with vision problem
+    from fastai.vision.all import *
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 49
+    # download (if necessary and return the path of the dataset)
+    home = "/Users/Natsume/Documents/fastdebug/kaggle_datasets/"
+    comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    # path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+    
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 57
+    @snoop
+    def download_kaggle_dataset(competition, local_folder='', install=''):
+        "override from fastkaggle.core.setup_comp. \
+    Return a path of the `local_folder` where `competition` dataset stored, \
+    downloading it if needed"
+        if iskaggle:
+            if install:
+                os.system(f'pip install -Uqq {install}')
+            return Path('../input')/competition
+        else:
+            path = Path(local_folder + competition)
+            api = import_kaggle()
+            if not path.exists():
+                import zipfile
+                api.competition_download_cli(str(competition), path=path)
+                zipfile.ZipFile(f'{local_folder + competition}.zip').extractall(str(local_folder + competition))
+            return path
+    # File:      ~/Documents/fastdebug/fastdebug/utils.py
+    # Type:      function
+    
+    
+    # %%
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    
+    # %%
+    /Users/Natsume/Documents/fastdebug/fastdebug/fast_src_download_kaggle_dataset.py
+
+
+
+[Open `fast_src_download_kaggle_dataset` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/fast_src_download_kaggle_dataset.py)
+
+
+
+```
+openpy("utils dataset")
+```
+
+    # %% ../nbs/fastai_notebooks/0008_fastai_first_steps_road_to_top_part_1.ipynb 6
+    # make sure fastkaggle is install and imported
+    import os
+    
+    try: import fastkaggle
+    except ModuleNotFoundError:
+        os.system("pip install -Uq fastkaggle")
+    
+    from fastkaggle import *
+    
+    # use fastdebug.utils 
+    if iskaggle: os.system("pip install nbdev snoop")
+    
+    if iskaggle:
+        path = "../input/fastdebugutils0"
+        import sys
+        sys.path
+        sys.path.insert(1, path)
+        import utils as fu
+        from utils import *
+    else: 
+        from fastdebug.utils import *
+        import fastdebug.utils as fu
+    
+    # import for dealing with vision problem
+    from fastai.vision.all import *
+    
+    # download (if necessary and return the path of the dataset)
+    home = "/Users/Natsume/Documents/fastdebug/kaggle_datasets/"
+    comp = 'paddy-disease-classification' # https://www.kaggle.com/competitions/paddy-disease-classification/submissions
+    path = download_kaggle_dataset(comp, local_folder=home, install='fastai "timm>=0.6.2.dev0"')
+    # path = setup_comp(comp, install='fastai "timm>=0.6.2.dev0"')
+    /Users/Natsume/Documents/fastdebug/fastdebug/kaggle_utils_dataset.py
+
 
 
 [Open `kaggle_utils_dataset` in Jupyter Notebook locally](http://localhost:8888/tree/fastdebug/kaggle_utils_dataset.py)

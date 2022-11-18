@@ -4,6 +4,8 @@
 
 This notebook is to experiment in order to understand what the original code does.
 
+### imports
+
 
 ```
 # make sure fastkaggle is install and imported
@@ -139,9 +141,11 @@ test_path
 
 
 
+### jn: revisit process_data notebook and change get started to process_data in title. /2022-11-14
+
 ## The original code start from below
 
-### rd: recsys - otto - get started - save a list or dict into pkl and load them
+### rd: recsys - otto - process data - save a list or dict into pkl and load them - id2type = ['clicks', 'carts', 'orders'] - type2id = {a: i for i, a in enumerate(id2type)} - pd.to_pickle(id2type, 'id2type.pkl')
 
 
 ```
@@ -191,7 +195,19 @@ with open('../input/otto-full-optimized-memory-footprint/id2type.pkl', "rb") as 
 
 ```
 
-### rd: recsys - otto - get started - process jsonl to df
+### rd: recsys - otto - process data - how to process jsonl file to df (pd.read_json, chunk.iterrows) - chunks = pd.read_json(fn, lines=True, chunksize=2) - for chunk in chunks: - for row_idx, session_data in chunk.iterrows(): - sessions = [] - num_events = len(session_data.events) - sessions += ([session_data.session] * num_events)
+
+
+```
+[1,2] * 2 + [3,4]
+```
+
+
+
+
+    [1, 2, 1, 2, 3, 4]
+
+
 
 
 ```
@@ -260,11 +276,47 @@ train_df = jsonl_to_df(train_path)
 # del train_df
 ```
 
-### rd: recsys - otto - get started - RAM needed to process data on Kaggle, 400MB jsonl takes up nearly 4GB ram
+### rd: src - recsys - otto - process data - jsonl_to_df
+
+
+```
+def jsonl_to_df(fn):
+    sessions = []
+    aids = []
+    tss = []
+    types = []
+
+    # lines: True => Read the file as a json object per line
+    # chunksize=100_000 => Return JsonReader object for iteration; If this is None, the file will be read into memory all at once.
+    # 100_000 == 100000, I guess _ is for easy view; each chunk will have 100,000 lines/objects
+    chunks = pd.read_json(fn, lines=True, chunksize=2) # you can change to chunksize=2 to experiment
+    
+    for chunk in chunks: # each chunk will have 2 items (if chunksize=2)
+        info = "each item is a session, each session has two items 'session' and 'events'"
+        info1 = "each session has variable amount of events"
+        pp(info, info1)
+        for row_idx, session_data in chunk.iterrows():
+            # each session_data is a pd.Series object and contain two columns: 'session' (int) and 'events' (list of dicts)
+            # each dict of 'events' has keys: 'aid', 'ts', 'type', 'clicks'
+            num_events = len(session_data.events) # total num of events of each session_data or each item in a chunk
+            sessions += ([session_data.session] * num_events) # sessions is a list contains the same session value for every event
+
+            pp(session_data.session, len(session_data.events), session_data.events[0], session_data.events[1])
+            for event in session_data.events: # each session_data.events actually have different num of events
+                aids.append(event['aid']) # aids is a list containing value of `aid` of every event
+                tss.append(event['ts']) # tss is a list containing value of `ts` of every event
+                types.append(type2id[event['type']]) # types is a list containing value of `type`|`id` of every event 
+                # (`id` is created by Radek from above)
+        return
+    # now we can combine all the data info `session`, `aids`, `tss` and `types` into a DataFrame for each session_data
+    return pd.DataFrame(data={'session': sessions, 'aid': aids, 'ts': tss, 'type': types})
+```
+
+### rd: recsys - otto - process data - 400MB parquet file takes up nearly 4GB ram on Kaggle
 
 see more detailed findings of mine in the discussion [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843#2024279)
 
-### rd: recsys - otto - get started - use parquet over csv, why and how
+### rd: recsys - otto - process data - use parquet over csv, why and how - test_df.type = test_df.type.astype(np.uint8) - test_df.to_parquet('test.parquet', index=False) - test_df.to_csv('test.csv', index=False)
 
 Summary of technical features of parquet files
 - Apache Parquet is column-oriented and designed to provide efficient columnar storage compared to row-based file types such as CSV.
@@ -293,7 +345,7 @@ test_df.to_csv('test.csv', index=False)
 del test_df
 ```
 
-### rd: recsys - otto - get started - use parquet to instead of jsonl or csv to save space on disk
+### rd: recsys - otto - process data - use parquet to instead of jsonl or csv to save space on disk - os.path.getsize(path)
 
 for details see discussion [here](https://www.kaggle.com/code/radek1/howto-full-dataset-as-parquet-csv-files/comments#2025116)
 
@@ -355,7 +407,7 @@ Although converting type further from int to uint8 in a parquet file can shrink 
 
 So, it seems that conversion from jsonl to parquet alone does the most heavy lifting in reducing size, converting from string to int and then uint8 is helpful but in this case has no significant effect in reducing the size.
 
-### rd: recsys - otto - get started - use `uint8` instead of `int` or `str` to reduce RAM usage by 9 times
+### rd: recsys - otto - process data - use `uint8` instead of `int` or `str` to reduce RAM usage by 9 times - test_df.memory_usage()
 
 read the discussion [here](https://www.kaggle.com/code/radek1/howto-full-dataset-as-parquet-csv-files/comments#2025129)
 
@@ -364,3 +416,5 @@ read the discussion [here](https://www.kaggle.com/code/radek1/howto-full-dataset
 test_df.memory_usage()
 test_df_str.memory_usage()
 ```
+
+### jn: process_data revisited and get the name straight for search (done) /2022-11-14

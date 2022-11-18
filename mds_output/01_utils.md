@@ -2052,15 +2052,24 @@ bool("head")
 
 ```
 #| export
-def openpy(name=None, acu=0.8, heading=None, db=False):
+def openpy(name=None, # name: default to None, "all" or query terms
+           acu=0.8, heading=None, db=False):
     "run openpy() can give all the py or ipynb files on src, kaggle, fastai related\
     run openpy(query) can get us a link to py or ipynb on query."
     _, _, ipynbs, _, _, _, pys, py_fd= get_all_nbs()
+    lst = [pyf for pyf in pys if ("src" in Path(pyf).name or "kaggle" in Path(pyf).name) and ".ipynb" not in Path(pyf).name]
     if not bool(name):
-        lst = [pyf for pyf in pys if "src" in Path(pyf).name or "kaggle" in Path(pyf).name or "fastai" in Path(pyf).name]
         pprint(lst)
         return
     
+    if name == "all":
+        for f in lst:
+            with open(f, 'r') as file:
+                for count, l in enumerate(file):
+                    print(l, end='')
+                print(f)
+        return
+            
     questlst = name.split(" ")
     name = ""
     for pyf in pys: 
@@ -2084,8 +2093,14 @@ def openpy(name=None, acu=0.8, heading=None, db=False):
     path = root + folder_mid
     path_server = root_server[:-1] + folder_mid
     if db: print(f'path: {path}, path_server: {path_server}')
+    for f in lst:
+        if name in f:
+            with open(f, 'r') as file:
+                for count, l in enumerate(file):
+                    print(l, end='')
+                print(f)
     for f in os.listdir(path):  
-        if f.endswith(".py") or f.endswith(".ipynb"):
+        if f.endswith(".py"): # or f.endswith(".ipynb"):
             if name in f: 
                 file_name = path_server + f + "#" + heading if bool(heading) else path_server + f
                 jn_link(name, file_name)
