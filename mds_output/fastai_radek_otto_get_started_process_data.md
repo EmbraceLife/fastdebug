@@ -369,10 +369,7 @@ def jsonl_to_df_type_str(fn):
                 types.append(event['type'])
 
     return pd.DataFrame(data={'session': sessions, 'aid': aids, 'ts': tss, 'type': types})
-```
 
-
-```
 %%time
 test_df_str = jsonl_to_df_type_str(test_path)
 test_df_str.to_parquet('test_keep_str.parquet', index=False)
@@ -385,17 +382,11 @@ test_df.to_csv('test0_str2int.csv', index=False)
 test_df.type = test_df.type.astype(np.uint8)
 test_df.to_parquet('test_str2uint8.parquet', index=False)
 test_df.to_csv('test_str2uint8.csv', index=False)
-```
 
-
-```
 def filesize(path): # path: str or path
     import os
     return os.path.getsize(path)
-```
 
-
-```
 [("jsonl=>{}".format(path), filesize(path)) for path in ['../input/otto-recommender-system/test.jsonl','test_keep_str.parquet', 'test_keep_str.csv', 'test_str2int.parquet', 'test0_str2int.csv', 'test_str2uint8.parquet', 'test_str2uint8.csv']]
 ```
 

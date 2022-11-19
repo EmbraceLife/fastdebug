@@ -267,6 +267,7 @@ fastlistnbs("journey")
     ### jn: I have finished the annotation of Radek's co-visitation matrix simplified notebook, and have a good feel of what does co-visitation matrix do here. But still there is more work on it can be learnt, e.g., all the previous notebooks [1st](https://www.kaggle.com/code/vslaykovsky/co-visitation-matrix) [2nd](https://www.kaggle.com/code/cdeotte/test-data-leak-lb-boost), [3nd](https://www.kaggle.com/code/ingvarasgalinskas/item-type-vs-multiple-clicks-vs-latest-items) which Radek based to built the simplifed notebook /2022-11-13
     ### jn: I need to finish up the annotation on Radek's EDA notebook properly /2022-11-13
     ### jn: following Radek's advice, I realize that there are also other great kagglers to learn from like [Chris Deotte](https://www.kaggle.com/code/cdeotte/test-data-leak-lb-boost) /2022-11-13
+    ### jn: process_data revisited and get the name straight for search (done) /2022-11-14
     ### jn: there are too many notebooks to try and hard to figure out which one to try first, but I should work on local validation tracks by Radek next /2022-11-14
     ### jn: to gradually conquer my fear, I should run both subset and full dataset to submit as did Radek with co-visitation matrix notebook. check my [leaderboard](https://www.kaggle.com/competitions/otto-recommender-system/leaderboard#) /2022-11-14
     ### jn: a helpful thing to all is to organize all otto kernels from easy to advanced /2022-11-14
@@ -789,6 +790,21 @@ hts
 fastlistnbs("radek")
 ```
 
+    
+    ## rd: recsys - otto - process data - How to convert dataset from jsonl file into parquet file to save disk tremendously, and convert type column from string to uint8 and ts column from int64 to int32 by dividing 1000 first to reduce RAM usage significantly
+    ### rd: recsys - otto - process data - create vocab or map between id and type using dict and list - id2type = ['clicks', 'carts', 'orders'] - type2id = {a: i for i, a in enumerate(id2type)}
+    ### rd: recsys - otto - process data - detail annotated source code of json_to_df
+    ### rd: recsys - otto - process data - chunks = pd.read_json(fn, lines=True, chunksize=100_000) - for chunk in chunks: - for row_idx, session_data in chunk.iterrows(): - session_data.session - for event in session_data.events: - aids.append(event['aid']) - tss.append(event['ts'])
+    ### rd: recsys - otto - process data - and check RAM of a df and save df into parquet or csv file - test_df_str.memory_usage() - test_df_str.to_parquet('test_keep_str.parquet', index=False) - test_df_str.to_csv('test_keep_str.csv', index=False)
+    ### rd: recsys - otto - process data - How much RAM does convert string to uint8 save? - test_df.type = test_df.type.astype(np.uint8)
+    ### rd: recsys - otto - process data - convert `ts` from int64 to int32 without `/1000` will lose a lot of info - (test_df_updated.ts/1000).astype(np.int32)
+    ### rd: recsys - otto - process data - dividing ts by 1000 only affect on milisecond accuracy not second accuracy - datetime.datetime.fromtimestamp((test_df_updated.ts/1000).astype(np.int32)[100])
+    ### rd: recsys - otto - process data - How much RAM can be saved by dividing `ts` by 1000 - test_df_updated.ts = (test_df_updated.ts / 1000).astype(np.int32) 
+    ### rd: recsys - otto - process data - use parquet to instead of jsonl or csv to save space on disk - os.path.getsize(path)
+    ### rd: recsys - otto - process data - 400MB parquet file takes up nearly 4GB ram on Kaggle
+    ### rd: recsys - otto - process data - use parquet over csv, why and how - test_df.type = test_df.type.astype(np.uint8) - test_df.to_parquet('test.parquet', index=False) - test_df.to_csv('test.csv', index=False)
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle-otto-process-data.md
+    
     ### rd: recsys - otto - get started - Andrew Ng recsys old videos 2022-11-7
     ### rd:  recsys - otto - get started - Andrew Ng on new recsys videos 2022-11-8
     #### rd: recsys - otto - get started - The best recsys intro video recommended by Radek
@@ -803,6 +819,18 @@ fastlistnbs("radek")
     ### rd: recsys - otto - big pic - what is ranking
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_otto_radek_recsys_overview.md
     
+    
+    ## rd: recsys - otto - process data - How to convert dataset from jsonl file into parquet file to save disk tremendously, and convert type column from string to uint8 and ts column from int64 to int32 by dividing 1000 first to reduce RAM usage significantly
+    ### rd: recsys - otto - process data - create vocab or map between id and type using dict and list - id2type = ['clicks', 'carts', 'orders'] - type2id = {a: i for i, a in enumerate(id2type)}
+    ### rd: recsys - otto - process data - chunks = pd.read_json(fn, lines=True, chunksize=100_000) - for chunk in chunks: - for row_idx, session_data in chunk.iterrows(): - session_data.session - for event in session_data.events: - aids.append(event['aid']) - tss.append(event['ts'])
+    ### rd: recsys - otto - process data - and check RAM of a df and save df into parquet or csv file - test_df_str.memory_usage() - test_df_str.to_parquet('test_keep_str.parquet', index=False) - test_df_str.to_csv('test_keep_str.csv', index=False)
+    ### rd: recsys - otto - process data - How much RAM does convert string to uint8 save? - test_df.type = test_df.type.astype(np.uint8)
+    ### rd: recsys - otto - process data - convert `ts` from int64 to int32 without `/1000` will lose a lot of info - (test_df_updated.ts/1000).astype(np.int32)
+    ### rd: recsys - otto - process data - dividing ts by 1000 only affect on milisecond accuracy not second accuracy - datetime.datetime.fromtimestamp((test_df_updated.ts/1000).astype(np.int32)[100])
+    ### rd: recsys - otto - process data - How much RAM can be saved by dividing `ts` by 1000 - test_df_updated.ts = (test_df_updated.ts / 1000).astype(np.int32) 
+    ### rd: recsys - otto - process data - how much disk can be saved by saving jsonl to parquet - os.path.getsize(path)
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle-process-data-otto.md
+    
     ### rd: recsys - otto - process data - save a list or dict into pkl and load them - id2type = ['clicks', 'carts', 'orders'] - type2id = {a: i for i, a in enumerate(id2type)} - pd.to_pickle(id2type, 'id2type.pkl')
     ### rd: recsys - otto - process data - how to process jsonl file to df (pd.read_json, chunk.iterrows) - chunks = pd.read_json(fn, lines=True, chunksize=2) - for chunk in chunks: - for row_idx, session_data in chunk.iterrows(): - sessions = [] - num_events = len(session_data.events) - sessions += ([session_data.session] * num_events)
     ### rd: src - recsys - otto - process data - jsonl_to_df
@@ -812,15 +840,9 @@ fastlistnbs("radek")
     ### rd: recsys - otto - process data - use `uint8` instead of `int` or `str` to reduce RAM usage by 9 times - test_df.memory_usage()
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_radek_otto_get_started_process_data.md
     
-    ### rd: recsys - otto - access otto parquet dataset - copy and paste dataset path and use !ls to see what inside - !ls ../input/otto-full-optimized-memory-footprint/
-    ### rd: recsys - otto - access otto parquet dataset - pd.read_parquet('copy and paste the dataset path') - train = pd.read_parquet('../input/otto-full-optimized-memory-footprint/train.parquet')
-    ### rd: recsys - otto - access otto parquet dataset - load a function from a pickle file - import pickle5 as pickle - with open('../input/otto-full-optimized-memory-footprint/id2type.pkl', "rb") as fh: - id2type = pickle.load(fh)
-    ### rd: recsys - otto - access otto parquet dataset - convert int back to string - train.iloc[:1000].type.map(lambda i: id2type[i])
-    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_otto_access_parquet_dataset.md
-    
-    ### rd: recsys - otto - access parquet - copy and paste dataset path and use !ls to see what inside
-    ### rd: recsys - otto - access parquet - pd.read_parquet('copy and paste the dataset path')
-    ### rd: recsys - otto - access parquet - load a function from a pickle file with pickle5, with open as fh: and pick.load(fh)
+    ### rd: recsys - otto - access parquet - copy and paste dataset path - !ls ../input/otto-full-optimized-memory-footprint/
+    ### rd: recsys - otto - access parquet - pd.read_parquet('../input/otto-full-optimized-memory-footprint/train.parquet')
+    ### rd: recsys - otto - access parquet - load a function from a pickle file - import pickle5 as pickle - with open('../input/otto-full-optimized-memory-footprint/id2type.pkl', "rb") as fh: - id2type = pickle.load(fh)
     ### rd: recsys - otto - access parquet - access the first 1000 rows and convert int back to string, train.iloc[:1000].type.map(lambda i: id2type[i])
     ### rd: recsys - otto - access parquet - how to use Series, map, lambda, dict together - type_as_string.map(lambda i: type2id[i])
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle-access-parquet-otto.md

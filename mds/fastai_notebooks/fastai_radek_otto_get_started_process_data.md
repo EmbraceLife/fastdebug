@@ -205,12 +205,9 @@ def jsonl_to_df(fn):
 
 ### rd: recsys - otto - process data - 400MB parquet file takes up nearly 4GB ram on Kaggle
 
-
 see more detailed findings of mine in the discussion [here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843#2024279)
 
-
 ### rd: recsys - otto - process data - use parquet over csv, why and how - test_df.type = test_df.type.astype(np.uint8) - test_df.to_parquet('test.parquet', index=False) - test_df.to_csv('test.csv', index=False)
-
 
 Summary of technical features of parquet files
 - Apache Parquet is column-oriented and designed to provide efficient columnar storage compared to row-based file types such as CSV.
@@ -235,7 +232,6 @@ del test_df
 
 ### rd: recsys - otto - process data - use parquet to instead of jsonl or csv to save space on disk - os.path.getsize(path)
 
-
 for details see discussion [here](https://www.kaggle.com/code/radek1/howto-full-dataset-as-parquet-csv-files/comments#2025116)
 
 ```python
@@ -257,9 +253,7 @@ def jsonl_to_df_type_str(fn):
                 types.append(event['type'])
 
     return pd.DataFrame(data={'session': sessions, 'aid': aids, 'ts': tss, 'type': types})
-```
 
-```python
 %%time
 test_df_str = jsonl_to_df_type_str(test_path)
 test_df_str.to_parquet('test_keep_str.parquet', index=False)
@@ -272,15 +266,11 @@ test_df.to_csv('test0_str2int.csv', index=False)
 test_df.type = test_df.type.astype(np.uint8)
 test_df.to_parquet('test_str2uint8.parquet', index=False)
 test_df.to_csv('test_str2uint8.csv', index=False)
-```
 
-```python
 def filesize(path): # path: str or path
     import os
     return os.path.getsize(path)
-```
 
-```python
 [("jsonl=>{}".format(path), filesize(path)) for path in ['../input/otto-recommender-system/test.jsonl','test_keep_str.parquet', 'test_keep_str.csv', 'test_str2int.parquet', 'test0_str2int.csv', 'test_str2uint8.parquet', 'test_str2uint8.csv']]
 ```
 

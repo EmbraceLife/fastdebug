@@ -1,3 +1,5 @@
+## Experiment on @radek1's notebook on local validation framework
+
 This notebook builds on my previous work -- [co-visitation matrix - simplified, imprvd logic 🔥](https://www.kaggle.com/code/radek1/co-visitation-matrix-simplified-imprvd-logic?scriptVersionId=110068977) that achieves 0.558 on the LB.
 
 Here we take the functionality from that notebook, run on 1/1000 of the data (it achieves ~0.487 on public LB).
@@ -9,7 +11,87 @@ Let's take a stab at implementing a local validation framework in this notebook!
 <strong>Please smash that thumbs up button if you like this notebook! Thank you! 🙂</strong>
 
 
+```python
+import os
+
+try: import fastkaggle
+except ModuleNotFoundError:
+    os.system("pip install -Uq fastkaggle")
+
+from fastkaggle import *
+
+# use fastdebug.utils 
+if iskaggle: os.system("pip install nbdev snoop")
+
+if iskaggle:
+    path = "../input/fastdebugutils0"
+    import sys
+    sys.path
+    sys.path.insert(1, path)
+    import utils as fu
+    from utils import *
+else: 
+    from fastdebug.utils import *
+    import fastdebug.utils as fu
 ```
+
+    WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+
+
+    Collecting nbdev
+      Downloading nbdev-2.3.9-py3-none-any.whl (64 kB)
+         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.1/64.1 kB 256.1 kB/s eta 0:00:00
+    Collecting snoop
+      Downloading snoop-0.4.2-py2.py3-none-any.whl (27 kB)
+    Requirement already satisfied: PyYAML in /opt/conda/lib/python3.7/site-packages (from nbdev) (6.0)
+    Collecting ghapi>=1.0.3
+      Downloading ghapi-1.0.3-py3-none-any.whl (58 kB)
+         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.1/58.1 kB 977.7 kB/s eta 0:00:00
+    Collecting watchdog
+      Downloading watchdog-2.1.9-py3-none-manylinux2014_x86_64.whl (78 kB)
+         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.4/78.4 kB 1.2 MB/s eta 0:00:00
+    Requirement already satisfied: astunparse in /opt/conda/lib/python3.7/site-packages (from nbdev) (1.6.3)
+    Requirement already satisfied: fastcore>=1.5.27 in /opt/conda/lib/python3.7/site-packages (from nbdev) (1.5.27)
+    Collecting execnb>=0.1.4
+      Downloading execnb-0.1.4-py3-none-any.whl (13 kB)
+    Collecting asttokens
+      Downloading asttokens-2.1.0-py2.py3-none-any.whl (26 kB)
+    Collecting cheap-repr>=0.4.0
+      Downloading cheap_repr-0.5.1-py2.py3-none-any.whl (12 kB)
+    Collecting executing
+      Downloading executing-1.2.0-py2.py3-none-any.whl (24 kB)
+    Requirement already satisfied: pygments in /opt/conda/lib/python3.7/site-packages (from snoop) (2.12.0)
+    Requirement already satisfied: six in /opt/conda/lib/python3.7/site-packages (from snoop) (1.15.0)
+    Requirement already satisfied: ipython in /opt/conda/lib/python3.7/site-packages (from execnb>=0.1.4->nbdev) (7.33.0)
+    Requirement already satisfied: pip in /opt/conda/lib/python3.7/site-packages (from fastcore>=1.5.27->nbdev) (22.1.2)
+    Requirement already satisfied: packaging in /opt/conda/lib/python3.7/site-packages (from fastcore>=1.5.27->nbdev) (21.3)
+    Requirement already satisfied: wheel<1.0,>=0.23.0 in /opt/conda/lib/python3.7/site-packages (from astunparse->nbdev) (0.37.1)
+    Requirement already satisfied: traitlets>=4.2 in /opt/conda/lib/python3.7/site-packages (from ipython->execnb>=0.1.4->nbdev) (5.3.0)
+    Requirement already satisfied: pickleshare in /opt/conda/lib/python3.7/site-packages (from ipython->execnb>=0.1.4->nbdev) (0.7.5)
+    Requirement already satisfied: pexpect>4.3 in /opt/conda/lib/python3.7/site-packages (from ipython->execnb>=0.1.4->nbdev) (4.8.0)
+    Requirement already satisfied: setuptools>=18.5 in /opt/conda/lib/python3.7/site-packages (from ipython->execnb>=0.1.4->nbdev) (59.8.0)
+    Requirement already satisfied: prompt-toolkit!=3.0.0,!=3.0.1,<3.1.0,>=2.0.0 in /opt/conda/lib/python3.7/site-packages (from ipython->execnb>=0.1.4->nbdev) (3.0.30)
+    Requirement already satisfied: decorator in /opt/conda/lib/python3.7/site-packages (from ipython->execnb>=0.1.4->nbdev) (5.1.1)
+    Requirement already satisfied: matplotlib-inline in /opt/conda/lib/python3.7/site-packages (from ipython->execnb>=0.1.4->nbdev) (0.1.3)
+    Requirement already satisfied: backcall in /opt/conda/lib/python3.7/site-packages (from ipython->execnb>=0.1.4->nbdev) (0.2.0)
+    Requirement already satisfied: jedi>=0.16 in /opt/conda/lib/python3.7/site-packages (from ipython->execnb>=0.1.4->nbdev) (0.18.1)
+    Requirement already satisfied: pyparsing!=3.0.5,>=2.0.2 in /opt/conda/lib/python3.7/site-packages (from packaging->fastcore>=1.5.27->nbdev) (3.0.9)
+    Requirement already satisfied: parso<0.9.0,>=0.8.0 in /opt/conda/lib/python3.7/site-packages (from jedi>=0.16->ipython->execnb>=0.1.4->nbdev) (0.8.3)
+    Requirement already satisfied: ptyprocess>=0.5 in /opt/conda/lib/python3.7/site-packages (from pexpect>4.3->ipython->execnb>=0.1.4->nbdev) (0.7.0)
+    Requirement already satisfied: wcwidth in /opt/conda/lib/python3.7/site-packages (from prompt-toolkit!=3.0.0,!=3.0.1,<3.1.0,>=2.0.0->ipython->execnb>=0.1.4->nbdev) (0.2.5)
+    Installing collected packages: executing, cheap-repr, watchdog, asttokens, snoop, ghapi, execnb, nbdev
+    Successfully installed asttokens-2.1.0 cheap-repr-0.5.1 execnb-0.1.4 executing-1.2.0 ghapi-1.0.3 nbdev-2.3.9 snoop-0.4.2 watchdog-2.1.9
+
+
+    WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+
+
+
+<style>.container { width:100% !important; }</style>
+
+
+
+```python
 import pandas as pd
 import numpy as np
 !pip install pickle5
@@ -18,31 +100,28 @@ import pickle5 as pickle
 
     Collecting pickle5
       Downloading pickle5-0.0.12-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl (256 kB)
-    [2K     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m256.4/256.4 kB[0m [31m4.4 MB/s[0m eta [36m0:00:00[0ma [36m0:00:01[0m
+    [2K     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m256.4/256.4 kB[0m [31m514.2 kB/s[0m eta [36m0:00:00[0ma [36m0:00:01[0m
     [?25hInstalling collected packages: pickle5
     Successfully installed pickle5-0.0.12
     [33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv[0m[33m
     [0m
 
 
-```
+```python
 %%time
 train = pd.read_parquet('../input/otto-full-optimized-memory-footprint/train.parquet')
 ```
 
-    CPU times: user 8.54 s, sys: 9 s, total: 17.5 s
-    Wall time: 19.8 s
+    CPU times: user 8.25 s, sys: 9.96 s, total: 18.2 s
+    Wall time: 19.2 s
 
 
-
-```
-# did we actually used the test from here in original Radek's code? (It seems not)
+### rd: recsys - otto - local validation - As we only use the last week of training set to split into the local test and local validation set
 # test = pd.read_parquet('../input/otto-full-optimized-memory-footprint/test.parquet') 
-```
 
 
-```
-DO_LOCAL_VALIDATION = True
+```python
+DO_LOCAL_VALIDATION = True # set it True if we are doing local validation instead of submit to the public leaderboard
 ```
 
 # Local CV
@@ -53,10 +132,10 @@ Essentially, without modifying the calculations in the notebook, we can run eval
 
 When doing local validation, we will print out local results. And without it, we will train on full data and submit to Kaggle LB.
 
-## Find the start and end datetime of training sessions
+### rd: recsys - otto - local validation - Find the start and end datetime of training sessions
 
 
-```
+```python
 ts_min, ts_max = train.ts.min(), train.ts.max()
 ts_min, ts_max
 ```
@@ -68,80 +147,27 @@ ts_min, ts_max
 
 
 
+### rd: recsys - otto - local validation - Version 2 of the Radek's dataset is second accuracy,`7*24*60*60` capture the length of actual 7 days; version 1 is millisecond accuracy and  using `7*24*60*60*1000` to capture 7 days length. see the accuracy difference in details [here](https://www.kaggle.com/code/danielliao/process-data-otto?scriptVersionId=111357696&cellId=29)
 
-```
+
+```python
 import datetime
-```
-
-
-```
-help(datetime.datetime.fromtimestamp)
-```
-
-    Help on built-in function fromtimestamp:
-    
-    fromtimestamp(...) method of builtins.type instance
-        timestamp[, tz] -> tz's local time from POSIX timestamp.
-    
-
-
-## datetime.datetime.fromtimestamp(ts_min/1000) make no sense to me
-
-
-```
-datetime.datetime.fromtimestamp(ts_min), datetime.datetime.fromtimestamp(ts_max), \
-datetime.datetime.fromtimestamp(ts_min/1000), datetime.datetime.fromtimestamp(ts_max/1000) 
+datetime.date.fromtimestamp(ts_max), datetime.date.fromtimestamp(ts_max - 7*24*60*60), datetime.date.fromtimestamp(ts_max - 7*24*60*60*1000)
 ```
 
 
 
 
-    (datetime.datetime(2022, 7, 31, 22, 0),
-     datetime.datetime(2022, 8, 28, 21, 59, 59),
-     datetime.datetime(1970, 1, 20, 4, 55, 4, 800000),
-     datetime.datetime(1970, 1, 20, 5, 35, 23, 999000))
+    (datetime.date(2022, 8, 28),
+     datetime.date(2022, 8, 21),
+     datetime.date(2003, 6, 29))
 
 
 
-## `7*24*60*60*1000` won't make the actual 7 days
-
-If 7 days is `7*24*60*60*1000` (604_800_000), then there is no cutoff which stays between ts_max and ts_min
+### rd: recsys - otto - local validation - ts where to cut - train_cutoff = ts_max - seven_days # 1_056_923_999 = 1_661_723_999 - 604_800
 
 
-```
-seven_days = 7*24*60*60*1000 # 604_800_000
-train_cutoff = ts_max - seven_days # 1_056_923_999 = 1_661_723_999 - 604_800_000
-ts_max > ts_min > train_cutoff
-```
-
-
-
-
-    True
-
-
-
-The cut is not 7 days from the last day, but 7000 days from the last day
-
-
-```
-datetime.datetime.fromtimestamp(0), datetime.datetime.fromtimestamp(train_cutoff), datetime.datetime.fromtimestamp(ts_min), datetime.datetime.fromtimestamp(ts_max), \
-```
-
-
-
-
-    (datetime.datetime(1970, 1, 1, 0, 0),
-     datetime.datetime(2003, 6, 29, 21, 59, 59),
-     datetime.datetime(2022, 7, 31, 22, 0),
-     datetime.datetime(2022, 8, 28, 21, 59, 59))
-
-
-
-If 7 days is `7*24*60*60` (604_800), then the cutoff which can stay between ts_max and ts_min, and cutoff is at the 7 days from the last day
-
-
-```
+```python
 seven_days = 7*24*60*60 # 604_800
 train_cutoff = ts_max - seven_days # 1_056_923_999 = 1_661_723_999 - 604_800
 ts_max > train_cutoff > ts_min
@@ -155,7 +181,7 @@ ts_max > train_cutoff > ts_min
 
 
 
-```
+```python
 datetime.datetime.fromtimestamp(0), datetime.datetime.fromtimestamp(train_cutoff), \
 datetime.datetime.fromtimestamp(ts_min), datetime.datetime.fromtimestamp(ts_max), \
 ```
@@ -170,10 +196,10 @@ datetime.datetime.fromtimestamp(ts_min), datetime.datetime.fromtimestamp(ts_max)
 
 
 
-## How big is train, local_train, local_test
+### rd: recsys - otto - local validation - split train into local_train and local_test - local_train = train[train.ts <= train_cutoff] - local_test = train[train.ts > train_cutoff]
 
 
-```
+```python
 train.shape, train.memory_usage() # 216_716_096 rows
 ```
 
@@ -191,12 +217,12 @@ train.shape, train.memory_usage() # 216_716_096 rows
 
 
 
-```
+```python
 local_train = train[train.ts <= train_cutoff] # 163_955_181 rows, and RAM on session metrics doubled from 4.6G to 9.1G
 ```
 
 
-```
+```python
 # run
 local_train.shape, local_train.memory_usage() # the Index is a huge number on RAM
 ```
@@ -215,13 +241,13 @@ local_train.shape, local_train.memory_usage() # the Index is a huge number on RA
 
 
 
-```
+```python
 # run
 local_test = train[train.ts > train_cutoff] # 52_760_915 rows, and RAM raise from 9.1G to 10.1G
 ```
 
 
-```
+```python
 # run 
 local_test.shape, local_test.memory_usage() # the Index is a huge number on RAM
 ```
@@ -239,11 +265,10 @@ local_test.shape, local_test.memory_usage() # the Index is a huge number on RAM
 
 
 
-## Can we save the RAM by making the index smaller? 
-https://stackoverflow.com/questions/54603378/pandas-convert-from-int64index-to-rangeindex
+### rd: recsys - otto - local validation - How train.reset_index work? - help(train.reset_index) 
 
 
-```
+```python
 # help(train.reset_index) 
 #     >>> df = pd.DataFrame([('bird', 389.0),
 #     ...                    ('bird', 24.0),
@@ -279,8 +304,11 @@ https://stackoverflow.com/questions/54603378/pandas-convert-from-int64index-to-r
 #     3  mammal        NaN
 ```
 
+### rd: recsys - otto - local validation - Save RAM by converting local_train.index from Int64Index to RangeIndex like train.index? - train.index, local_train.index, local_test.index - local_train.reset_index(inplace=True, drop=True)
+https://stackoverflow.com/questions/54603378/pandas-convert-from-int64index-to-rangeindex
 
-```
+
+```python
 train.index, local_train.index, local_test.index # RangeIndex vs Int64Index
 ```
 
@@ -306,9 +334,10 @@ train.index, local_train.index, local_test.index # RangeIndex vs Int64Index
 ### convert index from Int64Range to RangeIndex
 
 
-```
+```python
 local_train.reset_index(inplace=True, drop=True) # no effect on RAM from the session metrics board
 local_train.index, local_train.memory_usage() # but the number for Index dropped drastically
+# previously the local_train.index RAM usage is 1311641448, now is 128
 ```
 
 
@@ -325,9 +354,10 @@ local_train.index, local_train.memory_usage() # but the number for Index dropped
 
 
 
-```
+```python
 local_test.reset_index(inplace=True, drop=True) # no effect on RAM from the session metrics board
 local_test.index, local_test.memory_usage() # but the number for Index dropped drastically
+# the previous RAM usage of local_test.index is 422087320
 ```
 
 
@@ -344,44 +374,47 @@ local_test.index, local_test.memory_usage() # but the number for Index dropped d
 
 
 
-```
+```python
 del train # RAM dropped from 10.1G to 7.5G according to session metrics
 ```
 
-## remove intersecting sessions between local_train and local_test from local_test
+### rd: recsys - otto - local validation - what are the benefits of removing intersecting sessions between local_train and local_test to simulate real world - overlapping_sessions = set(local_train.session).intersection(set(local_test.session))
 
 
-```
+```python
 %%time
 overlapping_sessions = set(local_train.session).intersection(set(local_test.session)) # not use use RAM
 ```
 
-    CPU times: user 25.9 s, sys: 2.16 s, total: 28.1 s
-    Wall time: 27.8 s
+    CPU times: user 25.8 s, sys: 2.04 s, total: 27.8 s
+    Wall time: 27.6 s
 
 
+### rd: recsys - otto - local validation - the portion of intersection sessions on local_train and local_test is large. What would happen when adding those sessions back? better score or worse score? (question)
 
-```
-len(overlapping_sessions), local_train.session.unique().shape[0], local_test.session.unique().shape[0] 
+
+```python
+len(overlapping_sessions), len(overlapping_sessions)/local_train.session.unique().shape[0], len(overlapping_sessions)/local_test.session.unique().shape[0]
+
 # 3_521_833, 11_098_528, 5_323_084
 ```
 
 
 
 
-    (3521833, 11098528, 5323084)
+    (3521833, 0.31732433346115807, 0.6616151464076088)
 
 
 
 
-```
+```python
 %%time
 local_test = local_test[~local_test.session.isin(overlapping_sessions)] # RAM raise from 7.5 to 7.9
 local_test.index, local_test.memory_usage()
 ```
 
-    CPU times: user 2.07 s, sys: 387 ms, total: 2.45 s
-    Wall time: 2.45 s
+    CPU times: user 1.98 s, sys: 362 ms, total: 2.35 s
+    Wall time: 2.34 s
 
 
 
@@ -403,7 +436,7 @@ local_test.index, local_test.memory_usage()
 
 
 
-```
+```python
 local_test.reset_index(inplace=True, drop=True) # but not reduce RAM according to session metrics, stays at 7.9G
 local_test.index, local_test.memory_usage()
 ```
@@ -421,17 +454,17 @@ local_test.index, local_test.memory_usage()
 
 
 
-## There is no empty rows in any sessions of local_test
+### rd: recsys - otto - local validation - any empty rows in any sessions of local_test - local_test.groupby('session')['aid'].count().apply(lambda x: x == 0)
 
 
-```
+```python
 
 count_zero = local_test.groupby('session')['aid'].count().apply(lambda x: x == 0)
 count_one = local_test.groupby('session')['aid'].count().apply(lambda x: x > 0)
 ```
 
 
-```
+```python
 sum(count_zero), sum(count_one), local_test.session.unique().shape[0]
 ```
 
@@ -442,10 +475,10 @@ sum(count_zero), sum(count_one), local_test.session.unique().shape[0]
 
 
 
-## split data samples for local test and local validation
+### rd: recsys - otto - local validation - split local_test into test and validation two parts - for grp in local_test.groupby('session'): -     cutoff = np.random.randint(1, grp[1].shape[0]) - new_test.append(grp[1].iloc[:cutoff]) -     data_to_calculate_validation_score.append(grp[1].iloc[cutoff:])
 
 
-```
+```python
 %%time
 new_test = []
 data_to_calculate_validation_score = []
@@ -457,48 +490,50 @@ for grp in local_test.groupby('session'): # loop each session of local_test
     data_to_calculate_validation_score.append(grp[1].iloc[cutoff:]) # take the right part from the cutoff as data samples for local validation
 ```
 
-    CPU times: user 2min 44s, sys: 10.5 s, total: 2min 55s
+    CPU times: user 2min 48s, sys: 6.76 s, total: 2min 55s
     Wall time: 2min 55s
 
 
+### rd: recsys - otto - local validation - stack a list of smaller dfs onto each other - test = pd.concat(new_test).reset_index(drop=True) - valid = pd.concat(data_to_calculate_validation_score).reset_index(drop=True)
 
-```
+
+```python
 %%time
 test = pd.concat(new_test).reset_index(drop=True) # stack a list of smaller dfs onto each otehr
 valid = pd.concat(data_to_calculate_validation_score).reset_index(drop=True) # maximum to 24G
 ```
 
-    CPU times: user 6min 3s, sys: 18.2 s, total: 6min 21s
-    Wall time: 6min 21s
+    CPU times: user 5min 45s, sys: 12 s, total: 5min 57s
+    Wall time: 5min 57s
 
 
 
-```
+```python
 test.shape, test.memory_usage(), valid.shape, valid.memory_usage()
 ```
 
 
 
 
-    ((7695335, 4),
+    ((7697659, 4),
      Index           128
-     session    30781340
-     aid        30781340
-     ts         30781340
-     type        7695335
+     session    30790636
+     aid        30790636
+     ts         30790636
+     type        7697659
      dtype: int64,
-     (7689242, 4),
+     (7686918, 4),
      Index           128
-     session    30756968
-     aid        30756968
-     ts         30756968
-     type        7689242
+     session    30747672
+     aid        30747672
+     ts         30747672
+     type        7686918
      dtype: int64)
 
 
 
 
-```
+```python
 %%time
 test.to_parquet('_test.parquet') # save to a parquet file
 valid.to_parquet('_valid.parquet')
@@ -506,22 +541,22 @@ valid.to_parquet('_valid.parquet')
 del new_test, data_to_calculate_validation_score # now dropped to 9.8G
 ```
 
-    CPU times: user 16.8 s, sys: 2.03 s, total: 18.8 s
-    Wall time: 18.7 s
+    CPU times: user 16.7 s, sys: 2.14 s, total: 18.8 s
+    Wall time: 18.8 s
 
 
 
-```
+```python
 del local_test # from 9.8G down to 9.3G according to session metrics
 ```
 
 
-```
+```python
 train = local_train
 ```
 
 
-```
+```python
 DO_LOCAL_VALIDATION = True
 ```
 
@@ -529,15 +564,15 @@ We have now swapped the train and test sets for the ones we conjured and can now
 
 # Train
 
-## Create subsets for experiments from local_train (now, known as train)
+### rd: recsys - otto - local validation - create subset on both train and test - lucky_sessions_train = train.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use)['session'] - subset_of_train = train[train.session.isin(lucky_sessions_train)]
 
 
-```
+```python
 fraction_of_sessions_to_use = 1/1000
 ```
 
 
-```
+```python
 %%time
 
 lucky_sessions_train = train.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use)['session']
@@ -549,32 +584,34 @@ subset_of_test = test[test.session.isin(lucky_sessions_test)]
 # now session metrics reports RAM to be 10.5GB
 ```
 
-    CPU times: user 9.1 s, sys: 1.06 s, total: 10.2 s
-    Wall time: 10.2 s
+    CPU times: user 8.53 s, sys: 929 ms, total: 9.46 s
+    Wall time: 9.46 s
 
 
-### Add session as index for the subsets (train and test)
+### rd: recsys - otto - local validation - Add session as index for the subsets (train and test) - subset_of_train.index = pd.MultiIndex.from_frame(subset_of_train[['session']])
 
 
-```
+```python
 subset_of_train.index = pd.MultiIndex.from_frame(subset_of_train[['session']])
 subset_of_test.index = pd.MultiIndex.from_frame(subset_of_test[['session']]) # now effect on RAM
 ```
 
 
-```
+```python
 subset_of_train.shape, subset_of_train.session.unique().shape[0], subset_of_test.shape, subset_of_test.session.unique().shape[0],
 ```
 
 
 
 
-    ((164323, 4), 11099, (7507, 4), 1801)
+    ((166101, 4), 11099, (7768, 4), 1801)
 
 
 
+### rd: recsys - otto - local validation - each the last 30 events of each session, make a cartesian product on each event, remove rows with the same aids, only select rows two aids occurred consecutively within a day, and doing it in large chunk/batch of sessions each loop, put each chunk of sessions as an item into a list (see src below)
 
-```
+
+```python
 %%time
 
 all_consecutive_AIDs = [] 
@@ -593,7 +630,7 @@ for i in range(0, sessions.shape[0], chunk_size): # loop every 60_000 sessions, 
     consecutive_AIDs = consecutive_AIDs[consecutive_AIDs.aid_x != consecutive_AIDs.aid_y]
     # add a column named 'days_elapsed' to record how many days passed between two aids
     # whether divided by 1000 or not should make no difference in RAM, as they are all float64 type
-    consecutive_AIDs['days_elapsed'] = (consecutive_AIDs.ts_y - consecutive_AIDs.ts_x) / (24 * 60 * 60 * 1000)
+    consecutive_AIDs['days_elapsed'] = (consecutive_AIDs.ts_y - consecutive_AIDs.ts_x) / (24 * 60 * 60) # not 24*60*60*1000
     # select only rows where first aid comes before second aid and both occurred in the same day
     consecutive_AIDs = consecutive_AIDs[(consecutive_AIDs.days_elapsed > 0) & (consecutive_AIDs.days_elapsed <= 1)]
     # put every 60_000 session df processed above into a list
@@ -602,8 +639,8 @@ for i in range(0, sessions.shape[0], chunk_size): # loop every 60_000 sessions, 
     )
 ```
 
-    CPU times: user 3.78 s, sys: 86.2 ms, total: 3.87 s
-    Wall time: 3.86 s
+    CPU times: user 3.63 s, sys: 75.1 ms, total: 3.7 s
+    Wall time: 3.69 s
 
 
 #### How @radek1 explains `current_chunk.merge(current_chunk, on='session')` above from [discussion](https://www.kaggle.com/code/radek1/co-visitation-matrix-simplified-imprvd-logic/comments#2031136)
@@ -613,10 +650,10 @@ essentially, it is a trick to create aid pairs by session
 
 if a user had three aids in a session 1, 2, 3 this will create all possible pairs [1, 1], [1,2], [1,3], [2,1]… etc
 
-### apply the same logic above to the subset_of_test, and append them to consecutive_AIDs
+### rd: recsys - otto - local validaiton - apply the same logic above to the subset_of_test, and append them to consecutive_AIDs which is the same list that stores sessions in subset_of_train (see src)
 
 
-```
+```python
 %%time
 sessions = subset_of_test.session.unique()
 for i in range(0, sessions.shape[0], chunk_size):
@@ -631,24 +668,384 @@ for i in range(0, sessions.shape[0], chunk_size):
     )
 ```
 
-    CPU times: user 513 ms, sys: 2 ms, total: 515 ms
-    Wall time: 513 ms
+    CPU times: user 519 ms, sys: 9 ms, total: 528 ms
+    Wall time: 526 ms
 
 
-### stack all dfs inside all_consecutive_AIDs into a single df and remove the rows when their session, aid_x, aid_y are the same
+### rd: recsys - otto - local validation - check the rows with duplicated values on 3 specified columns - all_yet.duplicated(['session', 'aid_x', 'aid_y']) - and remove rows from the dataframe - all_yet.drop_duplicates(['session', 'aid_x', 'aid_y'])
 
 
+```python
+all_yet = pd.concat(all_consecutive_AIDs)
 ```
+
+
+```python
+all_yet.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>session</th>
+      <th>aid_x</th>
+      <th>ts_x</th>
+      <th>type_x</th>
+      <th>aid_y</th>
+      <th>ts_y</th>
+      <th>type_y</th>
+      <th>days_elapsed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>1314229</td>
+      <td>1661025934</td>
+      <td>0</td>
+      <td>0.000313</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>1192169</td>
+      <td>1661025984</td>
+      <td>0</td>
+      <td>0.000891</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>1679496</td>
+      <td>1661025992</td>
+      <td>0</td>
+      <td>0.000984</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>110964</td>
+      <td>1661033953</td>
+      <td>0</td>
+      <td>0.093125</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>1497089</td>
+      <td>1661036167</td>
+      <td>0</td>
+      <td>0.118750</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+all_yet.duplicated(['session', 'aid_x', 'aid_y']).sum(), all_yet.shape[0]
+all_yet.drop_duplicates(['session', 'aid_x', 'aid_y']).shape
+all_yet[all_yet.duplicated(['session', 'aid_x', 'aid_y'])]
+```
+
+
+
+
+    (279968, 596003)
+
+
+
+
+
+
+    (316035, 8)
+
+
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>session</th>
+      <th>aid_x</th>
+      <th>ts_x</th>
+      <th>type_x</th>
+      <th>aid_y</th>
+      <th>ts_y</th>
+      <th>type_y</th>
+      <th>days_elapsed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>1497089</td>
+      <td>1661036243</td>
+      <td>0</td>
+      <td>1.196296e-01</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>1497089</td>
+      <td>1661036518</td>
+      <td>0</td>
+      <td>1.228125e-01</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>398187</td>
+      <td>1661038376</td>
+      <td>0</td>
+      <td>1.443171e-01</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>1134003</td>
+      <td>1661038424</td>
+      <td>1</td>
+      <td>1.448727e-01</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>1134003</td>
+      <td>1661038448</td>
+      <td>0</td>
+      <td>1.451505e-01</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>76758</th>
+      <td>12897907</td>
+      <td>340856</td>
+      <td>1661722799</td>
+      <td>0</td>
+      <td>1253057</td>
+      <td>1661722973</td>
+      <td>0</td>
+      <td>2.013889e-06</td>
+    </tr>
+    <tr>
+      <th>76765</th>
+      <td>12897907</td>
+      <td>731037</td>
+      <td>1661722926</td>
+      <td>0</td>
+      <td>1253057</td>
+      <td>1661722973</td>
+      <td>0</td>
+      <td>5.439815e-07</td>
+    </tr>
+    <tr>
+      <th>76780</th>
+      <td>12897907</td>
+      <td>1253057</td>
+      <td>1661722973</td>
+      <td>0</td>
+      <td>1696378</td>
+      <td>1661722992</td>
+      <td>0</td>
+      <td>2.199074e-07</td>
+    </tr>
+    <tr>
+      <th>76781</th>
+      <td>12897907</td>
+      <td>1253057</td>
+      <td>1661722973</td>
+      <td>0</td>
+      <td>1011104</td>
+      <td>1661723010</td>
+      <td>0</td>
+      <td>4.282407e-07</td>
+    </tr>
+    <tr>
+      <th>76782</th>
+      <td>12897907</td>
+      <td>1253057</td>
+      <td>1661722973</td>
+      <td>0</td>
+      <td>1112182</td>
+      <td>1661723035</td>
+      <td>0</td>
+      <td>7.175926e-07</td>
+    </tr>
+  </tbody>
+</table>
+<p>279968 rows × 8 columns</p>
+</div>
+
+
+
+
+```python
+dup = all_yet[all_yet.duplicated(['session', 'aid_x', 'aid_y'])]
+dup1 = dup.loc[dup.aid_y == 398187]
+dup1.loc[dup1.aid_x == 1762221]
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>session</th>
+      <th>aid_x</th>
+      <th>ts_x</th>
+      <th>type_x</th>
+      <th>aid_y</th>
+      <th>ts_y</th>
+      <th>type_y</th>
+      <th>days_elapsed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>22</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>398187</td>
+      <td>1661038376</td>
+      <td>0</td>
+      <td>0.144317</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>1890</td>
+      <td>1762221</td>
+      <td>1661025907</td>
+      <td>1</td>
+      <td>398187</td>
+      <td>1661038704</td>
+      <td>0</td>
+      <td>0.148113</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+### rd: recsys - otto - local validation - question - selection with two conditionals - all_yet.loc[(all_yet.session == 1890 & all_yet.aid_x == 1762221), :]
+
+
+```python
+# all_yet.loc[(all_yet.session == 1890 & all_yet.aid_x == 1762221), :] # 
+```
+
+### rd: recsys - otto - local validation - stack all dfs inside all_consecutive_AIDs into a single df and remove the rows when their session, aid_x, aid_y are the same - all_consecutive_AIDs = pd.concat(all_consecutive_AIDs).drop_duplicates(['session', 'aid_x', 'aid_y'])[['aid_x', 'aid_y']]
+
+
+```python
 %%time
 all_consecutive_AIDs = pd.concat(all_consecutive_AIDs).drop_duplicates(['session', 'aid_x', 'aid_y'])[['aid_x', 'aid_y']]
 ```
 
-    CPU times: user 137 ms, sys: 962 µs, total: 138 ms
-    Wall time: 135 ms
+    CPU times: user 99.6 ms, sys: 14 ms, total: 114 ms
+    Wall time: 112 ms
 
 
 
-```
+```python
 all_consecutive_AIDs.head()
 ```
 
@@ -680,28 +1077,28 @@ all_consecutive_AIDs.head()
   <tbody>
     <tr>
       <th>1</th>
-      <td>236819</td>
-      <td>4268</td>
+      <td>1762221</td>
+      <td>1314229</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>236819</td>
-      <td>994930</td>
+      <td>1762221</td>
+      <td>1192169</td>
     </tr>
     <tr>
-      <th>8</th>
-      <td>236819</td>
-      <td>305933</td>
+      <th>3</th>
+      <td>1762221</td>
+      <td>1679496</td>
     </tr>
     <tr>
-      <th>11</th>
-      <td>236819</td>
-      <td>569669</td>
+      <th>4</th>
+      <td>1762221</td>
+      <td>110964</td>
     </tr>
     <tr>
-      <th>18</th>
-      <td>4268</td>
-      <td>994930</td>
+      <th>5</th>
+      <td>1762221</td>
+      <td>1497089</td>
     </tr>
   </tbody>
 </table>
@@ -709,10 +1106,10 @@ all_consecutive_AIDs.head()
 
 
 
-## Create a Counter with defaultdict to count the num of occurrences of other aids given each aid
+### rd: recsys - otto - local validation - across all sessions, for each (aid_x, aid_y) pair, count and accumulate the occurrences of aid_y - next_AIDs = defaultdict(Counter) - for row in all_consecutive_AIDs.itertuples(): - next_AIDs[row.aid_x][row.aid_y] += 1
 
 
-```
+```python
 %%time
 
 from collections import defaultdict, Counter
@@ -723,88 +1120,64 @@ for row in all_consecutive_AIDs.itertuples():
     next_AIDs[row.aid_x][row.aid_y] += 1
 ```
 
-    CPU times: user 861 ms, sys: 21 ms, total: 882 ms
-    Wall time: 881 ms
+    CPU times: user 625 ms, sys: 24.9 ms, total: 650 ms
+    Wall time: 648 ms
 
 
 
-```
+```python
 for k,v in next_AIDs.items(): 
     print(k)
     print(v)
     break
 ```
 
-    236819
-    Counter({4268: 1, 994930: 1, 305933: 1, 569669: 1})
+    1762221
+    Counter({1314229: 1, 1192169: 1, 1679496: 1, 110964: 1, 1497089: 1, 1441150: 1, 1509820: 1, 1077363: 1, 307558: 1, 398187: 1, 141736: 1, 824944: 1, 505035: 1, 1460571: 1, 1109824: 1, 759436: 1, 951283: 1, 1324356: 1, 1255532: 1, 549194: 1, 1134003: 1, 1162414: 1})
 
 
 
-```
-len(next_AIDs)
-```
-
-
-
-
-    49916
-
-
-
-## Now let's generate the predictions.
-
-
-```
-test.groupby('session')['aid'].apply(list)
+```python
+len(next_AIDs), all_consecutive_AIDs.aid_x.unique().shape[0]
 ```
 
 
 
 
-    session
-    11098528    [11830, 1679529, 92401, 1055218, 1561739, 1679...
-    11098529                                            [1105029]
-    11098530     [264500, 264500, 409236, 409236, 409236, 409236]
-    11098531    [452188, 1239060, 1557766, 452188, 396199, 130...
-    11098532                     [7651, 876469, 1596491, 1550739]
-                                      ...                        
-    12899774                                              [33035]
-    12899775                                            [1743151]
-    12899776                                             [548599]
-    12899777                                             [384045]
-    12899778                                             [561560]
-    Name: aid, Length: 1801251, dtype: object
+    (46188, 46188)
 
 
 
+## rd: recsys - otto - local validation - Now let's generate the predictions or labels from test set and validation set is to provide ground truth - get all aids of each test session into a list - test_session_AIDs = test.groupby('session')['aid'].apply(list)
 
-```
+
+```python
 %%time
 # get aid into a list for every session in the processed local_test
 test_session_AIDs = test.groupby('session')['aid'].apply(list)
 test_session_AIDs.head()
 ```
 
-    CPU times: user 34.3 s, sys: 434 ms, total: 34.8 s
-    Wall time: 34.8 s
+    CPU times: user 32.2 s, sys: 1.4 s, total: 33.7 s
+    Wall time: 33.7 s
 
 
 
 
 
     session
-    11098528    [11830, 1679529, 92401, 1055218, 1561739, 1679...
-    11098529                                            [1105029]
-    11098530     [264500, 264500, 409236, 409236, 409236, 409236]
-    11098531    [452188, 1239060, 1557766, 452188, 396199, 130...
-    11098532                     [7651, 876469, 1596491, 1550739]
+    11098528    [11830, 1679529, 92401, 1055218, 1561739, 1679529, 1033148, 440367, 11830, 1033148, 1679529, 1199737, 1199737, 990658, 1033148, 11830, 440367, 369774, 907564, 1199737, 1462506, 950341, 1561739, 92401]
+    11098529                                                                                                                                                                                                   [1105029]
+    11098530                                                                                                                                                            [264500, 264500, 409236, 409236, 409236, 409236]
+    11098531                                                                                                                                                         [452188, 1239060, 1557766, 452188, 396199, 1309633]
+    11098532                                                                                                                                     [7651, 876469, 1596491, 1550739, 1308930, 461190, 461190, 108125, 1089]
     Name: aid, dtype: object
 
 
 
 
-```
-session_types = ['clicks', 'carts', 'orders']
+```python
+
 ```
 
 ### rd: recsys - otto - robust local validation - debug a block of code by making it a func and use print and return
@@ -831,8 +1204,12 @@ for AIDs in test_session_AIDs: # loop each session to get its list of aids
         labels.append(AIDs[:20])
 ```
 
+### rd: recsys - otto - local validation - create the labels/predictions for each test session/user - reverse the list of aids of each session, remove the duplicated aids, and select the first 20 aids as labels - and save it into a list 'labels' - question: should we use the learning from training set here? (see src below)
 
-```
+### rd: recsys - otto - local validation - if there are less than 20 aids in each session then we can borrow aids from next_AIDs which is learnt from training - get all aid_ys for each aid of a test session - find 40 the most common aid_ys - if they are not already exist in the test session, then add them into the list of aids of the test session - then take the first 20 from the new list of aids of the test session (see src below)
+
+
+```python
 %%time
 def f():
     labels = []
@@ -870,12 +1247,12 @@ def f():
 labels = f()
 ```
 
-    CPU times: user 1min 2s, sys: 466 ms, total: 1min 2s
-    Wall time: 1min 2s
+    CPU times: user 43.8 s, sys: 731 ms, total: 44.5 s
+    Wall time: 44.5 s
 
 
 
-```
+```python
 from matplotlib import pyplot as plt
 
 plt.hist([len(l) for l in labels]);
@@ -883,21 +1260,29 @@ plt.hist([len(l) for l in labels]);
 
 
     
-![png](a-robust-local-validation-framework-reworked_files/a-robust-local-validation-framework-reworked_76_0.png)
+![png](kaggle-local-validation-framework-otto_files/kaggle-local-validation-framework-otto_83_0.png)
     
 
 
 ## Prepare the submission format
 
-### make the list of aids into a string
+### rd: recsys - otto - local validation - make the list of aids into a string - labels_as_strings = [' '.join([str(l) for l in lls]) for lls in labels] - make a df from a dict of lists - predictions = pd.DataFrame(data={'session_type': test_session_AIDs.index, 'labels': labels_as_strings})
 
 
-```
+```python
 labels_as_strings = [' '.join([str(l) for l in lls]) for lls in labels]
 predictions = pd.DataFrame(data={'session_type': test_session_AIDs.index, 'labels': labels_as_strings})
 labels_as_strings[:2]
 predictions.head()
 ```
+
+
+
+
+    ['92401 1561739 950341 1462506 1199737 907564 369774 440367 11830 1033148 990658 1679529 1055218 170669 834015 1146755 1503610 405331 425885 681918',
+     '1105029']
+
+
 
 
 
@@ -928,7 +1313,7 @@ predictions.head()
     <tr>
       <th>0</th>
       <td>11098528</td>
-      <td>369774 440367 11830 1033148 990658 1199737 167...</td>
+      <td>92401 1561739 950341 1462506 1199737 907564 369774 440367 11830 1033148 990658 1679529 1055218 170669 834015 1146755 1503610 405331 425885 681918</td>
     </tr>
     <tr>
       <th>1</th>
@@ -938,17 +1323,17 @@ predictions.head()
     <tr>
       <th>2</th>
       <td>11098530</td>
-      <td>409236 264500 860 492245 1151358</td>
+      <td>409236 264500 583026 335674 1604904 237586 805787 1603001 364155 877496 752334 1677181 899408 292767</td>
     </tr>
     <tr>
       <th>3</th>
       <td>11098531</td>
-      <td>1553691 1271998 396199 1728212 1365569 1557766...</td>
+      <td>1309633 396199 452188 1557766 1239060</td>
     </tr>
     <tr>
       <th>4</th>
       <td>11098532</td>
-      <td>1550739 1596491 876469 7651 1402537 123224 400...</td>
+      <td>1089 108125 461190 1308930 1550739 1596491 876469 7651 435253 1557927 659399 174981 39615 830550 612920 738098 511499 360420 1402537 695824</td>
     </tr>
   </tbody>
 </table>
@@ -956,9 +1341,12 @@ predictions.head()
 
 
 
+### rd: recsys - ottp - local validation - make predictions/labels for clicks, carts and orders (no difference) - and prepare and create the submission dataframe
 
-```
+
+```python
 prediction_dfs = []
+session_types = ['clicks', 'carts', 'orders']
 
 for st in session_types:
     modified_predictions = predictions.copy()
@@ -967,7 +1355,7 @@ for st in session_types:
 ```
 
 
-```
+```python
 prediction_dfs[0].head()
 ```
 
@@ -1000,7 +1388,7 @@ prediction_dfs[0].head()
     <tr>
       <th>0</th>
       <td>11098528_clicks</td>
-      <td>369774 440367 11830 1033148 990658 1199737 167...</td>
+      <td>92401 1561739 950341 1462506 1199737 907564 369774 440367 11830 1033148 990658 1679529 1055218 170669 834015 1146755 1503610 405331 425885 681918</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1010,17 +1398,17 @@ prediction_dfs[0].head()
     <tr>
       <th>2</th>
       <td>11098530_clicks</td>
-      <td>409236 264500 860 492245 1151358</td>
+      <td>409236 264500 583026 335674 1604904 237586 805787 1603001 364155 877496 752334 1677181 899408 292767</td>
     </tr>
     <tr>
       <th>3</th>
       <td>11098531_clicks</td>
-      <td>1553691 1271998 396199 1728212 1365569 1557766...</td>
+      <td>1309633 396199 452188 1557766 1239060</td>
     </tr>
     <tr>
       <th>4</th>
       <td>11098532_clicks</td>
-      <td>1550739 1596491 876469 7651 1402537 123224 400...</td>
+      <td>1089 108125 461190 1308930 1550739 1596491 876469 7651 435253 1557927 659399 174981 39615 830550 612920 738098 511499 360420 1402537 695824</td>
     </tr>
   </tbody>
 </table>
@@ -1029,7 +1417,7 @@ prediction_dfs[0].head()
 
 
 
-```
+```python
 prediction_dfs[1].head()
 ```
 
@@ -1062,7 +1450,7 @@ prediction_dfs[1].head()
     <tr>
       <th>0</th>
       <td>11098528_carts</td>
-      <td>369774 440367 11830 1033148 990658 1199737 167...</td>
+      <td>92401 1561739 950341 1462506 1199737 907564 369774 440367 11830 1033148 990658 1679529 1055218 170669 834015 1146755 1503610 405331 425885 681918</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1072,17 +1460,17 @@ prediction_dfs[1].head()
     <tr>
       <th>2</th>
       <td>11098530_carts</td>
-      <td>409236 264500 860 492245 1151358</td>
+      <td>409236 264500 583026 335674 1604904 237586 805787 1603001 364155 877496 752334 1677181 899408 292767</td>
     </tr>
     <tr>
       <th>3</th>
       <td>11098531_carts</td>
-      <td>1553691 1271998 396199 1728212 1365569 1557766...</td>
+      <td>1309633 396199 452188 1557766 1239060</td>
     </tr>
     <tr>
       <th>4</th>
       <td>11098532_carts</td>
-      <td>1550739 1596491 876469 7651 1402537 123224 400...</td>
+      <td>1089 108125 461190 1308930 1550739 1596491 876469 7651 435253 1557927 659399 174981 39615 830550 612920 738098 511499 360420 1402537 695824</td>
     </tr>
   </tbody>
 </table>
@@ -1091,7 +1479,7 @@ prediction_dfs[1].head()
 
 
 
-```
+```python
 prediction_dfs[2].head()
 ```
 
@@ -1124,7 +1512,7 @@ prediction_dfs[2].head()
     <tr>
       <th>0</th>
       <td>11098528_orders</td>
-      <td>369774 440367 11830 1033148 990658 1199737 167...</td>
+      <td>92401 1561739 950341 1462506 1199737 907564 369774 440367 11830 1033148 990658 1679529 1055218 170669 834015 1146755 1503610 405331 425885 681918</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1134,17 +1522,17 @@ prediction_dfs[2].head()
     <tr>
       <th>2</th>
       <td>11098530_orders</td>
-      <td>409236 264500 860 492245 1151358</td>
+      <td>409236 264500 583026 335674 1604904 237586 805787 1603001 364155 877496 752334 1677181 899408 292767</td>
     </tr>
     <tr>
       <th>3</th>
       <td>11098531_orders</td>
-      <td>1553691 1271998 396199 1728212 1365569 1557766...</td>
+      <td>1309633 396199 452188 1557766 1239060</td>
     </tr>
     <tr>
       <th>4</th>
       <td>11098532_orders</td>
-      <td>1550739 1596491 876469 7651 1402537 123224 400...</td>
+      <td>1089 108125 461190 1308930 1550739 1596491 876469 7651 435253 1557927 659399 174981 39615 830550 612920 738098 511499 360420 1402537 695824</td>
     </tr>
   </tbody>
 </table>
@@ -1153,7 +1541,7 @@ prediction_dfs[2].head()
 
 
 
-```
+```python
 submission = pd.concat(prediction_dfs).reset_index(drop=True)
 submission.head()
 ```
@@ -1187,7 +1575,7 @@ submission.head()
     <tr>
       <th>0</th>
       <td>11098528_clicks</td>
-      <td>369774 440367 11830 1033148 990658 1199737 167...</td>
+      <td>92401 1561739 950341 1462506 1199737 907564 369774 440367 11830 1033148 990658 1679529 1055218 170669 834015 1146755 1503610 405331 425885 681918</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1197,17 +1585,17 @@ submission.head()
     <tr>
       <th>2</th>
       <td>11098530_clicks</td>
-      <td>409236 264500 860 492245 1151358</td>
+      <td>409236 264500 583026 335674 1604904 237586 805787 1603001 364155 877496 752334 1677181 899408 292767</td>
     </tr>
     <tr>
       <th>3</th>
       <td>11098531_clicks</td>
-      <td>1553691 1271998 396199 1728212 1365569 1557766...</td>
+      <td>1309633 396199 452188 1557766 1239060</td>
     </tr>
     <tr>
       <th>4</th>
       <td>11098532_clicks</td>
-      <td>1550739 1596491 876469 7651 1402537 123224 400...</td>
+      <td>1089 108125 461190 1308930 1550739 1596491 876469 7651 435253 1557927 659399 174981 39615 830550 612920 738098 511499 360420 1402537 695824</td>
     </tr>
   </tbody>
 </table>
@@ -1221,8 +1609,10 @@ We need to now reverse the processing we applied to our predictions to shape the
 
 I am undoing this work here on purpose. I will replace the code I use for predictions down the road, so I want my evaluation framework to work with data formatted like for making a submission.
 
+### rd: load id2type dict and type2id list from pickle file
 
-```
+
+```python
 with open('../input/otto-full-optimized-memory-footprint/id2type.pkl', "rb") as fh:
     id2type = pickle.load(fh)
 with open('../input/otto-full-optimized-memory-footprint/type2id.pkl', "rb") as fh:
@@ -1232,7 +1622,7 @@ sample_sub = pd.read_csv('../input/otto-recommender-system/sample_submission.csv
 ```
 
 
-```
+```python
 sample_sub.head()
 ```
 
@@ -1293,8 +1683,9 @@ sample_sub.head()
 
 
 
+### rd: validation set and test set must be in the same session so that we can use test set to make predictions and validaiton set can provide ground truth to compare against
 
-```
+```python
 %%time
 if DO_LOCAL_VALIDATION:
     # convert back for experiment
@@ -1322,18 +1713,12 @@ if DO_LOCAL_VALIDATION:
 
 else:
     submission.to_csv('submission.csv', index=False)
-
 ```
-
-    Local validation score: 0.4439805579019317
-    CPU times: user 2min 32s, sys: 4.54 s, total: 2min 37s
-    Wall time: 2min 37s
-
 
 ## Experiment to figure what some lines do
 
 
-```
+```python
 submission = pd.concat(prediction_dfs).reset_index(drop=True)
 submission.head()
 ```
@@ -1367,7 +1752,7 @@ submission.head()
     <tr>
       <th>0</th>
       <td>11098528_clicks</td>
-      <td>369774 440367 11830 1033148 990658 1199737 167...</td>
+      <td>92401 1561739 950341 1462506 1199737 907564 369774 440367 11830 1033148 990658 1679529 1055218 170669 834015 1146755 1503610 405331 425885 681918</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1377,17 +1762,17 @@ submission.head()
     <tr>
       <th>2</th>
       <td>11098530_clicks</td>
-      <td>409236 264500 860 492245 1151358</td>
+      <td>409236 264500 583026 335674 1604904 237586 805787 1603001 364155 877496 752334 1677181 899408 292767</td>
     </tr>
     <tr>
       <th>3</th>
       <td>11098531_clicks</td>
-      <td>1553691 1271998 396199 1728212 1365569 1557766...</td>
+      <td>1309633 396199 452188 1557766 1239060</td>
     </tr>
     <tr>
       <th>4</th>
       <td>11098532_clicks</td>
-      <td>1550739 1596491 876469 7651 1402537 123224 400...</td>
+      <td>1089 108125 461190 1308930 1550739 1596491 876469 7651 435253 1557927 659399 174981 39615 830550 612920 738098 511499 360420 1402537 695824</td>
     </tr>
   </tbody>
 </table>
@@ -1396,7 +1781,7 @@ submission.head()
 
 
 
-```
+```python
 
 def f():
     if DO_LOCAL_VALIDATION:
@@ -1430,8 +1815,8 @@ def f():
         # add a column to count the ground truth or the number of aids of labels_y (turn labels_y into a string, 
         # len() of it can tell us how many aids are there)
         submission_with_gt['gt_count'] = submission_with_gt.labels_y.str.len()
-        print(submission_with_gt)
-        return         
+#         print(submission_with_gt)
+#         return         
 
         # calc recall for each type
         recall_per_type = submission_with_gt.groupby(['type'])['hits'].sum() / submission_with_gt.groupby(['type'])['gt_count'].sum() 
@@ -1447,41 +1832,12 @@ valid = pd.read_parquet('_valid.parquet')
 f()
 ```
 
-                session_type                                           labels_x  \
-    0        11098528_clicks  [369774, 440367, 11830, 1033148, 990658, 11997...   
-    1        11098529_clicks                                          [1105029]   
-    3        11098531_clicks  [1553691, 1271998, 396199, 1728212, 1365569, 1...   
-    4        11098532_clicks  [1550739, 1596491, 876469, 7651, 1402537, 1232...   
-    5        11098533_clicks  [144447, 1493503, 1233050, 23678, 941187, 7613...   
-    ...                  ...                                                ...   
-    5403303  12899329_orders                                          [1333457]   
-    5403311  12899337_orders  [558573, 1584505, 1046124, 899637, 698100, 877...   
-    5403329  12899355_orders  [1115942, 465366, 1439071, 933686, 1446430, 20...   
-    5403347  12899373_orders  [1766353, 995962, 487949, 1265534, 320314, 873...   
-    5403499  12899525_orders  [1488793, 1599360, 127479, 996393, 531353, 101...   
-    
-              session    type                   labels_y  hits  gt_count  
-    0        11098528  clicks                   [588923]     0         1  
-    1        11098529  clicks                  [1298277]     0         1  
-    3        11098531  clicks                  [1365569]     1         1  
-    4        11098532  clicks                   [444527]     0         1  
-    5        11098533  clicks                  [1188296]     0         1  
-    ...           ...     ...                        ...   ...       ...  
-    5403303  12899329  orders                   [931182]     0         1  
-    5403311  12899337  orders                   [851751]     0         1  
-    5403329  12899355  orders                   [465366]     1         1  
-    5403347  12899373  orders                  [1766353]     1         1  
-    5403499  12899525  orders  [1599360, 996393, 956231]     2         3  
-    
-    [2213594 rows x 7 columns]
 
-
-
-```
+```python
 
 ```
 
 
-```
+```python
 
 ```

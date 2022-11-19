@@ -135,7 +135,6 @@ Sorry, I can only address a beginner like myself, who knows a little python and 
 
 - What does a "custom sub-session logic which could help modeling" would look like? 
 	- [discussion](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363874#2017479)
-
 - why we should not discard but treasure longer sessions?
 	- great [analysis](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364375) by @radek1
 	- my [rephrase](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364375#2033760)
@@ -151,65 +150,47 @@ Sorry, I can only address a beginner like myself, who knows a little python and 
 	- [evidence](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364534) from organizer's [script](https://github.com/otto-de/recsys-dataset/blob/main/src/evaluate.py#L83) to clear the metric confusion @radek
 - Can Merlin DataLoaders make processing otto super faster? 
 	- [answer](https://twitter.com/radekosmulski/status/1593378877216522240) by @radek1
-
-
-
-
 - How the `ts` in Radek's parquet otto dataset differ from that of original jsonl otto dataset?
 	- "**IMPORTANT CAVEAT:** Please note that in my dataset, in order to minimize its size without losing information (unless you care about milliseconds, but I assume seconds should be enough 🙂), I divide the `ts` column by 1000. Notebooks on Kaggle by other people use unmodified data, so if you would want to run this validation with that code, you need to either make changes to the code or multiply the `ts` column by 1000."
 	- [which dataset](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2034277) did Radek refer to? (I found it [here](https://www.kaggle.com/datasets/radek1/otto-train-and-test-data-for-local-validation))
 		- it's a different dataset: "otto_train_and_test_data_for_local_validation"
-		- another dataset which does not have `ts/1000` is ""
+		- another dataset which does not have `ts/1000` is Otto Full Optimized Memory Footprint version 1 (version 2 also has `(ts/1000).astype(np.32)`)
 		- "This is another version of the Otto dataset, where I have minimized the size of it even further without losing information. Among other things, I divided the ts column by 1000 (this way, I could store it as np.int32)."
-- what's the evidence dividing 1000 on ts can save RAM or disk? the [way forward](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2034291) by @radek1 (todo)
 - Otto Full Optimized Memory Footprint, how to use a specified [version](https://www.kaggle.com/datasets/radek1/otto-full-optimized-memory-footprint)?
 	- click Data Explorer to see different version options
 	- but how to [use a specific version](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2034424) in Kaggle notebook? (usually a more patient and careful look after a good rest can solve it)
 - How does @radek1 use `process_data.ipynb` to convert `train.jsonl` to `train.parquet` to achieve huge RAM usage reduction?
 	- [why](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843#2024279) we can't process the data on Kaggle due to RAM shortage by me
 	- convert `type` column from `string` to `uint8`, [9 times more RAM](https://www.kaggle.com/code/radek1/howto-full-dataset-as-parquet-csv-files/comments#2025187) can be saved by @danielliao
-	- [half of RAM can be saved](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2034277) by dividing `ts` column by 1000 and convert `ts` to `int32` by @danielliao
+	- [half of RAM can be saved](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2034507) by dividing `ts` column by 1000 and convert `ts` to `int32` by @danielliao
+	- what's the evidence dividing 1000 on ts can save RAM or disk? [I got the evidence here](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2034291) 
 	- the [updated](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843#2034437) `process_data.ipynb`, and the [original one](https://www.kaggle.com/competitions/otto-recommender-system/discussion/363843#2015604) without dividing `ts` by 1000 and convert from int64 to int32
-	- doing the above conversion [only affect accuracy in milisecond more second accuracy](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2034529)
+	- doing the above conversion [only affect accuracy in milisecond not second accuracy](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2034529)
 	- my experimental process_data [notebook](https://www.kaggle.com/code/danielliao/process-data-otto) processing `test.jsonl`
-
-
 - How powerful can the last 20 aids of each test session as prediction be? 
 	- my [notebook](https://www.kaggle.com/danielliao/akaggle-otto-rd-last-20-aids) built upon @radek1's notebook
 	- submit to public leaderboard and run it on local validation
-
 - how to use parquet OTTO dataset by Radek's [notebook](https://www.kaggle.com/code/radek1/howto-full-dataset-as-parquet-csv-files?scriptVersionId=109945227) and my [version](https://www.kaggle.com/danielliao/kaggle-access-parquet-otto)
-
-
-
-
-
-
-
-### otto_train_and_test_data_for_local_validation
-- where is the dataset [here](https://www.kaggle.com/datasets/radek1/otto-train-and-test-data-for-local-validation).
-- [how](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364534) the dataset above is created? @radek1
-	- I created the dataset passing the competition train data to the script and used the last 7 days to create the test set.
-
-
-### local validation setup
-
+- otto_train_and_test_data_for_local_validation
+	- where is the dataset [here](https://www.kaggle.com/datasets/radek1/otto-train-and-test-data-for-local-validation).
+	- [how](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364534) the dataset above is created? @radek1
+		- I created the dataset passing the competition train data to the script and used the last 7 days to create the test set.
 - [Interesting findings](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364534) by @radek1 when creating the **otto_train_and_test_data_for_local_validation** dataset for local validation
 	- "Generally, the interesting bit here is that the test set created on the last week of the train set seems considerably easier to predict on than what we have in the competition." - I wonder why?
 	- "Another interesting observation s regarding the calculation of the metric. It is not a mean of per-row recall, rather it is recall calculated on hits across the entire dataset! (might be an important piece of information for anyone implementing the competition metric themselves!)" - what is the implication?
-
 - [compare](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364534) @radek1 implementation and the src of the `evaluation.py` from organizer
-
 - A great [example](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2023511) of how to incrementally building a notebook on @radek1's local validation setup
 	- where we shall see Radek's dataset with `ts/1000` in Chris's notebook
 	- how @cdeotte use the local validation setup to test [how it looks](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2023756) between local CV and public leaderboard on different versions of notebooks
-
-### Discover problems with dataset
-
-- "There are "new" AIDs (18785) in the validation test set comparing to validations train set). For the original train and test set this is not the case." ([solved](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2023756))
-
-
-
+- What to do when your eda found an issue in the dataset? example
+	- "There are "new" AIDs (18785) in the validation test set comparing to validations train set). For the original train and test set this is not the case." 
+	- [how it is solved](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991#2023756)
+- How to do local validation on OTTO dataset
+	- the setup [discussion](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991), [radek's notebook](https://www.kaggle.com/code/radek1/a-robust-local-validation-framework), 
+	- and my experiment [notebook](https://www.kaggle.com/danielliao/kaggle-local-validation-framework-otto) 🔥 (todo)
+- How does co-visitation matrix model work
+	- simplified and improved notebook by @radek
+	- my experiment [notebook](https://www.kaggle.com/danielliao/kaggle-covisitation-matrix-otto) (todo)
 
 ## todos: 
 
@@ -234,7 +215,7 @@ local validation tracks public LB perfecty -- here is the setup [discussion](htt
 
 - EDA by Radek's [notebook](https://www.kaggle.com/code/radek1/eda-an-overview-of-the-full-dataset) (annotation done)
 - co-visitation matrix by radek's [notebook](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364210) (annotation done)
-- local validation tracks public LB perfecty -- here is the setup [discussion](https://www.kaggle.com/competitions/otto-recommender-system/discussion/364991), [notebook](https://www.kaggle.com/code/radek1/a-robust-local-validation-framework)
+- 
 - 15x Faster Co-Visitation Matrices using RAPIDS cuDF! [discussion](https://www.kaggle.com/competitions/otto-recommender-system/discussion/365369), [notebook](https://www.kaggle.com/code/cdeotte/candidate-rerank-model-lb-0-573)
 -   the last 20 AIDs are very powerful! ([original code](https://www.kaggle.com/code/ttahara/last-aid-20), [simplified without need for chunking](https://www.kaggle.com/code/radek1/last-20-aids)
 -   A notebook by [@cdeotte](https://www.kaggle.com/cdeotte) building on the co-visitation matrix 👆 and demonstrating the power of training on the test data! (maybe training is too strong of a word, rather using the leak in your calculations)
@@ -256,4 +237,10 @@ local validation tracks public LB perfecty -- here is the setup [discussion](htt
 
 
 ### jn: always update the kaggle notebooks to review code and notebook logics and then directly download into fastai_notebooks folder and use fastlistnbs to access them /2022-11-18
-### jn: update co-visitation matrix and local validation notebooks to Kaggle, use name with kaggle for fastdebug access
+### jn: todo (tomorrow) - update co-visitation matrix and local validation notebooks to Kaggle, use name with kaggle for fastdebug access /2022-11-18
+### jn: my first gold comment is my timestamp note on recsys intro videos on Andrew Ng. A famous topic and the usefulness of the comment both are important for rating /2022-11-19
+### jn: doing the map without a notebook and code is all over the places, I want to use notebook/codes to unite the pieces together, and I can just use index notebook to find them all /2022-11-19
+### jn: todo tomorrow - need to work on two more notebooks https://www.kaggle.com/code/danielliao/polars-proof-of-concept-lgbm-ranker/edit and https://www.kaggle.com/code/danielliao/matrix-factorization-pytorch-merlin-dataloader/edit /2022-11-19
+
+## symbols to use
+🔥 👆💡

@@ -7,11 +7,14 @@ jupyter:
       format_version: '1.3'
       jupytext_version: 1.14.0
   kernelspec:
-    display_name: Python 3 (ipykernel)
+    display_name: Python 3
     language: python
     name: python3
 ---
 
+## Experiment on @radek1's notebook on local validation framework
+
+<!-- #region _uuid="8f2839f25d086af736a60e9eeb907d3b93b6e0e5" _cell_guid="b1076dfc-b9ad-4769-8c92-a6c4dae69d19" -->
 This notebook builds on my previous work -- [co-visitation matrix - simplified, imprvd logic 🔥](https://www.kaggle.com/code/radek1/co-visitation-matrix-simplified-imprvd-logic?scriptVersionId=110068977) that achieves 0.558 on the LB.
 
 Here we take the functionality from that notebook, run on 1/1000 of the data (it achieves ~0.487 on public LB).
@@ -21,6 +24,31 @@ The next step in improving our results is to create a robust local validation fr
 Let's take a stab at implementing a local validation framework in this notebook!
 
 <strong>Please smash that thumbs up button if you like this notebook! Thank you! 🙂</strong>
+<!-- #endregion -->
+
+```python
+import os
+
+try: import fastkaggle
+except ModuleNotFoundError:
+    os.system("pip install -Uq fastkaggle")
+
+from fastkaggle import *
+
+# use fastdebug.utils 
+if iskaggle: os.system("pip install nbdev snoop")
+
+if iskaggle:
+    path = "../input/fastdebugutils0"
+    import sys
+    sys.path
+    sys.path.insert(1, path)
+    import utils as fu
+    from utils import *
+else: 
+    from fastdebug.utils import *
+    import fastdebug.utils as fu
+```
 
 ```python
 import pandas as pd
@@ -34,13 +62,11 @@ import pickle5 as pickle
 train = pd.read_parquet('../input/otto-full-optimized-memory-footprint/train.parquet')
 ```
 
-```python
-# did we actually used the test from here in original Radek's code? (It seems not)
+### rd: recsys - otto - local validation - As we only use the last week of training set to split into the local test and local validation set
 # test = pd.read_parquet('../input/otto-full-optimized-memory-footprint/test.parquet') 
-```
 
 ```python
-DO_LOCAL_VALIDATION = True
+DO_LOCAL_VALIDATION = True # set it True if we are doing local validation instead of submit to the public leaderboard
 ```
 
 # Local CV
@@ -53,46 +79,21 @@ Essentially, without modifying the calculations in the notebook, we can run eval
 When doing local validation, we will print out local results. And without it, we will train on full data and submit to Kaggle LB.
 
 
-## Find the start and end datetime of training sessions
+### rd: recsys - otto - local validation - Find the start and end datetime of training sessions
 
 ```python
 ts_min, ts_max = train.ts.min(), train.ts.max()
 ts_min, ts_max
 ```
 
+### rd: recsys - otto - local validation - Version 2 of the Radek's dataset is second accuracy,`7*24*60*60` capture the length of actual 7 days; version 1 is millisecond accuracy and  using `7*24*60*60*1000` to capture 7 days length. see the accuracy difference in details [here](https://www.kaggle.com/code/danielliao/process-data-otto?scriptVersionId=111357696&cellId=29)
+
 ```python
 import datetime
+datetime.date.fromtimestamp(ts_max), datetime.date.fromtimestamp(ts_max - 7*24*60*60), datetime.date.fromtimestamp(ts_max - 7*24*60*60*1000)
 ```
 
-```python
-help(datetime.datetime.fromtimestamp)
-```
-
-## datetime.datetime.fromtimestamp(ts_min/1000) make no sense to me
-
-```python
-datetime.datetime.fromtimestamp(ts_min), datetime.datetime.fromtimestamp(ts_max), \
-datetime.datetime.fromtimestamp(ts_min/1000), datetime.datetime.fromtimestamp(ts_max/1000) 
-```
-
-## `7*24*60*60*1000` won't make the actual 7 days
-
-
-If 7 days is `7*24*60*60*1000` (604_800_000), then there is no cutoff which stays between ts_max and ts_min
-
-```python
-seven_days = 7*24*60*60*1000 # 604_800_000
-train_cutoff = ts_max - seven_days # 1_056_923_999 = 1_661_723_999 - 604_800_000
-ts_max > ts_min > train_cutoff
-```
-
-The cut is not 7 days from the last day, but 7000 days from the last day
-
-```python
-datetime.datetime.fromtimestamp(0), datetime.datetime.fromtimestamp(train_cutoff), datetime.datetime.fromtimestamp(ts_min), datetime.datetime.fromtimestamp(ts_max), \
-```
-
-If 7 days is `7*24*60*60` (604_800), then the cutoff which can stay between ts_max and ts_min, and cutoff is at the 7 days from the last day
+### rd: recsys - otto - local validation - ts where to cut - train_cutoff = ts_max - seven_days # 1_056_923_999 = 1_661_723_999 - 604_800
 
 ```python
 seven_days = 7*24*60*60 # 604_800
@@ -105,7 +106,7 @@ datetime.datetime.fromtimestamp(0), datetime.datetime.fromtimestamp(train_cutoff
 datetime.datetime.fromtimestamp(ts_min), datetime.datetime.fromtimestamp(ts_max), \
 ```
 
-## How big is train, local_train, local_test
+### rd: recsys - otto - local validation - split train into local_train and local_test - local_train = train[train.ts <= train_cutoff] - local_test = train[train.ts > train_cutoff]
 
 ```python
 train.shape, train.memory_usage() # 216_716_096 rows
@@ -130,8 +131,7 @@ local_test = train[train.ts > train_cutoff] # 52_760_915 rows, and RAM raise fro
 local_test.shape, local_test.memory_usage() # the Index is a huge number on RAM
 ```
 
-## Can we save the RAM by making the index smaller? 
-https://stackoverflow.com/questions/54603378/pandas-convert-from-int64index-to-rangeindex
+### rd: recsys - otto - local validation - How train.reset_index work? - help(train.reset_index) 
 
 ```python
 # help(train.reset_index) 
@@ -169,6 +169,9 @@ https://stackoverflow.com/questions/54603378/pandas-convert-from-int64index-to-r
 #     3  mammal        NaN
 ```
 
+### rd: recsys - otto - local validation - Save RAM by converting local_train.index from Int64Index to RangeIndex like train.index? - train.index, local_train.index, local_test.index - local_train.reset_index(inplace=True, drop=True)
+https://stackoverflow.com/questions/54603378/pandas-convert-from-int64index-to-rangeindex
+
 ```python
 train.index, local_train.index, local_test.index # RangeIndex vs Int64Index
 ```
@@ -178,26 +181,31 @@ train.index, local_train.index, local_test.index # RangeIndex vs Int64Index
 ```python
 local_train.reset_index(inplace=True, drop=True) # no effect on RAM from the session metrics board
 local_train.index, local_train.memory_usage() # but the number for Index dropped drastically
+# previously the local_train.index RAM usage is 1311641448, now is 128
 ```
 
 ```python
 local_test.reset_index(inplace=True, drop=True) # no effect on RAM from the session metrics board
 local_test.index, local_test.memory_usage() # but the number for Index dropped drastically
+# the previous RAM usage of local_test.index is 422087320
 ```
 
 ```python
 del train # RAM dropped from 10.1G to 7.5G according to session metrics
 ```
 
-## remove intersecting sessions between local_train and local_test from local_test
+### rd: recsys - otto - local validation - what are the benefits of removing intersecting sessions between local_train and local_test to simulate real world - overlapping_sessions = set(local_train.session).intersection(set(local_test.session))
 
 ```python
 %%time
 overlapping_sessions = set(local_train.session).intersection(set(local_test.session)) # not use use RAM
 ```
 
+### rd: recsys - otto - local validation - the portion of intersection sessions on local_train and local_test is large. What would happen when adding those sessions back? better score or worse score? (question)
+
 ```python
-len(overlapping_sessions), local_train.session.unique().shape[0], local_test.session.unique().shape[0] 
+len(overlapping_sessions), len(overlapping_sessions)/local_train.session.unique().shape[0], len(overlapping_sessions)/local_test.session.unique().shape[0]
+
 # 3_521_833, 11_098_528, 5_323_084
 ```
 
@@ -212,7 +220,7 @@ local_test.reset_index(inplace=True, drop=True) # but not reduce RAM according t
 local_test.index, local_test.memory_usage()
 ```
 
-## There is no empty rows in any sessions of local_test
+### rd: recsys - otto - local validation - any empty rows in any sessions of local_test - local_test.groupby('session')['aid'].count().apply(lambda x: x == 0)
 
 ```python
 
@@ -224,7 +232,7 @@ count_one = local_test.groupby('session')['aid'].count().apply(lambda x: x > 0)
 sum(count_zero), sum(count_one), local_test.session.unique().shape[0]
 ```
 
-## split data samples for local test and local validation
+### rd: recsys - otto - local validation - split local_test into test and validation two parts - for grp in local_test.groupby('session'): -     cutoff = np.random.randint(1, grp[1].shape[0]) - new_test.append(grp[1].iloc[:cutoff]) -     data_to_calculate_validation_score.append(grp[1].iloc[cutoff:])
 
 ```python
 %%time
@@ -237,6 +245,8 @@ for grp in local_test.groupby('session'): # loop each session of local_test
     new_test.append(grp[1].iloc[:cutoff]) # take the left part from cutoff as data samples for local test
     data_to_calculate_validation_score.append(grp[1].iloc[cutoff:]) # take the right part from the cutoff as data samples for local validation
 ```
+
+### rd: recsys - otto - local validation - stack a list of smaller dfs onto each other - test = pd.concat(new_test).reset_index(drop=True) - valid = pd.concat(data_to_calculate_validation_score).reset_index(drop=True)
 
 ```python
 %%time
@@ -274,7 +284,7 @@ We have now swapped the train and test sets for the ones we conjured and can now
 # Train
 
 
-## Create subsets for experiments from local_train (now, known as train)
+### rd: recsys - otto - local validation - create subset on both train and test - lucky_sessions_train = train.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use)['session'] - subset_of_train = train[train.session.isin(lucky_sessions_train)]
 
 ```python
 fraction_of_sessions_to_use = 1/1000
@@ -292,7 +302,7 @@ subset_of_test = test[test.session.isin(lucky_sessions_test)]
 # now session metrics reports RAM to be 10.5GB
 ```
 
-### Add session as index for the subsets (train and test)
+### rd: recsys - otto - local validation - Add session as index for the subsets (train and test) - subset_of_train.index = pd.MultiIndex.from_frame(subset_of_train[['session']])
 
 ```python
 subset_of_train.index = pd.MultiIndex.from_frame(subset_of_train[['session']])
@@ -302,6 +312,8 @@ subset_of_test.index = pd.MultiIndex.from_frame(subset_of_test[['session']]) # n
 ```python
 subset_of_train.shape, subset_of_train.session.unique().shape[0], subset_of_test.shape, subset_of_test.session.unique().shape[0],
 ```
+
+### rd: recsys - otto - local validation - each the last 30 events of each session, make a cartesian product on each event, remove rows with the same aids, only select rows two aids occurred consecutively within a day, and doing it in large chunk/batch of sessions each loop, put each chunk of sessions as an item into a list (see src below)
 
 ```python
 %%time
@@ -322,7 +334,7 @@ for i in range(0, sessions.shape[0], chunk_size): # loop every 60_000 sessions, 
     consecutive_AIDs = consecutive_AIDs[consecutive_AIDs.aid_x != consecutive_AIDs.aid_y]
     # add a column named 'days_elapsed' to record how many days passed between two aids
     # whether divided by 1000 or not should make no difference in RAM, as they are all float64 type
-    consecutive_AIDs['days_elapsed'] = (consecutive_AIDs.ts_y - consecutive_AIDs.ts_x) / (24 * 60 * 60 * 1000)
+    consecutive_AIDs['days_elapsed'] = (consecutive_AIDs.ts_y - consecutive_AIDs.ts_x) / (24 * 60 * 60) # not 24*60*60*1000
     # select only rows where first aid comes before second aid and both occurred in the same day
     consecutive_AIDs = consecutive_AIDs[(consecutive_AIDs.days_elapsed > 0) & (consecutive_AIDs.days_elapsed <= 1)]
     # put every 60_000 session df processed above into a list
@@ -339,7 +351,7 @@ essentially, it is a trick to create aid pairs by session
 if a user had three aids in a session 1, 2, 3 this will create all possible pairs [1, 1], [1,2], [1,3], [2,1]… etc
 
 
-### apply the same logic above to the subset_of_test, and append them to consecutive_AIDs
+### rd: recsys - otto - local validaiton - apply the same logic above to the subset_of_test, and append them to consecutive_AIDs which is the same list that stores sessions in subset_of_train (see src)
 
 ```python
 %%time
@@ -356,7 +368,35 @@ for i in range(0, sessions.shape[0], chunk_size):
     )
 ```
 
-### stack all dfs inside all_consecutive_AIDs into a single df and remove the rows when their session, aid_x, aid_y are the same
+### rd: recsys - otto - local validation - check the rows with duplicated values on 3 specified columns - all_yet.duplicated(['session', 'aid_x', 'aid_y']) - and remove rows from the dataframe - all_yet.drop_duplicates(['session', 'aid_x', 'aid_y'])
+
+```python
+all_yet = pd.concat(all_consecutive_AIDs)
+```
+
+```python
+all_yet.head()
+```
+
+```python
+all_yet.duplicated(['session', 'aid_x', 'aid_y']).sum(), all_yet.shape[0]
+all_yet.drop_duplicates(['session', 'aid_x', 'aid_y']).shape
+all_yet[all_yet.duplicated(['session', 'aid_x', 'aid_y'])]
+```
+
+```python
+dup = all_yet[all_yet.duplicated(['session', 'aid_x', 'aid_y'])]
+dup1 = dup.loc[dup.aid_y == 398187]
+dup1.loc[dup1.aid_x == 1762221]
+```
+
+### rd: recsys - otto - local validation - question - selection with two conditionals - all_yet.loc[(all_yet.session == 1890 & all_yet.aid_x == 1762221), :]
+
+```python
+# all_yet.loc[(all_yet.session == 1890 & all_yet.aid_x == 1762221), :] # 
+```
+
+### rd: recsys - otto - local validation - stack all dfs inside all_consecutive_AIDs into a single df and remove the rows when their session, aid_x, aid_y are the same - all_consecutive_AIDs = pd.concat(all_consecutive_AIDs).drop_duplicates(['session', 'aid_x', 'aid_y'])[['aid_x', 'aid_y']]
 
 ```python
 %%time
@@ -367,7 +407,7 @@ all_consecutive_AIDs = pd.concat(all_consecutive_AIDs).drop_duplicates(['session
 all_consecutive_AIDs.head()
 ```
 
-## Create a Counter with defaultdict to count the num of occurrences of other aids given each aid
+### rd: recsys - otto - local validation - across all sessions, for each (aid_x, aid_y) pair, count and accumulate the occurrences of aid_y - next_AIDs = defaultdict(Counter) - for row in all_consecutive_AIDs.itertuples(): - next_AIDs[row.aid_x][row.aid_y] += 1
 
 ```python
 %%time
@@ -388,14 +428,10 @@ for k,v in next_AIDs.items():
 ```
 
 ```python
-len(next_AIDs)
+len(next_AIDs), all_consecutive_AIDs.aid_x.unique().shape[0]
 ```
 
-## Now let's generate the predictions.
-
-```python
-test.groupby('session')['aid'].apply(list)
-```
+## rd: recsys - otto - local validation - Now let's generate the predictions or labels from test set and validation set is to provide ground truth - get all aids of each test session into a list - test_session_AIDs = test.groupby('session')['aid'].apply(list)
 
 ```python
 %%time
@@ -405,7 +441,7 @@ test_session_AIDs.head()
 ```
 
 ```python
-session_types = ['clicks', 'carts', 'orders']
+
 ```
 
 ### rd: recsys - otto - robust local validation - debug a block of code by making it a func and use print and return
@@ -433,6 +469,11 @@ for AIDs in test_session_AIDs: # loop each session to get its list of aids
         labels.append(AIDs[:20])
 ```
 <!-- #endregion -->
+
+### rd: recsys - otto - local validation - create the labels/predictions for each test session/user - reverse the list of aids of each session, remove the duplicated aids, and select the first 20 aids as labels - and save it into a list 'labels' - question: should we use the learning from training set here? (see src below)
+
+
+### rd: recsys - otto - local validation - if there are less than 20 aids in each session then we can borrow aids from next_AIDs which is learnt from training - get all aid_ys for each aid of a test session - find 40 the most common aid_ys - if they are not already exist in the test session, then add them into the list of aids of the test session - then take the first 20 from the new list of aids of the test session (see src below)
 
 ```python
 %%time
@@ -481,7 +522,7 @@ plt.hist([len(l) for l in labels]);
 ## Prepare the submission format
 
 
-### make the list of aids into a string
+### rd: recsys - otto - local validation - make the list of aids into a string - labels_as_strings = [' '.join([str(l) for l in lls]) for lls in labels] - make a df from a dict of lists - predictions = pd.DataFrame(data={'session_type': test_session_AIDs.index, 'labels': labels_as_strings})
 
 ```python
 labels_as_strings = [' '.join([str(l) for l in lls]) for lls in labels]
@@ -490,8 +531,11 @@ labels_as_strings[:2]
 predictions.head()
 ```
 
+### rd: recsys - ottp - local validation - make predictions/labels for clicks, carts and orders (no difference) - and prepare and create the submission dataframe
+
 ```python
 prediction_dfs = []
+session_types = ['clicks', 'carts', 'orders']
 
 for st in session_types:
     modified_predictions = predictions.copy()
@@ -522,6 +566,9 @@ We need to now reverse the processing we applied to our predictions to shape the
 
 I am undoing this work here on purpose. I will replace the code I use for predictions down the road, so I want my evaluation framework to work with data formatted like for making a submission.
 
+
+### rd: load id2type dict and type2id list from pickle file
+
 ```python
 with open('../input/otto-full-optimized-memory-footprint/id2type.pkl', "rb") as fh:
     id2type = pickle.load(fh)
@@ -535,6 +582,9 @@ sample_sub = pd.read_csv('../input/otto-recommender-system/sample_submission.csv
 sample_sub.head()
 ```
 
+### rd: validation set and test set must be in the same session so that we can use test set to make predictions and validaiton set can provide ground truth to compare against
+
+<!-- #region -->
 ```python
 %%time
 if DO_LOCAL_VALIDATION:
@@ -563,8 +613,8 @@ if DO_LOCAL_VALIDATION:
 
 else:
     submission.to_csv('submission.csv', index=False)
-
 ```
+<!-- #endregion -->
 
 ## Experiment to figure what some lines do
 
@@ -607,8 +657,8 @@ def f():
         # add a column to count the ground truth or the number of aids of labels_y (turn labels_y into a string, 
         # len() of it can tell us how many aids are there)
         submission_with_gt['gt_count'] = submission_with_gt.labels_y.str.len()
-        print(submission_with_gt)
-        return         
+#         print(submission_with_gt)
+#         return         
 
         # calc recall for each type
         recall_per_type = submission_with_gt.groupby(['type'])['hits'].sum() / submission_with_gt.groupby(['type'])['gt_count'].sum() 
