@@ -239,6 +239,9 @@ fastlistnbs("journey")
 ```
 
     jn by dates: ========
+    ### jn: last two days 2022-11-19-21, I was consumed by how to refactor local validation notebook and the last 20 aid notebook. The problem is that processing data takes a lot of time even on Kaggle and many places can go wrong when running the whole thing with version control. After some reflections, I retrain myself to the following: 1. try not to change the original notebook codes as much as I can; 2. add detailed and searchable comments for each line of code necessarily; 3. go through all the good notebooks and revisit commented notebooks daily to improve the search experience /2022-11-21
+    ### jn: what an amazing discussion and thought process by @radek1 and @cdeotte https://www.kaggle.com/competitions/otto-recommender-system/discussion/366474 /2022-11-21
+    ### jn: well, I kind of finished all the notebooks shared by Radek on otto at the moment, my goal is to be able to experiment further on these notebooks freely on my own. The next step is to familiarize those notebooks, read more on the models even come back to the videos by Xavier /2022-11-23
     ### jn: help other is the best way forward  /2022-11-2
     ### jn: combine experimenting notebooks with reading and writing codes /2022-11-5
     ### jn: Why start to try Kaggle Recommendation competition OTTO now /2022-11-7
@@ -275,8 +278,6 @@ fastlistnbs("journey")
     ### jn: what does `density` suppose to tell us and how it is calcuated? I have raised an [issue](https://github.com/otto-de/recsys-dataset/issues/2) in the otto dataset github /2022-11-14
     ### jn: I should find time to work on the [TBA](https://github.com/otto-de/recsys-dataset#dataset-statistics) of the dataset which helps me know better of the dataset and also it is the lower hanging fruits to contribute to the repo /2022-11-14
     ### jn: actually as the test set is not fully available due to competition, and after the competition test set statistics will be made available. I have done the basic statistics for the competition test set, can be seen [here](https://www.kaggle.com/code/danielliao/eda-an-overview-of-the-full-dataset?scriptVersionId=110913371) /2022-11-14
-    ### jn: revisit process_data notebook and change get started to process_data in title. /2022-11-14
-    ### jn: process_data revisited and get the name straight for search (done) /2022-11-14
     ##### jn: use help instead of doc_sig and chk from my utils will have less error throwing. Maybe remove doc_sig and chk from fastdebug.utils /2022-11-14
     #### jn: even for questions not answered, but writing up and revisit them, potential answers may flow to me more likely: use `/1000` could make the comparison more obvious? and without `/1000` can reveal the holiday season. /2022-11-14
     #### jn: (qusetion answered) Radek just informed me that dividing by 1000 on the timestamps can save RAM on Kaggle. /2022-11-14
@@ -292,6 +293,17 @@ fastlistnbs("journey")
     ### jn: (todos) After reading Radek's 3rd newsletter, I had an idea to create a beginner's map to recsys through otto competition. However, I am very slow on writing it up as great kaggler like Radek and Chris are faster in making new notebooks than I can read and experiment them. What shall I do? /2022-11-16
     ### jn: (todos) I have finished debug every line of code for local validation notebook, but I still need to revisit it to form a big picture as a whole, also I need to read more on recall metrics of otto dataset  /2022-11-16
     ### jn: I want to finish the beginners' map first at least the first version of it to have a sense of the scale of work to cover /2022-11-17
+    ### jn: becoming a DL practitioner or anything is a marathon, in order to keep working, I need to good health, which needs good sleep, which needs to have peace with my goal and progress everyday. I think I am in good path and I should allow myself to have peace! /2022-11-17
+    ### jn: to understand better of Kaggle discussions when I'm doing the map, I should first to extract the birdview logic from covisitation matrix model. /2022-11-17
+    ### jn: always update the kaggle notebooks to review code and notebook logics and then directly download into fastai_notebooks folder and use fastlistnbs to access them /2022-11-18
+    ### jn: todo (tomorrow) - update co-visitation matrix and local validation notebooks to Kaggle, use name with kaggle for fastdebug access /2022-11-18
+    ### jn: my first gold comment is my timestamp note on recsys intro videos on Andrew Ng. A famous topic and the usefulness of the comment both are important for rating /2022-11-19
+    ### jn: doing the map without a notebook and code is all over the places, I want to use notebook/codes to unite the pieces together, and I can just use index notebook to find them all /2022-11-19
+    ### jn: todo tomorrow - need to work on two more notebooks https://www.kaggle.com/code/danielliao/polars-proof-of-concept-lgbm-ranker/edit and https://www.kaggle.com/code/danielliao/matrix-factorization-pytorch-merlin-dataloader/edit /2022-11-19
+    ### jn: last two days 2022-11-19-21, I was consumed by how to refactor local validation notebook and the last 20 aid notebook. The problem is that processing data takes a lot of time even on Kaggle and many places can go wrong when running the whole thing with version control. After some reflections, I retrain myself to the following: 1. try not to change the original notebook codes as much as I can; 2. add detailed and searchable comments for each line of code necessarily; 3. go through all the good notebooks and revisit commented notebooks daily to improve the search experience /2022-11-21
+    ### jn: last two days 2022-11-19-21, I was consumed by how to refactor local validation notebook and the last 20 aid notebook. The problem is that processing data takes a lot of time even on Kaggle and many places can go wrong when running the whole thing with version control. After some reflections, I retrain myself to the following: 1. try not to change the original notebook codes as much as I can; 2. add detailed and searchable comments for each line of code necessarily; 3. go through all the good notebooks and revisit commented notebooks daily to improve the search experience /2022-11-21
+    ### jn: what an amazing discussion and thought process by @radek1 and @cdeotte https://www.kaggle.com/competitions/otto-recommender-system/discussion/366474 /2022-11-21
+    ### jn: well, I kind of finished all the notebooks shared by Radek on otto at the moment, my goal is to be able to experiment further on these notebooks freely on my own. The next step is to familiarize those notebooks, read more on the models even come back to the videos by Xavier /2022-11-23
 
 
 
@@ -782,14 +794,94 @@ hts
 
 
 ```
-# fastnbs("rd: src")
+fastnbs("use polars to load Radek's local validation datase")
 ```
+
+
+## rd: recsys - otto - lgbm ranker - <mark style="background-color: #ffff00">use</mark>  <mark style="background-color: #ffff00">polars</mark>  <mark style="background-color: #ffff00">to</mark>  <mark style="background-color: #ffff00">load</mark>  <mark style="background-color: #ffff00">radek's</mark>  <mark style="background-color: #ffff00">local</mark>  <mark style="background-color: #ffff00">validation</mark>  <mark style="background-color: #FFFF00">datase</mark> t
+
+
+
+
+heading 2.
+
+
+```python
+!pip install polars
+```
+
+### rd: recsys - otto - LGBM Ranker - import polars as pl - train = pl.read_parquet('../input/otto-train-and-test-data-for-local-validation/test.parquet') - train_labels = pl.read_parquet('../input/otto-train-and-test-data-for-local-validation/test_labels.parquet')
+
+```python
+import polars as pl
+```
+
+```python
+train = pl.read_parquet('../input/otto-train-and-test-data-for-local-validation/test.parquet')
+# test_labels.parquet is well prepared for local validation calculation
+train_labels = pl.read_parquet('../input/otto-train-and-test-data-for-local-validation/test_labels.parquet')
+```
+
+### rd: recsys - otto - LGBM Ranker - use local validation dataset save lots of data processing time (I should not have tried to do it for every run of a notebook); in this dataset there are train, test, and valid sets which are all splitted from the original training set; valid set is turned into test_label in the format good for local validation score calculation. In this notebook, LGBM Ranker model is trained on train set (actually test set) and test_labels (actually processed from valid sets), so the model is trained with a smaller amount of data for experiment and time saving.
+
+
+### rd: recsys - otto - LGBM Ranker - todo: train LGBM Ranker on the entire training set
+
+
+### rd: recsys - otto - LGBM Ranker - We can check their datetime to confirm the dataset length - datetime.datetime.fromtimestamp(real_train['ts'].min()), datetime.datetime.fromtimestamp(real_train['ts'].max())
+
+```python
+real_train = pl.read_parquet('../input/otto-train-and-test-data-for-local-validation/train.parquet')
+```
+
+```python
+real_train['ts'].min(), real_train['ts'].max()
+
+import datetime
+datetime.datetime.fromtimestamp(real_train['ts'].min()), datetime.datetime.fromtimestamp(real_train['ts'].max()) # 3 weeks
+
+datetime.datetime.fromtimestamp(train['ts'].min()), datetime.datetime.fromtimestamp(train['ts'].max()) # 1 weeks
+```
+
+### rd: recsys - otto - LGBM Ranker - check session intersection
+
+```python
+train['session'].unique().shape[0], train_labels['session'].unique().shape[0]
+```
+
+```python
+len(set(train['session']).intersection(set(train_labels['session'])))
+```
+
+> We are calculating the scores that we used for creating co-vistation matrices! We know they carry signal, so let's provde this information to our `LGBM Ranker`!
+
+### rd: recsys - otto - LGBM Ranker - question: where/which notebook did Radek calc the scores "we used for creating co-vistation matrices!" in the first place? What do we know aobut their sygnal?
+
+
+Next, heading 2
+## rd: recsys - otto - LGBM Ranker - calc and add the features to train for LGBM Ranker model
+
+
+
+[Open `kaggle-otto-polars-lgbm-ranker` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/kaggle-otto-polars-lgbm-ranker.ipynb#rd:-recsys---otto---LGBM-Ranker---use-polars-to-load-Radek's-local-validation-dataset
+)
+
 
 
 ```
 fastlistnbs("radek")
 ```
 
+    
+    ## rd: radek - newsletter - Do not introduce yourself.
+    
+    ## rd: radek - newsletter - Do not ask for the time of peope you don't know or where you are adding ZERO value to their undertaking.s
+    
+    ## rd: radek - newsletter - You just go around and be a good citizen AND DON'T EXPECT ANYTHING IN RETURN.
+    
+    ## rd: radek - newsletter - But who has time for doing such things these days! (which makes you stand out)
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/004_fastai_radek_newsletter.md
+    
     
     ## rd: recsys - otto - process data - How to convert dataset from jsonl file into parquet file to save disk tremendously, and convert type column from string to uint8 and ts column from int64 to int32 by dividing 1000 first to reduce RAM usage significantly
     ### rd: recsys - otto - process data - create vocab or map between id and type using dict and list - id2type = ['clicks', 'carts', 'orders'] - type2id = {a: i for i, a in enumerate(id2type)}
@@ -820,25 +912,64 @@ fastlistnbs("radek")
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_otto_radek_recsys_overview.md
     
     
-    ## rd: recsys - otto - process data - How to convert dataset from jsonl file into parquet file to save disk tremendously, and convert type column from string to uint8 and ts column from int64 to int32 by dividing 1000 first to reduce RAM usage significantly
-    ### rd: recsys - otto - process data - create vocab or map between id and type using dict and list - id2type = ['clicks', 'carts', 'orders'] - type2id = {a: i for i, a in enumerate(id2type)}
-    ### rd: recsys - otto - process data - chunks = pd.read_json(fn, lines=True, chunksize=100_000) - for chunk in chunks: - for row_idx, session_data in chunk.iterrows(): - session_data.session - for event in session_data.events: - aids.append(event['aid']) - tss.append(event['ts'])
-    ### rd: recsys - otto - process data - and check RAM of a df and save df into parquet or csv file - test_df_str.memory_usage() - test_df_str.to_parquet('test_keep_str.parquet', index=False) - test_df_str.to_csv('test_keep_str.csv', index=False)
-    ### rd: recsys - otto - process data - How much RAM does convert string to uint8 save? - test_df.type = test_df.type.astype(np.uint8)
-    ### rd: recsys - otto - process data - convert `ts` from int64 to int32 without `/1000` will lose a lot of info - (test_df_updated.ts/1000).astype(np.int32)
-    ### rd: recsys - otto - process data - dividing ts by 1000 only affect on milisecond accuracy not second accuracy - datetime.datetime.fromtimestamp((test_df_updated.ts/1000).astype(np.int32)[100])
-    ### rd: recsys - otto - process data - How much RAM can be saved by dividing `ts` by 1000 - test_df_updated.ts = (test_df_updated.ts / 1000).astype(np.int32) 
-    ### rd: recsys - otto - process data - how much disk can be saved by saving jsonl to parquet - os.path.getsize(path)
-    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle-process-data-otto.md
+    ## rd: recsys - otto - LGBM Ranker - my utils
     
-    ### rd: recsys - otto - process data - save a list or dict into pkl and load them - id2type = ['clicks', 'carts', 'orders'] - type2id = {a: i for i, a in enumerate(id2type)} - pd.to_pickle(id2type, 'id2type.pkl')
-    ### rd: recsys - otto - process data - how to process jsonl file to df (pd.read_json, chunk.iterrows) - chunks = pd.read_json(fn, lines=True, chunksize=2) - for chunk in chunks: - for row_idx, session_data in chunk.iterrows(): - sessions = [] - num_events = len(session_data.events) - sessions += ([session_data.session] * num_events)
-    ### rd: src - recsys - otto - process data - jsonl_to_df
-    ### rd: recsys - otto - process data - 400MB parquet file takes up nearly 4GB ram on Kaggle
-    ### rd: recsys - otto - process data - use parquet over csv, why and how - test_df.type = test_df.type.astype(np.uint8) - test_df.to_parquet('test.parquet', index=False) - test_df.to_csv('test.csv', index=False)
-    ### rd: recsys - otto - process data - use parquet to instead of jsonl or csv to save space on disk - os.path.getsize(path)
-    ### rd: recsys - otto - process data - use `uint8` instead of `int` or `str` to reduce RAM usage by 9 times - test_df.memory_usage()
-    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_radek_otto_get_started_process_data.md
+    ## rd: recsys - otto - LGBM Ranker - use polars to load Radek's local validation dataset
+    ### rd: recsys - otto - LGBM Ranker - import polars as pl - train = pl.read_parquet('../input/otto-train-and-test-data-for-local-validation/test.parquet') - train_labels = pl.read_parquet('../input/otto-train-and-test-data-for-local-validation/test_labels.parquet')
+    ### rd: recsys - otto - LGBM Ranker - use local validation dataset save lots of data processing time (I should not have tried to do it for every run of a notebook); in this dataset there are train, test, and valid sets which are all splitted from the original training set; valid set is turned into test_label in the format good for local validation score calculation. In this notebook, LGBM Ranker model is trained on train set (actually test set) and test_labels (actually processed from valid sets), so the model is trained with a smaller amount of data for experiment and time saving.
+    ### rd: recsys - otto - LGBM Ranker - todo: train LGBM Ranker on the entire training set
+    ### rd: recsys - otto - LGBM Ranker - We can check their datetime to confirm the dataset length - datetime.datetime.fromtimestamp(real_train['ts'].min()), datetime.datetime.fromtimestamp(real_train['ts'].max())
+    ### rd: recsys - otto - LGBM Ranker - check session intersection
+    ### rd: recsys - otto - LGBM Ranker - question: where/which notebook did Radek calc the scores "we used for creating co-vistation matrices!" in the first place? What do we know aobut their sygnal?
+    
+    ## rd: recsys - otto - LGBM Ranker - calc and add the features to train for LGBM Ranker model
+    ### rd: recsys - otto - LGBM Ranker - use pp and return to debug every line of the functions (see src below)
+    ### rd: recsys - otto - LGBM Ranker - (polars) select all existing columns, select "session" col to apply cumcount, reverse, over('session'), and rename it action_num_reverse_chrono - df.select([pl.col('*'),pl.col('session').cumcount().reverse().over('session').alias('action_num_reverse_chrono')])
+    ### rd: recsys - otto - LGBM Ranker - (polars) select all existing columns, select "session" col to apply count, over('session'), rename to 'session_length'
+    ### rd: recsys - otto - LGBM Ranker - (polars) add or overwrite more column (a Series with an exprssion to calc) to df, named log_recency_score which calc log_recency_score - df.with_columns(pl.Series(2**linear_interpolation - 1).alias('log_recency_score')).fill_nan(1)
+    ### rd: recsys - otto - LGBM Ranker - (polars) create a pl Series by apply a lambda to a column - pl.Series(df['type'].apply(lambda x: type_weights[x]) * df['log_recency_score'])
+    ### rd: recsys - otto - LGBM Ranker - (polars) add or replace a column to df - df.with_column(type_weighted_log_recency_score.alias('type_weighted_log_recency_score'))
+    
+    ## rd: recsys - otto - LGBM Ranker - question - why weights are different - The 0,1,2 refers to `clicks`, `carts` and `orders`, but why the values are so different? (0.1, 0.3, 0.6 vs 1,6,3)
+    
+    ## rd: recsys - otto - LGBM Ranker - process our labels to merge them onto our train set.
+    ### rd: recsys - otto - LGBM Ranker - (polars) 'explode' a list of aids as a single value in a column into multiple rows of a column - train_labels.explode('ground_truth')
+    ### rd: recsys - otto - LGBM Ranker - (polars) add two columns to df by rename one and overwrite another column - train_labels.explode('ground_truth').with_columns([pl.col('ground_truth').alias('aid'),pl.col('type').apply(lambda x: type2id[x])])
+    ### rd: recsys - otto - LGBM Ranker - (polars) select 3 columns of a df - train_labels[['session', 'type', 'aid']]
+    ### rd: recsys - otto - LGBM Ranker - (polars) overwrite 3 columns by casting each to a different type - train_labels.with_columns([pl.col('session').cast(pl.datatypes.Int32),pl.col('type').cast(pl.datatypes.UInt8),pl.col('aid').cast(pl.datatypes.Int32)])
+    ### rd: recsys - otto - LGBM Ranker - (polars) add a column by filling in a literal value - train_labels.with_column(pl.lit(1).alias('gt'))
+    ### rd: recsys - otto - LGBM Ranker - (polars) merge or join two dfs on 3 columns - train.join(train_labels, how='left', on=['session', 'type', 'aid'])
+    ### rd: recsys - otto - LGBM Ranker - (polars) overwrite a column by filling null with 0 - train.join(train_labels, how='left', on=['session', 'type', 'aid']).with_column(pl.col('gt').fill_null(0))
+    
+    ## rd: recsys - otto - LGBM Ranker - how to group and compress all rows of a session into a single row/value for the session
+    ### rd: recsys - otto - LGBM Ranker - (polars) group all rows of a session, agg or compress into a single row with the value of count of the rows in the session - train.groupby('session').agg([pl.col('session').count().alias('session_length')])
+    ### rd: recsys - otto - LGBM Ranker - (polars) select a single column from a df and convert it to a numpy array - df['session_length'].to_numpy()
+    
+    ## rd: recsys - otto - LGBM Rander - Build and Train a LGBM Ranker
+    ### rd: recsys - otto - LGBM Rander - import and build a LGBM Ranker - from lightgbm.sklearn import LGBMRanker - ranker = LGBMRanker(objective="lambdarank",metric="ndcg",boosting_type="dart",n_estimators=20,importance_type='gain',)
+    ### rd: recsys - otto - LGBM Rander - find features and target columns for LGMB Ranker model - train.columns - feature_cols = ['aid', 'type', 'action_num_reverse_chrono', 'session_length', 'log_recency_score', 'type_weighted_log_recency_score']- target = 'gt'
+    ### rd: recsys - otto - LGBM Rander - get features column names and target and group for training the LGMB Ranker model with 
+    ### rd: recsys - otto - LGBM Rander - train the model with feature columns, target column and group the rows using session_length_train - ranker = ranker.fit(train[feature_cols].to_pandas(),train[target].to_pandas(),group=session_lengths_train,)
+    ### rd: recsys - otto - LGBM Rander - question: can we do local validation on LGBM Ranker model? But if we want to train the model with train.parquet and use test.parquet and test_labels.parquet to do local validation to see how good the model is. However, we can't just use train.parquet, we will have to do random split on train.parquet to have a new train.parquet and train_labels.parquet. So, I wonder whether @radek1 could update his dataset to include them.
+    
+    ## rd: recsys - otto - LGBM Ranker - load test set, process it to get features, and make predictions
+    ### rd: recsys - otto - LGBM Ranker - load and process test set - test = pl.read_parquet('../input/otto-full-optimized-memory-footprint/test.parquet') - test = apply(test, pipeline)
+    ### rd: recsys - otto - LGBM Ranker - use model to predict with the feature columns of the test set - scores = ranker.predict(test[feature_cols].to_pandas())
+    
+    ## rd: recsys - otto - LGBM Ranker - from predictions to submission df
+    ### rd: recsys - otto - LGBM Ranker - add a column of score to test dataframe - test = test.with_columns(pl.Series(name='score', values=scores))
+    ### rd: recsys - otto - LGBM Ranker - sort test dataframe by 2 columns 'session' and 'score' and reverse the order (session from high to low, and then score from high to low within a session) - test.sort(['session', 'score'], reverse=True)
+    ### rd: recsys - otto - LGBM Ranker - take every row of a session and compress them into a single row/value which is a list of the first 20 aids of the session (return a 2-column df) - test.groupby('session').agg([pl.col('aid').limit(20).list()])
+    
+    ## rd: recsys - otto - LGBM Ranker - make the submission
+    ### rd: recsys - otto - LGBM Ranker - loop every session number and aid list - for session, preds in zip(test_predictions['session'].to_numpy(), test_predictions['aid'].to_numpy()):
+    ### rd: recsys - otto - LGBM Ranker - turn a list into a string of aids separated by " " - l = ' '.join(str(p) for p in preds)
+    ### rd: recsys - otto - LGBM Ranker - create a list to contain the string of aids and a list to contain session + type - labels.append(l) - session_types.append(f'{session}_{session_type}')
+    ### rd: recsys - otto - LGBM Ranker - create a dataframe with a dict of two lists - submission = pl.DataFrame({'session_type': session_types, 'labels': labels})
+    ### rd: recsys - otto - LGBM Ranker - (polars) write dataframe into csv file - submission.write_csv('submission.csv')
+    
+    ## rd: recsys - otto - LGBM Ranker - todo: 1. read this post and discussion to improve on this ranker model https://www.kaggle.com/competitions/otto-recommender-system/discussion/366474; 2. read this post to have a general understanding of XGB or LGBM Ranker and more https://www.kaggle.com/competitions/otto-recommender-system/discussion/366477
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle-otto-polars-lgbm-ranker.md
     
     ### rd: recsys - otto - access parquet - copy and paste dataset path - !ls ../input/otto-full-optimized-memory-footprint/
     ### rd: recsys - otto - access parquet - pd.read_parquet('../input/otto-full-optimized-memory-footprint/train.parquet')
@@ -903,6 +1034,8 @@ fastlistnbs("radek")
     ### rd: recsys - otto - covisitation_simplified - give each list of label strings a session number - predictions = pd.DataFrame(data={'session_type': test_session_AIDs.index, 'labels': labels_as_strings})
     ### rd: recsys - otto - covisitation_simplified - multi-objective means 'clicks', 'carts', and 'orders'; and we make the same predictions on them - session_types = ['clicks', 'carts', 'orders'] - for st in session_types: - modified_predictions = predictions.copy() - modified_predictions.session_type = modified_predictions.session_type.astype('str') + f'_{st}' - prediction_dfs.append(modified_predictions)
     ### rd: recsys - otto - covisitation_simplified - get the csv file ready, stack on each other. - submission = pd.concat(prediction_dfs).reset_index(drop=True) - submission.to_csv('submission.csv', index=False) - submission.head()
+    
+    ## rd: recsys - otto - covisitation simplified - todo: read a post about hyperparam for covisitations https://www.kaggle.com/competitions/otto-recommender-system/discussion/365153
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/fastai_kaggle_radek_covisitation_matrix_simplifed.md
     
     ### rd: recsys - otto - eda - Read parquet file with `pd.read_parquet`
@@ -927,6 +1060,72 @@ fastlistnbs("radek")
     ### rd: recsys - otto - last 20 aid - turn a list into a string with values connected with empty space - labels.append(' '.join([str(a) for a in aids]))
     ### rd: recsys - otto - last 20 aid - make a df from a dict with two lists as values - pd.DataFrame({'session_type': session_type, 'labels': labels})
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle-otto-rd-last-20-aids.md
+    
+    
+    ## rd: recsys - otto - matrix factorization - takes 50+ mins to run, based on version 6 of @radek1's notebook
+    
+    ## rd: recsys - otto - matrix factorization - @radek1 provides us ways to improve on this notebook
+    
+    ## rd: recsys - otto - matrix factorization - use polars to read train.parquet and test.parquet - !pip install polars - import polars as pl - train = pl.read_parquet('../input/otto-full-optimized-memory-footprint/train.parquet')
+    
+    ## rd: recsys - otto - matrix factorization - build aid-aid pairs of train + test
+    ### rd: recsys - otto - matrix factorization - stack train on top of test - pl.concat([train, test])
+    ### rd: recsys - otto - matrix factorization - group by session, aggregate/compress rows of column 'aid' in the session into a single row and aggregate column 'aid' and shift forward by 1 and name it 'aid_next' - df.groupby('session').agg([pl.col('aid'),pl.col('aid').shift(-1).alias('aid_next')])
+    ### rd: recsys - otto - matrix factorization - explore the values of each row in columns 'aid' and 'aid_next' - df.explode(['aid', 'aid_next'])
+    ### rd: recsys - otto - matrix factorization - remove all nulls in all rows - df.drop_nulls()
+    ### rd: recsys - otto - matrix factorization - select only specified columns - df[['aid', 'aid_next']]
+    ### rd: recsys - otto - matrix factorization - how many rows and memory useage of train_pairs - ppn(train_pairs.shape) - train_pairs.to_pandas().memory_usage()
+    
+    ## rd: recsys - otto - matrix factorization - help(polars_df) to find out more of the usages
+    ### rd: recsys - otto - matrix factorization - sort a single or multiple columns in reverse order or not - train_pairs.sort([pl.col("aid"), pl.col("aid_next")],reverse=[True, False],)
+    ### rd: recsys - otto - matrix factorization - (polars) find unique rows - len(train_pairs.to_pandas().aid.unique()), len(train_pairs.to_pandas().aid_next.unique()), 
+    ### rd: recsys - otto - matrix factorization - question: what does cardinality really mean? - cardinality_aids = max(train_pairs['aid'].max(), train_pairs['aid_next'].max())
+    
+    ## rd: recsys - otto - matrix factorization - build a ClicksDataset
+    ### rd: recsys - otto - matrix factorization - import what needed from torch - import torch, from torch import nn, from torch.utils.data import Dataset, DataLoader
+    ### rd: recsys - otto - matrix factorization - how to build a ClickDataset class - build __init__, __getitem__, __len__ - see src below
+    ### rd: recsys - otto - matrix factorization - instantiate a ClicksDataset and create a DataLoader - train_ds = ClicksDataset(train_pairs) - train_dl_pytorch = DataLoader(train_ds, 65536, True, num_workers=2)
+    ### rd: recsys - otto - matrix factorization - loop every batch of 65536 samples and access data from each sample and time the process - %%time - for batch in train_dl_pytorch: aid1, aid2 = batch[0], batch[1]
+    
+    ## rd: recsys - otto - matrix factorization - why torch Dataset and DataLoader take so long to access data? indexing into the the arrays and collating results into batches is very computationally expensive.
+    
+    ## rd: recsys - otto - matrix factorization - Merlin DataLoader can rescue torch DataLoader with great speed, but kaggle's GPU RAM is too small so we have to use Merlin DataLoader with CPU RAM.
+    
+    ## rd: recsys - otto - matrix factorization - how to install Merlin DataLoader - !pip install merlin-dataloader
+    ### rd: recsys - otto - matrix factorization - save dataframe into parquet files - train_pairs[:-10_000_000].to_pandas().to_parquet('train_pairs.parquet') - train_pairs[-10_000_000:].to_pandas().to_parquet('valid_pairs.parquet')
+    ### rd: recsys - otto - matrix factorization - what to import from merlin - from merlin.loader.torch import Loader - from merlin.io import Dataset
+    ### rd: recsys - otto - matrix factorization - merlin dataloader can access dataset directly from disk with parquet files and make into Datase and Loader - train_ds = Dataset('train_pairs.parquet') - train_dl_merlin = Loader(train_ds, 65536, True)
+    ### rd: recsys - otto - matrix factorization - access  - %%time - for batch in train_dl_merlin: - aid1, aid2 = batch[0], batch[1]
+    ### rd: recsys - otto - matrix factorization - help(df) to learn more of how to use merlin-dataloader
+    
+    ## rd: recsys - otto - matrix factorization - how to build a layer/model of MatrixFactorization
+    ### rd: recsys - otto - matrix factorization - how to initialize to create an embedding function -     def __init__(self, n_aids, n_factors): - super().__init__() - self.aid_factors = nn.Embedding(n_aids, n_factors, sparse=True)
+    ### rd: recsys - otto - matrix factorization - how to write the forward function -     def forward(self, aid1, aid2): - aid1 = self.aid_factors(aid1) - aid2 = self.aid_factors(aid2) - return (aid1 * aid2).sum(dim=1)
+    
+    ## rd: recsys - otto - matrix factorization - how to write a AverageMeter class
+    ### rd: recsys - otto - matrix factorization - how to write __init__, reset, update, __str__
+    
+    ## rd: recsys - otto - matrix factorization - create a Dataset and DataLoader from valid_pairs.parquet - valid_ds = Dataset('valid_pairs.parquet') - valid_dl_merlin = Loader(valid_ds, 65536, True)
+    
+    ## rd: recsys - otto - matrix factorization - Instantiate a MatrixFactorization model and create an optimizer and loss function
+    ### rd: recsys - otto - matrix factorization - Instantiate a model with MatrixFactorization - model = MatrixFactorization(cardinality_aids+1, 32)
+    ### rd: recsys - otto - matrix factorization - Create an optimizer - from torch.optim import SparseAdam - num_epochs=1- lr=0.1 - optimizer = SparseAdam(model.parameters(), lr=lr)
+    ### rd: recsys - otto - matrix factorization - Create a loss function - criterion = nn.BCEWithLogitsLoss()
+    
+    ## rd: recsys - otto - matrix factorization - train matrix factorization model: forward, backward, trainloss and accuracy (see src below)
+    ### rd: recsys - otto - matrix factorization - what are negative output and what they are  for? see radek's answer [here](https://www.kaggle.com/code/radek1/matrix-factorization-pytorch-merlin-dataloader/comments#2039714)
+    
+    ## rd: recsys - otto - matrix factorization - extract embeddings from the model - embeddings = model.aid_factors.weight.detach().numpy()
+    
+    ## rd: recsys - otto - matrix factorization - create an instance of AnnoyIndex for approximate nearest neighbor search
+    ### rd: recsys - otto - matrix factorization - import and create an instance of AnnoyIndex - from annoy import AnnoyIndex - index = AnnoyIndex(32, 'euclidean')
+    ### rd: recsys - otto - matrix factorization - load embeddings to annoyindex - for i, v in enumerate(embeddings): - index.add_item(i, v)
+    ### rd: recsys - otto - matrix factorization - build a forest of n trees - index.build(10)
+    
+    ## rd: recsys - otto - matrix factorization - make the format right for submission
+    
+    ## rd: recsys - otto - matrix factorization - what to do next on this notebook
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle-otto-matrix-factorization.md
     
     
     ## rd: The problem with theory
@@ -1029,6 +1228,37 @@ fastlistnbs("radek")
     ### rd: The worse scenario of working for them
     /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/00_fastai_Meta_learning_Radek.md
     
+    ### rd: recsys - otto - local validation - As we only use the last week of training set to split into the local test and local validation set
+    ### rd: recsys - otto - local validation - Find the start and end datetime of training sessions
+    ### rd: recsys - otto - local validation - Version 2 of the Radek's dataset is second accuracy,`7*24*60*60` capture the length of actual 7 days; version 1 is millisecond accuracy and  using `7*24*60*60*1000` to capture 7 days length. see the accuracy difference in details [here](https://www.kaggle.com/code/danielliao/process-data-otto?scriptVersionId=111357696&cellId=29)
+    ### rd: recsys - otto - local validation - ts where to cut - train_cutoff = ts_max - seven_days # 1_056_923_999 = 1_661_723_999 - 604_800
+    ### rd: recsys - otto - local validation - split train into local_train and local_test - local_train = train[train.ts <= train_cutoff] - local_test = train[train.ts > train_cutoff]
+    ### rd: recsys - otto - local validation - How train.reset_index work? - help(train.reset_index) 
+    ### rd: recsys - otto - local validation - Save RAM by converting local_train.index from Int64Index to RangeIndex like train.index? - train.index, local_train.index, local_test.index - local_train.reset_index(inplace=True, drop=True)
+    ### rd: recsys - otto - local validation - what are the benefits of removing intersecting sessions between local_train and local_test to simulate real world - overlapping_sessions = set(local_train.session).intersection(set(local_test.session))
+    ### rd: recsys - otto - local validation - the portion of intersection sessions on local_train and local_test is large. What would happen when adding those sessions back? better score or worse score? (question)
+    ### rd: recsys - otto - local validation - any empty rows in any sessions of local_test - local_test.groupby('session')['aid'].count().apply(lambda x: x == 0)
+    ### rd: recsys - otto - local validation - split local_test into test and validation two parts - for grp in local_test.groupby('session'): -     cutoff = np.random.randint(1, grp[1].shape[0]) - new_test.append(grp[1].iloc[:cutoff]) -     data_to_calculate_validation_score.append(grp[1].iloc[cutoff:])
+    ### rd: recsys - otto - local validation - stack a list of smaller dfs onto each other - test = pd.concat(new_test).reset_index(drop=True) - valid = pd.concat(data_to_calculate_validation_score).reset_index(drop=True)
+    ### rd: recsys - otto - local validation - create subset on both train and test - lucky_sessions_train = train.drop_duplicates(['session']).sample(frac=fraction_of_sessions_to_use)['session'] - subset_of_train = train[train.session.isin(lucky_sessions_train)]
+    ### rd: recsys - otto - local validation - Add session as index for the subsets (train and test) - subset_of_train.index = pd.MultiIndex.from_frame(subset_of_train[['session']])
+    ### rd: recsys - otto - local validation - each the last 30 events of each session, make a cartesian product on each event, remove rows with the same aids, only select rows two aids occurred consecutively within a day, and doing it in large chunk/batch of sessions each loop, put each chunk of sessions as an item into a list (see src below)
+    ### rd: recsys - otto - local validaiton - apply the same logic above to the subset_of_test, and append them to consecutive_AIDs which is the same list that stores sessions in subset_of_train (see src)
+    ### rd: recsys - otto - local validation - check the rows with duplicated values on 3 specified columns - all_yet.duplicated(['session', 'aid_x', 'aid_y']) - and remove rows from the dataframe - all_yet.drop_duplicates(['session', 'aid_x', 'aid_y'])
+    ### rd: recsys - otto - local validation - question - selection with two conditionals - all_yet.loc[(all_yet.session == 1890 & all_yet.aid_x == 1762221), :]
+    ### rd: recsys - otto - local validation - stack all dfs inside all_consecutive_AIDs into a single df and remove the rows when their session, aid_x, aid_y are the same - all_consecutive_AIDs = pd.concat(all_consecutive_AIDs).drop_duplicates(['session', 'aid_x', 'aid_y'])[['aid_x', 'aid_y']]
+    ### rd: recsys - otto - local validation - across all sessions, for each (aid_x, aid_y) pair, count and accumulate the occurrences of aid_y - next_AIDs = defaultdict(Counter) - for row in all_consecutive_AIDs.itertuples(): - next_AIDs[row.aid_x][row.aid_y] += 1
+    
+    ## rd: recsys - otto - local validation - Now let's generate the predictions or labels from test set and validation set is to provide ground truth - get all aids of each test session into a list - test_session_AIDs = test.groupby('session')['aid'].apply(list)
+    ### rd: recsys - otto - robust local validation - debug a block of code by making it a func and use print and return
+    ### rd: recsys - otto - local validation - create the labels/predictions for each test session/user - reverse the list of aids of each session, remove the duplicated aids, and select the first 20 aids as labels - and save it into a list 'labels' - question: should we use the learning from training set here? (see src below)
+    ### rd: recsys - otto - local validation - if there are less than 20 aids in each session then we can borrow aids from next_AIDs which is learnt from training - get all aid_ys for each aid of a test session - find 40 the most common aid_ys - if they are not already exist in the test session, then add them into the list of aids of the test session - then take the first 20 from the new list of aids of the test session (see src below)
+    ### rd: recsys - otto - local validation - make the list of aids into a string - labels_as_strings = [' '.join([str(l) for l in lls]) for lls in labels] - make a df from a dict of lists - predictions = pd.DataFrame(data={'session_type': test_session_AIDs.index, 'labels': labels_as_strings})
+    ### rd: recsys - ottp - local validation - make predictions/labels for clicks, carts and orders (no difference) - and prepare and create the submission dataframe
+    ### rd: load id2type dict and type2id list from pickle file
+    ### rd: validation set and test set must be in the same session so that we can use test set to make predictions and validaiton set can provide ground truth to compare against
+    /Users/Natsume/Documents/fastdebug/mds/fastai_notebooks/kaggle-local-validation-framework-otto.md
+    
     jn by dates: ========
 
 
@@ -1036,6 +1266,25 @@ fastlistnbs("radek")
 ```
 fastnbs("rd: experiment")
 ```
+
+
+### <mark style="background-color: #ffff00">rd:</mark>  recsys - otto - lgbm ranker - use local validation dataset save lots of data processing time (i should not have tried to do it for every run of a notebook); in this dataset there are train, test, and valid sets which are all splitted from the original training set; valid set is turned into test_label in the format good for local validation score calculation. in this notebook, lgbm ranker model is trained on train set (actually test set) and test_labels (actually processed from valid sets), so the model is trained with a smaller amount of data for <mark style="background-color: #FFFF00">experiment</mark>  and time saving.
+
+
+
+
+heading 3.
+
+
+
+Next, heading 3
+### rd: recsys - otto - LGBM Ranker - todo: train LGBM Ranker on the entire training set
+
+
+
+[Open `kaggle-otto-polars-lgbm-ranker` in Jupyter Notebook locally](http://localhost:8888/tree/nbs/fastai_notebooks/kaggle-otto-polars-lgbm-ranker.ipynb#rd:-recsys---otto---LGBM-Ranker---use-local-validation-dataset-save-lots-of-data-processing-time-(I-should-not-have-tried-to-do-it-for-every-run-of-a-notebook);-in-this-dataset-there-are-train,-test,-and-valid-sets-which-are-all-splitted-from-the-original-training-set;-valid-set-is-turned-into-test_label-in-the-format-good-for-local-validation-score-calculation.-In-this-notebook,-LGBM-Ranker-model-is-trained-on-train-set-(actually-test-set)-and-test_labels-(actually-processed-from-valid-sets),-so-the-model-is-trained-with-a-smaller-amount-of-data-for-experiment-and-time-saving.
+)
+
 
 
 ## <mark style="background-color: #ffff00">rd:</mark>  recsys - otto - covisitation_simplified - taking subset for fast <mark style="background-color: #FFFF00">experiment</mark> 

@@ -17882,6 +17882,8 @@ plt.suptitle('Distribution of predicted sequence lengths');
 # print(f'Test sessions that we did not manage to extend based on the co-visitation matrix: {no_data_all_aids}')
 ```
 
+## rd: recsys - otto - covisitation simplified - todo: read a post about hyperparam for covisitations https://www.kaggle.com/competitions/otto-recommender-system/discussion/365153
+
 
 ```
 

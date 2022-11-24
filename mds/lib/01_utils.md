@@ -16,24 +16,54 @@ jupyter:
 
 > little functions to tell you the basics of a module
 
-
-## imports
-
-```python
-from fastdebug.utils import *
-```
-
-Todos: do I need whichversion? and fu?
-
 ```python
 #| default_exp utils
 ```
 
+## imports
+
 ```python
 #| export
+from __future__ import print_function
 from __future__ import annotations
 annotations = annotations
 import inspect, torch
+```
+
+## Expand cells
+
+```python
+#| exporti
+def expandcell():
+    "expand cells of the current notebook to its full width"
+    from IPython.display import display, HTML 
+    display(HTML("<style>.container { width:100% !important; }</style>"))
+```
+
+```python
+#| exporti
+expand = expandcell()
+```
+
+```python
+#| export
+def ppn(num):
+    if num < 1000: print(num)
+    elif num < 1000_000: print(str(round(num/1_000,2)) + "K", " == {:,}".format(num))
+    elif num < 1000_000_000: print(str(round(num/1_000_000,2)) + "MM", " == {:,}".format(num))
+    elif num < 1000_000_000_000: print(str(round(num/1_000_000_000,2)) + "Bn", " == {:,}".format(num))       
+    elif num < 1000_000_000_000_000: print(str(round(num/1_000_000_000_000,2)) + "Tn", " == {:,}".format(num))                
+#     print("{:,}".format(num), "==", str(num/1_000_000) + "MM", \
+#           "==", str(round(num/1_000_000_000,2)) + "Bn", "==", str(round(num/1_000_000_000_000,2)) + "Tn")
+```
+
+```python
+for num in [121,23424,1231423423, 1423432423434]:
+    ppn(num)
+```
+
+```python
+
 ```
 
 ## Jupyter theme
@@ -616,21 +646,6 @@ def automagics():
 
 ```python
 
-```
-
-## Expand cells
-
-```python
-#| exporti
-def expandcell():
-    "expand cells of the current notebook to its full width"
-    from IPython.display import display, HTML 
-    display(HTML("<style>.container { width:100% !important; }</style>"))
-```
-
-```python
-#| exporti
-expand = expandcell()
 ```
 
 ## Import fastcore env

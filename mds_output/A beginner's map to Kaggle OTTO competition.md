@@ -222,5 +222,6 @@ local validation tracks public LB perfecty -- here is the setup [discussion](htt
 ### jn: doing the map without a notebook and code is all over the places, I want to use notebook/codes to unite the pieces together, and I can just use index notebook to find them all /2022-11-19
 ### jn: todo tomorrow - need to work on two more notebooks https://www.kaggle.com/code/danielliao/polars-proof-of-concept-lgbm-ranker/edit and https://www.kaggle.com/code/danielliao/matrix-factorization-pytorch-merlin-dataloader/edit /2022-11-19
 
+
 ## symbols to use
 🔥 👆💡

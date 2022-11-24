@@ -142,7 +142,7 @@ hts
 ## Search Mentors, like "radek"
 
 ```python
-# fastnbs("rd: src")
+fastnbs("use polars to load Radek's local validation datase")
 ```
 
 ```python
